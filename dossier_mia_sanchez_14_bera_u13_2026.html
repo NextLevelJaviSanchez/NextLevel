@@ -23,48 +23,50 @@
   /* HEADER */
   .header {
     background: linear-gradient(135deg, #0f172a 0%, #1a3a5c 60%, #2e7eed 100%);
-    color: white; padding: 32px 40px; display: flex; align-items: center; gap: 32px;
+    color: white; padding: 24px 20px; display: flex; align-items: center;
+    gap: 20px; flex-wrap: wrap;
   }
   .player-avatar {
-    width: 110px; height: 110px; border-radius: 50%;
+    width: 80px; height: 80px; border-radius: 50%;
     background: linear-gradient(135deg, var(--celeste), var(--naranja));
     display: flex; align-items: center; justify-content: center;
-    font-size: 42px; font-weight: 900; color: white; flex-shrink: 0;
-    border: 4px solid rgba(255,255,255,0.3);
+    font-size: 28px; font-weight: 900; color: white; flex-shrink: 0;
+    border: 3px solid rgba(255,255,255,0.3);
   }
-  .header-info h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
-  .header-info h2 { font-size: 1.05rem; opacity: 0.75; margin-top: 4px; font-weight: 400; }
-  .header-badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .header-info { flex: 1; min-width: 0; }
+  .header-info h1 { font-size: clamp(1.2rem, 5vw, 2rem); font-weight: 800; letter-spacing: -0.5px; }
+  .header-info h2 { font-size: 0.82rem; opacity: 0.75; margin-top: 4px; font-weight: 400; line-height: 1.5; }
+  .header-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
   .badge {
     background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
-    padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600;
   }
-  .header-stats { margin-left: auto; display: flex; gap: 24px; }
-  .hs { text-align: center; }
-  .hs .val { font-size: 2.2rem; font-weight: 900; color: var(--celeste); line-height: 1; }
-  .hs .lbl { font-size: 0.7rem; opacity: 0.65; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+  .header-stats { display: flex; gap: 20px; flex-wrap: wrap; width: 100%; }
+  .hs { text-align: center; flex: 1; min-width: 60px; }
+  .hs .val { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 900; color: var(--celeste); line-height: 1; }
+  .hs .lbl { font-size: 0.65rem; opacity: 0.65; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
 
   /* LAYOUT */
-  .container { max-width: 1180px; margin: 0 auto; padding: 28px 24px; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 20px 14px; }
   .section-title {
     font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
     color: var(--celeste); margin-bottom: 14px; padding-bottom: 6px;
     border-bottom: 1px solid rgba(46,126,237,0.3);
   }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .card {
-    background: #1e293b; border-radius: 14px; padding: 20px;
+    background: #1e293b; border-radius: 14px; padding: 16px;
     border: 1px solid rgba(255,255,255,0.07);
   }
   .card-title { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase;
     color: #94a3b8; margin-bottom: 14px; }
 
   /* KPI CARDS */
-  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .kpi {
-    background: #1e293b; border-radius: 12px; padding: 16px 12px;
+    background: #1e293b; border-radius: 12px; padding: 14px 10px;
     text-align: center; border: 1px solid rgba(255,255,255,0.07);
     position: relative; overflow: hidden;
   }
@@ -72,9 +74,9 @@
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: var(--accent, var(--celeste));
   }
-  .kpi .v { font-size: 1.9rem; font-weight: 800; color: white; line-height: 1; }
-  .kpi .l { font-size: 0.65rem; color: #64748b; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
-  .kpi .sub { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+  .kpi .v { font-size: 1.6rem; font-weight: 800; color: white; line-height: 1; }
+  .kpi .l { font-size: 0.62rem; color: #64748b; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .kpi .sub { font-size: 0.65rem; color: #94a3b8; margin-top: 2px; }
 
   /* PERCENTIL RADAR */
   .radar-wrap { position: relative; height: 280px; }
@@ -129,6 +131,42 @@
 
   .mb20 { margin-bottom: 20px; }
   .mb28 { margin-bottom: 28px; }
+
+  /* ── RESPONSIVE MÓVIL ──────────────────────────────────────── */
+  @media (max-width: 600px) {
+    /* Header — apilar avatar + info arriba, stats abajo */
+    .header { padding: 18px 16px; gap: 14px; }
+    .player-avatar { width: 64px; height: 64px; font-size: 22px; }
+    .header-info h1 { font-size: 1.3rem; }
+    .header-info h2 { font-size: 0.76rem; }
+    .header-stats { gap: 10px; margin-top: 4px; }
+    .hs .val { font-size: 1.5rem; }
+    .hs .lbl { font-size: 0.58rem; }
+
+    /* KPIs — 2 columnas en lugar de 3 */
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .kpi .v { font-size: 1.4rem; }
+
+    /* Grids — 1 columna */
+    .grid2 { grid-template-columns: 1fr; gap: 12px; }
+    .grid3 { grid-template-columns: 1fr; gap: 12px; }
+    .grid4 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+    /* Cards — menos padding */
+    .card { padding: 14px 12px; }
+    .container { padding: 14px 10px; }
+
+    /* Game log — tabla más compacta */
+    .game-log table { font-size: 0.72rem; }
+    .game-log th, .game-log td { padding: 6px 6px; }
+    /* Ocultar columna MIN en móvil (la menos crítica) */
+    .game-log th:nth-child(5),
+    .game-log td:nth-child(5) { display: none; }
+
+    /* Radar y trend — altura reducida */
+    .radar-wrap { height: 220px; }
+    .trend-wrap { height: 180px; }
+  }
 
   /* ── VOZ DEL JUGADOR ─────────────────────────────────────── */
   .voz-section {
