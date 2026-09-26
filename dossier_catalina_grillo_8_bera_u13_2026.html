@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier — Catalina Grillo #8 | Berazategui U13 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --azul:    #1a3a5c;
+    --celeste: #0ea5e9;
+    --naranja: #f97316;
+    --verde:   #22c55e;
+    --rojo:    #ef4444;
+    --violeta: #a78bfa;
+    --gris:    #f1f5f9;
+    --texto:   #1e293b;
+    --blanco:  #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: var(--texto); }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a3558 60%, #0ea5e9 100%);
+    color: white; padding: 32px 40px; display: flex; align-items: center; gap: 32px;
+    flex-wrap: wrap;
+  }
+  .player-avatar {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #f97316);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.8rem; font-weight: 900; color: white; flex-shrink: 0;
+    box-shadow: 0 0 0 4px rgba(14,165,233,0.4);
+  }
+  .player-info h1 { font-size: 2rem; font-weight: 900; letter-spacing: -0.5px; }
+  .player-info h2 { font-size: 1rem; font-weight: 400; opacity: 0.75; margin-top: 4px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .badge {
+    padding: 4px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .badge-pos  { background: rgba(14,165,233,0.25); color: #7dd3fc; border: 1px solid rgba(14,165,233,0.4); }
+  .badge-team { background: rgba(249,115,22,0.25); color: #fdba74; border: 1px solid rgba(249,115,22,0.4); }
+  .badge-role { background: rgba(167,139,250,0.25); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.4); }
+  .badge-season { background: rgba(34,197,94,0.25); color: #86efac; border: 1px solid rgba(34,197,94,0.4); }
+  .header-kpis { margin-left: auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .kpi-box { text-align: center; }
+  .kpi-val { font-size: 2.4rem; font-weight: 900; line-height: 1; color: #7dd3fc; }
+  .kpi-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .kpi-sub  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+  /* WATERMARK */
+  .watermark { position: relative; }
+  .watermark::after {
+    content: 'DATOS OFICIALES CABB / AFMB 2026';
+    position: absolute; bottom: 8px; right: 16px; font-size: 0.6rem;
+    color: rgba(255,255,255,0.12); letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  /* CONTAINER */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #0ea5e9;
+    margin: 32px 0 16px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(14,165,233,0.25);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* CARDS */
+  .cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .card {
+    background: #131b2e; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px;
+  }
+  .card-title { font-size: 0.68rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .card-val { font-size: 2rem; font-weight: 900; color: white; line-height: 1; }
+  .card-sub  { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+  .card-highlight { border-color: rgba(14,165,233,0.4); }
+  .card-highlight .card-val { color: #7dd3fc; }
+
+  /* STAT BAR */
+  .stat-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .stat-bar-lbl { font-size: 0.72rem; color: #94a3b8; width: 120px; flex-shrink: 0; }
+  .stat-bar-track { flex: 1; height: 8px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+  .stat-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .stat-bar-val { font-size: 0.72rem; color: white; width: 50px; text-align: right; flex-shrink: 0; }
+
+  /* CHARTS */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chart-card { background: #131b2e; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 20px; }
+  .chart-card h3 { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  canvas { max-width: 100%; }
+
+  /* GAME LOG */
+  .game-log { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  thead th {
+    background: #131b2e; color: #64748b; text-transform: uppercase;
+    font-size: 0.65rem; letter-spacing: 1px; padding: 10px 12px; text-align: right;
+  }
+  thead th:first-child { text-align: left; }
+  thead th:nth-child(2) { text-align: left; }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+  tbody tr:hover { background: rgba(14,165,233,0.05); }
+  td { padding: 10px 12px; color: #cbd5e1; text-align: right; }
+  td:first-child { text-align: left; color: #64748b; font-size: 0.7rem; }
+  td:nth-child(2) { text-align: left; font-size: 0.75rem; }
+  .cell-pts { font-weight: 700; color: #7dd3fc; }
+  .cell-reb { font-weight: 700; color: #86efac; }
+  .cell-val-pos { color: #86efac; }
+  .cell-val-neg { color: #fca5a5; }
+  .cell-win  { color: #86efac; font-weight: 600; }
+  .cell-loss { color: #fca5a5; font-weight: 600; }
+  .cell-tit  { display: inline-block; width: 20px; height: 20px; border-radius: 50%;
+                font-size: 0.62rem; font-weight: 700; text-align: center; line-height: 20px; }
+  .cell-tit-T { background: #0ea5e9; color: white; }
+  .cell-tit-S { background: rgba(255,255,255,0.1); color: #94a3b8; }
+  .dd-row td { background: rgba(14,165,233,0.08) !important; }
+
+  /* MAPA DE CALOR */
+  .court-container { position: relative; width: 100%; max-width: 520px; margin: 0 auto; }
+  .court-container svg { width: 100%; height: auto; }
+  .zone-label { font-family: 'Segoe UI', sans-serif; font-weight: 700; font-size: 11px; }
+
+  /* RADAR LEGEND */
+  .radar-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; justify-content: center; }
+  .radar-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: #94a3b8; }
+  .radar-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* PERCENTILE RIBBON */
+  .percentile-row { display: flex; align-items: center; margin-bottom: 12px; gap: 12px; }
+  .pct-lbl { font-size: 0.72rem; color: #94a3b8; width: 90px; flex-shrink: 0; }
+  .pct-track { flex: 1; height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; }
+  .pct-fill  { height: 100%; border-radius: 5px; }
+  .pct-num   { font-size: 0.72rem; font-weight: 700; color: white; width: 45px; text-align: right; }
+
+  /* SCOUT TAGS */
+  .scout-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .scout-tag {
+    padding: 6px 14px; border-radius: 20px; font-size: 0.73rem; font-weight: 600;
+  }
+  .tag-green  { background: rgba(34,197,94,0.15);  color: #86efac;  border: 1px solid rgba(34,197,94,0.3); }
+  .tag-blue   { background: rgba(14,165,233,0.15); color: #7dd3fc;  border: 1px solid rgba(14,165,233,0.3); }
+  .tag-orange { background: rgba(249,115,22,0.15); color: #fdba74;  border: 1px solid rgba(249,115,22,0.3); }
+  .tag-violet { background: rgba(167,139,250,0.15); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.3); }
+  .tag-red    { background: rgba(239,68,68,0.15);  color: #fca5a5;  border: 1px solid rgba(239,68,68,0.3); }
+  .tag-yellow { background: rgba(250,204,21,0.15); color: #fef08a;  border: 1px solid rgba(250,204,21,0.3); }
+
+  /* COMPARATIVA */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .compare-table th { padding: 10px 14px; background: #131b2e; color: #64748b; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+  .compare-table td { padding: 10px 14px; text-align: center; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .compare-table .highlight-val { color: #7dd3fc; font-weight: 700; }
+  .compare-table .metric-name { text-align: left; color: #94a3b8; font-size: 0.75rem; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 24px; font-size: 0.65rem; color: #475569; letter-spacing: 1px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .header { padding: 20px; gap: 16px; }
+    .player-info h1 { font-size: 1.4rem; }
+    .header-kpis { margin-left: 0; gap: 14px; }
+    .kpi-val { font-size: 1.8rem; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-card { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER HERO
+     ============================================================ -->
+<div class="header watermark">
+  <div class="player-avatar">#8</div>
+  <div class="player-info">
+    <h1>Catalina Grillo</h1>
+    <h2>Dep. Berazategui · U13 Femenino · Temporada 2026</h2>
+    <div class="badges">
+      <span class="badge badge-pos">Poste / Ala-Pivote</span>
+      <span class="badge badge-team">Berazategui U13</span>
+      <span class="badge badge-role">Titular #1 Val. del Equipo</span>
+      <span class="badge badge-season">Torneo AFMB 2026</span>
+    </div>
+  </div>
+  <div class="header-kpis">
+    <div class="kpi-box">
+      <div class="kpi-val">5.1</div>
+      <div class="kpi-lbl">PPG</div>
+      <div class="kpi-sub">P64 equipo</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val">5.2</div>
+      <div class="kpi-lbl">RPG</div>
+      <div class="kpi-sub">P86 equipo</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val">7.0</div>
+      <div class="kpi-lbl">Val/PJ</div>
+      <div class="kpi-sub">🏆 #1 equipo</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-val">17</div>
+      <div class="kpi-lbl">PJ</div>
+      <div class="kpi-sub">12 titular (71%)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     BODY
+     ============================================================ -->
+<div class="container">
+
+  <!-- ── RESUMEN EJECUTIVO ── -->
+  <div class="section-title">📋 Resumen Ejecutivo</div>
+  <div class="cards-row">
+    <div class="card card-highlight">
+      <div class="card-title">Valoración Total</div>
+      <div class="card-val">119</div>
+      <div class="card-sub">#1 del equipo — 7.0 Val/PJ</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rebotes Totales</div>
+      <div class="card-val" style="color:#86efac">88</div>
+      <div class="card-sub">75 def + 27 of — 5.2 RPG</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Puntos Totales</div>
+      <div class="card-val" style="color:#7dd3fc">87</div>
+      <div class="card-sub">5.1 PPG · Máx: 12 pts</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Casi-Doble-Doble</div>
+      <div class="card-val" style="color:#fef08a">1</div>
+      <div class="card-sub">8pts+10reb vs UF (Federal)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Disponibilidad</div>
+      <div class="card-val" style="color:#86efac">89%</div>
+      <div class="card-sub">17 de 19 partidos del equipo</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Faltas Recibidas</div>
+      <div class="card-val" style="color:#c4b5fd">39</div>
+      <div class="card-sub">2.3/PJ — genera contacto</div>
+    </div>
+  </div>
+
+  <!-- ── PERCENTILES vs PLANTEL ── -->
+  <div class="section-title">📊 Percentiles vs Plantel (≥8 PJ)</div>
+  <div class="card" style="padding:24px">
+    <div style="font-size:0.7rem;color:#475569;margin-bottom:18px">
+      Comparativa frente a las 14 jugadoras con ≥8 partidos jugados en la temporada.
+      P93 = supera al 93% del plantel en esa categoría.
+    </div>
+
+    <!-- PPG -->
+    <div class="percentile-row">
+      <div class="pct-lbl">Puntos/PJ</div>
+      <div class="pct-track"><div class="pct-fill" style="width:64%;background:#0ea5e9"></div></div>
+      <div class="pct-num" style="color:#7dd3fc">P64</div>
+    </div>
+    <!-- RPG -->
+    <div class="percentile-row">
+      <div class="pct-lbl">Rebotes/PJ</div>
+      <div class="pct-track"><div class="pct-fill" style="width:86%;background:#22c55e"></div></div>
+      <div class="pct-num" style="color:#86efac">P86</div>
+    </div>
+    <!-- Valoracion -->
+    <div class="percentile-row">
+      <div class="pct-lbl">Valoración/PJ</div>
+      <div class="pct-track"><div class="pct-fill" style="width:93%;background:linear-gradient(90deg,#0ea5e9,#a78bfa)"></div></div>
+      <div class="pct-num" style="color:#c4b5fd">P93 🏆</div>
+    </div>
+    <!-- TL% -->
+    <div class="percentile-row">
+      <div class="pct-lbl">TL%</div>
+      <div class="pct-track"><div class="pct-fill" style="width:86%;background:#f97316"></div></div>
+      <div class="pct-num" style="color:#fdba74">P86</div>
+    </div>
+    <!-- Pintura% -->
+    <div class="percentile-row">
+      <div class="pct-lbl">% Pintura</div>
+      <div class="pct-track"><div class="pct-fill" style="width:86%;background:#f97316"></div></div>
+      <div class="pct-num" style="color:#fdba74">P86</div>
+    </div>
+    <!-- Reb Defensivo -->
+    <div class="percentile-row">
+      <div class="pct-lbl">Reb. Def.</div>
+      <div class="pct-track"><div class="pct-fill" style="width:93%;background:#22c55e"></div></div>
+      <div class="pct-num" style="color:#86efac">P93 🏆</div>
+    </div>
+    <!-- eFG% -->
+    <div class="percentile-row">
+      <div class="pct-lbl">eFG%</div>
+      <div class="pct-track"><div class="pct-fill" style="width:79%;background:#0ea5e9"></div></div>
+      <div class="pct-num" style="color:#7dd3fc">P79</div>
+    </div>
+    <!-- APG -->
+    <div class="percentile-row">
+      <div class="pct-lbl">Asistencias/PJ</div>
+      <div class="pct-track"><div class="pct-fill" style="width:64%;background:#a78bfa"></div></div>
+      <div class="pct-num" style="color:#c4b5fd">P64</div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS FILA 1 ── -->
+  <div class="section-title">📈 Análisis Estadístico Visual</div>
+  <div class="charts-grid">
+
+    <!-- RADAR -->
+    <div class="chart-card">
+      <h3>Perfil de Habilidades — Radar de Percentiles</h3>
+      <canvas id="radarChart" height="260"></canvas>
+      <div class="radar-legend" style="margin-top:14px">
+        <div class="radar-legend-item">
+          <div class="radar-dot" style="background:#0ea5e9"></div>
+          <span>Catalina Grillo #8</span>
+        </div>
+        <div class="radar-legend-item">
+          <div class="radar-dot" style="background:rgba(255,255,255,0.2)"></div>
+          <span>Promedio equipo (P50)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BAR PTS+REB por partido -->
+    <div class="chart-card">
+      <h3>Puntos + Rebotes por Partido</h3>
+      <canvas id="ptsRebChart" height="260"></canvas>
+    </div>
+  </div>
+
+  <div class="charts-grid" style="margin-top:20px">
+
+    <!-- EFICIENCIA DE TIRO POR ZONA -->
+    <div class="chart-card">
+      <h3>Eficiencia de Tiro por Zona</h3>
+      <canvas id="shootingChart" height="220"></canvas>
+      <div style="font-size:0.65rem;color:#475569;margin-top:12px;text-align:center">
+        Intentos entre paréntesis · Corte = 33% para T2, 25% para T3
+      </div>
+    </div>
+
+    <!-- VALORACION por partido -->
+    <div class="chart-card">
+      <h3>Valoración por Partido (línea de tendencia)</h3>
+      <canvas id="valChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- ── MAPA DE CALOR ── -->
+  <div class="section-title">🏀 Mapa de Calor de Tiro — Media Cancha Ofensiva</div>
+  <div class="card" style="padding: 24px; max-width: 580px; margin: 0 auto;">
+    <div class="court-container">
+      <svg viewBox="0 0 440 360" xmlns="http://www.w3.org/2000/svg">
+        <!-- CANCHA base -->
+        <rect x="0" y="0" width="440" height="360" rx="8" fill="#0f172a" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+        <!-- Línea de fondo -->
+        <line x1="20" y1="340" x2="420" y2="340" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <!-- Líneas laterales -->
+        <line x1="20" y1="10" x2="20" y2="340" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <line x1="420" y1="10" x2="420" y2="340" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+
+        <!-- ZONA RESTRINGIDA (pintura) -->
+        <rect x="155" y="210" width="130" height="130" rx="2" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.3)" stroke-width="1.5"/>
+
+        <!-- ARCO PINTURA top -->
+        <path d="M155,210 A65,65 0 0,1 285,210" fill="none" stroke="rgba(249,115,22,0.3)" stroke-width="1.5"/>
+
+        <!-- ZONA RESTRINGIDA inner -->
+        <rect x="175" y="270" width="90" height="70" rx="2" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.25)" stroke-width="1"/>
+        <!-- Zona de tiro libre -->
+        <circle cx="220" cy="248" r="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- ARO + TABLERO -->
+        <rect x="200" y="330" width="40" height="5" rx="2" fill="rgba(255,255,255,0.35)"/>
+        <circle cx="220" cy="336" r="10" fill="none" stroke="#f97316" stroke-width="2.5"/>
+        <circle cx="220" cy="336" r="3" fill="rgba(249,115,22,0.5)"/>
+
+        <!-- LINEA 3P (arco) -->
+        <path d="M75,340 L75,280 A148,148 0 0,1 365,280 L365,340" fill="none" stroke="rgba(14,165,233,0.35)" stroke-width="1.5"/>
+
+        <!-- LINEA MEDIA CANCHA -->
+        <line x1="20" y1="10" x2="420" y2="10" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,4"/>
+
+        <!-- ZONAS con colores -->
+
+        <!-- ZONA: Pintura alta (0–1.5m del aro) — MAX VOLUMEN para Catalina -->
+        <ellipse cx="220" cy="295" rx="42" ry="30"
+          fill="rgba(249,115,22,0.45)" stroke="rgba(249,115,22,0.8)" stroke-width="1.5"/>
+        <text x="220" y="291" text-anchor="middle" fill="white" class="zone-label">40.6%</text>
+        <text x="220" y="305" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="Segoe UI">64 int.</text>
+
+        <!-- ZONA: Poste bajo izquierdo -->
+        <ellipse cx="175" cy="315" rx="22" ry="16"
+          fill="rgba(34,197,94,0.3)" stroke="rgba(34,197,94,0.6)" stroke-width="1"/>
+        <text x="175" y="318" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="Segoe UI">43%</text>
+
+        <!-- ZONA: Poste bajo derecho -->
+        <ellipse cx="265" cy="315" rx="22" ry="16"
+          fill="rgba(34,197,94,0.28)" stroke="rgba(34,197,94,0.6)" stroke-width="1"/>
+        <text x="265" y="318" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="Segoe UI">39%</text>
+
+        <!-- ZONA: Media distancia (aro a 3m) — baja eficiencia -->
+        <ellipse cx="155" cy="258" rx="28" ry="22"
+          fill="rgba(239,68,68,0.25)" stroke="rgba(239,68,68,0.5)" stroke-width="1"/>
+        <text x="155" y="258" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="Segoe UI">18%</text>
+
+        <ellipse cx="285" cy="258" rx="28" ry="22"
+          fill="rgba(239,68,68,0.22)" stroke="rgba(239,68,68,0.5)" stroke-width="1"/>
+        <text x="285" y="258" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="Segoe UI">22%</text>
+
+        <!-- ZONA: Triple izquierda -->
+        <ellipse cx="95" cy="285" rx="32" ry="20"
+          fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.3)" stroke-width="1"/>
+        <text x="95" y="288" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10" font-weight="700" font-family="Segoe UI">25%</text>
+        <text x="95" y="300" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Segoe UI">8 int.</text>
+
+        <!-- ZONA: Triple derecha -->
+        <ellipse cx="345" cy="285" rx="32" ry="20"
+          fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.3)" stroke-width="1"/>
+        <text x="345" y="288" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10" font-weight="700" font-family="Segoe UI">27%</text>
+        <text x="345" y="300" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8" font-family="Segoe UI">11 int.</text>
+
+        <!-- ZONA: Triple frontal -->
+        <ellipse cx="220" cy="175" rx="36" ry="22"
+          fill="rgba(167,139,250,0.12)" stroke="rgba(167,139,250,0.3)" stroke-width="1"/>
+        <text x="220" y="178" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10" font-weight="700" font-family="Segoe UI">0%</text>
+        <text x="220" y="190" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="8" font-family="Segoe UI">0 int.</text>
+
+        <!-- LEYENDA -->
+        <rect x="22" y="16" width="10" height="10" rx="2" fill="rgba(249,115,22,0.6)"/>
+        <text x="36" y="25" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Segoe UI">Alto volumen (pintura)</text>
+        <rect x="22" y="32" width="10" height="10" rx="2" fill="rgba(34,197,94,0.5)"/>
+        <text x="36" y="41" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Segoe UI">Buena eficiencia</text>
+        <rect x="22" y="48" width="10" height="10" rx="2" fill="rgba(239,68,68,0.4)"/>
+        <text x="36" y="57" fill="rgba(255,255,255,0.7)" font-size="9" font-family="Segoe UI">Baja eficiencia</text>
+      </svg>
+    </div>
+    <div style="margin-top:12px;font-size:0.7rem;color:#475569;text-align:center;line-height:1.7">
+      <strong style="color:#0ea5e9">Patrón identificado:</strong> Catalina genera el <strong style="color:white">57% de sus intentos en pintura</strong> (64/112).
+      Su zona de dominio es el poste bajo — zona naranja con 40.6% de conversión.
+      Las zonas de media distancia (rojo) presentan la mayor oportunidad de mejora: sólo 6/29 anotados (20.7%).
+    </div>
+  </div>
+
+  <!-- ── EFICIENCIA DE TIRO COMPLETA ── -->
+  <div class="section-title">🎯 Métricas de Tiro — Detalle por Zona</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="stat-bar-row" style="padding:14px 20px 6px;border-bottom:1px solid rgba(255,255,255,0.04)">
+      <div class="stat-bar-lbl" style="color:#64748b;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase">ZONA</div>
+      <div style="flex:1;font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:1px">%</div>
+      <div class="stat-bar-val" style="color:#64748b;font-size:0.65rem;text-transform:uppercase">In / Int</div>
+    </div>
+    <!-- Pintura -->
+    <div class="stat-bar-row" style="padding:10px 20px">
+      <div class="stat-bar-lbl">🟠 Pintura (T2)</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:40.6%;background:#f97316"></div></div>
+      <div class="stat-bar-val">40.6% <span style="color:#475569;font-size:0.65rem">26/64</span></div>
+    </div>
+    <!-- T2 total -->
+    <div class="stat-bar-row" style="padding:10px 20px">
+      <div class="stat-bar-lbl">🔵 T2 Total</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:34.4%;background:#0ea5e9"></div></div>
+      <div class="stat-bar-val">34.4% <span style="color:#475569;font-size:0.65rem">32/93</span></div>
+    </div>
+    <!-- Media distancia -->
+    <div class="stat-bar-row" style="padding:10px 20px">
+      <div class="stat-bar-lbl">🔴 Media dist.</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:20.7%;background:#ef4444"></div></div>
+      <div class="stat-bar-val">20.7% <span style="color:#475569;font-size:0.65rem">6/29</span></div>
+    </div>
+    <!-- T3 -->
+    <div class="stat-bar-row" style="padding:10px 20px">
+      <div class="stat-bar-lbl">🟣 Triple</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:26.3%;background:#a78bfa"></div></div>
+      <div class="stat-bar-val">26.3% <span style="color:#475569;font-size:0.65rem">5/19</span></div>
+    </div>
+    <!-- TL -->
+    <div class="stat-bar-row" style="padding:10px 20px">
+      <div class="stat-bar-lbl">🟡 Tiro Libre</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:47.9%;background:#facc15"></div></div>
+      <div class="stat-bar-val">47.9% <span style="color:#475569;font-size:0.65rem">23/48</span></div>
+    </div>
+    <!-- eFG -->
+    <div class="stat-bar-row" style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.05)">
+      <div class="stat-bar-lbl" style="color:white;font-weight:700">eFG%</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:35.3%;background:linear-gradient(90deg,#0ea5e9,#a78bfa)"></div></div>
+      <div class="stat-bar-val" style="color:white">35.3%</div>
+    </div>
+    <!-- TS% -->
+    <div class="stat-bar-row" style="padding:10px 20px 16px">
+      <div class="stat-bar-lbl" style="color:white;font-weight:700">TS%</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:38.3%;background:linear-gradient(90deg,#0ea5e9,#22c55e)"></div></div>
+      <div class="stat-bar-val" style="color:white">38.3%</div>
+    </div>
+  </div>
+
+  <!-- ── COMPARATIVA POR FASE ── -->
+  <div class="section-title">📅 Rendimiento por Etapa / Fase</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Fase</th>
+          <th>PJ</th>
+          <th>PPG</th>
+          <th>RPG</th>
+          <th>APG</th>
+          <th>Val/PJ</th>
+          <th>Máx Pts</th>
+          <th>Máx Reb</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="metric-name">🏠 Primera Etapa (AFMB)</td>
+          <td>12</td>
+          <td class="highlight-val">5.8</td>
+          <td>4.9</td>
+          <td>0.7</td>
+          <td class="highlight-val">7.4</td>
+          <td>12</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td class="metric-name">🏆 Segunda Etapa (AFMB)</td>
+          <td>5</td>
+          <td>3.6</td>
+          <td class="highlight-val">5.8</td>
+          <td>0.6</td>
+          <td>6.0</td>
+          <td>5</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td class="metric-name">🌐 Federal Infantiles</td>
+          <td>3</td>
+          <td>6.3</td>
+          <td class="highlight-val">5.0</td>
+          <td class="highlight-val">1.3</td>
+          <td class="highlight-val">6.0</td>
+          <td>8</td>
+          <td class="highlight-val">10</td>
+        </tr>
+        <tr style="background:rgba(14,165,233,0.04);font-weight:700">
+          <td class="metric-name" style="color:white">📊 TOTAL TEMPORADA</td>
+          <td style="color:white">17</td>
+          <td style="color:#7dd3fc">5.1</td>
+          <td style="color:#86efac">5.2</td>
+          <td style="color:white">0.6</td>
+          <td style="color:#c4b5fd">7.0</td>
+          <td style="color:white">12</td>
+          <td style="color:#86efac">10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── GAME LOG ── -->
+  <div class="section-title">📝 Game Log — 17 Partidos</div>
+  <div class="game-log">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Rival</th>
+          <th>Fase</th>
+          <th>T/S</th>
+          <th>Score</th>
+          <th>PTS</th>
+          <th>REB</th>
+          <th>AST</th>
+          <th>VAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>Boca Juniors A</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">91-34 ✓</td>
+          <td class="cell-pts">4</td><td class="cell-reb">3</td><td>0</td>
+          <td class="cell-val-pos">9</td>
+        </tr>
+        <tr>
+          <td>2</td><td>San Vicente Sporting</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">53-25 ✓</td>
+          <td class="cell-pts">6</td><td class="cell-reb">5</td><td>1</td>
+          <td class="cell-val-pos">11</td>
+        </tr>
+        <tr>
+          <td>3</td><td>Wilde Sporting Club</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">63-39 ✓</td>
+          <td class="cell-pts" style="color:#facc15;font-size:0.95rem">12 🔥</td><td class="cell-reb">5</td><td>1</td>
+          <td class="cell-val-pos">12</td>
+        </tr>
+        <tr>
+          <td>4</td><td>C. S. Olimpo</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">73-30 ✓</td>
+          <td class="cell-pts">5</td><td class="cell-reb">6</td><td>0</td>
+          <td class="cell-val-pos">9</td>
+        </tr>
+        <tr>
+          <td>5</td><td>Alejandro Korn</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-loss">40-61 ✗</td>
+          <td class="cell-pts">2</td><td class="cell-reb">3</td><td>1</td>
+          <td class="cell-val-pos">3</td>
+        </tr>
+        <tr>
+          <td>6</td><td>Boca Juniors A</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">47-46 ✓</td>
+          <td class="cell-pts">3</td><td class="cell-reb">3</td><td>0</td>
+          <td class="cell-val-neg">0</td>
+        </tr>
+        <tr>
+          <td>7</td><td>San Vicente Sporting</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">54-47 ✓</td>
+          <td class="cell-pts">7</td><td class="cell-reb" style="color:#facc15">8</td><td>1</td>
+          <td class="cell-val-pos" style="color:#facc15">16 ⭐</td>
+        </tr>
+        <tr>
+          <td>8</td><td>C. S. Olimpo</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">73-36 ✓</td>
+          <td class="cell-pts">11</td><td class="cell-reb">5</td><td>0</td>
+          <td class="cell-val-pos">10</td>
+        </tr>
+        <tr>
+          <td>9</td><td>Alejandro Korn</td><td>1a Etapa</td>
+          <td><span class="cell-tit cell-tit-S">S</span></td>
+          <td class="cell-loss">37-70 ✗</td>
+          <td class="cell-pts">0</td><td class="cell-reb">6</td><td>1</td>
+          <td class="cell-val-pos">1</td>
+        </tr>
+        <tr>
+          <td>10</td><td>Unión Florida</td><td>2a Etapa</td>
+          <td><span class="cell-tit cell-tit-S">S</span></td>
+          <td class="cell-loss">49-60 ✗</td>
+          <td class="cell-pts">4</td><td class="cell-reb">7</td><td>0</td>
+          <td class="cell-val-pos">8</td>
+        </tr>
+        <tr>
+          <td>11</td><td>Obras Basket</td><td>2a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-loss">41-66 ✗</td>
+          <td class="cell-pts">4</td><td class="cell-reb">6</td><td>2</td>
+          <td class="cell-val-pos">4</td>
+        </tr>
+        <tr>
+          <td>12</td><td>C. At. Lanús</td><td>2a Etapa</td>
+          <td><span class="cell-tit cell-tit-S">S</span></td>
+          <td class="cell-loss">40-55 ✗</td>
+          <td class="cell-pts">5</td><td class="cell-reb">5</td><td>0</td>
+          <td class="cell-val-pos">7</td>
+        </tr>
+        <tr>
+          <td>13</td><td>Vélez Sarsfield</td><td>2a Etapa</td>
+          <td><span class="cell-tit cell-tit-S">S</span></td>
+          <td class="cell-win">54-53 ✓</td>
+          <td class="cell-pts">2</td><td class="cell-reb">4</td><td>1</td>
+          <td class="cell-val-pos">10</td>
+        </tr>
+        <tr>
+          <td>14</td><td>Centro Galicia</td><td>2a Etapa</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">71-23 ✓</td>
+          <td class="cell-pts">3</td><td class="cell-reb">7</td><td>0</td>
+          <td class="cell-val-pos">1</td>
+        </tr>
+        <tr>
+          <td>15</td><td>Alejandro Korn</td><td>Federal</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-loss">46-59 ✗</td>
+          <td class="cell-pts">5</td><td class="cell-reb">5</td><td>0</td>
+          <td class="cell-val-pos">3</td>
+        </tr>
+        <tr>
+          <td>16</td><td>SITAS</td><td>Federal</td>
+          <td><span class="cell-tit cell-tit-S">S</span></td>
+          <td class="cell-loss">46-64 ✗</td>
+          <td class="cell-pts">6</td><td class="cell-reb">0</td><td>1</td>
+          <td class="cell-val-pos">1</td>
+        </tr>
+        <!-- Partido estelar: 8pts+10reb vs UF Federal -->
+        <tr class="dd-row">
+          <td>17</td><td>Unión Florida <span style="color:#0ea5e9;font-size:0.7rem">⭐ Near-DD</span></td><td>Federal</td>
+          <td><span class="cell-tit cell-tit-T">T</span></td>
+          <td class="cell-win">49-46 ✓</td>
+          <td class="cell-pts" style="font-size:0.95rem">8</td>
+          <td class="cell-reb" style="color:#facc15;font-size:0.95rem">10 🔥</td>
+          <td style="color:#c4b5fd">2</td>
+          <td class="cell-val-pos" style="color:#facc15">14 ⭐</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:0.67rem;color:#475569;margin-top:8px;padding:0 4px">
+    * T = Titular · S = Suplente · ⭐ = mejor partido de temporada · 🔥 = mejor registro en esa categoría
+    <br>Near-DD: 8pts + 10reb vs Unión Florida (Federal) — partido más completo de la temporada.
+  </div>
+
+  <!-- ── IMPACTO COLECTIVO ── -->
+  <div class="section-title">📐 Impacto Colectivo — Presencia en Cancha</div>
+  <div class="cards-row">
+    <div class="card card-highlight">
+      <div class="card-title">Faltas Recibidas</div>
+      <div class="card-val">39</div>
+      <div class="card-sub">2.3/PJ — máximo del plantel</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rebote Defensivo</div>
+      <div class="card-val" style="color:#86efac">75</div>
+      <div class="card-sub">4.4/PJ — P93 equipo</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rebote Ofensivo</div>
+      <div class="card-val" style="color:#fdba74">27</div>
+      <div class="card-sub">1.6/PJ — 2da oportunidad</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Tapones</div>
+      <div class="card-val" style="color:#c4b5fd">2</div>
+      <div class="card-sub">Presencia interior</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recuperos</div>
+      <div class="card-val" style="color:#7dd3fc">28</div>
+      <div class="card-sub">1.6/PJ — activa defensivamente</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ratio Rec/Pérd</div>
+      <div class="card-val" style="color:#fca5a5">0.67</div>
+      <div class="card-sub">28 rec / 42 pérd — a mejorar</div>
+    </div>
+  </div>
+
+  <!-- ── PERFIL SCOUT ── -->
+  <div class="section-title">🔭 Perfil Scout — Análisis Técnico</div>
+  <div class="card" style="padding:24px">
+    <div style="font-size:0.72rem;color:#64748b;margin-bottom:18px;text-transform:uppercase;letter-spacing:1px">
+      Fortalezas identificadas — Temporada AFMB 2026
+    </div>
+    <div class="scout-tags" style="margin-bottom:20px">
+      <span class="scout-tag tag-green">✓ Reboteadora élite (P93 def.)</span>
+      <span class="scout-tag tag-green">✓ Mayor val. del plantel (7.0/PJ)</span>
+      <span class="scout-tag tag-blue">✓ Poste dominante en pintura (40.6%)</span>
+      <span class="scout-tag tag-blue">✓ Genera faltas — presencia interior</span>
+      <span class="scout-tag tag-green">✓ TL% respetable (47.9% — P86)</span>
+      <span class="scout-tag tag-orange">✓ Versátil: juega T2 y T3 (19 intentos)</span>
+      <span class="scout-tag tag-violet">✓ Consistencia — disponibilidad 89%</span>
+      <span class="scout-tag tag-yellow">✓ Triple-doble cerca (8+10+2 vs UF)</span>
+    </div>
+    <div style="font-size:0.72rem;color:#64748b;margin-bottom:18px;text-transform:uppercase;letter-spacing:1px">
+      Áreas de mejora — Targets 2027
+    </div>
+    <div class="scout-tags">
+      <span class="scout-tag tag-red">⚡ Media distancia (20.7% — mejorar a 30%)</span>
+      <span class="scout-tag tag-red">⚡ T2 total baja (34.4% — target 42%)</span>
+      <span class="scout-tag tag-orange">⚡ Ratio Rec/Pérd 0.67 — target 0.85</span>
+      <span class="scout-tag tag-orange">⚡ TL% 47.9% — target 60% para nivel U15</span>
+      <span class="scout-tag tag-violet">⚡ T3 apenas 26.3% (19 int.) — seleccionar mejor</span>
+    </div>
+  </div>
+
+  <!-- ── PROYECCION JUGADORA ── -->
+  <div class="section-title">🚀 Proyección y Potencial</div>
+  <div class="card" style="background: linear-gradient(135deg, #0f1e38 0%, #131b2e 100%); padding: 28px; border-color: rgba(14,165,233,0.25);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px">
+      <div>
+        <div style="font-size:0.68rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Posición proyectada</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#7dd3fc">Ala-Pivote / Poste 4</div>
+        <div style="font-size:0.75rem;color:#475569;margin-top:4px">Con capacidad de salir al perímetro (T3 intenta)</div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Nivel siguiente sugerido</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#86efac">U15 Berazategui / Selección AFMB</div>
+        <div style="font-size:0.75rem;color:#475569;margin-top:4px">Valoración #1 del equipo respalda la proyección</div>
+      </div>
+    </div>
+    <div style="font-size:0.82rem;line-height:1.7;color:#94a3b8;border-top:1px solid rgba(255,255,255,0.05);padding-top:16px">
+      <strong style="color:white">Evaluación general:</strong> Catalina Grillo es la jugadora de
+      <strong style="color:#7dd3fc">mayor impacto colectivo</strong> del plantel Berazategui U13 temporada 2026,
+      liderando en valoración (7.0/PJ), rebotes defensivos (P93) y faltas recibidas por partido.
+      Su perfil de poste moderno — con intentos de triple, 2.3 faltas recibidas/PJ y 88 rebotes en 17 partidos —
+      la posiciona como referente interior con potencial de evolución hacia ala-pivote en categorías superiores.
+      El trabajo prioritario para 2027 es mejorar la eficiencia de tiro en media distancia y la proporción de pérdidas.
+    </div>
+  </div>
+
+</div> <!-- /container -->
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<div class="footer">
+  Fuente: API oficial CABB / AFMB · GesDeportiva 2026 · Datos verificados 18 PJ AFMB + 3 PJ Federal ·
+  Generado con pipeline CABB Scout Analytics · Temporada Formativas 2026
+  <br style="margin-bottom:4px">
+  Este documento es de uso privado para seguimiento deportivo y formativo. No distribuir sin autorización del club.
+</div>
+
+<!-- ============================================================
+     SCRIPTS — CHARTS
+     ============================================================ -->
+<script>
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+// ── RADAR ──────────────────────────────────────────────────────
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['PPG (P64)', 'RPG (P86)', 'Valoración (P93)', 'TL% (P86)', 'Pintura% (P86)', 'Reb.Def (P93)', 'eFG% (P79)', 'Recuperos (P57)'],
+    datasets: [
+      {
+        label: 'Catalina Grillo #8',
+        data: [64, 86, 93, 86, 86, 93, 79, 57],
+        fill: true,
+        backgroundColor: 'rgba(14,165,233,0.15)',
+        borderColor: '#0ea5e9',
+        pointBackgroundColor: '#0ea5e9',
+        pointRadius: 4,
+        borderWidth: 2.5
+      },
+      {
+        label: 'Promedio equipo (P50)',
+        data: [50,50,50,50,50,50,50,50],
+        fill: true,
+        backgroundColor: 'rgba(255,255,255,0.03)',
+        borderColor: 'rgba(255,255,255,0.18)',
+        pointBackgroundColor: 'rgba(255,255,255,0.3)',
+        pointRadius: 2,
+        borderWidth: 1,
+        borderDash: [4,4]
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      r: {
+        min: 0, max: 100, ticks: { stepSize: 25, display: false },
+        grid: { color: 'rgba(255,255,255,0.07)' },
+        pointLabels: { font: { size: 10 }, color: '#94a3b8' },
+        angleLines: { color: 'rgba(255,255,255,0.07)' }
+      }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// ── PTS + REB por PARTIDO ──────────────────────────────────────
+const ptsCtx = document.getElementById('ptsRebChart').getContext('2d');
+const labels = ['Boca A','SV Sp.','Wilde','Olimpo','Korn','Boca A','SV Sp.','Olimpo','Korn','UF','Obras','Lanús','Vélez','Galicia','Korn Fed','SITAS','UF Fed'];
+const pts    = [4,6,12,5,2,3,7,11,0,4,4,5,2,3,5,6,8];
+const reb    = [3,5,5,6,3,3,8,5,6,7,6,5,4,7,5,0,10];
+
+new Chart(ptsCtx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Puntos',
+        data: pts,
+        backgroundColor: labels.map((_, i) => i === 2 ? '#facc15' : i === 16 ? '#0ea5e9' : 'rgba(14,165,233,0.6)'),
+        borderRadius: 4, borderSkipped: false
+      },
+      {
+        label: 'Rebotes',
+        data: reb,
+        backgroundColor: labels.map((_, i) => i === 16 ? '#22c55e' : 'rgba(34,197,94,0.5)'),
+        borderRadius: 4, borderSkipped: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: { ticks: { font: { size: 9 }, maxRotation: 60 }, grid: { display: false } },
+      y: { ticks: { stepSize: 2, font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+    },
+    plugins: {
+      legend: { labels: { font: { size: 10 }, boxWidth: 12 } }
+    }
+  }
+});
+
+// ── EFICIENCIA POR ZONA ────────────────────────────────────────
+const shootCtx = document.getElementById('shootingChart').getContext('2d');
+new Chart(shootCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Pintura (64 int.)', 'T2 Total (93 int.)', 'Media (29 int.)', 'Triple (19 int.)', 'Tiro Libre (48 int.)'],
+    datasets: [{
+      label: '% Conversión',
+      data: [40.6, 34.4, 20.7, 26.3, 47.9],
+      backgroundColor: ['#f97316','rgba(14,165,233,0.7)','#ef4444','rgba(167,139,250,0.7)','#facc15'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    scales: {
+      x: { min:0, max:60, ticks: { callback: v => v+'%', font:{size:9} }, grid: { color:'rgba(255,255,255,0.05)' } },
+      y: { ticks: { font:{size:9} }, grid:{ display:false } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } }
+    }
+  }
+});
+
+// ── VALORACION LINE ────────────────────────────────────────────
+const valCtx = document.getElementById('valChart').getContext('2d');
+const valData = [9,11,12,9,3,0,16,10,1,8,4,7,10,1,3,1,14];
+const valColors = valData.map(v => v >= 10 ? '#22c55e' : v >= 5 ? '#0ea5e9' : v <= 0 ? '#ef4444' : '#94a3b8');
+
+new Chart(valCtx, {
+  type: 'line',
+  data: {
+    labels: ['PJ1','PJ2','PJ3','PJ4','PJ5','PJ6','PJ7','PJ8','PJ9','PJ10','PJ11','PJ12','PJ13','PJ14','PJ15','PJ16','PJ17'],
+    datasets: [{
+      label: 'Valoración',
+      data: valData,
+      fill: true,
+      backgroundColor: 'rgba(14,165,233,0.07)',
+      borderColor: '#0ea5e9',
+      pointBackgroundColor: valColors,
+      pointRadius: 5,
+      tension: 0.35,
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: { ticks:{font:{size:9}}, grid:{display:false} },
+      y: { ticks:{font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'} }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` Val: ${ctx.raw} | ${['Boca A','SV Sp.','Wilde','Olimpo','Korn','Boca A','SV Sp.','Olimpo','Korn','UF','Obras','Lanús','Vélez','Galicia','Korn Fed','SITAS','UF Fed'][ctx.dataIndex]}`
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
