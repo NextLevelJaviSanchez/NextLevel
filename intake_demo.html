@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CABB Scout Analytics — Demo Lara Suárez</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #040c1a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+:root {
+  --celeste:  #0ea5e9;
+  --naranja:  #f97316;
+  --verde:    #22c55e;
+  --violeta:  #a78bfa;
+  --amarillo: #facc15;
+  --muted:    #475569;
+  --border:   rgba(255,255,255,0.08);
+  --bg-card:  #0c1828;
+  --bg-input: #0f1f35;
+  --radius:   14px;
+  --radius-sm:8px;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(160deg, #020810 0%, #081830 55%, #0d2a50 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '🏀';
+  position: absolute; right: -20px; top: -20px;
+  font-size: 14rem; opacity: 0.04; user-select: none;
+  transform: rotate(15deg);
+}
+.logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.logo-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #0ea5e9, #a78bfa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.logo-txt { font-size: 0.72rem; font-weight: 800; letter-spacing: 2px; color: #7dd3fc; text-transform: uppercase; }
+.hero h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 12px; }
+.hero h1 span { color: #7dd3fc; }
+.hero p { font-size: 0.88rem; color: #64748b; max-width: 480px; margin: 0 auto 24px; line-height: 1.75; }
+
+/* STEPS */
+.steps { display: flex; gap: 6px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+.step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.7rem; color: #64748b;
+}
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #1e3a5a;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 800; color: #7dd3fc;
+}
+.step-sep { color: #1e3a5a; }
+
+/* CONTAINER */
+.container { max-width: 620px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* FORM SECTIONS */
+.form-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.fs-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.fs-icon { font-size: 1.4rem; }
+.fs-title { font-size: 0.9rem; font-weight: 800; color: white; }
+.fs-subtitle { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+/* FIELD */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block; font-size: 0.72rem; font-weight: 700;
+  color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px;
+  margin-bottom: 7px;
+}
+.field label .req { color: #ef4444; margin-left: 2px; }
+.field label .opt { color: var(--muted); font-weight: 400; font-size: 0.65rem; text-transform: none; letter-spacing: 0; }
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-sm);
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--celeste);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
+}
+input::placeholder, textarea::placeholder { color: #2d4a6a; }
+select option { background: #0f1f35; color: #e2e8f0; }
+textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+/* FIELDS ROW */
+.fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 400px) { .fields-row { grid-template-columns: 1fr; } }
+
+/* CHIP SELECTOR */
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 8px 16px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  background: var(--bg-input); border: 1.5px solid rgba(255,255,255,0.07);
+  color: #64748b; transition: all 0.15s; user-select: none;
+}
+.chip:hover { border-color: rgba(14,165,233,0.3); color: #94a3b8; }
+.chip.selected { background: rgba(14,165,233,0.15); border-color: var(--celeste); color: #7dd3fc; }
+.chip.selected-naranja { background: rgba(249,115,22,0.15); border-color: #f97316; color: #fdba74; }
+.chip.selected-verde   { background: rgba(34,197,94,0.15);  border-color: #22c55e; color: #86efac; }
+.chip.selected-violeta { background: rgba(167,139,250,0.15);border-color: #a78bfa; color: #c4b5fd; }
+
+/* CHAR COUNTER */
+.char-count { font-size: 0.65rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+/* INFO BOX */
+.info-box {
+  background: rgba(14,165,233,0.07); border: 1px solid rgba(14,165,233,0.2);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  font-size: 0.75rem; color: #7dd3fc; line-height: 1.65; margin-bottom: 16px;
+}
+.info-box strong { color: #bae6fd; }
+
+/* QUESTION CARDS */
+.q-card {
+  background: var(--bg-input);
+  border: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 16px; margin-bottom: 14px;
+}
+.q-card:last-child { margin-bottom: 0; }
+.q-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(14,165,233,0.2); color: #7dd3fc;
+  font-size: 0.65rem; font-weight: 800; margin-bottom: 8px;
+}
+.q-text { font-size: 0.82rem; font-weight: 700; color: #cbd5e1; margin-bottom: 10px; line-height: 1.4; }
+.q-hint { font-size: 0.7rem; color: var(--muted); margin-bottom: 10px; font-style: italic; }
+
+/* SUBMIT */
+.submit-section { margin-top: 8px; }
+.btn-submit {
+  width: 100%; padding: 16px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  color: white; font-size: 1rem; font-weight: 800;
+  border: none; cursor: pointer; letter-spacing: 0.3px;
+  transition: opacity 0.2s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-submit:hover { opacity: 0.92; }
+.btn-submit:active { transform: scale(0.99); }
+
+.btn-secondary {
+  width: 100%; padding: 13px; border-radius: var(--radius-sm);
+  background: transparent; color: #64748b;
+  font-size: 0.85rem; font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.07); cursor: pointer; margin-top: 10px;
+}
+.btn-secondary:hover { color: #94a3b8; border-color: rgba(255,255,255,0.12); }
+
+/* ERROR */
+.field-error { font-size: 0.7rem; color: #ef4444; margin-top: 5px; display: none; }
+input.error, textarea.error, select.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+
+/* PREVIEW PANEL */
+.preview-panel {
+  background: rgba(14,165,233,0.05);
+  border: 1px solid rgba(14,165,233,0.15);
+  border-radius: var(--radius); padding: 16px;
+  margin-top: 20px; display: none;
+}
+.preview-panel.visible { display: block; }
+.preview-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--celeste); margin-bottom: 12px; }
+.preview-player { font-size: 1.1rem; font-weight: 900; color: white; margin-bottom: 4px; }
+.preview-meta   { font-size: 0.75rem; color: #64748b; margin-bottom: 12px; }
+.preview-links { display: flex; gap: 10px; }
+.preview-link {
+  flex: 1; padding: 11px; border-radius: var(--radius-sm);
+  text-align: center; font-size: 0.78rem; font-weight: 700;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: opacity 0.15s;
+}
+.preview-link:hover { opacity: 0.88; }
+.preview-link-dossier { background: var(--celeste); color: white; }
+.preview-link-plan    { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8; }
+
+/* FOOTER */
+.footer { text-align: center; padding: 24px 20px 40px; font-size: 0.62rem; color: #1e3a5a; letter-spacing: 1px; text-transform: uppercase; }
+
+/* DEMO BADGE */
+.demo-banner {
+  background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.2);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  font-size: 0.72rem; color: #fef08a; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="logo">
+    <div class="logo-dot">🏀</div>
+    <div class="logo-txt">CABB Scout Analytics</div>
+  </div>
+  <h1>Tu <span>Dossier</span> de<br>Rendimiento Individual</h1>
+  <p>Análisis personalizado con datos oficiales CABB/AFMB.
+     Completá el formulario y generamos el dossier y el plan de mejora al instante.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><span>Completás el formulario</span></div>
+    <div class="step-sep">→</div>
+    <div class="step"><div class="step-num">2</div><span>Obtenés el dossier</span></div>
+    <div class="step-sep">→</div>
+    <div class="step"><div class="step-num">3</div><span>Abrís el plan de mejora</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="demo-banner">
+    ⚡ <span><strong>Modo demo:</strong> Este formulario genera el dossier de <strong>Lara Suárez #14</strong> con tus respuestas personalizadas incorporadas. Los datos son de ejemplo.</span>
+  </div>
+
+  <!-- SECCIÓN 1: DATOS DEL JUGADOR -->
+  <div class="form-section">
+    <div class="fs-header">
+      <div class="fs-icon">👤</div>
+      <div>
+        <div class="fs-title">Datos del/la jugador/a</div>
+        <div class="fs-subtitle">Información básica para identificar el dossier</div>
+      </div>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label>Nombre <span class="req">*</span></label>
+        <input type="text" id="inp-nombre" placeholder="Lara" value="Lara">
+        <div class="field-error" id="err-nombre">Ingresá el nombre</div>
+      </div>
+      <div class="field">
+        <label>Apellido <span class="req">*</span></label>
+        <input type="text" id="inp-apellido" placeholder="Sánchez" value="Sánchez">
+        <div class="field-error" id="err-apellido">Ingresá el apellido</div>
+      </div>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label>Dorsal <span class="req">*</span></label>
+        <input type="text" id="inp-dorsal" placeholder="14" value="14" maxlength="3">
+        <div class="field-error" id="err-dorsal">Ingresá el dorsal</div>
+      </div>
+      <div class="field">
+        <label>Posición <span class="opt">(opcional)</span></label>
+        <select id="inp-posicion">
+          <option value="">Seleccionar…</option>
+          <option value="Base" selected>Base</option>
+          <option value="Escolta">Escolta</option>
+          <option value="Alero">Alero</option>
+          <option value="Ala-Pivote">Ala-Pivote</option>
+          <option value="Pivote / Poste">Pivote / Poste</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Club / Equipo <span class="req">*</span></label>
+      <input type="text" id="inp-equipo" placeholder="Club Demo" value="Club Demo">
+      <div class="field-error" id="err-equipo">Ingresá el equipo</div>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label>Categoría <span class="req">*</span></label>
+        <select id="inp-categoria">
+          <option value="">Seleccionar…</option>
+          <option value="U13" selected>U13</option>
+          <option value="U15">U15</option>
+          <option value="U17">U17</option>
+          <option value="U19">U19</option>
+          <option value="Primera División">Primera División</option>
+          <option value="Senior">Senior</option>
+        </select>
+        <div class="field-error" id="err-categoria">Seleccioná la categoría</div>
+      </div>
+      <div class="field">
+        <label>Liga / Torneo <span class="req">*</span></label>
+        <select id="inp-liga">
+          <option value="">Seleccionar…</option>
+          <option value="AFMB" selected>AFMB / Formativas</option>
+          <option value="Federal CABB">Federal CABB</option>
+          <option value="Liga Nacional">Liga Nacional</option>
+          <option value="Liga Femenina">Liga Femenina CABB</option>
+          <option value="FeBAMBA">FeBAMBA</option>
+          <option value="Provincial">Provincial / Municipal</option>
+          <option value="Otra">Otra liga</option>
+        </select>
+        <div class="field-error" id="err-liga">Seleccioná la liga</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Email <span class="opt">(para recibir el link)</span></label>
+      <input type="email" id="inp-email" placeholder="papá@email.com">
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: PREGUNTAS CUALITATIVAS -->
+  <div class="form-section">
+    <div class="fs-header">
+      <div class="fs-icon">🧠</div>
+      <div>
+        <div class="fs-title">Preguntas sobre el juego</div>
+        <div class="fs-subtitle">Estas respuestas se incorporan al plan de mejora personalizado</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>¿Por qué estas preguntas?</strong> Las estadísticas muestran <em>qué</em> pasó, pero no <em>cómo se siente</em> la jugadora.
+      Tus respuestas aparecen en una sección especial del dossier y guían los objetivos del plan de mejora.
+    </div>
+
+    <!-- P1: Tipo de jugador -->
+    <div class="q-card">
+      <div class="q-num">1</div>
+      <div class="q-text">¿Qué tipo de jugador/a te considerás?</div>
+      <div class="q-hint">Ej: más goleadora que armadora, defensora intensa, inteligente tácticamente, atlética, etc.</div>
+      <div class="chip-group" id="chips-tipo" style="margin-bottom: 10px">
+        <div class="chip" data-val="Anotadora" onclick="toggleChip(this,'chips-tipo','selected')">🎯 Anotadora</div>
+        <div class="chip" data-val="Armadora / pasadora" onclick="toggleChip(this,'chips-tipo','selected')">🎲 Armadora</div>
+        <div class="chip" data-val="Defensora" onclick="toggleChip(this,'chips-tipo','selected')">🛡️ Defensora</div>
+        <div class="chip" data-val="Reboteadora" onclick="toggleChip(this,'chips-tipo','selected')">📦 Reboteadora</div>
+        <div class="chip" data-val="Atlética / explosiva" onclick="toggleChip(this,'chips-tipo','selected')">⚡ Atlética</div>
+        <div class="chip" data-val="Táctica / inteligente" onclick="toggleChip(this,'chips-tipo','selected')">🧠 Táctica</div>
+        <div class="chip" data-val="Completa / versátil" onclick="toggleChip(this,'chips-tipo','selected')">⭐ Completa</div>
+      </div>
+      <textarea id="q1-texto" placeholder="Contanos con tus palabras qué tipo de jugadora sos…" maxlength="280"
+        oninput="updateChar('q1-texto','q1-char')"></textarea>
+      <div class="char-count"><span id="q1-char">0</span>/280</div>
+    </div>
+
+    <!-- P2: Debilidades mentales -->
+    <div class="q-card">
+      <div class="q-num">2</div>
+      <div class="q-text">¿Qué debilidades mentales reconocés en tu juego?</div>
+      <div class="q-hint">Ej: me trabo en los tiros libres, me afectan los errores, me cuesta concentrarme en defensa, me pongo nerviosa en partidos importantes…</div>
+      <div class="chip-group" id="chips-mental" style="margin-bottom: 10px">
+        <div class="chip" data-val="Me trabo en los TL" onclick="toggleChip(this,'chips-mental','selected-naranja')">😤 Me trabo en TL</div>
+        <div class="chip" data-val="Los errores me afectan" onclick="toggleChip(this,'chips-mental','selected-naranja')">😞 Los errores me bajan</div>
+        <div class="chip" data-val="Me pongo nerviosa en momentos importantes" onclick="toggleChip(this,'chips-mental','selected-naranja')">😰 Nervios en momentos clave</div>
+        <div class="chip" data-val="Me cuesta concentrarme en defensa" onclick="toggleChip(this,'chips-mental','selected-naranja')">💭 Desconcentración defensa</div>
+        <div class="chip" data-val="Pienso demasiado antes de tirar" onclick="toggleChip(this,'chips-mental','selected-naranja')">🤔 Sobreanálisis</div>
+        <div class="chip" data-val="Me frustra no marcar puntos" onclick="toggleChip(this,'chips-mental','selected-naranja')">😡 Frustración sin puntos</div>
+      </div>
+      <textarea id="q2-texto" placeholder="Describí con tus palabras…" maxlength="280"
+        oninput="updateChar('q2-texto','q2-char')"></textarea>
+      <div class="char-count"><span id="q2-char">0</span>/280</div>
+    </div>
+
+    <!-- P3: Área a enfocar -->
+    <div class="q-card">
+      <div class="q-num">3</div>
+      <div class="q-text">¿Qué área te gustaría enfocar esta temporada?</div>
+      <div class="q-hint">Ej: mejorar el tiro exterior, ser más agresiva en defensa, leer mejor el juego, ganar metros en pintura…</div>
+      <div class="chip-group" id="chips-foco" style="margin-bottom: 10px">
+        <div class="chip" data-val="Tiro exterior / triples" onclick="toggleChip(this,'chips-foco','selected-verde')">🎯 Tiro exterior</div>
+        <div class="chip" data-val="Tiro libre" onclick="toggleChip(this,'chips-foco','selected-verde')">🟡 Tiro libre</div>
+        <div class="chip" data-val="Defensa individual" onclick="toggleChip(this,'chips-foco','selected-verde')">🛡️ Defensa individual</div>
+        <div class="chip" data-val="Finalizaciones en pintura" onclick="toggleChip(this,'chips-foco','selected-verde')">🏀 Pintura</div>
+        <div class="chip" data-val="Lectura del juego / vision" onclick="toggleChip(this,'chips-foco','selected-verde')">👁️ Lectura del juego</div>
+        <div class="chip" data-val="Proteccion del balon / decision" onclick="toggleChip(this,'chips-foco','selected-verde')">🔄 Cuidar el balón</div>
+        <div class="chip" data-val="Rebote" onclick="toggleChip(this,'chips-foco','selected-verde')">📦 Rebote</div>
+        <div class="chip" data-val="Condicion fisica / explosividad" onclick="toggleChip(this,'chips-foco','selected-verde')">⚡ Condición física</div>
+      </div>
+      <textarea id="q3-texto" placeholder="Contanos qué querés trabajar…" maxlength="280"
+        oninput="updateChar('q3-texto','q3-char')"></textarea>
+      <div class="char-count"><span id="q3-char">0</span>/280</div>
+    </div>
+
+  </div>
+
+  <!-- SECCIÓN 3: OBJETIVO EXTRA -->
+  <div class="form-section">
+    <div class="fs-header">
+      <div class="fs-icon">🎯</div>
+      <div>
+        <div class="fs-title">Meta de la temporada</div>
+        <div class="fs-subtitle">Objetivo concreto que la jugadora quiere lograr</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Cuál es tu gran objetivo para la próxima temporada? <span class="opt">(opcional)</span></label>
+      <textarea id="inp-meta" placeholder="Ej: Llegar a la selección U15, mejorar mi porcentaje de TL al 60%, jugar más minutos como titular…" maxlength="200"
+        oninput="updateChar('inp-meta','meta-char')"></textarea>
+      <div class="char-count"><span id="meta-char">0</span>/200</div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-section">
+    <button class="btn-submit" onclick="generarDossier()">
+      <span>📊</span> Generar mi Dossier y Plan de Mejora
+    </button>
+    <button class="btn-secondary" onclick="resetForm()">Limpiar formulario</button>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel" id="preview-panel">
+    <div class="preview-title">✅ Dossier generado</div>
+    <div class="preview-player" id="prev-nombre">—</div>
+    <div class="preview-meta" id="prev-meta">—</div>
+    <div class="preview-links">
+      <a class="preview-link preview-link-dossier" id="prev-dossier-link" href="#" target="_blank">📊 Abrir Dossier</a>
+      <a class="preview-link preview-link-plan" id="prev-plan-link" href="#" target="_blank">📱 Abrir Plan de Mejora</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  CABB Scout Analytics · Datos oficiales AFMB / GesDeportiva 2026 · Uso privado
+</div>
+
+<script>
+// ── CHIP TOGGLE ─────────────────────────────────────────────────
+function toggleChip(el, groupId, selectedClass) {
+  // permite múltiple selección
+  el.classList.toggle(selectedClass);
+  // limpiar otras clases selected- que no correspondan
+  ['selected','selected-naranja','selected-verde','selected-violeta'].forEach(c => {
+    if (c !== selectedClass) el.classList.remove(c);
+  });
+}
+
+function getSelectedChips(groupId) {
+  return [...document.querySelectorAll(`#${groupId} .chip`)]
+    .filter(c => c.className.includes('selected'))
+    .map(c => c.dataset.val);
+}
+
+// ── CHAR COUNTER ────────────────────────────────────────────────
+function updateChar(inputId, counterId) {
+  const v = document.getElementById(inputId).value.length;
+  document.getElementById(counterId).textContent = v;
+}
+
+// ── VALIDATION ──────────────────────────────────────────────────
+function validateField(inputId, errId, test) {
+  const el  = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if (!el) return true;
+  const ok = test(el.value.trim());
+  el.classList.toggle('error', !ok);
+  if (err) err.style.display = ok ? 'none' : 'block';
+  return ok;
+}
+
+// ── GENERAR DOSSIER ─────────────────────────────────────────────
+function generarDossier() {
+  const okNombre    = validateField('inp-nombre',   'err-nombre',   v => v.length >= 2);
+  const okApellido  = validateField('inp-apellido', 'err-apellido', v => v.length >= 2);
+  const okDorsal    = validateField('inp-dorsal',   'err-dorsal',   v => v.length >= 1);
+  const okEquipo    = validateField('inp-equipo',   'err-equipo',   v => v.length >= 2);
+  const okCategoria = validateField('inp-categoria','err-categoria',v => v !== '');
+  const okLiga      = validateField('inp-liga',     'err-liga',     v => v !== '');
+
+  if (![okNombre,okApellido,okDorsal,okEquipo,okCategoria,okLiga].every(Boolean)) {
+    document.querySelector('.field-error[style*="block"]')?.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  // Recolectar datos
+  const nombre    = document.getElementById('inp-nombre').value.trim();
+  const apellido  = document.getElementById('inp-apellido').value.trim();
+  const dorsal    = document.getElementById('inp-dorsal').value.trim();
+  const posicion  = document.getElementById('inp-posicion').value;
+  const equipo    = document.getElementById('inp-equipo').value.trim();
+  const categoria = document.getElementById('inp-categoria').value;
+  const liga      = document.getElementById('inp-liga').value;
+
+  const chipsTipo   = getSelectedChips('chips-tipo');
+  const chipsMental = getSelectedChips('chips-mental');
+  const chipsFoco   = getSelectedChips('chips-foco');
+  const q1 = document.getElementById('q1-texto').value.trim();
+  const q2 = document.getElementById('q2-texto').value.trim();
+  const q3 = document.getElementById('q3-texto').value.trim();
+  const meta= document.getElementById('inp-meta').value.trim();
+
+  // Construir params
+  const params = new URLSearchParams({
+    nombre, apellido, dorsal, posicion, equipo, categoria, liga,
+    tipo:   chipsTipo.join('|'),
+    mental: chipsMental.join('|'),
+    foco:   chipsFoco.join('|'),
+    q1, q2, q3, meta
+  });
+  const paramStr = params.toString();
+
+  const dossierURL = `dossier_lara_suarez_14_demo_2026.html?${paramStr}`;
+  const planURL    = `plan_mejora_lara_suarez_14_demo.html?${paramStr}`;
+
+  // Mostrar panel
+  const panel = document.getElementById('preview-panel');
+  document.getElementById('prev-nombre').textContent = `${nombre} ${apellido} · #${dorsal}`;
+  document.getElementById('prev-meta').textContent   = `${equipo} · ${categoria} · ${liga}`;
+  document.getElementById('prev-dossier-link').href  = dossierURL;
+  document.getElementById('prev-plan-link').href     = planURL;
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function resetForm() {
+  document.getElementById('preview-panel').classList.remove('visible');
+  document.querySelectorAll('.chip').forEach(c => {
+    c.className = 'chip';
+  });
+  document.querySelectorAll('textarea').forEach(t => t.value = '');
+  ['q1-char','q2-char','q3-char','meta-char'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '0';
+  });
+}
+</script>
+</body>
+</html>
