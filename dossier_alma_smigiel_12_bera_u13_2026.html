@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier — ALMA SMIGIEL #12 | BERAZATEGUI 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --celeste: #2e7eed; --naranja: #f97316; --verde: #22c55e;
+    --rojo: #ef4444; --texto: #1e293b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a3a5c 60%, #2e7eed 100%);
+    color: white; padding: 24px 20px; display: flex; align-items: center;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #2e7eed, #f97316);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 900; color: white;
+    border: 3px solid rgba(255,255,255,0.3);
+  }
+  .header-info { flex: 1; min-width: 0; }
+  .header-info h1 { font-size: clamp(1.2rem, 5vw, 2rem); font-weight: 800; }
+  .header-info h2 { font-size: 0.82rem; opacity: 0.7; margin-top: 4px; line-height: 1.5; }
+  .header-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+    padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+  .header-stats { display: flex; gap: 20px; flex-wrap: wrap; width: 100%; margin-top: 4px; }
+  .hs { text-align: center; flex: 1; min-width: 55px; }
+  .hs .val { font-size: clamp(1.4rem,5vw,2.2rem); font-weight: 900; color: #2e7eed; line-height: 1; }
+  .hs .lbl { font-size: 0.62rem; opacity: 0.6; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px 14px 40px; }
+  .sec { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: #2e7eed; margin: 24px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid rgba(46,126,237,0.3); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: #1e293b; border-radius: 14px; padding: 18px;
+    border: 1px solid rgba(255,255,255,0.07); }
+  .ctitle { font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #94a3b8; margin-bottom: 14px; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+  .kpi { background: #1e293b; border-radius: 12px; padding: 14px 10px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.07); position: relative; overflow: hidden; }
+  .kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background: var(--accent, #2e7eed); }
+  .kpi .v { font-size: 1.6rem; font-weight: 800; color: white; line-height: 1; }
+  .kpi .l { font-size: 0.6rem; color: #64748b; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .kpi .s { font-size: 0.62rem; color: #94a3b8; margin-top: 2px; }
+
+  .game-log { overflow-x: auto; }
+  .game-log table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .game-log th { background: #0f172a; color: #64748b; font-size: 0.62rem; letter-spacing: 1px;
+    text-transform: uppercase; padding: 8px 8px; text-align: right; }
+  .game-log th:nth-child(-n+4) { text-align: left; }
+  .game-log td { padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #e2e8f0; text-align: right; }
+  .game-log td:nth-child(-n+4) { text-align: left; }
+  .game-log tr:hover { background: rgba(46,126,237,0.06); }
+  .score-w { color: #4ade80; font-weight: 600; }
+  .score-l { color: #f87171; }
+  .val-pos { color: #4ade80; }
+  .val-neg { color: #f87171; }
+
+  .fase-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .fase-table th { background: #0f172a; color: #64748b; font-size: 0.62rem; letter-spacing: 1px;
+    text-transform: uppercase; padding: 8px 12px; text-align: center; }
+  .fase-table th:first-child { text-align: left; }
+  .fase-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: center; color: #94a3b8; }
+  .fase-table td:first-child { text-align: left; }
+
+  .footer { text-align: center; padding: 20px; color: #334155; font-size: 0.65rem; }
+
+  @media (max-width: 600px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2,1fr); }
+    .game-log th:nth-child(4), .game-log td:nth-child(4) { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="avatar" id="player-avatar">12</div>
+  <div class="header-info">
+    <h1 id="player-name">ALMA SMIGIEL</h1>
+    <h2>BERAZATEGUI · INFANTILES FEMENINO · AFMB · Temporada 2026</h2>
+    <div class="header-badges">
+      <span class="badge">17 PJ</span>
+      <span class="badge">3 titular</span>
+      <span class="badge">AFMB</span>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hs"><div class="val">3.0</div><div class="lbl">PPG</div></div>
+    <div class="hs"><div class="val">4.0</div><div class="lbl">RPG</div></div>
+    <div class="hs"><div class="val">0.5</div><div class="lbl">APG</div></div>
+    <div class="hs"><div class="val">3.3</div><div class="lbl">VAL/PJ</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPIs -->
+  <div class="sec">Estadísticas Clave</div>
+  
+  <div class="kpi-grid">
+    <div class="kpi" style="--accent:#2e7eed"><div class="v">17</div><div class="l">PJ</div><div class="s">3 tit · 14 sup</div></div>
+    <div class="kpi" style="--accent:#f97316"><div class="v">51</div><div class="l">Puntos</div><div class="s">3.0 PPG</div></div>
+    <div class="kpi" style="--accent:#22c55e"><div class="v">68</div><div class="l">Rebotes</div><div class="s">4.0 RPG</div></div>
+    <div class="kpi" style="--accent:#facc15"><div class="v">31.4%</div><div class="l">TL%</div><div class="s">11/35 int.</div></div>
+    <div class="kpi" style="--accent:#a78bfa"><div class="v">26.6%</div><div class="l">eFG%</div><div class="s">Eficiencia campo</div></div>
+    <div class="kpi" style="--accent:#ec4899"><div class="v">7</div><div class="l">Max pts</div><div class="s">0 doble-dobles</div></div>
+  </div>
+
+  <!-- CHARTS FILA 1 -->
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="ctitle">Perfil Percentil — vs Plantel</div>
+      <div style="position:relative;height:260px"><canvas id="radarChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Tendencia — Puntos &amp; Rebotes</div>
+      <div style="position:relative;height:260px"><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TIRO + RANKING -->
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="ctitle">Eficiencia de Tiro por Zona</div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:110px;color:#94a3b8">T2 Total</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:48%;background:#2e7eed;border-radius:4px"></div></div>
+          <span style="width:70px;text-align:right;color:#e2e8f0">28.6% (32/112)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:110px;color:#94a3b8">Triple</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:14%;background:#a78bfa;border-radius:4px"></div></div>
+          <span style="width:70px;text-align:right;color:#e2e8f0">7.1% (1/14)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:110px;color:#94a3b8">Tiro Libre</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:39%;background:#facc15;border-radius:4px"></div></div>
+          <span style="width:70px;text-align:right;color:#e2e8f0">31.4% (11/35)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px">
+          <span style="width:110px;color:white;font-weight:700">eFG%</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:44%;background:linear-gradient(90deg,#2e7eed,#a78bfa);border-radius:4px"></div></div>
+          <span style="width:70px;text-align:right;color:white;font-weight:700">26.6%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem">
+          <span style="width:110px;color:white;font-weight:700">TS%</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:39%;background:#22c55e;border-radius:4px"></div></div>
+          <span style="width:70px;text-align:right;color:white;font-weight:700">27.6%</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Ranking Plantel — PPG</div>
+      
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">DOMINGUEZ #5</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:100%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">8.7</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">SANCHEZ #14</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:99%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">8.6</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">GOMEZ #7</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:82%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">7.1</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">BAILON #10</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:71%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">6.2</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">GRILLO #8</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:59%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">5.1</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">PEDERNERA #1</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:56%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">4.9</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">BENITEZ #4</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:52%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">4.5</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.8rem">
+          <span style="width:140px;color:#94a3b8;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">GONZALEZ DIAZ #9</span>
+          <div style="flex:1;background:#0f172a;border-radius:4px;height:10px;overflow:hidden"><div style="height:100%;width:44%;background:#334155;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:#e2e8f0;font-weight:600">3.8</span>
+        </div>
+    </div>
+  </div>
+
+  <!-- POR FASE -->
+  <div class="sec">Rendimiento por Fase</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+    <table class="fase-table">
+      <thead><tr>
+        <th>Fase</th><th>PJ</th><th>PPG</th><th>RPG</th><th>APG</th><th>Val/PJ</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>SEGUNDA ETAPA</td>
+          <td>5</td>
+          <td style="color:#7dd3fc;font-weight:700">1.8</td>
+          <td style="color:#86efac">4.0</td>
+          <td>0.4</td>
+          <td style="color:#c4b5fd">3.0</td>
+        </tr>
+        <tr>
+          <td>PRIMERA ETAPA</td>
+          <td>9</td>
+          <td style="color:#7dd3fc;font-weight:700">4.0</td>
+          <td style="color:#86efac">4.0</td>
+          <td>0.7</td>
+          <td style="color:#c4b5fd">3.4</td>
+        </tr>
+        <tr>
+          <td>PRIMERA FASE</td>
+          <td>3</td>
+          <td style="color:#7dd3fc;font-weight:700">2.0</td>
+          <td style="color:#86efac">4.0</td>
+          <td>0.0</td>
+          <td style="color:#c4b5fd">3.3</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <!-- GAME LOG -->
+  <div class="sec">Game Log — 17 Partidos</div>
+  <div class="card game-log" style="padding:0;overflow:hidden;margin-bottom:16px">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Rival</th><th>Fase</th><th>Fecha</th><th>T/S</th>
+        <th>Score</th><th>PTS</th><th>REB</th><th>AST</th><th>VAL</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">1</td>
+          <td>CLUB ATLETICO LANUS</td>
+          <td><span style="font-size:0.65rem;color:#64748b">SEGUNDA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">01/09/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">40-55</td>
+          <td style="font-weight:700;color:#7dd3fc">2</td>
+          <td style="color:#86efac">6</td>
+          <td>0</td>
+          <td class="val-pos">2</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">2</td>
+          <td>CLUB SOCIAL Y DEPORTIVO UNIO</td>
+          <td><span style="font-size:0.65rem;color:#64748b">SEGUNDA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">02/08/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">49-60</td>
+          <td style="font-weight:700;color:#7dd3fc">0</td>
+          <td style="color:#86efac">3</td>
+          <td>1</td>
+          <td class="">0</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">3</td>
+          <td>OBRAS BASKET</td>
+          <td><span style="font-size:0.65rem;color:#64748b">SEGUNDA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">09/08/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">●</td>
+          <td class="score-l">41-66</td>
+          <td style="font-weight:700;color:#7dd3fc">2</td>
+          <td style="color:#86efac">8</td>
+          <td>0</td>
+          <td class="val-pos">7</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">4</td>
+          <td>WILDE SPORTING CLUB</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">12/04/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">63-39</td>
+          <td style="font-weight:700;color:#7dd3fc">2</td>
+          <td style="color:#86efac">3</td>
+          <td>1</td>
+          <td class="val-pos">1</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">5</td>
+          <td>CENTRO GALICIA DE BUENOS AIR</td>
+          <td><span style="font-size:0.65rem;color:#64748b">SEGUNDA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">13/09/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">71-23</td>
+          <td style="font-weight:700;color:#7dd3fc">5</td>
+          <td style="color:#86efac">2</td>
+          <td>1</td>
+          <td class="val-pos">9</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">6</td>
+          <td>ALEJANDRO KORN  </td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">14/06/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">37-70</td>
+          <td style="font-weight:700;color:#7dd3fc">0</td>
+          <td style="color:#86efac">5</td>
+          <td>1</td>
+          <td class="val-neg">-1</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">7</td>
+          <td>ALEJANDRO KORN</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA FASE</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">15/09/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">46-59</td>
+          <td style="font-weight:700;color:#7dd3fc">1</td>
+          <td style="color:#86efac">4</td>
+          <td>0</td>
+          <td class="val-pos">4</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">8</td>
+          <td>SITAS</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA FASE</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">16/09/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">46-64</td>
+          <td style="font-weight:700;color:#7dd3fc">3</td>
+          <td style="color:#86efac">1</td>
+          <td>0</td>
+          <td class="">0</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">9</td>
+          <td>BOCA JUNIORS FEMENINO A</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">17/03/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">91-34</td>
+          <td style="font-weight:700;color:#7dd3fc">7</td>
+          <td style="color:#86efac">5</td>
+          <td>1</td>
+          <td class="val-pos">10</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">10</td>
+          <td>BOCA JUNIORS FEMENINO A</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">17/05/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">47-46</td>
+          <td style="font-weight:700;color:#7dd3fc">6</td>
+          <td style="color:#86efac">2</td>
+          <td>0</td>
+          <td class="val-pos">2</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">11</td>
+          <td>UNION FLORIDA</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA FASE</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">17/09/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">49-46</td>
+          <td style="font-weight:700;color:#7dd3fc">2</td>
+          <td style="color:#86efac">7</td>
+          <td>0</td>
+          <td class="val-pos">6</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">12</td>
+          <td>CLUB SOCIAL Y DEPORTIVO OLIM</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">19/04/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">73-30</td>
+          <td style="font-weight:700;color:#7dd3fc">2</td>
+          <td style="color:#86efac">2</td>
+          <td>1</td>
+          <td class="val-pos">1</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">13</td>
+          <td>SAN VICENTE SPORTING ASOCIAC</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">24/05/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">54-47</td>
+          <td style="font-weight:700;color:#7dd3fc">3</td>
+          <td style="color:#86efac">5</td>
+          <td>0</td>
+          <td class="val-pos">2</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">14</td>
+          <td>ALEJANDRO KORN  </td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">26/04/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">40-61</td>
+          <td style="font-weight:700;color:#7dd3fc">6</td>
+          <td style="color:#86efac">4</td>
+          <td>0</td>
+          <td class="">0</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">15</td>
+          <td>SAN VICENTE SPORTING ASOCIAC</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">29/03/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">○</td>
+          <td class="score-l">53-25</td>
+          <td style="font-weight:700;color:#7dd3fc">3</td>
+          <td style="color:#86efac">1</td>
+          <td>1</td>
+          <td class="val-pos">3</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">16</td>
+          <td>CLUB ATLETICO VELEZ SARSFIEL</td>
+          <td><span style="font-size:0.65rem;color:#64748b">SEGUNDA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">30/08/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">●</td>
+          <td class="score-l">54-53</td>
+          <td style="font-weight:700;color:#7dd3fc">0</td>
+          <td style="color:#86efac">1</td>
+          <td>0</td>
+          <td class="val-neg">-3</td>
+        </tr>
+        <tr>
+          <td style="color:#475569;font-size:0.7rem">17</td>
+          <td>WILDE SPORTING CLUB</td>
+          <td><span style="font-size:0.65rem;color:#64748b">PRIMERA ETAP</span></td>
+          <td style="color:#94a3b8;font-size:0.7rem">31/05/2026</td>
+          <td style="font-size:0.7rem;color:#94a3b8">●</td>
+          <td class="score-l">58-52</td>
+          <td style="font-weight:700;color:#7dd3fc">7</td>
+          <td style="color:#86efac">9</td>
+          <td>1</td>
+          <td class="val-pos">13</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <!-- SCOUT / OBJETIVOS -->
+  <div class="sec">Áreas de Mejora Identificadas</div>
+  <div class="card" style="margin-bottom:16px">
+    
+        <div style="background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:3px solid #facc15">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:0.82rem;font-weight:700;color:white">🟡 Tiro Libre al 60%</span>
+            <span style="font-size:0.72rem;color:#64748b">31.4% → 60%</span>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b;line-height:1.5">Actual 31.4% (11/35 TL) -> Meta 60%. El TL es la accion sin defensa: la mas controlable.</div>
+        </div>
+        <div style="background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:3px solid #38bdf8">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:0.82rem;font-weight:700;color:white">📦 Rebote: 11 en un partido</span>
+            <span style="font-size:0.72rem;color:#64748b">9 (record) → 11</span>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b;line-height:1.5">Con 4.0 RPG (35 of + 62 def) hay margen para mas. Meta: superar el record personal.</div>
+        </div>
+        <div style="background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:3px solid #22c55e">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:0.82rem;font-weight:700;color:white">🔄 Ratio Rec/Perd >= 0.90</span>
+            <span style="font-size:0.72rem;color:#64748b">0.65 → 0.90</span>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b;line-height:1.5">Actual 0.65 (22 rec / 34 perd). Reducir 1 perdida por partido = una posesion extra.</div>
+        </div>
+        <div style="background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:3px solid #f97316">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:0.82rem;font-weight:700;color:white">🟠 Finalizacion en Pintura al 38%</span>
+            <span style="font-size:0.72rem;color:#64748b">30.0% → 38%</span>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b;line-height:1.5">Actual 30.0% en zona restringida. Alto volumen de intentos, mejorar decision y contacto.</div>
+        </div>
+  </div>
+
+  <!-- IMPACTO COLECTIVO -->
+  <div class="sec">Impacto Colectivo</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+    <div class="kpi" style="--accent:#22c55e"><div class="v">22</div><div class="l">Recuperos</div><div class="s">1.3/PJ</div></div>
+    <div class="kpi" style="--accent:#ef4444"><div class="v">34</div><div class="l">Pérdidas</div><div class="s">Ratio: 0.65</div></div>
+    <div class="kpi" style="--accent:#a78bfa"><div class="v">1</div><div class="l">Tapones</div><div class="s">28 faltas rec.</div></div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- VOZ DEL JUGADOR (intake params) -->
+<div class="container">
+  <div id="voz-section" style="display:none;background:linear-gradient(135deg,#0c1e3a,#0f2548);
+    border:1px solid rgba(46,126,237,0.25);border-radius:16px;padding:24px;margin-bottom:24px">
+    <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      color:#60a5fa;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(96,165,250,0.2)">
+      💬 Voz de la Jugadora
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+      <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:6px">Tipo de jugadora</div>
+        <div id="voz-chips-tipo" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+        <div id="voz-q1" style="font-size:0.75rem;color:#94a3b8;font-style:italic"></div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:6px">Debilidades mentales</div>
+        <div id="voz-chips-mental" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+        <div id="voz-q2" style="font-size:0.75rem;color:#94a3b8;font-style:italic"></div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:6px">Área a enfocar</div>
+        <div id="voz-chips-foco" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+        <div id="voz-q3" style="font-size:0.75rem;color:#94a3b8;font-style:italic"></div>
+      </div>
+    </div>
+    <div id="voz-meta" style="display:none;margin-top:14px;padding:10px 14px;
+      background:rgba(250,204,21,0.07);border-radius:8px;border-left:2px solid #facc15;
+      font-size:0.78rem;color:#fef08a;line-height:1.5"></div>
+  </div>
+</div>
+
+<div class="footer">
+  Generado con CABB Scout Analytics · API GesDeportiva/AFMB · BERAZATEGUI 2026
+</div>
+
+<script>
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+// RADAR
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ["Puntos", "Rebotes", "Valoración", "Asistencias", "Disponib.", "TL%"],
+    datasets: [{
+      label: 'ALMA SMIGIEL',
+      data: [36,50,50,64,100,36],
+      fill: true,
+      backgroundColor: 'rgba(46,126,237,0.18)',
+      borderColor: '#2e7eed',
+      pointBackgroundColor: '#2e7eed',
+      pointRadius: 4, borderWidth: 2.5,
+    }, {
+      label: 'Media equipo (P50)',
+      data: [50,50,50,50,50,50],
+      fill: true,
+      backgroundColor: 'rgba(255,255,255,0.03)',
+      borderColor: 'rgba(255,255,255,0.15)',
+      pointRadius: 2, borderWidth: 1,
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    scales: { r: { min:0, max:100, ticks:{display:false},
+      grid:{color:'rgba(255,255,255,0.07)'},
+      angleLines:{color:'rgba(255,255,255,0.08)'},
+      pointLabels:{font:{size:10},color:'#94a3b8'} } },
+    plugins: { legend:{labels:{font:{size:10},boxWidth:12}} }
+  }
+});
+
+// TENDENCIA
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17"],
+    datasets: [
+      { label:'Puntos', data:[2,0,2,2,5,0,1,3,7,6,2,2,3,6,3,0,7],
+        borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)',
+        borderWidth:2.5, tension:0.35, fill:true,
+        pointBackgroundColor:["#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#fcd34d", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#f97316", "#fcd34d"],
+        pointRadius:[3, 3, 3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 3, 3, 6] },
+      { label:'Rebotes', data:[6, 3, 8, 3, 2, 5, 4, 1, 5, 2, 7, 2, 5, 4, 1, 1, 9],
+        borderColor:'#2e7eed', borderWidth:1.5, tension:0.35,
+        pointRadius:3, borderDash:[4,3] }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    scales: {
+      x:{ ticks:{color:'#64748b',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'} },
+      y:{ min:0, ticks:{color:'#64748b',font:{size:9},stepSize:4}, grid:{color:'rgba(255,255,255,0.05)'} }
+    },
+    plugins:{ legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:14,usePointStyle:true}} }
+  }
+});
+
+// INTAKE PARAMS
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const nombre = p.get('nombre'), apellido = p.get('apellido'),
+        dorsal = p.get('dorsal'), equipo = p.get('equipo'),
+        tipo = p.get('tipo')||'', mental = p.get('mental')||'',
+        foco = p.get('foco')||'',
+        q1 = p.get('q1')||'', q2 = p.get('q2')||'', q3 = p.get('q3')||'',
+        meta = p.get('meta')||'';
+  if (nombre && apellido) document.getElementById('player-name').textContent = nombre+' '+apellido;
+  if (dorsal)  document.getElementById('player-avatar').textContent = '#'+dorsal;
+  const hasCual = tipo||mental||foco||q1||q2||q3||meta;
+  if (!hasCual) return;
+  document.getElementById('voz-section').style.display = 'block';
+  function chips(cId, raw, cls) {
+    const c = document.getElementById(cId);
+    raw.split('|').filter(Boolean).forEach(v => {
+      const s = document.createElement('span');
+      s.style.cssText = `padding:2px 9px;border-radius:20px;font-size:0.68rem;font-weight:600;${cls}`;
+      s.textContent = v; c.appendChild(s);
+    });
+  }
+  chips('voz-chips-tipo',   tipo,   'background:rgba(46,126,237,0.2);border:1px solid rgba(46,126,237,0.35);color:#93c5fd');
+  chips('voz-chips-mental', mental, 'background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:#fdba74');
+  chips('voz-chips-foco',   foco,   'background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#86efac');
+  if (q1) document.getElementById('voz-q1').textContent = '\u201c'+q1+'\u201d';
+  if (q2) document.getElementById('voz-q2').textContent = '\u201c'+q2+'\u201d';
+  if (q3) document.getElementById('voz-q3').textContent = '\u201c'+q3+'\u201d';
+  if (meta) {
+    const el = document.getElementById('voz-meta');
+    el.style.display = 'block';
+    el.innerHTML = '<strong style="color:#facc15">Meta:</strong> '+meta;
+  }
+})();
+</script>
+</body>
+</html>

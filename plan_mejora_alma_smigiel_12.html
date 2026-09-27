@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Plan de Mejora · ALMA SMIGIEL #12</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0a0f1e; color: #e2e8f0;
+  min-height: 100vh; padding-bottom: 90px;
+}
+:root {
+  --bg-card:#131b2e; --bg-input:#1e2a40;
+  --celeste:#3b82f6; --verde:#22c55e; --naranja:#f97316;
+  --amarillo:#facc15; --violeta:#a78bfa; --rojo:#ef4444;
+  --muted:#64748b; --border:rgba(255,255,255,0.07);
+  --radius:14px; --radius-sm:8px;
+}
+
+/* HERO */
+.hero { background:linear-gradient(160deg,#0f2040 0%,#1a3a6e 60%,#2563eb 100%);
+  padding:24px 20px; position:relative; overflow:hidden; }
+.hero::after { content:''; position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  pointer-events:none; }
+.hero-inner { position:relative; z-index:1; }
+.hero-top { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.avatar { width:58px; height:58px; border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#f97316);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; font-weight:900; color:white;
+  border:3px solid rgba(255,255,255,0.25); flex-shrink:0; }
+.hero-title { font-size:1.3rem; font-weight:800; line-height:1.2; }
+.hero-sub   { font-size:0.75rem; opacity:.65; margin-top:3px; }
+.hero-season { font-size:0.7rem; background:rgba(255,255,255,0.12);
+  padding:3px 10px; border-radius:20px; display:inline-block; margin-top:6px; }
+.hero-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.hs { background:rgba(0,0,0,0.25); border-radius:var(--radius-sm); padding:9px 6px;
+  text-align:center; border:1px solid rgba(255,255,255,0.08); }
+.hs .v { font-size:1.3rem; font-weight:800; color:#60a5fa; line-height:1; }
+.hs .l { font-size:0.58rem; color:rgba(255,255,255,0.5); margin-top:3px;
+  letter-spacing:.8px; text-transform:uppercase; }
+
+/* TABS */
+.tab-bar { position:sticky; top:0; z-index:100; background:#0a0f1e;
+  border-bottom:1px solid var(--border); display:flex; overflow-x:auto;
+  scrollbar-width:none; padding:0 4px; }
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab-btn { flex-shrink:0; padding:13px 16px; font-size:0.78rem; font-weight:600;
+  color:var(--muted); background:none; border:none; cursor:pointer;
+  position:relative; transition:color .2s; white-space:nowrap; }
+.tab-btn.active { color:var(--celeste); }
+.tab-btn.active::after { content:''; position:absolute; bottom:0; left:10px; right:10px;
+  height:2px; background:var(--celeste); border-radius:2px; }
+
+/* SECTIONS */
+.section { display:none; padding:16px; }
+.section.active { display:block; }
+
+/* CARDS */
+.card { background:var(--bg-card); border-radius:var(--radius);
+  border:1px solid var(--border); margin-bottom:14px; overflow:hidden; }
+.card-header { padding:14px 16px 10px; display:flex; align-items:center; gap:10px; }
+.card-icon { font-size:1.2rem; }
+.card-ht { font-size:0.7rem; font-weight:700; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--muted); }
+.card-body { padding:0 16px 16px; }
+
+/* OBJETIVOS */
+.obj-card { background:var(--bg-card); border-radius:var(--radius);
+  border:1px solid var(--border); margin-bottom:16px; overflow:hidden; }
+.obj-header { padding:14px 16px; display:flex; align-items:flex-start;
+  gap:12px; cursor:pointer; }
+.obj-number { width:32px; height:32px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center;
+  font-size:0.85rem; font-weight:800; flex-shrink:0; border:2px solid currentColor; }
+.obj-meta { flex:1; min-width:0; }
+.obj-title { font-size:0.95rem; font-weight:700; line-height:1.3; }
+.obj-subtitle { font-size:0.72rem; color:var(--muted); margin-top:3px; }
+.obj-chevron { color:var(--muted); font-size:1rem; transition:transform .2s; flex-shrink:0; }
+.obj-card.open .obj-chevron { transform:rotate(180deg); }
+.obj-body { display:none; padding:0 16px 16px; }
+.obj-card.open .obj-body { display:block; }
+
+.obj-progress-wrap { margin-bottom:14px; }
+.obj-progress-labels { display:flex; justify-content:space-between;
+  font-size:.7rem; margin-bottom:6px; }
+.val-actual { font-size:1.1rem; font-weight:800; }
+.progress-track { height:10px; background:#1e2a40; border-radius:6px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:6px; transition:width .8s cubic-bezier(.4,0,.2,1); }
+
+/* CHECKLIST */
+.check-item { display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.check-item:last-child { border-bottom:none; }
+.check-box { width:22px; height:22px; border-radius:6px; border:2px solid var(--muted);
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; transition:all .15s; }
+.check-box.done { background:var(--verde); border-color:var(--verde); color:white; }
+.ct { font-size:.82rem; line-height:1.45; padding-top:1px; }
+.ct.done { text-decoration:line-through; color:var(--muted); }
+
+/* REGISTRO */
+.num-input { width:100%; background:var(--bg-input);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:white; padding:10px; font-size:1rem; text-align:center;
+  -moz-appearance:textfield; }
+.num-input::-webkit-inner-spin-button, .num-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+.num-input:focus { outline:none; border-color:var(--celeste); }
+.type-btn { padding:8px 14px; border-radius:20px; font-size:.75rem; font-weight:600;
+  background:var(--bg-input); border:1px solid var(--border); color:var(--muted); cursor:pointer; }
+.type-btn.active-type { background:var(--celeste); color:white; border-color:var(--celeste); }
+
+/* HISTORIAL */
+.hist-item { background:var(--bg-input); border-radius:var(--radius-sm);
+  padding:12px; margin-bottom:8px; border:1px solid var(--border); }
+.hist-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+.hist-date { font-size:.68rem; color:var(--muted); }
+
+/* PROGRESO */
+.obj-pill { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.pill-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.pill-info { flex:1; }
+.pill-name { font-size:.78rem; font-weight:600; color:white; }
+.pill-pct  { font-size:.7rem; color:var(--muted); margin-top:2px; }
+.pill-track { width:80px; height:8px; background:rgba(255,255,255,0.07);
+  border-radius:4px; overflow:hidden; }
+.pill-fill { height:100%; border-radius:4px; }
+
+/* EXPORTAR LINK */
+.export-url { background:var(--bg-input); border:1px solid rgba(59,130,246,.3);
+  border-radius:var(--radius-sm); padding:10px 12px; font-size:.7rem;
+  color:#93c5fd; word-break:break-all; cursor:pointer; line-height:1.5; }
+
+/* TIPS */
+.tip-card { background:linear-gradient(135deg,#0e1d36,#132440);
+  border:1px solid rgba(59,130,246,.25); border-radius:var(--radius);
+  padding:16px; margin-bottom:14px; }
+.tip-hdr { font-size:.62rem; color:var(--celeste); text-transform:uppercase;
+  letter-spacing:1px; margin-bottom:8px; }
+.tip-txt { font-size:.82rem; line-height:1.6; color:#cbd5e1; }
+.tip-nav { display:flex; justify-content:flex-end; margin-top:10px; }
+.tip-btn { padding:5px 12px; background:rgba(59,130,246,.15);
+  border:1px solid rgba(59,130,246,.3); border-radius:20px;
+  color:#7dd3fc; font-size:.72rem; cursor:pointer; }
+
+/* INTAKE BANNER */
+.intake-banner { background:linear-gradient(135deg,#0f1f38,#132840);
+  border:1px solid rgba(59,130,246,.2); border-radius:var(--radius);
+  margin-bottom:14px; overflow:hidden; }
+.intake-banner-hdr { padding:12px 16px; display:flex; align-items:center;
+  gap:10px; cursor:pointer; }
+.intake-banner-title { font-size:.75rem; font-weight:700; color:#93c5fd; flex:1; }
+.intake-banner-arrow { font-size:.7rem; color:var(--muted); transition:transform .2s; }
+.intake-banner-body { display:none; padding:0 16px 14px; }
+.intake-banner.open .intake-banner-body { display:block; }
+.intake-banner.open .intake-banner-arrow { transform:rotate(180deg); }
+.voz-row { margin-bottom:10px; }
+.voz-label { font-size:.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.8px; color:var(--muted); margin-bottom:4px; }
+.chip-sm { padding:2px 9px; border-radius:20px; font-size:.68rem; font-weight:600;
+  display:inline-block; margin:2px; }
+
+/* NAV */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0;
+  background:#0c1524; border-top:1px solid var(--border);
+  display:flex; z-index:100; padding-bottom:env(safe-area-inset-bottom); }
+.nav-btn { flex:1; padding:10px 8px 12px; background:none; border:none; cursor:pointer;
+  font-size:.58rem; color:var(--muted); text-transform:uppercase; letter-spacing:.7px;
+  display:flex; flex-direction:column; align-items:center; gap:3px; }
+.nav-btn .ni { font-size:1.25rem; }
+.nav-btn.active { color:var(--celeste); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div class="avatar" id="hero-dorsal">12</div>
+      <div>
+        <div class="hero-title" id="hero-nombre">ALMA SMIGIEL</div>
+        <div class="hero-sub" id="hero-sub">BERAZATEGUI · INFANTILES FEMENINO</div>
+        <div class="hero-season">Plan de Mejora · Temp. 2026</div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><div class="v">3.0</div><div class="l">PPG</div></div>
+      <div class="hs"><div class="v">4.0</div><div class="l">RPG</div></div>
+      <div class="hs"><div class="v">17</div><div class="l">PJ</div></div>
+      <div class="hs"><div class="v">3.3</div><div class="l">VAL/PJ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="objetivos">🎯 Objetivos</button>
+  <button class="tab-btn" data-tab="sesion">💪 Sesión</button>
+  <button class="tab-btn" data-tab="registro">📊 Registro</button>
+  <button class="tab-btn" data-tab="progreso">📈 Progreso</button>
+</div>
+
+<!-- TAB OBJETIVOS -->
+<div class="section active" id="tab-objetivos">
+
+  <!-- INTAKE BANNER -->
+  <div id="intake-banner" class="intake-banner" style="display:none">
+    <div class="intake-banner-hdr" onclick="toggleBanner()">
+      <div>💬</div>
+      <div class="intake-banner-title">Tus respuestas del intake</div>
+      <div class="intake-banner-arrow">▾</div>
+    </div>
+    <div class="intake-banner-body" id="intake-body">
+      <div class="voz-row" id="vr-tipo" style="display:none">
+        <div class="voz-label">Tipo de jugadora</div>
+        <div id="vc-tipo"></div><div id="vt-q1" style="font-size:.75rem;color:#64748b;font-style:italic;margin-top:4px"></div>
+      </div>
+      <div class="voz-row" id="vr-mental" style="display:none">
+        <div class="voz-label">Debilidades mentales</div>
+        <div id="vc-mental"></div><div id="vt-q2" style="font-size:.75rem;color:#64748b;font-style:italic;margin-top:4px"></div>
+      </div>
+      <div class="voz-row" id="vr-foco" style="display:none">
+        <div class="voz-label">Área a enfocar</div>
+        <div id="vc-foco"></div><div id="vt-q3" style="font-size:.75rem;color:#64748b;font-style:italic;margin-top:4px"></div>
+      </div>
+      <div id="vt-meta" style="display:none;margin-top:8px;padding:8px 10px;background:rgba(250,204,21,.06);border-radius:6px;border-left:2px solid #facc15;font-size:.73rem;color:#fef08a"></div>
+    </div>
+  </div>
+
+  
+  <!-- OBJ 1 -->
+  <div class="obj-card" id="obj1">
+    <div class="obj-header" onclick="toggleObj('obj1')">
+      <div class="obj-number" style="color:#facc15">1</div>
+      <div class="obj-meta">
+        <div class="obj-title">Tiro Libre al 60%</div>
+        <div class="obj-subtitle">Actual 31.4% (11/35 TL) -> Meta 60%. El TL es la accion sin defensa: la mas cont...</div>
+      </div>
+      <div class="obj-chevron">▾</div>
+    </div>
+    <div class="obj-body">
+      <div class="obj-progress-wrap">
+        <div class="obj-progress-labels">
+          <span><span class="val-actual" style="color:#facc15" id="obj1-val">31.4%</span> <span style="font-size:0.72rem;color:var(--muted)">actual</span></span>
+          <span style="color:var(--muted)">Meta: 60% 🎯</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="obj1-bar"
+            style="width:52%;background:#facc15;color:#facc15"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:4px">
+          <span>Base: 31.4%</span>
+          <span>Meta: 60%</span>
+        </div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Ejercicios de práctica</div>
+      <div class="checklist" id="checks-obj1">
+                <div class="check-item" id="chk-1-0" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Ritual fijo: 3 botes + respiracion profunda antes de cada TL</div></div>
+        </div>
+        <div class="check-item" id="chk-1-1" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Series de 20 TL al inicio de cada practica, registrar % diario</div></div>
+        </div>
+        <div class="check-item" id="chk-1-2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">TL bajo fatiga: 3 sprints cortos -> 2 TL inmediatos (x5 rondas)</div></div>
+        </div>
+        <div class="check-item" id="chk-1-3" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">BEEF: Balance, Eyes, Elbow, Follow-through, revisar mecanica 1x/semana</div></div>
+        </div>
+        <div class="check-item" id="chk-1-4" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Objetivo semanal: minimo 80 intentos de TL en practica</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- OBJ 2 -->
+  <div class="obj-card" id="obj2">
+    <div class="obj-header" onclick="toggleObj('obj2')">
+      <div class="obj-number" style="color:#38bdf8">2</div>
+      <div class="obj-meta">
+        <div class="obj-title">Rebote: 11 en un partido</div>
+        <div class="obj-subtitle">Con 4.0 RPG (35 of + 62 def) hay margen para mas. Meta: superar el record person...</div>
+      </div>
+      <div class="obj-chevron">▾</div>
+    </div>
+    <div class="obj-body">
+      <div class="obj-progress-wrap">
+        <div class="obj-progress-labels">
+          <span><span class="val-actual" style="color:#38bdf8" id="obj2-val">9 (record)</span> <span style="font-size:0.72rem;color:var(--muted)">actual</span></span>
+          <span style="color:var(--muted)">Meta: 11 🎯</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="obj2-bar"
+            style="width:82%;background:#38bdf8;color:#38bdf8"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:4px">
+          <span>Base: 9 (record)</span>
+          <span>Meta: 11</span>
+        </div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Ejercicios de práctica</div>
+      <div class="checklist" id="checks-obj2">
+                <div class="check-item" id="chk-2-0" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Boxing out agresivo en CADA tiro del equipo, ofensivo y defensivo</div></div>
+        </div>
+        <div class="check-item" id="chk-2-1" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Seguir el rebote ofensivo los ultimos 3 min de cada cuarto</div></div>
+        </div>
+        <div class="check-item" id="chk-2-2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Saltar en el momento justo: esperar la parabola, no adelantarse</div></div>
+        </div>
+        <div class="check-item" id="chk-2-3" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Posicion de ventaja: ponerse entre defensa y aro antes del tiro</div></div>
+        </div>
+        <div class="check-item" id="chk-2-4" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Senalar al entrenador cuando consiga 5+ rebotes en practica</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- OBJ 3 -->
+  <div class="obj-card" id="obj3">
+    <div class="obj-header" onclick="toggleObj('obj3')">
+      <div class="obj-number" style="color:#22c55e">3</div>
+      <div class="obj-meta">
+        <div class="obj-title">Ratio Rec/Perd >= 0.90</div>
+        <div class="obj-subtitle">Actual 0.65 (22 rec / 34 perd). Reducir 1 perdida por partido = una posesion ext...</div>
+      </div>
+      <div class="obj-chevron">▾</div>
+    </div>
+    <div class="obj-body">
+      <div class="obj-progress-wrap">
+        <div class="obj-progress-labels">
+          <span><span class="val-actual" style="color:#22c55e" id="obj3-val">0.65</span> <span style="font-size:0.72rem;color:var(--muted)">actual</span></span>
+          <span style="color:var(--muted)">Meta: 0.90 🎯</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="obj3-bar"
+            style="width:72%;background:#22c55e;color:#22c55e"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:4px">
+          <span>Base: 0.65</span>
+          <span>Meta: 0.90</span>
+        </div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Ejercicios de práctica</div>
+      <div class="checklist" id="checks-obj3">
+                <div class="check-item" id="chk-3-0" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Decidir que hacer con el balon ANTES de recibirlo</div></div>
+        </div>
+        <div class="check-item" id="chk-3-1" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Chinning the ball: proteger con codos afuera en trafico</div></div>
+        </div>
+        <div class="check-item" id="chk-3-2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Pase de salida del poste: reconocer presion, pasar antes del doble</div></div>
+        </div>
+        <div class="check-item" id="chk-3-3" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Ejercicio 2x2 post-wing: leer la defensa, si no hay -> pasar</div></div>
+        </div>
+        <div class="check-item" id="chk-3-4" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Registrar perdidas en cada practica, reducir 1 por semana</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- OBJ 4 -->
+  <div class="obj-card" id="obj4">
+    <div class="obj-header" onclick="toggleObj('obj4')">
+      <div class="obj-number" style="color:#f97316">4</div>
+      <div class="obj-meta">
+        <div class="obj-title">Finalizacion en Pintura al 38%</div>
+        <div class="obj-subtitle">Actual 30.0% en zona restringida. Alto volumen de intentos, mejorar decision y c...</div>
+      </div>
+      <div class="obj-chevron">▾</div>
+    </div>
+    <div class="obj-body">
+      <div class="obj-progress-wrap">
+        <div class="obj-progress-labels">
+          <span><span class="val-actual" style="color:#f97316" id="obj4-val">30.0%</span> <span style="font-size:0.72rem;color:var(--muted)">actual</span></span>
+          <span style="color:var(--muted)">Meta: 38% 🎯</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="obj4-bar"
+            style="width:79%;background:#f97316;color:#f97316"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:4px">
+          <span>Base: 30.0%</span>
+          <span>Meta: 38%</span>
+        </div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Ejercicios de práctica</div>
+      <div class="checklist" id="checks-obj4">
+                <div class="check-item" id="chk-4-0" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Mikan drill: 2 series x 20 tiros alternados sin saltar</div></div>
+        </div>
+        <div class="check-item" id="chk-4-1" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Drop-step con contacto: companera con almohadilla como defensa</div></div>
+        </div>
+        <div class="check-item" id="chk-4-2" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Gancho mano habil desde poste bajo (3 series x 10 por lado)</div></div>
+        </div>
+        <div class="check-item" id="chk-4-3" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Recibir de espaldas al aro -> girar -> finalizar con control</div></div>
+        </div>
+        <div class="check-item" id="chk-4-4" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text"><div class="ct">Power layup con dos apoyos fuertes desde linea de fondo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB SESIÓN -->
+<div class="section" id="tab-sesion">
+  <div class="tip-card">
+    <div class="tip-hdr">💡 Tip de hoy</div>
+    <div class="tip-txt" id="tip-text">...</div>
+    <div class="tip-nav"><button class="tip-btn" onclick="nextTip()">Siguiente →</button></div>
+  </div>
+  <div style="font-size:.72rem;color:var(--muted);padding:12px 14px;background:var(--bg-card);
+    border-radius:var(--radius-sm);border:1px solid var(--border);line-height:1.6">
+    Usá esta sección como guía durante el entrenamiento.
+    Los ejercicios de cada objetivo están en el tab <strong style="color:white">Objetivos</strong>.
+  </div>
+</div>
+
+<!-- TAB REGISTRO -->
+<div class="section" id="tab-registro">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✍️</div>
+      <div class="card-ht">Nuevo registro</div>
+    </div>
+    <div class="card-body">
+      <div style="margin-bottom:12px">
+        <label style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:6px">Tipo</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="type-btn active-type" data-type="practica" onclick="setType(this)">Práctica</button>
+          <button class="type-btn" data-type="partido" onclick="setType(this)">Partido</button>
+          <button class="type-btn" data-type="scrimmage" onclick="setType(this)">Scrimmage</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">TL Ac / Int</label>
+          <div style="display:flex;gap:5px">
+            <input type="number" class="num-input" id="r-tla" placeholder="Ac.">
+            <input type="number" class="num-input" id="r-tli" placeholder="Int.">
+          </div></div>
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">T2 Ac / Int</label>
+          <div style="display:flex;gap:5px">
+            <input type="number" class="num-input" id="r-t2a" placeholder="Ac.">
+            <input type="number" class="num-input" id="r-t2i" placeholder="Int.">
+          </div></div>
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">Pts</label>
+          <input type="number" class="num-input" id="r-pts" placeholder="0"></div>
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">Reb</label>
+          <input type="number" class="num-input" id="r-reb" placeholder="0"></div>
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">Rec</label>
+          <input type="number" class="num-input" id="r-rec" placeholder="0"></div>
+        <div><label style="font-size:.7rem;color:var(--muted);display:block;margin-bottom:5px">Pérd</label>
+          <input type="number" class="num-input" id="r-per" placeholder="0"></div>
+      </div>
+      <textarea id="r-nota" rows="2"
+        style="width:100%;background:var(--bg-input);border:1px solid var(--border);
+          border-radius:var(--radius-sm);color:white;padding:10px;font-size:.82rem;resize:none;margin-bottom:10px"
+        placeholder="Nota opcional..."></textarea>
+      <button onclick="guardar()"
+        style="width:100%;background:var(--celeste);color:white;border:none;
+          border-radius:var(--radius-sm);padding:13px;font-size:.9rem;font-weight:700;cursor:pointer">
+        💾 Guardar
+      </button>
+      <div id="fb" style="font-size:.72rem;color:var(--verde);text-align:center;margin-top:6px;display:none"></div>
+    </div>
+  </div>
+  <div id="hist-cont"></div>
+</div>
+
+<!-- TAB PROGRESO -->
+<div class="section" id="tab-progreso">
+
+  <!-- Ring de progreso global -->
+  <div style="display:flex;flex-direction:column;align-items:center;margin:16px 0 20px">
+    <svg width="130" height="130" viewBox="0 0 130 130">
+      <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="11"/>
+      <circle cx="65" cy="65" r="52" fill="none" stroke="#3b82f6" stroke-width="11"
+        stroke-dasharray="326.7" stroke-dashoffset="326.7"
+        stroke-linecap="round" transform="rotate(-90 65 65)" id="ring-c"/>
+      <text x="65" y="71" text-anchor="middle" font-size="22" font-weight="900"
+        fill="#60a5fa" font-family="Segoe UI,sans-serif" id="ring-t">0%</text>
+    </svg>
+    <div style="font-size:.68rem;color:var(--muted);margin-top:-4px">Progreso global</div>
+  </div>
+
+  <!-- Pills objetivos -->
+  <div class="card" style="padding:18px;margin-bottom:16px">
+    <div class="obj-pill"><div class="pill-dot" style="background:#facc15"></div><div class="pill-info"><div class="pill-name">1. Tiro Libre al 60%</div><div class="pill-pct">31.4% -&gt; 60%</div></div><div class="pill-track"><div class="pill-fill" id="pp-1" style="width:0%;background:#facc15"></div></div></div>
+<div class="obj-pill"><div class="pill-dot" style="background:#38bdf8"></div><div class="pill-info"><div class="pill-name">2. Rebote: 11 en un partido</div><div class="pill-pct">9 (record) -&gt; 11</div></div><div class="pill-track"><div class="pill-fill" id="pp-2" style="width:0%;background:#38bdf8"></div></div></div>
+<div class="obj-pill"><div class="pill-dot" style="background:#22c55e"></div><div class="pill-info"><div class="pill-name">3. Ratio Rec/Perd >= 0.90</div><div class="pill-pct">0.65 -&gt; 0.90</div></div><div class="pill-track"><div class="pill-fill" id="pp-3" style="width:0%;background:#22c55e"></div></div></div>
+<div class="obj-pill"><div class="pill-dot" style="background:#f97316"></div><div class="pill-info"><div class="pill-name">4. Finalizacion en Pintura al 38%</div><div class="pill-pct">30.0% -&gt; 38%</div></div><div class="pill-track"><div class="pill-fill" id="pp-4" style="width:0%;background:#f97316"></div></div></div>
+  </div>
+
+  <!-- Exportar como link -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔗</div>
+      <div class="card-ht">Compartir progreso</div>
+    </div>
+    <div class="card-body">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:12px;line-height:1.6">
+        Generá un link con todo tu progreso — podés mandarlo por WhatsApp y se abre en cualquier celular.
+      </div>
+      <button onclick="exportLink()"
+        style="width:100%;padding:13px;border-radius:var(--radius-sm);
+          background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;
+          border:none;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:8px">
+        🔗 Generar link
+      </button>
+      <div id="exp-result" style="display:none">
+        <div class="export-url" id="exp-url" onclick="copyLink()"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button onclick="copyLink()"
+            style="flex:1;padding:10px;background:var(--celeste);color:white;border:none;
+              border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;cursor:pointer">📋 Copiar</button>
+          <button onclick="waLink()"
+            style="flex:1;padding:10px;background:#22c55e;color:white;border:none;
+              border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;cursor:pointer">💬 WhatsApp</button>
+        </div>
+        <div id="copy-fb" style="font-size:.72rem;color:var(--verde);text-align:center;margin-top:6px;display:none">✓ Copiado</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /progreso -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-nav="objetivos" onclick="switchNav(this)">
+    <span class="ni">🎯</span>Objetivos
+  </button>
+  <button class="nav-btn" data-nav="sesion" onclick="switchNav(this)">
+    <span class="ni">💪</span>Sesión
+  </button>
+  <button class="nav-btn" data-nav="registro" onclick="switchNav(this)">
+    <span class="ni">📊</span>Registro
+  </button>
+  <button class="nav-btn" data-nav="progreso" onclick="switchNav(this)">
+    <span class="ni">📈</span>Progreso
+  </button>
+</nav>
+
+<script>
+// ── STATE ───────────────────────────────────────────────────────
+const SK = 'smigiel_alma_berazategui_plan_v1';
+function ls() { try { return JSON.parse(localStorage.getItem(SK))||{}; } catch {return {};} }
+function ss(s) { localStorage.setItem(SK, JSON.stringify(s)); }
+let S = ls();
+if (!S.checks)  S.checks  = {};
+if (!S.hist)    S.hist    = [];
+if (!S.bars)    S.bars    = {};
+if (!S.tipIdx)  S.tipIdx  = 0;
+
+// ── TABS / NAV ──────────────────────────────────────────────────
+function switchNav(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = btn.dataset.nav;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  const tb = document.querySelector('.tab-btn[data-tab="'+tab+'"]');
+  if (tb) tb.classList.add('active');
+  if (tab === 'progreso') updateProgress();
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = btn.dataset.tab;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  const nb = document.querySelector('.nav-btn[data-nav="'+tab+'"]');
+  if (nb) nb.classList.add('active');
+  if (tab === 'progreso') updateProgress();
+}));
+
+// ── OBJETIVOS ───────────────────────────────────────────────────
+function toggleObj(id) { document.getElementById(id).classList.toggle('open'); }
+
+// ── CHECKS ──────────────────────────────────────────────────────
+function toggleCheck(item) {
+  const box = item.querySelector('.check-box');
+  const ct  = item.querySelector('.ct');
+  const id  = item.id;
+  const done = !S.checks[id];
+  S.checks[id] = done;
+  ss(S);
+  box.classList.toggle('done', done);
+  if (done) box.textContent = '✓'; else box.textContent = '';
+  if (ct) ct.classList.toggle('done', done);
+}
+function restoreChecks() {
+  Object.entries(S.checks).forEach(([id, done]) => {
+    const item = document.getElementById(id);
+    if (!item) return;
+    const box = item.querySelector('.check-box');
+    const ct  = item.querySelector('.ct');
+    if (done) { box.classList.add('done'); box.textContent = '✓';
+                 if (ct) ct.classList.add('done'); }
+  });
+}
+
+// ── PROGRESS ────────────────────────────────────────────────────
+function updateProgress() {
+  const nObj = 4;
+  let total = 0;
+  for (let i = 1; i <= nObj; i++) {
+    const checks = document.querySelectorAll(`[id^="chk-${i}-"]`);
+    const done   = document.querySelectorAll(`[id^="chk-${i}-"] .check-box.done`);
+    const pct    = checks.length > 0 ? Math.round(done.length/checks.length*100) : 0;
+    S.bars['obj'+i] = pct;
+    const pp = document.getElementById('pp-'+i);
+    if (pp) pp.style.width = pct+'%';
+    total += pct;
+  }
+  ss(S);
+  const avg = Math.round(total / nObj);
+  const ring = document.getElementById('ring-c');
+  const rt   = document.getElementById('ring-t');
+  if (ring) ring.style.strokeDashoffset = 326.7 * (1 - avg/100);
+  if (rt)   rt.textContent = avg+'%';
+}
+
+// ── REGISTRO ────────────────────────────────────────────────────
+let curType = 'practica';
+function setType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active-type'));
+  btn.classList.add('active-type'); curType = btn.dataset.type;
+}
+function guardar() {
+  const tla = +document.getElementById('r-tla').value||0;
+  const tli = +document.getElementById('r-tli').value||0;
+  const t2a = +document.getElementById('r-t2a').value||0;
+  const t2i = +document.getElementById('r-t2i').value||0;
+  const rec = {
+    fecha: new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'}),
+    tipo: curType,
+    tl:  tli>0 ? Math.round(tla/tli*100) : null,
+    t2:  t2i>0 ? Math.round(t2a/t2i*100) : null,
+    pts: +document.getElementById('r-pts').value||0,
+    reb: +document.getElementById('r-reb').value||0,
+    rc:  +document.getElementById('r-rec').value||0,
+    per: +document.getElementById('r-per').value||0,
+    nota: document.getElementById('r-nota').value,
+  };
+  S.hist.unshift(rec);
+  if (S.hist.length>50) S.hist=S.hist.slice(0,50);
+  ss(S); renderHist();
+  ['r-tla','r-tli','r-t2a','r-t2i','r-pts','r-reb','r-rec','r-per'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('r-nota').value='';
+  const fb=document.getElementById('fb');
+  fb.style.display='block'; fb.textContent='✓ Guardado';
+  setTimeout(()=>fb.style.display='none',2500);
+}
+function renderHist() {
+  const c = document.getElementById('hist-cont');
+  if (!c) return;
+  if (!S.hist.length) { c.innerHTML='<div style="font-size:.75rem;color:var(--muted);text-align:center;padding:20px">Sin registros aún.</div>'; return; }
+  c.innerHTML = S.hist.slice(0,20).map(r => {
+    const tc = r.tipo==='partido'?'color:#f97316':r.tipo==='scrimmage'?'color:#a78bfa':'color:#3b82f6';
+    return `<div class="hist-item">
+      <div class="hist-row">
+        <span class="hist-date">${r.fecha}</span>
+        <span style="font-size:.68rem;font-weight:700;${tc}">${r.tipo.toUpperCase()}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:.72rem;color:#94a3b8">
+        ${r.pts?`<span><b style="color:white">${r.pts}</b> pts</span>`:''}
+        ${r.reb?`<span><b style="color:white">${r.reb}</b> reb</span>`:''}
+        ${r.tl!=null?`<span>TL <b style="color:white">${r.tl}%</b></span>`:''}
+        ${r.t2!=null?`<span>T2 <b style="color:white">${r.t2}%</b></span>`:''}
+        ${r.nota?`<span style="width:100%;color:#475569;font-style:italic">"${r.nota.substring(0,60)}"</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── TIPS ────────────────────────────────────────────────────────
+const TIPS = [  '<strong style="color:#facc15">Tiro Libre:</strong> El secreto no es la fuerza, es el ritmo. Usá siempre el mismo ritual: 3 botes, respiración profunda, visualizá la pelota entrando. El 80% del TL es mental.',
+  '<strong style="color:#22c55e">Protección del balón:</strong> Antes de recibir el pase, ya tenés que saber qué vas a hacer. Decidir en el aire elimina el 70% de las pérdidas.',
+  '<strong style="color:#f97316">Finalización en pintura:</strong> Lo primero es cuadrar los pies. Un pivot sólido vale más que un dribble extra. Confiá en el tablero.',
+  '<strong style="color:#60a5fa">Mentalidad:</strong> Un mal partido no borra una buena temporada. ALMA SMIGIEL tiene 17 PJ en el cuerpo. La consistencia es el mejor atributo.',
+  '<strong style="color:#f97316">Presión:</strong> Practicá TL después de sprint o ejercicio intenso. La presión fisiológica del partido se puede entrenar.'
+];
+let tipIdx = S.tipIdx || 0;
+function showTip() {
+  const el = document.getElementById('tip-text');
+  if (el) el.innerHTML = TIPS[tipIdx % TIPS.length];
+}
+function nextTip() {
+  tipIdx = (tipIdx+1) % TIPS.length;
+  S.tipIdx = tipIdx; ss(S); showTip();
+}
+
+// ── INTAKE PARAMS ───────────────────────────────────────────────
+(function() {
+  const p = new URLSearchParams(window.location.search);
+  const nombre=p.get('nombre'), apellido=p.get('apellido'), dorsal=p.get('dorsal'),
+        equipo=p.get('equipo'), categoria=p.get('categoria'),
+        tipo=p.get('tipo')||'', mental=p.get('mental')||'',
+        foco=p.get('foco')||'', q1=p.get('q1')||'',
+        q2=p.get('q2')||'', q3=p.get('q3')||'', meta=p.get('meta')||'';
+  if (nombre&&apellido) { const el=document.getElementById('hero-nombre'); if(el) el.textContent=nombre+' '+apellido; }
+  if (dorsal) { const el=document.getElementById('hero-dorsal'); if(el) el.textContent=dorsal; }
+  if (equipo&&categoria) { const el=document.getElementById('hero-sub'); if(el) el.textContent=equipo+' · '+categoria; }
+  const hasCual=tipo||mental||foco||q1||q2||q3||meta;
+  if (!hasCual) return;
+  const banner=document.getElementById('intake-banner');
+  if (banner) { banner.style.display='block'; banner.classList.add('open'); }
+  function chips(cId, raw, bg, border, color) {
+    const c=document.getElementById(cId); if(!c) return;
+    raw.split('|').filter(Boolean).forEach(v=>{
+      const s=document.createElement('span');
+      s.className='chip-sm';
+      s.style.cssText=`background:${bg};border:1px solid ${border};color:${color}`;
+      s.textContent=v; c.appendChild(s);
+    });
+  }
+  function showRow(rId,cId,raw,bg,border,color,tId,txt) {
+    if(!raw&&!txt) return;
+    const r=document.getElementById(rId); if(r) r.style.display='block';
+    chips(cId,raw,bg,border,color);
+    if(txt) { const el=document.getElementById(tId); if(el) el.textContent='"'+txt+'"'; }
+  }
+  showRow('vr-tipo','vc-tipo',tipo,'rgba(46,126,237,.18)','rgba(46,126,237,.3)','#93c5fd','vt-q1',q1);
+  showRow('vr-mental','vc-mental',mental,'rgba(249,115,22,.12)','rgba(249,115,22,.25)','#fdba74','vt-q2',q2);
+  showRow('vr-foco','vc-foco',foco,'rgba(34,197,94,.12)','rgba(34,197,94,.25)','#86efac','vt-q3',q3);
+  if (meta) { const el=document.getElementById('vt-meta'); if(el){ el.style.display='block'; el.innerHTML='<strong style="color:#facc15">Meta:</strong> '+meta; } }
+})();
+
+function toggleBanner() {
+  const b=document.getElementById('intake-banner'); b.classList.toggle('open');
+}
+
+// ── EXPORTAR COMO LINK ──────────────────────────────────────────
+function exportLink() {
+  const snap={ checks:S.checks, hist:S.hist, bars:S.bars, tipIdx:S.tipIdx, exported_at:new Date().toISOString() };
+  let enc;
+  try { enc = btoa(unescape(encodeURIComponent(JSON.stringify(snap)))); } catch(e) { alert('Error'); return; }
+  const cur = new URLSearchParams(window.location.search);
+  cur.set('estado', enc);
+  const url = window.location.origin+window.location.pathname+'?'+cur.toString();
+  const box = document.getElementById('exp-url');
+  box.textContent = url; box.dataset.url = url;
+  document.getElementById('exp-result').style.display='block';
+  box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function copyLink() {
+  const url = document.getElementById('exp-url').dataset.url;
+  navigator.clipboard.writeText(url).then(()=>{
+    const fb=document.getElementById('copy-fb'); fb.style.display='block';
+    setTimeout(()=>fb.style.display='none',2500);
+  }).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=url;
+    ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta);
+    ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    const fb=document.getElementById('copy-fb'); fb.style.display='block';
+    setTimeout(()=>fb.style.display='none',2500);
+  });
+}
+function waLink() {
+  const url = document.getElementById('exp-url').dataset.url || '';
+  if (!url) { exportLink(); return; }
+  const nombre = document.getElementById('hero-nombre')?.textContent || 'Jugadora';
+  window.open('https://wa.me/?text='+encodeURIComponent('🏀 Plan de mejora de '+nombre+' — CABB Scout Analytics\n'+url),'_blank');
+}
+
+// ── RESTAURAR DESDE URL ─────────────────────────────────────────
+(function() {
+  const enc = new URLSearchParams(window.location.search).get('estado');
+  if (!enc) return;
+  try {
+    const snap = JSON.parse(decodeURIComponent(escape(atob(enc))));
+    Object.assign(S, snap); ss(S);
+    document.addEventListener('DOMContentLoaded', () => {
+      const t=document.createElement('div');
+      t.style.cssText='position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#22c55e;color:white;padding:10px 20px;border-radius:20px;font-size:.78rem;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.4)';
+      t.textContent='✓ Progreso restaurado';
+      document.body.appendChild(t); setTimeout(()=>t.remove(),3500);
+    });
+  } catch(e) {}
+})();
+
+// ── INIT ────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  restoreChecks();
+  renderHist();
+  showTip();
+});
+</script>
+</body>
+</html>
