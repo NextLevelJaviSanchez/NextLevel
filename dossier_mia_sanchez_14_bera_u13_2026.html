@@ -225,6 +225,15 @@
   </div>
 </div>
 
+<!-- NAV MÓDULOS -->
+<div style="background:#0c1428;border-bottom:1px solid rgba(46,126,237,0.2);padding:10px 20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+  <a href="intake_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(46,126,237,0.12);border:1px solid rgba(46,126,237,0.3);color:#93c5fd;padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:600">📋 Intake</a>
+  <a href="plan_mejora_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac;padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:600">🎯 Plan de Mejora</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.4);color:#F5A623;padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:700">⚡ Análisis Avanzado</a>
+  <a href="evaluacion_fisica.html?player=mia14" style="text-decoration:none;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc;padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:700">🏋️ Preparación Física</a>
+  <a href="../bera_u13_scout_index.html" style="text-decoration:none;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#64748b;padding:6px 14px;border-radius:20px;font-size:0.75rem">← Plantel</a>
+</div>
+
 <!-- MAIN -->
 <div class="container">
 
@@ -1091,5 +1100,21 @@ new Chart(ctxPPM, {
   }
 });
 </script>
+<!-- ── NAV MÍA ───────────────────────────────────────────────────────── -->
+<style>
+.mia-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.mia-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s}
+.mia-nav a .ni{font-size:1.2rem;line-height:1}
+.mia-nav a.on{color:#f97316}
+.mia-nav a:hover{color:#94a3b8}
+</style>
+<nav class="mia-nav">
+  <a href="dossier_mia_sanchez_14_bera_u13_2026.html" class="on"><span class="ni">📊</span>Dossier</a>
+  <a href="intake_mia_sanchez_14_2026.html"><span class="ni">📋</span>Intake</a>
+  <a href="plan_mejora_mia_sanchez_14_2026.html"><span class="ni">🎯</span>Plan</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html"><span class="ni">⚡</span>Análisis</a>
+  <a href="evaluacion_fisica.html?player=mia14"><span class="ni">🏋️</span>Prep. Física</a>
+</nav>
+<script>document.body.style.paddingBottom='62px'</script>
 </body>
 </html>

@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Preparación Física · NextLevel Basketball</title>
+<style>
+/* ─── RESET & TOKENS ─────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#060c18;color:#e2e8f0;min-height:100vh;padding-bottom:90px}
+:root{
+  --ac:#f97316;--ac2:#facc15;--green:#22c55e;--blue:#38bdf8;--purple:#a78bfa;--red:#ef4444;
+  --card:#0f1827;--card2:#141e2e;--input:#1a2537;
+  --border:rgba(255,255,255,0.07);--muted:#64748b;
+  --r:14px;--rs:9px;
+}
+input,select,textarea{font-family:inherit;font-size:1rem;color:#e2e8f0;background:var(--input);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;width:100%;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}
+input[type=file]{padding:8px;cursor:pointer}
+select option{background:#1a2537}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:var(--rs);font-weight:700;transition:all .15s}
+button:active{transform:scale(0.97)}
+
+/* ─── SCREENS ────────────────────────────────────────────────────── */
+.screen{display:none}
+.screen.on{display:block}
+
+/* ─── TOPBAR ──────────────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:#060c18;border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+}
+.topbar-title{font-size:0.95rem;font-weight:800;flex:1}
+.topbar-sub{font-size:0.7rem;color:var(--muted)}
+.btn-icon{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#e2e8f0;padding:7px 10px;border-radius:var(--rs);font-size:0.9rem;line-height:1}
+.btn-icon:hover{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3)}
+
+/* ─── HERO ────────────────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(160deg,#040a14 0%,#130e00 60%,rgba(249,115,22,0.12) 100%);
+  padding:20px 16px 16px;border-bottom:1px solid var(--border);
+}
+.hero-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+/* AVATAR con soporte foto */
+.avatar-wrap{position:relative;flex-shrink:0}
+.avatar{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,#f97316,#facc15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:900;color:#000;
+  border:2.5px solid rgba(249,115,22,0.5);
+  overflow:hidden;cursor:pointer;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+.avatar-badge{
+  position:absolute;bottom:-4px;right:-4px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--ac);border:2px solid #060c18;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;cursor:pointer;
+}
+.hero-info{flex:1;min-width:0}
+.hero-name{font-size:1.35rem;font-weight:900;line-height:1.15}
+.hero-sub{font-size:0.72rem;color:var(--muted);margin-top:3px}
+.hero-badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.62rem;font-weight:700;
+  background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#f97316;margin-top:5px
+}
+.hero-strip{display:flex;gap:0;border-top:1px solid var(--border);padding-top:12px;overflow-x:auto;scrollbar-width:none}
+.hero-strip::-webkit-scrollbar{display:none}
+.hs{flex:0 0 auto;text-align:center;padding:0 13px}
+.hs+.hs{border-left:1px solid var(--border)}
+.hs-v{font-size:1.2rem;font-weight:900;color:var(--ac);line-height:1}
+.hs-l{font-size:0.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+
+/* ─── TABS ────────────────────────────────────────────────────────── */
+.tabs{position:sticky;top:53px;z-index:100;background:#060c18;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:12px 15px;font-size:0.75rem;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;position:relative;transition:color .2s;white-space:nowrap}
+.tab.on{color:var(--ac)}
+.tab.on::after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:2px;background:var(--ac);border-radius:2px}
+
+/* ─── PANEL ───────────────────────────────────────────────────────── */
+.panel{display:none;padding:14px 14px 20px;max-width:640px;margin:0 auto}
+.panel.on{display:block}
+
+/* ─── SECTION HEADING ─────────────────────────────────────────────── */
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:4px}
+.sh-icon{font-size:1rem}
+.sh-title{font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);flex:1}
+.sh-title span{color:var(--ac)}
+.sh::after{content:'';flex:none}
+.sh-line{flex:1;height:1px;background:var(--border);margin-left:8px}
+
+/* ─── CARDS ───────────────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card-tit{font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+/* ─── FORM ROWS ───────────────────────────────────────────────────── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row.full{grid-template-columns:1fr}
+.form-row.trio{grid-template-columns:1fr 1fr 1fr}
+.form-label{font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:5px;display:block}
+.form-group{display:flex;flex-direction:column}
+.form-hint{font-size:0.63rem;color:#334155;margin-top:4px}
+.form-unit{font-size:0.7rem;color:var(--muted);margin-top:3px;text-align:right}
+
+/* ─── DERIVED STRIP ───────────────────────────────────────────────── */
+.derived{
+  background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);
+  border-radius:var(--rs);padding:12px 14px;margin-top:4px;margin-bottom:14px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center
+}
+.der-v{font-size:1.05rem;font-weight:900;color:var(--ac);line-height:1}
+.der-l{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px}
+
+/* ─── TEST CARD ───────────────────────────────────────────────────── */
+.test-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.test-hd{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.test-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.test-name{font-size:0.88rem;font-weight:800;line-height:1.2}
+.test-desc{font-size:0.67rem;color:var(--muted);margin-top:2px}
+.test-best{
+  background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);
+  border-radius:var(--rs);padding:8px 12px;margin-top:10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.test-best-lbl{font-size:0.67rem;color:#4ade80;font-weight:600}
+.test-best-val{font-size:1.1rem;font-weight:900;color:#4ade80}
+
+/* ─── BUTTONS ─────────────────────────────────────────────────────── */
+.btn-primary{
+  background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;
+  padding:13px 20px;width:100%;font-size:0.9rem;border-radius:var(--r);
+  margin-top:6px;
+}
+.btn-primary:hover{background:linear-gradient(135deg,#fb923c,#f97316)}
+.btn-secondary{
+  background:var(--card2);color:#e2e8f0;border:1px solid var(--border);
+  padding:10px 16px;font-size:0.8rem;border-radius:var(--rs);
+}
+.btn-secondary:hover{border-color:rgba(249,115,22,0.4)}
+.btn-danger{
+  background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);
+  padding:8px 14px;font-size:0.75rem;border-radius:var(--rs);
+}
+.btn-success{
+  background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.2);
+  padding:8px 14px;font-size:0.75rem;border-radius:var(--rs);
+}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn-add{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  background:rgba(249,115,22,0.12);border:1px dashed rgba(249,115,22,0.3);
+  color:var(--ac);padding:12px;border-radius:var(--r);width:100%;
+  font-size:0.82rem;font-weight:700;margin-bottom:12px;
+}
+
+/* ─── EVAL LIST ───────────────────────────────────────────────────── */
+.eval-item{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;margin-bottom:10px;cursor:pointer;
+  transition:border-color .15s;
+}
+.eval-item:hover{border-color:rgba(249,115,22,0.3)}
+.eval-item-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.eval-date{font-size:0.82rem;font-weight:800;color:var(--ac)}
+.eval-num{font-size:0.67rem;background:rgba(249,115,22,0.12);color:var(--ac);padding:2px 8px;border-radius:10px;font-weight:700}
+.eval-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.es{text-align:center;background:var(--card2);border-radius:8px;padding:7px 4px}
+.es-v{font-size:0.88rem;font-weight:800;color:#e2e8f0;line-height:1}
+.es-l{font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+
+/* ─── DELTA ───────────────────────────────────────────────────────── */
+.delta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.delta-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px}
+.delta-metric{font-size:0.67rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.delta-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.delta-vals{font-size:0.8rem;color:#94a3b8}
+.delta-arrow{font-size:0.7rem;color:var(--muted)}
+.delta-val{font-size:1rem;font-weight:900}
+.delta-pos{color:#4ade80}
+.delta-neg{color:#f87171}
+.delta-neu{color:var(--muted)}
+
+/* ─── CHART WRAP ──────────────────────────────────────────────────── */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.chart-title{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.chart-wrap{position:relative;height:160px}
+
+/* ─── PLAYER SELECTOR ─────────────────────────────────────────────── */
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:14px}
+.player-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s;
+}
+.player-card:hover,.player-card.sel{border-color:var(--ac);background:rgba(249,115,22,0.06)}
+.pc-av{
+  width:48px;height:48px;border-radius:12px;margin:0 auto 8px;
+  background:linear-gradient(135deg,#f97316,#facc15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:900;color:#000;overflow:hidden;
+}
+.pc-av img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.pc-name{font-size:0.78rem;font-weight:700;line-height:1.3}
+.pc-cat{font-size:0.62rem;color:var(--muted)}
+.pc-dot{width:8px;height:8px;border-radius:50%;background:#334155;margin:6px auto 0}
+.pc-dot.has{background:var(--green)}
+
+/* ─── TOAST ───────────────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:#1e293b;border:1px solid rgba(249,115,22,0.3);border-radius:var(--r);
+  padding:10px 20px;font-size:0.82rem;font-weight:600;
+  z-index:9999;transition:transform .3s;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─── MODAL ───────────────────────────────────────────────────────── */
+.modal-bg{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;
+  align-items:flex-end;justify-content:center;
+}
+.modal-bg.on{display:flex}
+.modal{
+  background:#0f1827;border-radius:var(--r) var(--r) 0 0;
+  padding:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;
+  border:1px solid var(--border);border-bottom:none;
+}
+.modal-title{font-size:0.9rem;font-weight:800;margin-bottom:16px;color:var(--ac)}
+.modal-close{float:right;font-size:1.2rem;background:none;border:none;color:var(--muted);cursor:pointer;margin-top:-2px}
+
+/* ─── PHOTO MODAL ─────────────────────────────────────────────────── */
+.photo-preview{
+  width:100%;max-height:200px;object-fit:cover;
+  border-radius:var(--rs);border:1px solid var(--border);margin-bottom:10px;display:none
+}
+
+/* ─── EMPTY STATE ─────────────────────────────────────────────────── */
+.empty{
+  text-align:center;padding:40px 20px;color:var(--muted);font-size:0.82rem
+}
+.empty-icon{font-size:2.5rem;margin-bottom:10px}
+
+/* ─── BLOQUES COLAPSABLES ─────────────────────────────────────────── */
+.bloque{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.bloque-hd{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none}
+.bloque-hd:hover{background:rgba(255,255,255,0.03)}
+.bloque-check{display:flex;align-items:center;flex-shrink:0}
+.bloque-check input[type=checkbox]{display:none}
+.bloque-chk-ui{
+  width:22px;height:22px;border-radius:7px;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;
+  transition:all .15s;background:rgba(255,255,255,0.03);
+}
+.bloque-check input:checked + .bloque-chk-ui{
+  background:var(--ac);border-color:var(--ac);color:#000;
+}
+.bloque-check input:checked + .bloque-chk-ui::after{content:'✓';font-weight:900}
+.bloque-icon{width:32px;height:32px;border-radius:9px;background:rgba(249,115,22,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.bloque-meta{flex:1;min-width:0}
+.bloque-name{font-size:0.82rem;font-weight:700;line-height:1.3}
+.bloque-hint{font-size:0.65rem;color:var(--muted);margin-top:1px}
+.bloque-chevron{font-size:0.9rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.bloque.open .bloque-chevron{transform:rotate(90deg)}
+.bloque-body{display:none;padding:0 14px 14px}
+.bloque.open .bloque-body{display:block}
+/* Bloque activo (checkbox marcado) resalta el borde */
+.bloque.open{border-color:rgba(249,115,22,0.3)}
+
+/* ─── REQUIRED STAR ───────────────────────────────────────────────── */
+.req{color:var(--ac);font-size:0.75rem}
+.err-msg{font-size:0.67rem;color:#f87171;margin-top:4px;display:none}
+input.invalid,.invalid input{border-color:#ef4444 !important}
+
+/* ─── NAV BAR ─────────────────────────────────────────────────────── */
+.navbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:#060c18;border-top:1px solid var(--border);
+  display:flex;
+}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 4px;cursor:pointer;font-size:0.62rem;font-weight:600;color:var(--muted);transition:color .15s;border:none;background:none}
+.nb-icon{font-size:1.25rem;margin-bottom:2px;line-height:1}
+.nb.on{color:var(--ac)}
+.nb.on .nb-icon{filter:drop-shadow(0 0 6px rgba(249,115,22,.5))}
+
+/* ─── MISC ────────────────────────────────────────────────────────── */
+.sep{height:1px;background:var(--border);margin:14px 0}
+.note{font-size:0.72rem;color:var(--muted);line-height:1.6;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:var(--rs);border:1px solid var(--border)}
+.tag{display:inline-block;padding:2px 9px;border-radius:10px;font-size:0.65rem;font-weight:700}
+.tag-blue{background:rgba(56,189,248,0.12);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2)}
+.tag-green{background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.tag-orange{background:rgba(249,115,22,0.12);color:#f97316;border:1px solid rgba(249,115,22,0.2)}
+.tag-purple{background:rgba(167,139,250,0.12);color:#c4b5fd;border:1px solid rgba(167,139,250,0.2)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SCREEN: LISTA DE JUGADORES ════════════════════ -->
+<div id="scr-players" class="screen on">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">🏀 Preparación Física</div>
+      <div class="topbar-sub">NextLevel Basketball · Berazategui U13</div>
+    </div>
+    <a href="dossier_mia_sanchez_14_bera_u13_2026.html" class="btn-icon">←</a>
+  </div>
+  <div id="player-grid" class="player-grid"></div>
+</div>
+
+<!-- ═══════════════════ SCREEN: PERFIL JUGADORA ══════════════════════ -->
+<div id="scr-profile" class="screen">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="btn-icon" onclick="goPlayers()">←</button>
+    <div style="flex:1">
+      <div class="topbar-title" id="prof-title">Jugadora</div>
+      <div class="topbar-sub" id="prof-sub">Preparación Física</div>
+    </div>
+    <button class="btn-icon" id="btn-photo" onclick="openPhotoModal()" title="Cambiar foto">📷</button>
+  </div>
+
+  <!-- MINI NAV ECOSISTEMA MÍA (solo visible cuando player=mia14) -->
+  <div id="mia-ctx-nav" style="display:none;background:#07091a;border-bottom:1px solid rgba(255,255,255,0.06);padding:7px 14px;overflow-x:auto;white-space:nowrap;scrollbar-width:none">
+    <a href="dossier_mia_sanchez_14_bera_u13_2026.html" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.67rem;font-weight:700;text-decoration:none;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);color:#f97316;margin-right:6px">📊 Dossier</a>
+    <a href="intake_mia_sanchez_14_2026.html" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.67rem;font-weight:700;text-decoration:none;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.2);color:#93c5fd;margin-right:6px">📋 Intake</a>
+    <a href="plan_mejora_mia_sanchez_14_2026.html" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.67rem;font-weight:700;text-decoration:none;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;margin-right:6px">🎯 Plan</a>
+    <a href="analisis_avanzado_mia_sanchez_14_2026.html" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.67rem;font-weight:700;text-decoration:none;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);color:#F5A623;margin-right:6px">⚡ Análisis</a>
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.67rem;font-weight:700;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.35);color:#38bdf8">🏋️ Prep. Física</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-row">
+      <div class="avatar-wrap">
+        <div class="avatar" id="prof-avatar" onclick="openPhotoModal()">
+          <span id="prof-avatar-text">?</span>
+          <img id="prof-avatar-img" src="" alt="" style="display:none">
+        </div>
+        <div class="avatar-badge" onclick="openPhotoModal()">📷</div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name" id="prof-name">—</div>
+        <div class="hero-sub" id="prof-cat">—</div>
+        <div class="hero-badge" id="prof-badge">Sin evaluaciones</div>
+      </div>
+    </div>
+    <div class="hero-strip" id="hero-strip">
+      <div class="hs"><div class="hs-v">—</div><div class="hs-l">Talla</div></div>
+      <div class="hs"><div class="hs-v">—</div><div class="hs-l">Peso</div></div>
+      <div class="hs"><div class="hs-v">—</div><div class="hs-l">Beep Test</div></div>
+      <div class="hs"><div class="hs-v">—</div><div class="hs-l">Lane Ag.</div></div>
+      <div class="hs"><div class="hs-v">—</div><div class="hs-l">Sprint</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab on"  onclick="showTab('historial')">📋 Historial</button>
+    <button class="tab"     onclick="showTab('evolucion')">📈 Evolución</button>
+    <button class="tab"     onclick="showTab('graficos')">📊 Gráficos</button>
+    <button class="tab"     onclick="showTab('plan')">🏃 Plan</button>
+  </div>
+
+  <!-- ── TAB: HISTORIAL ──────────────────────────────────────────── -->
+  <div id="tab-historial" class="panel on">
+    <button class="btn-add" onclick="openNewEval()">
+      <span style="font-size:1.2rem">＋</span> Nueva Evaluación
+    </button>
+    <div id="eval-list"></div>
+  </div>
+
+  <!-- ── TAB: EVOLUCIÓN ──────────────────────────────────────────── -->
+  <div id="tab-evolucion" class="panel">
+    <div id="evolucion-content"></div>
+  </div>
+
+  <!-- ── TAB: GRÁFICOS ───────────────────────────────────────────── -->
+  <div id="tab-graficos" class="panel">
+    <div id="graficos-content"></div>
+  </div>
+
+  <!-- ── TAB: PLAN ───────────────────────────────────────────────── -->
+  <div id="tab-plan" class="panel">
+    <div id="plan-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL: FOTO DE PERFIL ════════════════════════ -->
+<div id="modal-photo" class="modal-bg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-photo')">✕</button>
+    <div class="modal-title">📷 Foto de perfil</div>
+    <img id="photo-preview" class="photo-preview">
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Seleccionar foto del dispositivo</label>
+      <input type="file" id="photo-input" accept="image/*" onchange="previewPhoto(this)">
+      <div class="form-hint">Formatos: JPG, PNG, WEBP. Recomendado: cuadrada, hasta 2 MB.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="savePhoto()" style="flex:1">Guardar foto</button>
+      <button class="btn-danger"  onclick="deletePhoto()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL: NUEVA / EDITAR EVALUACIÓN ════════════ -->
+<div id="modal-eval" class="modal-bg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-eval')">✕</button>
+    <div class="modal-title" id="modal-eval-title">➕ Nueva Evaluación</div>
+
+    <!-- META (siempre visible) -->
+    <div class="card">
+      <div class="card-tit">📋 Datos generales</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fecha <span class="req">*</span></label>
+          <input type="date" id="ef-date">
+          <div class="err-msg" id="err-date">Fecha requerida</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría</label>
+          <input type="text" id="ef-cat" placeholder="U13, U15…">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Edad al momento</label>
+          <input type="number" id="ef-age" placeholder="13" min="6" max="25" step="1">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Observaciones</label>
+          <textarea id="ef-notes" rows="2" placeholder="Condiciones del test, estado de la jugadora…" style="resize:vertical"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE: ANTROPOMETRÍA (colapsable) -->
+    <div class="bloque" id="bloque-antro">
+      <div class="bloque-hd" onclick="toggleBloque('antro')">
+        <label class="bloque-check" onclick="event.stopPropagation()">
+          <input type="checkbox" id="chk-antro" onchange="toggleBloque('antro',this.checked)">
+          <span class="bloque-chk-ui"></span>
+        </label>
+        <div class="bloque-icon">📏</div>
+        <div class="bloque-meta">
+          <div class="bloque-name">Antropometría</div>
+          <div class="bloque-hint">Talla · Peso · Envergadura · Altura sentado</div>
+        </div>
+        <div class="bloque-chevron" id="chev-antro">▸</div>
+      </div>
+      <div class="bloque-body" id="body-antro">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Talla (cm)</label>
+            <input type="number" id="ef-height" placeholder="158.5" min="50" max="250" step="0.1" oninput="calcDerived()">
+            <div class="err-msg" id="err-height">Valor positivo requerido</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Peso (kg)</label>
+            <input type="number" id="ef-weight" placeholder="47.5" min="10" max="200" step="0.1" oninput="calcDerived()">
+            <div class="err-msg" id="err-weight">Valor positivo requerido</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Envergadura (cm)</label>
+            <input type="number" id="ef-wingspan" placeholder="161.0" min="50" max="280" step="0.1" oninput="calcDerived()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Altura sentado (cm)</label>
+            <input type="number" id="ef-sitting" placeholder="83.0" min="30" max="160" step="0.1" oninput="calcDerived()">
+          </div>
+        </div>
+        <div class="derived" id="derived-strip">
+          <div><div class="der-v" id="d-bmi">—</div><div class="der-l">IMC</div></div>
+          <div><div class="der-v" id="d-wsh">—</div><div class="der-l">Env − Talla</div></div>
+          <div><div class="der-v" id="d-shr">—</div><div class="der-l">Alt.Sent / Talla</div></div>
+        </div>
+        <div class="note" style="font-size:0.65rem">ℹ️ IMC calculado automáticamente. Sin clasificación para jugadores/as en formación.</div>
+      </div>
+    </div>
+
+    <!-- BLOQUE: YO-YO (colapsable) -->
+    <div class="bloque" id="bloque-yoyo">
+      <div class="bloque-hd" onclick="toggleBloque('yoyo')">
+        <label class="bloque-check" onclick="event.stopPropagation()">
+          <input type="checkbox" id="chk-yoyo" onchange="toggleBloque('yoyo',this.checked)">
+          <span class="bloque-chk-ui"></span>
+        </label>
+        <div class="bloque-icon" style="background:rgba(56,189,248,0.12)">🏃</div>
+        <div class="bloque-meta">
+          <div class="bloque-name">Test 1 — Beep Test (20m Shuttle)</div>
+          <div class="bloque-hint">Resistencia aeróbica · Mayor nivel/lanzadera = mejor</div>
+        </div>
+        <div class="bloque-chevron" id="chev-yoyo">▸</div>
+      </div>
+      <div class="bloque-body" id="body-yoyo">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nivel alcanzado <span class="req">*</span></label>
+            <input type="number" id="ef-yoyo-level" placeholder="8" min="1" max="16" step="1" oninput="calcBeepDist()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lanzadera alcanzada <span class="req">*</span></label>
+            <input type="number" id="ef-yoyo-shuttle" placeholder="6" min="1" max="16" step="1" oninput="calcBeepDist()">
+          </div>
+        </div>
+        <!-- RESULTADO CALCULADO -->
+        <div style="background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);border-radius:9px;padding:11px 14px;margin-top:4px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+          <div><div style="font-size:1.1rem;font-weight:900;color:#38bdf8" id="beep-result-disp">—</div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-top:2px">Resultado</div></div>
+          <div><div style="font-size:1.1rem;font-weight:900;color:#38bdf8" id="beep-dist-disp">— m</div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-top:2px">Distancia</div></div>
+          <div><div style="font-size:1.1rem;font-weight:900;color:#38bdf8" id="beep-shuttles-disp">—</div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-top:2px">Lanzaderas tot.</div></div>
+        </div>
+        <div class="note" style="font-size:0.65rem;margin-top:8px">ℹ️ La distancia se calcula automáticamente (cada lanzadera = 20 m). Protocolo estándar 16 niveles.</div>
+        <!-- campos ocultos para storage -->
+        <input type="hidden" id="ef-yoyo-result">
+        <input type="hidden" id="ef-yoyo-dist">
+      </div>
+    </div>
+
+    <!-- BLOQUE: LANE AGILITY (colapsable) -->
+    <div class="bloque" id="bloque-lane">
+      <div class="bloque-hd" onclick="toggleBloque('lane')">
+        <label class="bloque-check" onclick="event.stopPropagation()">
+          <input type="checkbox" id="chk-lane" onchange="toggleBloque('lane',this.checked)">
+          <span class="bloque-chk-ui"></span>
+        </label>
+        <div class="bloque-icon" style="background:rgba(167,139,250,0.12)">⚡</div>
+        <div class="bloque-meta">
+          <div class="bloque-name">Test 2 — Lane Agility</div>
+          <div class="bloque-hint">Agilidad alrededor de la llave · Menor tiempo = mejor</div>
+        </div>
+        <div class="bloque-chevron" id="chev-lane">▸</div>
+      </div>
+      <div class="bloque-body" id="body-lane">
+        <div class="form-row trio">
+          <div class="form-group">
+            <label class="form-label">Intento 1 (s)</label>
+            <input type="number" id="ef-lane-1" placeholder="14.12" min="0" step="0.01" oninput="calcLaneBest()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intento 2 (s)</label>
+            <input type="number" id="ef-lane-2" placeholder="13.82" min="0" step="0.01" oninput="calcLaneBest()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mejor</label>
+            <input type="number" id="ef-lane-best" placeholder="—" readonly style="background:#1a1a2e;cursor:default">
+          </div>
+        </div>
+        <div class="test-best">
+          <div class="test-best-lbl">⏱ Mejor tiempo</div>
+          <div class="test-best-val" id="lane-best-disp">— s</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE: SPRINT 20m (colapsable) -->
+    <div class="bloque" id="bloque-sprint">
+      <div class="bloque-hd" onclick="toggleBloque('sprint')">
+        <label class="bloque-check" onclick="event.stopPropagation()">
+          <input type="checkbox" id="chk-sprint" onchange="toggleBloque('sprint',this.checked)">
+          <span class="bloque-chk-ui"></span>
+        </label>
+        <div class="bloque-icon" style="background:rgba(250,204,21,0.12)">💨</div>
+        <div class="bloque-meta">
+          <div class="bloque-name">Test 3 — Sprint 20 metros</div>
+          <div class="bloque-hint">Velocidad lineal · Salida estática · Menor tiempo = mejor</div>
+        </div>
+        <div class="bloque-chevron" id="chev-sprint">▸</div>
+      </div>
+      <div class="bloque-body" id="body-sprint">
+        <div class="form-row trio">
+          <div class="form-group">
+            <label class="form-label">Intento 1 (s)</label>
+            <input type="number" id="ef-sprint-1" placeholder="4.12" min="0" step="0.01" oninput="calcSprintBest()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intento 2 (s)</label>
+            <input type="number" id="ef-sprint-2" placeholder="4.05" min="0" step="0.01" oninput="calcSprintBest()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mejor</label>
+            <input type="number" id="ef-sprint-best" placeholder="—" readonly style="background:#1a1a2e;cursor:default">
+          </div>
+        </div>
+        <div class="test-best">
+          <div class="test-best-lbl">⏱ Mejor tiempo</div>
+          <div class="test-best-val" id="sprint-best-disp">— s</div>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="ef-edit-id" value="">
+    <div class="note" style="margin-bottom:12px;font-size:0.68rem">✅ Solo la <strong>fecha</strong> es obligatoria. Activá los bloques que vayas a cargar en esta sesión.</div>
+    <button class="btn-primary" onclick="saveEval()">💾 Guardar evaluación</button>
+    <div style="height:8px"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL: VER EVALUACIÓN ════════════════════════ -->
+<div id="modal-view" class="modal-bg">
+  <div class="modal" id="modal-view-body"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- NAV BAR -->
+<div class="navbar" id="navbar" style="display:none">
+  <button class="nb on" id="nb-hist" onclick="showTab('historial')">
+    <div class="nb-icon">📋</div>Historial
+  </button>
+  <button class="nb" id="nb-evol" onclick="showTab('evolucion')">
+    <div class="nb-icon">📈</div>Evolución
+  </button>
+  <button class="nb" id="nb-graf" onclick="showTab('graficos')">
+    <div class="nb-icon">📊</div>Gráficos
+  </button>
+  <button class="nb" id="nb-plan" onclick="showTab('plan')">
+    <div class="nb-icon">🏃</div>Plan
+  </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════════════════════
+const SK_PLAYERS   = 'nl_ef_players_v1';   // lista de jugadoras
+const SK_EVALS     = 'nl_ef_evals_v1';     // todas las evaluaciones
+const SK_PHOTOS    = 'nl_ef_photos_v1';    // fotos base64 por playerId
+
+// Jugadoras del plantel (preconfiguradas, expandibles)
+const PLANTEL_DEFAULT = [
+  {id:'mia14',     name:'Mía Sánchez',      dorsal:'14', cat:'U13 AFMB'},
+  {id:'cat8',      name:'Catalina Grillo',   dorsal:'8',  cat:'U13 AFMB'},
+  {id:'luba6',     name:'Luba Portinari',    dorsal:'6',  cat:'U13 AFMB'},
+  {id:'alma12',    name:'Alma Smigiel',      dorsal:'12', cat:'U13 AFMB'},
+  {id:'martina10', name:'Martina Bailón',    dorsal:'10', cat:'U13 AFMB'},
+];
+
+function loadPlayers(){
+  const saved = localStorage.getItem(SK_PLAYERS);
+  return saved ? JSON.parse(saved) : PLANTEL_DEFAULT;
+}
+function savePlayers(p){ localStorage.setItem(SK_PLAYERS, JSON.stringify(p)); }
+function loadEvals(){
+  const saved = localStorage.getItem(SK_EVALS);
+  return saved ? JSON.parse(saved) : [];
+}
+function saveEvals(e){ localStorage.setItem(SK_EVALS, JSON.stringify(e)); }
+function loadPhotos(){
+  const saved = localStorage.getItem(SK_PHOTOS);
+  return saved ? JSON.parse(saved) : {};
+}
+function savePhotos(p){ localStorage.setItem(SK_PHOTOS, JSON.stringify(p)); }
+
+function getPlayerEvals(playerId){
+  return loadEvals().filter(e => e.playerId === playerId)
+    .sort((a,b) => a.date.localeCompare(b.date));
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════════════════════
+let currentPlayer = null;
+let charts = {};
+
+// ═══════════════════════════════════════════════════════════════════════
+// PANTALLA: LISTA DE JUGADORAS
+// ═══════════════════════════════════════════════════════════════════════
+function renderPlayers(){
+  const players = loadPlayers();
+  const evals   = loadEvals();
+  const photos  = loadPhotos();
+  const grid = document.getElementById('player-grid');
+  grid.innerHTML = '';
+  players.forEach(p => {
+    const pEvals = evals.filter(e => e.playerId === p.id);
+    const hasEvals = pEvals.length > 0;
+    const lastEval = hasEvals ? pEvals.sort((a,b)=>b.date.localeCompare(a.date))[0] : null;
+    const photo = photos[p.id];
+
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    card.onclick = () => openPlayer(p.id);
+
+    const avHtml = photo
+      ? `<img src="${photo}" alt="${p.name}">`
+      : `<span>${p.dorsal}</span>`;
+
+    card.innerHTML = `
+      <div class="pc-av">${avHtml}</div>
+      <div class="pc-name">${p.name}</div>
+      <div class="pc-cat">${p.cat}</div>
+      ${hasEvals
+        ? `<div class="pc-dot has" title="${pEvals.length} evaluación(es)"></div>`
+        : `<div class="pc-dot" title="Sin evaluaciones"></div>`
+      }
+      ${hasEvals ? `<div style="font-size:0.6rem;color:#64748b;margin-top:3px">Última: ${fmtDate(lastEval.date)}</div>` : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('navbar').style.display = id === 'scr-profile' ? 'flex' : 'none';
+}
+function goPlayers(){
+  showScreen('scr-players');
+  renderPlayers();
+  const ctxNav = document.getElementById('mia-ctx-nav');
+  if(ctxNav) ctxNav.style.display = 'none';
+}
+function openPlayer(playerId){
+  const players = loadPlayers();
+  currentPlayer = players.find(p => p.id === playerId);
+  if(!currentPlayer) return;
+  showScreen('scr-profile');
+  renderProfile();
+  showTab('historial');
+  // Mostrar mini nav del ecosistema solo para Mía
+  const ctxNav = document.getElementById('mia-ctx-nav');
+  if(ctxNav) ctxNav.style.display = playerId === 'mia14' ? 'block' : 'none';
+}
+
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('tab-' + name).classList.add('on');
+  // nav bar
+  ['hist','evol','graf','plan'].forEach(k => document.getElementById('nb-'+k)?.classList.remove('on'));
+  const map = {historial:'hist', evolucion:'evol', graficos:'graf', plan:'plan'};
+  if(map[name]) document.getElementById('nb-'+map[name])?.classList.add('on');
+  // find tab button
+  const tabs = document.querySelectorAll('.tab');
+  const tabMap = {historial:0, evolucion:1, graficos:2, plan:3};
+  if(tabMap[name] !== undefined) tabs[tabMap[name]]?.classList.add('on');
+
+  if(name === 'evolucion') renderEvolucion();
+  if(name === 'graficos')  renderGraficos();
+  if(name === 'plan')      renderPlan();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER PERFIL
+// ═══════════════════════════════════════════════════════════════════════
+function renderProfile(){
+  const p = currentPlayer;
+  const evals = getPlayerEvals(p.id);
+  const photos = loadPhotos();
+  const photo  = photos[p.id];
+  const last   = evals.length ? evals[evals.length-1] : null;
+
+  document.getElementById('prof-title').textContent = p.name;
+  document.getElementById('prof-sub').textContent   = p.cat + ' · #' + p.dorsal;
+  document.getElementById('prof-name').textContent  = p.name;
+  document.getElementById('prof-cat').textContent   = p.cat + ' · Dorsal #' + p.dorsal;
+  document.getElementById('prof-badge').textContent = last
+    ? `Última eval: ${fmtDate(last.date)}`
+    : 'Sin evaluaciones';
+
+  // Avatar
+  const avText = document.getElementById('prof-avatar-text');
+  const avImg  = document.getElementById('prof-avatar-img');
+  if(photo){
+    avImg.src = photo; avImg.style.display = 'block'; avText.style.display = 'none';
+  } else {
+    avImg.style.display = 'none'; avText.style.display = '';
+    avText.textContent = '#' + p.dorsal;
+  }
+
+  // Hero strip
+  const hs = document.getElementById('hero-strip');
+  if(last){
+    hs.innerHTML = `
+      <div class="hs"><div class="hs-v">${last.heightCm||'—'}</div><div class="hs-l">Talla cm</div></div>
+      <div class="hs"><div class="hs-v">${last.weightKg||'—'}</div><div class="hs-l">Peso kg</div></div>
+      <div class="hs"><div class="hs-v">${last.yoyoResult||'—'}</div><div class="hs-l">Beep Test</div></div>
+      <div class="hs"><div class="hs-v">${last.laneAgilityBest||'—'}</div><div class="hs-l">Lane Ag. s</div></div>
+      <div class="hs"><div class="hs-v">${last.sprint20mBest||'—'}</div><div class="hs-l">Sprint s</div></div>
+    `;
+  }
+
+  renderHistorial(evals);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HISTORIAL
+// ═══════════════════════════════════════════════════════════════════════
+function renderHistorial(evals){
+  const el = document.getElementById('eval-list');
+  if(!evals.length){
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div>Sin evaluaciones registradas.<br>Tocá <strong>+ Nueva Evaluación</strong> para empezar.</div>`;
+    return;
+  }
+  el.innerHTML = '';
+  [...evals].reverse().forEach((ev, i) => {
+    const num = evals.length - i;
+    const div = document.createElement('div');
+    div.className = 'eval-item';
+    div.innerHTML = `
+      <div class="eval-item-hd">
+        <div class="eval-date">📅 ${fmtDate(ev.date)}</div>
+        <div class="eval-num">Eval #${num}</div>
+      </div>
+      <div class="eval-stats">
+        <div class="es"><div class="es-v">${ev.heightCm||'—'}</div><div class="es-l">Talla cm</div></div>
+        <div class="es"><div class="es-v">${ev.weightKg||'—'}</div><div class="es-l">Peso kg</div></div>
+        <div class="es"><div class="es-v">${ev.yoyoResult||'—'}</div><div class="es-l">Beep Test</div></div>
+        <div class="es"><div class="es-v">${ev.laneAgilityBest||'—'}</div><div class="es-l">Lane s</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn-success" onclick="viewEval('${ev.id}');event.stopPropagation()">👁 Ver</button>
+        <button class="btn-secondary" onclick="editEval('${ev.id}');event.stopPropagation()">✏️ Editar</button>
+        <button class="btn-danger" onclick="deleteEval('${ev.id}');event.stopPropagation()">🗑 Eliminar</button>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// VER EVALUACIÓN COMPLETA
+// ═══════════════════════════════════════════════════════════════════════
+function viewEval(id){
+  const all = loadEvals();
+  const ev  = all.find(e => e.id === id);
+  if(!ev) return;
+  const body = document.getElementById('modal-view-body');
+  body.innerHTML = `
+    <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
+    <div class="modal-title">📋 ${fmtDate(ev.date)} — ${ev.category||currentPlayer.cat}</div>
+
+    ${ev.ageAtAssessment ? `<div class="note" style="margin-bottom:12px">Edad al momento: <strong>${ev.ageAtAssessment} años</strong></div>` : ''}
+
+    <div class="card-tit" style="margin-bottom:8px">📏 Antropometría</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      ${row('Talla', ev.heightCm, 'cm')}
+      ${row('Peso', ev.weightKg, 'kg')}
+      ${row('Envergadura', ev.wingspanCm, 'cm')}
+      ${row('Altura sentado', ev.sittingHeightCm, 'cm')}
+      ${row('IMC', ev.bmi, '')}
+      ${row('Env − Talla', ev.wingspanMinusHeightCm !== undefined ? (ev.wingspanMinusHeightCm >= 0 ? '+' : '') + ev.wingspanMinusHeightCm : '—', 'cm')}
+      ${row('Alt.Sent/Talla', ev.sittingHeightRatio, '%')}
+    </div>
+
+    <div class="card-tit" style="margin-bottom:8px">🏀 Tests Físicos</div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;font-weight:700;color:#7dd3fc;margin-bottom:6px">🏃 Beep Test (20m Shuttle)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        ${row('Resultado', ev.yoyoResult, '')}
+        ${row('Nivel', ev.yoyoLevel, '')}
+        ${row('Lanzadera', ev.yoyoShuttle, '')}
+        ${row('Distancia', ev.yoyoDistanceMeters, 'm')}
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;font-weight:700;color:#c4b5fd;margin-bottom:6px">⚡ Lane Agility Test</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        ${row('Intento 1', ev.laneAgilityAttempt1, 's')}
+        ${row('Intento 2', ev.laneAgilityAttempt2, 's')}
+        ${row('Mejor', ev.laneAgilityBest, 's')}
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;font-weight:700;color:#fde68a;margin-bottom:6px">💨 Sprint 20 metros</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        ${row('Intento 1', ev.sprint20mAttempt1, 's')}
+        ${row('Intento 2', ev.sprint20mAttempt2, 's')}
+        ${row('Mejor', ev.sprint20mBest, 's')}
+      </div>
+    </div>
+
+    ${ev.notes ? `<div class="note"><strong>Observaciones:</strong> ${ev.notes}</div>` : ''}
+    <div style="height:8px"></div>
+  `;
+  openModal('modal-view');
+}
+
+function row(label, val, unit){
+  if(val === undefined || val === null || val === '') return `<div class="es"><div class="es-v">—</div><div class="es-l">${label}</div></div>`;
+  return `<div class="es"><div class="es-v">${val}${unit ? '<span style="font-size:0.6rem;color:#64748b"> '+unit+'</span>' : ''}</div><div class="es-l">${label}</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NUEVA / EDITAR EVALUACIÓN
+// ═══════════════════════════════════════════════════════════════════════
+function openNewEval(){
+  clearForm();
+  document.getElementById('ef-edit-id').value = '';
+  document.getElementById('modal-eval-title').textContent = '➕ Nueva Evaluación';
+  // pre-fill date = hoy
+  document.getElementById('ef-date').value = new Date().toISOString().split('T')[0];
+  // pre-fill cat
+  if(currentPlayer) document.getElementById('ef-cat').value = currentPlayer.cat || '';
+  openModal('modal-eval');
+}
+
+function editEval(id){
+  const all = loadEvals();
+  const ev  = all.find(e => e.id === id);
+  if(!ev) return;
+  closeModal('modal-view');
+  clearForm(); // cierra todos los bloques primero
+  document.getElementById('ef-edit-id').value      = id;
+  document.getElementById('modal-eval-title').textContent = '✏️ Editar Evaluación';
+  document.getElementById('ef-date').value          = ev.date || '';
+  document.getElementById('ef-cat').value           = ev.category || '';
+  document.getElementById('ef-age').value           = ev.ageAtAssessment || '';
+  document.getElementById('ef-notes').value         = ev.notes || '';
+
+  // Antropometría — abrir bloque si tiene datos
+  if(ev.heightCm || ev.weightKg || ev.wingspanCm || ev.sittingHeightCm){
+    toggleBloque('antro', true);
+    document.getElementById('ef-height').value   = ev.heightCm || '';
+    document.getElementById('ef-weight').value   = ev.weightKg || '';
+    document.getElementById('ef-wingspan').value = ev.wingspanCm || '';
+    document.getElementById('ef-sitting').value  = ev.sittingHeightCm || '';
+    calcDerived();
+  }
+  // Beep Test — abrir bloque si tiene datos, restaurar nivel+lanzadera y recalcular
+  if(ev.yoyoLevel || ev.yoyoShuttle){
+    toggleBloque('yoyo', true);
+    document.getElementById('ef-yoyo-level').value   = ev.yoyoLevel   || '';
+    document.getElementById('ef-yoyo-shuttle').value = ev.yoyoShuttle || '';
+    calcBeepDist(); // recalcula result y dist desde nivel/lanzadera
+  }
+  // Lane Agility — abrir bloque si tiene datos
+  if(ev.laneAgilityBest || ev.laneAgilityAttempt1){
+    toggleBloque('lane', true);
+    document.getElementById('ef-lane-1').value = ev.laneAgilityAttempt1 || '';
+    document.getElementById('ef-lane-2').value = ev.laneAgilityAttempt2 || '';
+    calcLaneBest();
+  }
+  // Sprint — abrir bloque si tiene datos
+  if(ev.sprint20mBest || ev.sprint20mAttempt1){
+    toggleBloque('sprint', true);
+    document.getElementById('ef-sprint-1').value = ev.sprint20mAttempt1 || '';
+    document.getElementById('ef-sprint-2').value = ev.sprint20mAttempt2 || '';
+    calcSprintBest();
+  }
+  openModal('modal-eval');
+}
+
+function deleteEval(id){
+  if(!confirm('¿Eliminar esta evaluación?')) return;
+  const all = loadEvals().filter(e => e.id !== id);
+  saveEvals(all);
+  renderProfile();
+  toast('Evaluación eliminada');
+}
+
+function clearForm(){
+  ['ef-date','ef-cat','ef-age','ef-notes','ef-height','ef-weight','ef-wingspan','ef-sitting',
+   'ef-yoyo-result','ef-yoyo-level','ef-yoyo-shuttle','ef-yoyo-dist',
+   'ef-lane-1','ef-lane-2','ef-lane-best','ef-sprint-1','ef-sprint-2','ef-sprint-best']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['d-bmi','d-wsh','d-shr'].forEach(id => document.getElementById(id).textContent = '—');
+  document.getElementById('lane-best-disp').textContent = '— s';
+  document.getElementById('sprint-best-disp').textContent = '— s';
+  document.querySelectorAll('.err-msg').forEach(e => e.style.display = 'none');
+  document.querySelectorAll('.invalid').forEach(e => e.classList.remove('invalid'));
+  // Cerrar todos los bloques
+  ['antro','yoyo','lane','sprint'].forEach(n => toggleBloque(n, false));
+}
+
+// ─── CÁLCULOS AUTOMÁTICOS ─────────────────────────────────────────────
+function calcDerived(){
+  const h = parseFloat(document.getElementById('ef-height').value);
+  const w = parseFloat(document.getElementById('ef-weight').value);
+  const ws= parseFloat(document.getElementById('ef-wingspan').value);
+  const sh= parseFloat(document.getElementById('ef-sitting').value);
+
+  document.getElementById('d-bmi').textContent =
+    (h > 0 && w > 0) ? (w / Math.pow(h/100, 2)).toFixed(1) : '—';
+  document.getElementById('d-wsh').textContent =
+    (ws > 0 && h > 0) ? ((ws - h) >= 0 ? '+' : '') + (ws - h).toFixed(1) + ' cm' : '—';
+  document.getElementById('d-shr').textContent =
+    (sh > 0 && h > 0) ? (sh / h * 100).toFixed(1) + '%' : '—';
+}
+
+// ─── BEEP TEST — tabla oficial 16 niveles ────────────────────────────
+// shuttlesPerLevel[nivel] = lanzaderas EN ese nivel
+const BEEP_TABLE = {1:7,2:8,3:8,4:8,5:9,6:9,7:10,8:10,9:11,10:11,11:11,12:12,13:12,14:13,15:13,16:13};
+
+function calcBeepDist(){
+  const nivel   = parseInt(document.getElementById('ef-yoyo-level').value);
+  const lanAdest= parseInt(document.getElementById('ef-yoyo-shuttle').value);
+  if(isNaN(nivel) || nivel < 1 || isNaN(lanAdest) || lanAdest < 1){
+    document.getElementById('beep-result-disp').textContent  = '—';
+    document.getElementById('beep-dist-disp').textContent    = '— m';
+    document.getElementById('beep-shuttles-disp').textContent= '—';
+    document.getElementById('ef-yoyo-result').value = '';
+    document.getElementById('ef-yoyo-dist').value   = '';
+    return;
+  }
+  // Validar que la lanzadera no supere las del nivel
+  const maxLan = BEEP_TABLE[nivel] || 16;
+  const lan = Math.min(lanAdest, maxLan);
+  // Lanzaderas acumuladas de niveles anteriores completos + lanzaderas del nivel actual
+  let cumPrev = 0;
+  for(let i = 1; i < nivel; i++) cumPrev += (BEEP_TABLE[i] || 0);
+  const totalShuttles = cumPrev + lan;
+  const distancia = totalShuttles * 20;
+  const resultado = nivel + '.' + lan;
+
+  document.getElementById('beep-result-disp').textContent  = resultado;
+  document.getElementById('beep-dist-disp').textContent    = distancia.toLocaleString('es-AR') + ' m';
+  document.getElementById('beep-shuttles-disp').textContent= totalShuttles;
+  // guardar en campos hidden para storage
+  document.getElementById('ef-yoyo-result').value = resultado;
+  document.getElementById('ef-yoyo-dist').value   = distancia;
+}
+
+function calcLaneBest(){
+  const a1 = parseFloat(document.getElementById('ef-lane-1').value);
+  const a2 = parseFloat(document.getElementById('ef-lane-2').value);
+  const vals = [a1, a2].filter(v => !isNaN(v) && v > 0);
+  if(!vals.length){ document.getElementById('ef-lane-best').value = ''; document.getElementById('lane-best-disp').textContent = '— s'; return; }
+  const best = Math.min(...vals).toFixed(2);
+  document.getElementById('ef-lane-best').value = best;
+  document.getElementById('lane-best-disp').textContent = best + ' s';
+}
+
+function calcSprintBest(){
+  const a1 = parseFloat(document.getElementById('ef-sprint-1').value);
+  const a2 = parseFloat(document.getElementById('ef-sprint-2').value);
+  const vals = [a1, a2].filter(v => !isNaN(v) && v > 0);
+  if(!vals.length){ document.getElementById('ef-sprint-best').value = ''; document.getElementById('sprint-best-disp').textContent = '— s'; return; }
+  const best = Math.min(...vals).toFixed(2);
+  document.getElementById('ef-sprint-best').value = best;
+  document.getElementById('sprint-best-disp').textContent = best + ' s';
+}
+
+// ─── BLOQUES COLAPSABLES ─────────────────────────────────────────────
+function toggleBloque(name, forceState){
+  const bloque = document.getElementById('bloque-' + name);
+  const chk    = document.getElementById('chk-' + name);
+  // Si se llama desde el checkbox, forceState viene definido; si se llama desde el header, toggle
+  const willOpen = forceState !== undefined ? forceState : !bloque.classList.contains('open');
+  if(willOpen){
+    bloque.classList.add('open');
+    chk.checked = true;
+  } else {
+    bloque.classList.remove('open');
+    chk.checked = false;
+  }
+}
+function bloqueIsOpen(name){
+  return document.getElementById('bloque-' + name).classList.contains('open');
+}
+
+// ─── VALIDACIÓN ───────────────────────────────────────────────────────
+function validateForm(){
+  let ok = true;
+  // Solo fecha es obligatoria
+  const dateEl  = document.getElementById('ef-date');
+  const dateErr = document.getElementById('err-date');
+  if(!dateEl.value){ dateEl.classList.add('invalid'); dateErr.style.display='block'; ok=false; }
+  else             { dateEl.classList.remove('invalid'); dateErr.style.display='none'; }
+
+  // Dentro de bloques abiertos: validar que los numéricos sean positivos
+  const numericFields = [
+    {id:'ef-height',  bloque:'antro'}, {id:'ef-weight',   bloque:'antro'},
+    {id:'ef-wingspan',bloque:'antro'}, {id:'ef-sitting',  bloque:'antro'},
+    {id:'ef-yoyo-result', bloque:'yoyo'}, {id:'ef-yoyo-dist', bloque:'yoyo'},
+    {id:'ef-yoyo-shuttle',bloque:'yoyo'},
+    {id:'ef-lane-1',  bloque:'lane'},  {id:'ef-lane-2',   bloque:'lane'},
+    {id:'ef-sprint-1',bloque:'sprint'},{id:'ef-sprint-2', bloque:'sprint'},
+  ];
+  numericFields.forEach(({id, bloque}) => {
+    if(!bloqueIsOpen(bloque)) return; // ignorar bloques cerrados
+    const el = document.getElementById(id);
+    if(el.value !== '' && (isNaN(parseFloat(el.value)) || parseFloat(el.value) < 0)){
+      el.classList.add('invalid'); ok = false;
+    } else { el.classList.remove('invalid'); }
+  });
+  return ok;
+}
+
+// ─── GUARDAR ─────────────────────────────────────────────────────────
+function saveEval(){
+  if(!validateForm()){ toast('⚠️ Revisá los campos marcados en rojo'); return; }
+  if(!currentPlayer) return;
+
+  // Solo leer datos de bloques abiertos; bloques cerrados quedan null
+  const antro  = bloqueIsOpen('antro');
+  const yoyo   = bloqueIsOpen('yoyo');
+  const lane   = bloqueIsOpen('lane');
+  const sprint = bloqueIsOpen('sprint');
+
+  const h  = antro  ? parseFloat(document.getElementById('ef-height').value)  || null : null;
+  const w  = antro  ? parseFloat(document.getElementById('ef-weight').value)   || null : null;
+  const ws = antro  ? parseFloat(document.getElementById('ef-wingspan').value) || null : null;
+  const sh = antro  ? parseFloat(document.getElementById('ef-sitting').value)  || null : null;
+  const l1 = lane   ? parseFloat(document.getElementById('ef-lane-1').value)   || null : null;
+  const l2 = lane   ? parseFloat(document.getElementById('ef-lane-2').value)   || null : null;
+  const s1 = sprint ? parseFloat(document.getElementById('ef-sprint-1').value) || null : null;
+  const s2 = sprint ? parseFloat(document.getElementById('ef-sprint-2').value) || null : null;
+
+  const laneBest   = [l1,l2].filter(v=>v!==null&&v>0).length ? Math.min(...[l1,l2].filter(v=>v!==null&&v>0)) : null;
+  const sprintBest = [s1,s2].filter(v=>v!==null&&v>0).length ? Math.min(...[s1,s2].filter(v=>v!==null&&v>0)) : null;
+
+  const ev = {
+    id:      document.getElementById('ef-edit-id').value || uid(),
+    playerId: currentPlayer.id,
+    date:    document.getElementById('ef-date').value,
+    category: document.getElementById('ef-cat').value || currentPlayer.cat,
+    ageAtAssessment: parseFloat(document.getElementById('ef-age').value) || null,
+    notes:   document.getElementById('ef-notes').value.trim() || '',
+
+    heightCm:          h,
+    weightKg:          w,
+    wingspanCm:        ws,
+    sittingHeightCm:   sh,
+    bmi:               (h && w) ? parseFloat((w / Math.pow(h/100, 2)).toFixed(1)) : null,
+    wingspanMinusHeightCm: (ws && h) ? parseFloat((ws - h).toFixed(1)) : null,
+    sittingHeightRatio:    (sh && h) ? parseFloat((sh / h * 100).toFixed(1)) : null,
+
+    yoyoResult:         yoyo ? parseFloat(document.getElementById('ef-yoyo-result').value)  || null : null,
+    yoyoLevel:          yoyo ? document.getElementById('ef-yoyo-level').value.trim()  || null : null,
+    yoyoShuttle:        yoyo ? parseFloat(document.getElementById('ef-yoyo-shuttle').value) || null : null,
+    yoyoDistanceMeters: yoyo ? parseFloat(document.getElementById('ef-yoyo-dist').value)    || null : null,
+
+    laneAgilityAttempt1: l1,
+    laneAgilityAttempt2: l2,
+    laneAgilityBest:     laneBest   ? parseFloat(laneBest.toFixed(2))   : null,
+
+    sprint20mAttempt1: s1,
+    sprint20mAttempt2: s2,
+    sprint20mBest:     sprintBest  ? parseFloat(sprintBest.toFixed(2))  : null,
+  };
+
+  const all = loadEvals();
+  const idx = all.findIndex(e => e.id === ev.id);
+  if(idx >= 0) all[idx] = ev;
+  else all.push(ev);
+  saveEvals(all);
+
+  closeModal('modal-eval');
+  renderProfile();
+  toast('✅ Evaluación guardada');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EVOLUCIÓN
+// ═══════════════════════════════════════════════════════════════════════
+function renderEvolucion(){
+  const el = document.getElementById('evolucion-content');
+  const evals = getPlayerEvals(currentPlayer.id);
+  if(evals.length < 2){
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📈</div>Necesitás al menos 2 evaluaciones para ver la evolución.</div>`;
+    return;
+  }
+  const prev = evals[evals.length - 2];
+  const curr = evals[evals.length - 1];
+  el.innerHTML = `
+    <div class="note" style="margin-bottom:14px">
+      Comparando <strong>${fmtDate(prev.date)}</strong> → <strong>${fmtDate(curr.date)}</strong>
+    </div>
+
+    <div class="sh"><span class="sh-icon">📏</span><span class="sh-title">Antropometría</span><div class="sh-line"></div></div>
+    <div class="delta-grid">
+      ${deltaCard('Talla', prev.heightCm, curr.heightCm, 'cm', 'up')}
+      ${deltaCard('Peso', prev.weightKg, curr.weightKg, 'kg', 'up')}
+      ${deltaCard('Envergadura', prev.wingspanCm, curr.wingspanCm, 'cm', 'up')}
+      ${deltaCard('Altura sent.', prev.sittingHeightCm, curr.sittingHeightCm, 'cm', 'up')}
+      ${deltaCard('IMC', prev.bmi, curr.bmi, '', 'neutral')}
+      ${deltaCard('Env − Talla', prev.wingspanMinusHeightCm, curr.wingspanMinusHeightCm, 'cm', 'up')}
+    </div>
+
+    <div class="sh"><span class="sh-icon">🏀</span><span class="sh-title">Rendimiento Físico</span><div class="sh-line"></div></div>
+    <div class="delta-grid">
+      ${deltaCard('Beep Test', prev.yoyoResult, curr.yoyoResult, '', 'up')}
+      ${deltaCard('Dist. Beep', prev.yoyoDistanceMeters, curr.yoyoDistanceMeters, 'm', 'up')}
+      ${deltaCard('Lane Agility', prev.laneAgilityBest, curr.laneAgilityBest, 's', 'down')}
+      ${deltaCard('Sprint 20m', prev.sprint20mBest, curr.sprint20mBest, 's', 'down')}
+    </div>
+  `;
+}
+
+// dir: 'up' = mayor es mejor, 'down' = menor es mejor, 'neutral'
+function deltaCard(label, prev, curr, unit, dir){
+  if(prev === null || prev === undefined || curr === null || curr === undefined){
+    return `<div class="delta-card"><div class="delta-metric">${label}</div><div style="color:var(--muted);font-size:0.78rem">Sin datos</div></div>`;
+  }
+  const diff = parseFloat((curr - prev).toFixed(3));
+  const improved = dir === 'up' ? diff > 0 : dir === 'down' ? diff < 0 : null;
+  const cls = improved === true ? 'delta-pos' : improved === false ? 'delta-neg' : 'delta-neu';
+  const sign = diff > 0 ? '+' : '';
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '=';
+  return `
+    <div class="delta-card">
+      <div class="delta-metric">${label}</div>
+      <div class="delta-row">
+        <div class="delta-vals">${prev}${unit ? ' '+unit : ''} → ${curr}${unit ? ' '+unit : ''}</div>
+      </div>
+      <div class="delta-val ${cls}">${arrow} ${sign}${diff}${unit ? ' '+unit : ''}</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PLAN DE MEJORA FÍSICA
+// ═══════════════════════════════════════════════════════════════════════
+function renderPlan(){
+  const el    = document.getElementById('plan-content');
+  const evals = getPlayerEvals(currentPlayer.id);
+  const last  = evals.length ? evals[evals.length - 1] : null;
+
+  // ── Bloque antropometría (última evaluación) ──────────────────────
+  let antroHtml = '';
+  if(last && (last.heightCm || last.weightKg || last.wingspanCm || last.bmi)){
+    const fields = [
+      { l:'Talla',      v: last.heightCm        ? last.heightCm + ' cm'  : '—' },
+      { l:'Peso',       v: last.weightKg         ? last.weightKg + ' kg'  : '—' },
+      { l:'Envergadura',v: last.wingspanCm        ? last.wingspanCm + ' cm': '—' },
+      { l:'Alt. Sent.', v: last.sittingHeightCm   ? last.sittingHeightCm + ' cm' : '—' },
+      { l:'IMC',        v: last.bmi               ? last.bmi               : '—' },
+      { l:'Env − Talla',v: last.wingspanMinusHeightCm !== null && last.wingspanMinusHeightCm !== undefined
+                            ? (last.wingspanMinusHeightCm >= 0 ? '+' : '') + last.wingspanMinusHeightCm + ' cm' : '—' },
+    ];
+    antroHtml = `
+      <div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+        📏 Datos antropométricos — ${fmtDate(last.date)}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+        ${fields.map(f => `
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 8px;text-align:center">
+            <div style="font-size:1rem;font-weight:900;color:var(--ac);line-height:1">${f.v}</div>
+            <div style="font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px">${f.l}</div>
+          </div>`).join('')}
+      </div>`;
+  } else {
+    antroHtml = `
+      <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:var(--rs);padding:11px 14px;margin-bottom:16px;font-size:.75rem;color:#94a3b8">
+        📏 Sin datos antropométricos aún.
+        <a onclick="openNewEval()" style="color:var(--ac);font-weight:700;cursor:pointer;text-decoration:none"> Cargar evaluación →</a>
+      </div>`;
+  }
+
+  // ── Tests físicos actuales ────────────────────────────────────────
+  let testsHtml = '';
+  if(last && (last.yoyoResult || last.laneAgilityBest || last.sprint20mBest)){
+    testsHtml = `
+      <div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">
+        🎯 Tests actuales — base para el plan
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+        <div style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:var(--rs);padding:10px 8px;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#38bdf8;line-height:1">${last.yoyoResult||'—'}</div>
+          <div style="font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px">Beep Test</div>
+        </div>
+        <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:var(--rs);padding:10px 8px;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#c4b5fd;line-height:1">${last.laneAgilityBest ? last.laneAgilityBest + ' s' : '—'}</div>
+          <div style="font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px">Lane Agility</div>
+        </div>
+        <div style="background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.2);border-radius:var(--rs);padding:10px 8px;text-align:center">
+          <div style="font-size:1rem;font-weight:900;color:#fde68a;line-height:1">${last.sprint20mBest ? last.sprint20mBest + ' s' : '—'}</div>
+          <div style="font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px">Sprint 20m</div>
+        </div>
+      </div>`;
+  }
+
+  // ── Plan 3 sesiones × 30 min ──────────────────────────────────────
+  // Estructura: cada sesión tiene secciones (titulo+color+items[])
+  const sesiones = [
+    {
+      dia: 'Sesión A — Velocidad y agilidad',
+      dia_semana: 'Lunes',
+      color: '#38bdf8', bg: 'rgba(56,189,248,0.07)', border: 'rgba(56,189,248,0.2)', icon: '⚡',
+      secciones: [
+        {
+          titulo: '🔥 Entrada en calor · 5 min',
+          items: [
+            'Caminata/trote suave en el lugar — 1 min',
+            'Skipping bajo — 1 min',
+            'Talones al glúteo — 1 min',
+            'Desplazamientos laterales — 1 min',
+            'Movilidad de tobillos, rodillas y cadera — 1 min',
+          ]
+        },
+        {
+          titulo: '🏃 Bloque de velocidad · 10 min',
+          nota: 'En un espacio de 10–20 metros. Prioridad: calidad del movimiento, no cantidad.',
+          items: [
+            '<strong>6 × sprint de 10–20 m</strong> — Salida rápida · volver caminando · recuperación completa antes de repetir',
+            '<strong>4 × aceleración</strong> — 3 pasos rápidos · frenada controlada · volver caminando',
+          ]
+        },
+        {
+          titulo: '↔️ Cambios de dirección · 10 min',
+          nota: 'Marcá dos puntos separados 3–5 metros. Descansá 30–45 s entre bloques.',
+          items: [
+            '5 × ida y vuelta frontal',
+            '5 × desplazamiento lateral',
+            '5 × adelante → lateral → atrás',
+            '5 × combinación libre',
+          ]
+        },
+        {
+          titulo: '🧘 Vuelta a la calma · 5 min',
+          items: ['Caminata suave', 'Pantorrillas', 'Cuádriceps', 'Isquiotibiales', 'Aductores']
+        },
+      ]
+    },
+    {
+      dia: 'Sesión B — Fuerza y estabilidad',
+      dia_semana: 'Miércoles',
+      color: '#c4b5fd', bg: 'rgba(167,139,250,0.07)', border: 'rgba(167,139,250,0.2)', icon: '💪',
+      secciones: [
+        {
+          titulo: '🔥 Entrada en calor · 5 min',
+          items: [
+            'Trote suave en el lugar — 1 min',
+            'Sentadillas — 10',
+            'Elevaciones de talones — 15',
+            'Zancadas cortas — 6 por pierna',
+            'Movilidad de cadera y tobillos',
+          ]
+        },
+        {
+          titulo: '🦵 Circuito de fuerza · 15 min',
+          nota: '3 vueltas · Descanso 60 s entre vueltas · Técnica controlada en cada ejercicio.',
+          items: [
+            '12 sentadillas',
+            '8 zancadas por pierna',
+            '10 puentes de glúteos',
+            '8 flexiones de brazos',
+            '20 segundos de plancha',
+            '10 elevaciones de talones',
+          ]
+        },
+        {
+          titulo: '🦶 Estabilidad · 5 min',
+          nota: 'Repetir 2 veces.',
+          items: [
+            'Equilibrio sobre una pierna — 20 s por pierna',
+            'Equilibrio con ligera flexión de rodilla — 20 s por pierna',
+            '8 sentadillas a una pierna asistidas por lado',
+          ]
+        },
+        {
+          titulo: '🧘 Vuelta a la calma · 5 min',
+          items: ['Movilidad y elongación suave de piernas, cadera y espalda.']
+        },
+      ]
+    },
+    {
+      dia: 'Sesión C — Resistencia aeróbica',
+      dia_semana: 'Viernes',
+      color: '#86efac', bg: 'rgba(34,197,94,0.07)', border: 'rgba(34,197,94,0.2)', icon: '❤️',
+      secciones: [
+        {
+          titulo: '🔥 Entrada en calor · 5 min',
+          items: [
+            'Caminata rápida — 1 min',
+            'Trote suave — 2 min',
+            'Skipping suave — 30 s',
+            'Desplazamiento lateral — 30 s',
+            'Movilidad general — 1 min',
+          ]
+        },
+        {
+          titulo: '🔄 Intervalos · 15 min',
+          nota: '30 s trabajo + 30 s recuperación · Repetir el circuito 3 veces · Intensidad alta pero controlada.',
+          items: [
+            'Trote rápido',
+            'Desplazamiento lateral',
+            'Skipping',
+            'Trote rápido',
+            'Desplazamiento adelante/atrás',
+          ]
+        },
+        {
+          titulo: '🏃 Bloque final · 5 min',
+          nota: 'Intentá mantener una intensidad similar en las 5 repeticiones.',
+          items: ['5 × 30 s de carrera/trote rápido + 30 s caminando']
+        },
+        {
+          titulo: '🧘 Vuelta a la calma · 5 min',
+          items: ['Caminata suave', 'Respiración', 'Movilidad de tobillos y cadera', 'Elongación suave de piernas']
+        },
+      ]
+    },
+  ];
+
+  const sesHtml = sesiones.map(s => `
+    <div style="background:var(--card);border:1px solid ${s.border};border-left:3px solid ${s.color};border-radius:var(--r);padding:14px 15px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+        <div style="width:36px;height:36px;border-radius:10px;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">${s.icon}</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:800;color:${s.color}">${s.dia}</div>
+          <div style="font-size:.63rem;color:var(--muted);margin-top:2px">30 min · casa / patio / espacio reducido · sin equipamiento</div>
+        </div>
+      </div>
+      ${s.secciones.map(sec => `
+        <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
+          <div style="font-size:.72rem;font-weight:800;color:#e2e8f0;margin-bottom:${sec.nota ? '4px' : '6px'}">${sec.titulo}</div>
+          ${sec.nota ? `<div style="font-size:.67rem;color:#64748b;margin-bottom:6px;font-style:italic">${sec.nota}</div>` : ''}
+          <ul style="margin:0;padding-left:16px">
+            ${sec.items.map(it => `<li style="font-size:.71rem;color:#94a3b8;line-height:1.65;margin-bottom:2px">${it}</li>`).join('')}
+          </ul>
+        </div>`).join('')}
+    </div>`).join('');
+
+  // ── Semana tipo ───────────────────────────────────────────────────
+  const semanaHtml = `
+    <div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px">📅 Organización semanal</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px">
+      ${[
+        {d:'Lu', s:'A', c:'#38bdf8'},
+        {d:'Ma', s:'·', c:'#334155', muted:true},
+        {d:'Mi', s:'B', c:'#c4b5fd'},
+        {d:'Ju', s:'·', c:'#334155', muted:true},
+        {d:'Vi', s:'C', c:'#86efac'},
+        {d:'Sá', s:'🏀', c:'#f97316'},
+        {d:'Do', s:'💤', c:'#1e293b', muted:true},
+      ].map(x => `
+        <div style="background:${x.muted ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.05)'};border:1px solid ${x.muted ? 'var(--border)' : x.c+'44'};border-radius:8px;padding:8px 4px;text-align:center">
+          <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">${x.d}</div>
+          <div style="font-size:.82rem;font-weight:900;color:${x.c}">${x.s}</div>
+        </div>`).join('')}
+    </div>
+    <div style="font-size:.67rem;color:#475569;margin-bottom:16px">Al menos <strong style="color:#94a3b8">1 día de recuperación</strong> entre sesiones.</div>`;
+
+  // ── Objetivo ──────────────────────────────────────────────────────
+  const progHtml = `
+    <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:var(--rs);padding:12px 14px;font-size:.71rem;color:#94a3b8;line-height:1.75;margin-bottom:14px">
+      <div style="font-size:.67rem;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🎯 Objetivo del plan</div>
+      Mejorar progresivamente <strong style="color:#e2e8f0">velocidad · aceleración · cambios de dirección · fuerza · estabilidad · resistencia</strong>.<br>
+      La calidad de los movimientos es más importante que hacer más repeticiones.<br>
+      <span style="color:#64748b;font-size:.67rem">📌 Cada 4 semanas cargá una nueva evaluación en Historial para ver tu progreso.</span>
+    </div>`;
+
+  el.innerHTML = antroHtml + testsHtml
+    + `<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🏋️ Sesiones semanales — 3 días × 30 min · sin pelota · sin equipamiento</div>`
+    + sesHtml + semanaHtml + progHtml;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// GRÁFICOS
+// ═══════════════════════════════════════════════════════════════════════
+function renderGraficos(){
+  const el = document.getElementById('graficos-content');
+  const evals = getPlayerEvals(currentPlayer.id);
+  if(evals.length < 2){
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div>Necesitás al menos 2 evaluaciones para ver los gráficos.</div>`;
+    return;
+  }
+
+  // Destruir charts previos
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  charts = {};
+
+  const labels = evals.map(e => fmtDate(e.date));
+  const cfg = (label, data, color) => ({
+    type:'line',
+    data:{ labels, datasets:[{ label, data, borderColor:color, backgroundColor:color+'22',
+      fill:true, tension:0.3, pointRadius:5, pointBackgroundColor:color, borderWidth:2.5 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ ticks:{color:'#64748b', font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+        y:{ ticks:{color:'#94a3b8', font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false }
+      }
+    }
+  });
+
+  const charts_def = [
+    { id:'gc-height',  label:'Talla (cm)',        key:'heightCm',          color:'#38bdf8' },
+    { id:'gc-weight',  label:'Peso (kg)',          key:'weightKg',          color:'#f97316' },
+    { id:'gc-wings',   label:'Envergadura (cm)',   key:'wingspanCm',        color:'#a78bfa' },
+    { id:'gc-sit',     label:'Altura sentado (cm)',key:'sittingHeightCm',   color:'#facc15' },
+    { id:'gc-yoyo',    label:'Beep Test resultado', key:'yoyoResult',        color:'#22c55e' },
+    { id:'gc-lane',    label:'Lane Agility (s)',   key:'laneAgilityBest',   color:'#c084fc' },
+    { id:'gc-sprint',  label:'Sprint 20m (s)',     key:'sprint20mBest',     color:'#fb923c' },
+  ];
+
+  el.innerHTML = charts_def.map(cd => `
+    <div class="chart-card">
+      <div class="chart-title">${cd.label}</div>
+      <div class="chart-wrap"><canvas id="${cd.id}"></canvas></div>
+    </div>
+  `).join('');
+
+  // Pequeño delay para que el DOM renderice antes de crear los canvas
+  setTimeout(() => {
+    charts_def.forEach(cd => {
+      const data = evals.map(e => e[cd.key] !== null && e[cd.key] !== undefined ? e[cd.key] : null);
+      const ctx = document.getElementById(cd.id);
+      if(ctx) charts[cd.id] = new Chart(ctx, cfg(cd.label, data, cd.color));
+    });
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FOTO DE PERFIL
+// ═══════════════════════════════════════════════════════════════════════
+let photoDataUrl = null;
+
+function openPhotoModal(){
+  if(!currentPlayer) return;
+  const photos = loadPhotos();
+  const existing = photos[currentPlayer.id];
+  const prev = document.getElementById('photo-preview');
+  const inp  = document.getElementById('photo-input');
+  inp.value = '';
+  photoDataUrl = null;
+  if(existing){
+    prev.src = existing; prev.style.display = 'block';
+  } else {
+    prev.style.display = 'none';
+  }
+  openModal('modal-photo');
+}
+
+function previewPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 3 * 1024 * 1024){ toast('⚠️ Imagen demasiado grande (máx. 3 MB)'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    photoDataUrl = e.target.result;
+    const prev = document.getElementById('photo-preview');
+    prev.src = photoDataUrl; prev.style.display = 'block';
+    // Comprimir si es necesario
+    compressImage(photoDataUrl, 400, 0.78, dataUrl => {
+      photoDataUrl = dataUrl;
+      prev.src = dataUrl;
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+function compressImage(src, maxPx, quality, cb){
+  const img = new Image();
+  img.onload = () => {
+    const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+    const w = Math.round(img.width * scale);
+    const h = Math.round(img.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    cb(canvas.toDataURL('image/jpeg', quality));
+  };
+  img.src = src;
+}
+
+function savePhoto(){
+  if(!photoDataUrl){ toast('Seleccioná una foto primero'); return; }
+  if(!currentPlayer) return;
+  const photos = loadPhotos();
+  photos[currentPlayer.id] = photoDataUrl;
+  savePhotos(photos);
+  closeModal('modal-photo');
+  renderProfile();
+  renderPlayers();
+  toast('📷 Foto guardada');
+}
+
+function deletePhoto(){
+  if(!currentPlayer) return;
+  if(!confirm('¿Eliminar foto de perfil?')) return;
+  const photos = loadPhotos();
+  delete photos[currentPlayer.id];
+  savePhotos(photos);
+  closeModal('modal-photo');
+  renderProfile();
+  toast('Foto eliminada');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════
+function openModal(id){
+  document.getElementById(id).classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function uid(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function fmtDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// Cerrar modales tocando el fondo
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => {
+    if(e.target === bg) closeModal(bg.id);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT — si viene ?player=ID en la URL, abrir directo ese perfil
+// ═══════════════════════════════════════════════════════════════════════
+(function(){
+  renderPlayers();
+  const pid = new URLSearchParams(window.location.search).get('player');
+  if(pid) openPlayer(pid);
+})();
+</script>
+</body>
+</html>

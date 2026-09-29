@@ -164,6 +164,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   <button class="tab" data-t="sesion">💪 Sesión</button>
   <button class="tab" data-t="reg">📊 Registro</button>
   <button class="tab" data-t="prog">📈 Progreso</button>
+  <button class="tab" data-t="mental">🧘 Mental</button>
 </div>
 
 <!-- ═══════════════ TAB OBJETIVOS ═══════════════ -->
@@ -500,12 +501,32 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 
 </div><!-- /tab-prog -->
 
+<!-- ═══════════════ TAB MENTAL ═══════════════ -->
+<div class="sec" id="tab-mental">
+
+  <div class="card" style="padding:14px 15px;margin-bottom:13px;border-left:3px solid #ef4444">
+    <div style="font-size:.68rem;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Plan de mejora mental · Personalizado</div>
+    <div style="font-size:.78rem;color:#cbd5e1;line-height:1.65">
+      Estos tips están generados a partir de tus <strong style="color:#fca5a5">desafíos mentales seleccionados en el Intake</strong>.
+      Para actualizarlos, completá el intake y volvé al Plan desde el botón "Generar".
+    </div>
+  </div>
+
+  <div id="mental-tips-plan">
+    <div style="text-align:center;color:var(--muted);font-size:.78rem;padding:24px 0;font-style:italic">
+      Completá el <a href="intake_mia_sanchez_14_2026.html" style="color:#f97316;text-decoration:none;font-weight:700">Intake</a> y hacé clic en "Generar" para ver tus tips personalizados aquí.
+    </div>
+  </div>
+
+</div><!-- /tab-mental -->
+
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="bnav-btn on" data-t="obj" onclick="swTab(this)"><span class="ni">🎯</span>Objetivos</button>
   <button class="bnav-btn" data-t="sesion" onclick="swTab(this)"><span class="ni">💪</span>Sesión</button>
   <button class="bnav-btn" data-t="reg" onclick="swTab(this)"><span class="ni">📊</span>Registro</button>
   <button class="bnav-btn" data-t="prog" onclick="swTab(this)"><span class="ni">📈</span>Progreso</button>
+  <button class="bnav-btn" data-t="mental" onclick="swTab(this)"><span class="ni">🧘</span>Mental</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -515,6 +536,75 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 const SK = 'plan_mia14_v2';
 let state = JSON.parse(localStorage.getItem(SK) || '{}');
 function save() { localStorage.setItem(SK, JSON.stringify(state)); }
+
+// ── PLAN MENTAL — datos y render ─────────────────────────────────
+const MENTAL_TIPS = {
+  'Me trabo en los TL': {
+    titulo: '😤 Tiro Libre — Ritual de concentración',
+    tips: [
+      '<strong>Rutina fija pre-tiro:</strong> definí siempre la misma secuencia (ej: 2 botes, respiración, visualizar la red). El ritual desactiva el pensamiento excesivo.',
+      '<strong>Respiración 4-4-4:</strong> Antes de tirar, inhalá 4 seg, aguantá 4 seg, exhalá 4 seg. Baja el ritmo cardíaco y calma la mente.',
+      '<strong>Foco en el proceso:</strong> Pensá "ejecutar el movimiento" en lugar de "no fallar". La atención en el proceso reduce la presión del resultado.',
+    ]
+  },
+  'Los errores me bajan': {
+    titulo: '😞 Resiliencia — Resetear después de un error',
+    tips: [
+      '<strong>El "borrador mental":</strong> Después de un error, hacé un gesto físico corto (chasquear los dedos, golpe suave en el muslo) y decite internamente "siguiente". Corta el loop mental.',
+      '<strong>Regla de los 3 segundos:</strong> Darte 3 segundos para sentir la frustración está bien. Pasados esos 3 segundos, acción — moverse, pedir el balón, defender.',
+      '<strong>Memoria corta en negativo:</strong> Anotar los aciertos del partido, no solo los errores. El cerebro tiende a recordar más lo negativo — contrabalancealo activamente.',
+    ]
+  },
+  'Nervios en momentos clave': {
+    titulo: '😰 Presión — Convertir los nervios en energía',
+    tips: [
+      '<strong>Reencuadre cognitivo:</strong> Los nervios son energía. Cuando los sentís, decite "estoy activada, lista para jugar" en lugar de "estoy nerviosa". Mismo estado fisiológico, distinto significado.',
+      '<strong>Preparación de escenarios:</strong> En la semana previa, visualizá la situación estresante (ej: TL a falta de 5 seg) y verte ejecutando bien. El cerebro no distingue bien lo imaginado de lo real.',
+      '<strong>Anchor de confianza:</strong> Recordá 1 momento concreto donde jugaste muy bien bajo presión. Usalo como punto de anclaje antes de los momentos clave.',
+    ]
+  },
+  'Me desconcentro en defensa': {
+    titulo: '💭 Concentración defensiva',
+    tips: [
+      '<strong>Palabra clave:</strong> Elegí una palabra corta (ej: "pies", "cuerpo", "activa") y repetíla mentalmente cuando sintás que la atención se va. Ancla la mente al presente.',
+      '<strong>Defensa por tandas de 5 seg:</strong> En lugar de pensar "tengo que defender todo el partido", focalizate en cada posesión de 5 seg. Objetivos cortos son más manejables.',
+      '<strong>Cuerpo delante del balón:</strong> Mantener atención en el movimiento de caderas del rival (no en el balón) mejora la reacción y exige más concentración activa.',
+    ]
+  },
+  'Pienso demasiado antes de tirar': {
+    titulo: '🤔 Sobreanálisis — Confiar en el automatismo',
+    tips: [
+      '<strong>Disparador de acción:</strong> Establecé un gatillo automático ("si tengo espacio, tiro") en lugar de analizar cada vez. La automatización libera la mente del análisis.',
+      '<strong>Practicar bajo presión de tiempo:</strong> En entrenamiento, usá un contador de 3 seg para tomar decisiones de tiro. Esto entrena la confianza en la primera lectura.',
+      '<strong>Confianza en el trabajo previo:</strong> Si practicaste el tiro, el cuerpo sabe hacerlo. Tu trabajo en el partido es liberar al cuerpo, no revisarlo.',
+    ]
+  },
+  'Me frustra no anotar': {
+    titulo: '😡 Frustración de anotadora — Ampliar el impacto',
+    tips: [
+      '<strong>Redefinir el éxito del partido:</strong> Antes de cada juego, poné 3 métricas de éxito que no sean solo puntos (ej: 3 rebotes ofensivos, 1 recupero, buenos screens). Ampliá el concepto de "buen partido".',
+      '<strong>El partido colectivo:</strong> Cuando no anotás, buscá activamente cómo ayudar de otras formas (defensa intensa, bloqueos, correr el contraataque). Mantenerse activa cambia el estado mental.',
+      '<strong>Estadísticas post-partido:</strong> Revisá tus números completos después. Muchas veces un partido donde no anotaste tuviste impacto positivo en rebotes o defensa que no registraste en caliente.',
+    ]
+  },
+};
+
+function renderMentalTips(selectedVals) {
+  const container = document.getElementById('mental-tips-plan');
+  if (!selectedVals || !selectedVals.length) return;
+  let html = '';
+  selectedVals.forEach(val => {
+    const tip = MENTAL_TIPS[val];
+    if (!tip) return;
+    html += `<div style="background:var(--input);border-left:3px solid #ef4444;border-radius:0 9px 9px 0;padding:11px 14px;margin-bottom:10px;font-size:.78rem;line-height:1.6;color:#cbd5e1">
+      <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#ef4444;margin-bottom:5px;display:block">${tip.titulo}</span>
+      <ul style="padding-left:16px;margin:0">
+        ${tip.tips.map(t => `<li style="margin-bottom:7px">${t}</li>`).join('')}
+      </ul>
+    </div>`;
+  });
+  if (html) container.innerHTML = html;
+}
 
 // ── TABS ─────────────────────────────────────────────────────────
 function swTab(btn) {
@@ -709,6 +799,9 @@ function renderIntake(p) {
   if (hasData) { banner.style.display='block'; banner.classList.add('open'); }
   const nombre = p.get('nombre');
   if (nombre) { document.getElementById('h-nombre').textContent = nombre + ' Sánchez'; }
+  // Cargar tips mentales en el tab Mental
+  const mental = p.get('mental');
+  if (mental) renderMentalTips(mental.split('|').filter(Boolean));
 }
 
 // ── INIT ─────────────────────────────────────────────────────────
@@ -737,5 +830,21 @@ function renderIntake(p) {
   }
 })();
 </script>
+<!-- ── NAV MÍA ───────────────────────────────────────────────────────── -->
+<style>
+.mia-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.mia-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s}
+.mia-nav a .ni{font-size:1.2rem;line-height:1}
+.mia-nav a.on{color:#f97316}
+.mia-nav a:hover{color:#94a3b8}
+</style>
+<nav class="mia-nav">
+  <a href="dossier_mia_sanchez_14_bera_u13_2026.html"><span class="ni">📊</span>Dossier</a>
+  <a href="intake_mia_sanchez_14_2026.html"><span class="ni">📋</span>Intake</a>
+  <a href="plan_mejora_mia_sanchez_14_2026.html" class="on"><span class="ni">🎯</span>Plan</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html"><span class="ni">⚡</span>Análisis</a>
+  <a href="evaluacion_fisica.html?player=mia14"><span class="ni">🏋️</span>Prep. Física</a>
+</nav>
+<script>document.body.style.paddingBottom='62px'</script>
 </body>
 </html>
