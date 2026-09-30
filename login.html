@@ -22,31 +22,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
 
 .field{margin-bottom:16px}
 .field label{display:block;font-size:0.68rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.field input{
-  width:100%;background:var(--input);border:1.5px solid var(--border);
-  border-radius:var(--rs);color:#e2e8f0;font-size:0.95rem;
-  padding:12px 14px;outline:none;font-family:inherit;transition:border-color .15s
-}
+.field input{width:100%;background:var(--input);border:1.5px solid var(--border);border-radius:var(--rs);color:#e2e8f0;font-size:0.95rem;padding:12px 14px;outline:none;font-family:inherit;transition:border-color .15s}
 .field input:focus{border-color:var(--ac)}
 
-.btn{
-  width:100%;padding:14px;border-radius:var(--rs);
-  background:linear-gradient(135deg,#c2410c,#f97316);
-  color:white;font-size:0.95rem;font-weight:800;
-  border:none;cursor:pointer;transition:opacity .2s;margin-top:4px
-}
+.btn{width:100%;padding:14px;border-radius:var(--rs);background:linear-gradient(135deg,#c2410c,#f97316);color:white;font-size:0.95rem;font-weight:800;border:none;cursor:pointer;transition:opacity .2s;margin-top:4px}
 .btn:hover{opacity:.9}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 
-.err{
-  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);
-  border-radius:var(--rs);padding:10px 14px;font-size:0.78rem;color:#fca5a5;
-  margin-bottom:14px;display:none
-}
-.err.show{display:block}
-
-.loading{display:none;text-align:center;padding:12px;font-size:0.82rem;color:var(--muted)}
-.loading.show{display:block}
+.msg{border-radius:var(--rs);padding:10px 14px;font-size:0.78rem;margin-bottom:14px;display:none}
+.msg.show{display:block}
+.msg.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5}
+.msg.info{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc}
 
 .footer{margin-top:28px;font-size:0.62rem;color:#1e3a5a;text-align:center;letter-spacing:1px;text-transform:uppercase}
 </style>
@@ -63,12 +49,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
   <div class="card-title">Ingresá a tu perfil</div>
   <div class="card-sub">Accedé con tu email y contraseña</div>
 
-  <div class="err" id="err-msg"></div>
-  <div class="loading" id="loading">⏳ Verificando...</div>
+  <div class="msg err" id="err-msg"></div>
+  <div class="msg info" id="info-msg">⏳ Verificando…</div>
 
   <div class="field">
     <label>Email</label>
-    <input type="email" id="inp-email" placeholder="tu@email.com" autocomplete="email">
+    <input type="email" id="inp-email" placeholder="tu@email.com" autocomplete="email" inputmode="email">
   </div>
   <div class="field">
     <label>Contraseña</label>
@@ -80,100 +66,132 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
 
 <div class="footer">NextLevel Basketball · Demo 2.0</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-const SUPA_URL  = 'https://yjcxwfkedxzkcspddghz.supabase.co';
-const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
-const supabase  = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+// ─── Constantes ────────────────────────────────────────────────────────
+const SUPA_URL = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
 
-// Si ya hay sesión activa → redirigir directo
-(async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) redirect(session.user);
-})();
+const SHORT_IDS = {
+  '11111111-0000-0000-0000-000000000014': 'mia14',
+  '11111111-0000-0000-0000-000000000008': 'cat8',
+  '11111111-0000-0000-0000-000000000006': 'luba6',
+  '11111111-0000-0000-0000-000000000012': 'alma12',
+  '11111111-0000-0000-0000-000000000010': 'martina10',
+};
 
+// ─── UI helpers ────────────────────────────────────────────────────────
+function showErr(msg)  { hide('info-msg'); show('err-msg', msg); }
+function showInfo(msg) { hide('err-msg');  show('info-msg', msg); }
+function hideAll()     { hide('err-msg');  hide('info-msg'); }
+function show(id, msg) { const e=document.getElementById(id); e.textContent=msg; e.classList.add('show'); }
+function hide(id)      { const e=document.getElementById(id); e.classList.remove('show'); }
+
+function setBusy(on) {
+  const btn = document.getElementById('btn-login');
+  btn.disabled = on;
+  btn.textContent = on ? '⏳ Ingresando…' : 'Ingresar →';
+}
+
+// ─── Enter key ─────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+
+// ─── LOGIN ─────────────────────────────────────────────────────────────
 async function doLogin() {
+  hideAll();
   const email = document.getElementById('inp-email').value.trim();
   const pass  = document.getElementById('inp-pass').value;
-  const btn   = document.getElementById('btn-login');
-  const err   = document.getElementById('err-msg');
-  const load  = document.getElementById('loading');
 
-  err.classList.remove('show');
   if (!email || !pass) { showErr('Completá email y contraseña'); return; }
 
-  btn.disabled = true;
-  load.classList.add('show');
+  setBusy(true);
+  showInfo('⏳ Verificando…');
+
+  // Carga dinámica del SDK si no está disponible aún
+  if (typeof window.supabase === 'undefined') {
+    try {
+      await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
+    } catch(e) {
+      setBusy(false);
+      showErr('No se pudo cargar el SDK. Chequeá tu conexión e intentá de nuevo.');
+      return;
+    }
+  }
+
+  const client = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
   let data, error;
   try {
-    ({ data, error } = await supabase.auth.signInWithPassword({ email, password: pass }));
+    ({ data, error } = await client.auth.signInWithPassword({ email, password: pass }));
   } catch(e) {
-    load.classList.remove('show');
-    btn.disabled = false;
-    showErr('Error de conexión: ' + e.message);
+    setBusy(false);
+    showErr('Error de red: ' + e.message);
     return;
   }
 
-  load.classList.remove('show');
-  btn.disabled = false;
+  setBusy(false);
+  hideAll();
 
   if (error) {
-    const msg = error.message === 'Invalid login credentials'
-      ? 'Email o contraseña incorrectos'
-      : (error.message === 'Email not confirmed'
-        ? 'Confirmá tu email antes de ingresar'
-        : error.message);
-    showErr(msg);
+    const msgs = {
+      'Invalid login credentials': 'Email o contraseña incorrectos',
+      'Email not confirmed':        'Confirmá tu email antes de ingresar',
+      'Too many requests':          'Demasiados intentos. Esperá unos minutos.',
+    };
+    showErr(msgs[error.message] || error.message);
     return;
   }
-  if (!data || !data.user) { showErr('Error inesperado — intentá de nuevo'); return; }
-  redirect(data.user);
-}
 
-async function redirect(user) {
-  // Buscar el player vinculado a este user_id
-  const { data: players } = await supabase
+  if (!data?.user) { showErr('Error inesperado. Intentá de nuevo.'); return; }
+
+  // ─── Redirect por rol ───────────────────────────────────────────────
+  showInfo('✅ Acceso OK — cargando…');
+
+  const { data: players } = await client
     .from('players')
-    .select('id, name, dorsal')
-    .eq('user_id', user.id);
+    .select('id')
+    .eq('user_id', data.user.id)
+    .limit(1);
 
   if (players && players.length > 0) {
-    const p = players[0];
-    // Jugadora → ir a Preparación Física con su ID
-    // Mapeamos el player UUID al id corto para la URL
-    const shortId = getShortId(p.id);
-    if (shortId) {
-      window.location.href = 'evaluacion_fisica_v2.html?player=' + shortId;
-    } else {
-      window.location.href = 'evaluacion_fisica_v2.html';
-    }
+    const shortId = SHORT_IDS[players[0].id];
+    window.location.href = shortId
+      ? 'evaluacion_fisica_v2.html?player=' + shortId
+      : 'evaluacion_fisica_v2.html';
   } else {
-    // Admin (sin player vinculado) → panel admin
     window.location.href = 'admin.html';
   }
 }
 
-function getShortId(uuid) {
-  const map = {
-    '11111111-0000-0000-0000-000000000014': 'mia14',
-    '11111111-0000-0000-0000-000000000008': 'cat8',
-    '11111111-0000-0000-0000-000000000006': 'luba6',
-    '11111111-0000-0000-0000-000000000012': 'alma12',
-    '11111111-0000-0000-0000-000000000010': 'martina10',
-  };
-  return map[uuid] || null;
+// ─── Carga dinámica de script ──────────────────────────────────────────
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload  = resolve;
+    s.onerror = () => reject(new Error('Script load failed: ' + src));
+    document.head.appendChild(s);
+  });
 }
 
-function showErr(msg) {
-  const el = document.getElementById('err-msg');
-  el.textContent = msg;
-  el.classList.add('show');
-}
-
-// Enter para hacer login
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
+// ─── Auto-check sesión activa ──────────────────────────────────────────
+window.addEventListener('load', async () => {
+  try {
+    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
+    const client = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    const { data: { session } } = await client.auth.getSession();
+    if (session?.user) {
+      showInfo('✅ Sesión activa — redirigiendo…');
+      const { data: players } = await client.from('players').select('id').eq('user_id', session.user.id).limit(1);
+      if (players && players.length > 0) {
+        const shortId = SHORT_IDS[players[0].id];
+        window.location.href = shortId ? 'evaluacion_fisica_v2.html?player=' + shortId : 'evaluacion_fisica_v2.html';
+      } else {
+        window.location.href = 'admin.html';
+      }
+    }
+  } catch(e) {
+    // SDK no cargó en el arranque — el botón lo intentará de nuevo al hacer click
+  }
 });
 </script>
 </body>
