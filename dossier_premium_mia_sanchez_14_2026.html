@@ -175,15 +175,41 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   </div>
 </div>
 
-<!-- ══ NAV MÓDULOS ════════════════════════════════════════════ -->
+<!-- ══ NAV MÓDULOS (sticky top) ══════════════════════════════════ -->
 <div style="background:#060d1a;border-bottom:1px solid rgba(249,115,22,0.15);padding:10px 20px;
   display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:100">
   <a href="intake_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">📋 Intake</a>
   <span style="background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.5);color:#f97316;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:700">⭐ Dossier</span>
   <a href="plan_mejora_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🎯 Plan</a>
   <a href="analisis_avanzado_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:#fbbf24;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">⚡ Análisis</a>
-  <a href="evaluacion_fisica_v2.html?player=mia14" style="text-decoration:none;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:#67e8f9;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🏋️ Prep. Física</a>
+  <a href="evaluacion_fisica_v2.html?player=mia14" style="text-decoration:none;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:#67e8f9;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🏋️ Física</a>
+  <button onclick="doLogout()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:inherit">🚪 Salir</button>
 </div>
+<style>
+.mia-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.mia-nav a,.mia-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s;background:none;border:none;cursor:pointer;font-family:inherit}
+.mia-nav a .ni,.mia-nav button .ni{font-size:1.2rem;line-height:1}
+.mia-nav a.on{color:#f97316}
+.mia-nav a:hover{color:#94a3b8}
+.mia-nav button:hover{color:#f87171}
+</style>
+<nav class="mia-nav">
+  <a href="dossier_mia_sanchez_14_bera_u13_2026.html"><span class="ni">📊</span>Dossier</a>
+  <a href="intake_mia_sanchez_14_2026.html"><span class="ni">📋</span>Intake</a>
+  <a href="plan_mejora_mia_sanchez_14_2026.html"><span class="ni">🎯</span>Plan</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html"><span class="ni">⚡</span>Análisis</a>
+  <a href="evaluacion_fisica_v2.html?player=mia14"><span class="ni">🏋️</span>Física</a>
+  <button onclick="doLogout()"><span class="ni">🚪</span>Salir</button>
+</nav>
+<script>
+document.addEventListener('DOMContentLoaded',()=>document.body.style.paddingBottom='62px');
+const _SU='https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+async function doLogout(){
+  try{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';await new Promise((r,j)=>{s.onload=r;s.onerror=j;document.head.appendChild(s);});await window.supabase.createClient(_SU,_SK).auth.signOut();}catch(e){}
+  window.location.href='login.html';
+}
+</script>
 
 <!-- ══ MAIN CONTENT ════════════════════════════════════════════ -->
 <div class="wrap">
