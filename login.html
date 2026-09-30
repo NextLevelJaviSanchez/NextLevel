@@ -105,12 +105,29 @@ async function doLogin() {
   btn.disabled = true;
   load.classList.add('show');
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  let data, error;
+  try {
+    ({ data, error } = await supabase.auth.signInWithPassword({ email, password: pass }));
+  } catch(e) {
+    load.classList.remove('show');
+    btn.disabled = false;
+    showErr('Error de conexión: ' + e.message);
+    return;
+  }
 
   load.classList.remove('show');
   btn.disabled = false;
 
-  if (error) { showErr(error.message === 'Invalid login credentials' ? 'Email o contraseña incorrectos' : error.message); return; }
+  if (error) {
+    const msg = error.message === 'Invalid login credentials'
+      ? 'Email o contraseña incorrectos'
+      : (error.message === 'Email not confirmed'
+        ? 'Confirmá tu email antes de ingresar'
+        : error.message);
+    showErr(msg);
+    return;
+  }
+  if (!data || !data.user) { showErr('Error inesperado — intentá de nuevo'); return; }
   redirect(data.user);
 }
 
