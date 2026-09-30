@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dossier Premium · Mía G. Sánchez #14 · NextLevel 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #03080f;
+  --bg2: #060d1a;
+  --card: #0b1528;
+  --card2: #0f1e35;
+  --border: rgba(255,255,255,0.07);
+  --ac: #f97316;
+  --ac2: #fb923c;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+  --green: #22c55e;
+  --purple: #a855f7;
+  --yellow: #facc15;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --r: 16px;
+  --rs: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── HERO PREMIUM ─────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(145deg, #010608 0%, #0a1628 40%, #12083a 70%, rgba(249,115,22,0.12) 100%);
+  padding: 0; position: relative; overflow: hidden;
+  border-bottom: 1px solid rgba(249,115,22,0.2);
+}
+.hero-grid-bg {
+  position: absolute; inset: 0; opacity: 0.03;
+  background-image: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 40px),
+                    repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 40px);
+}
+.hero-glow {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
+  top: -100px; right: -100px; pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; padding: 32px 24px 28px; max-width: 900px; margin: 0 auto; }
+
+.hero-top { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 24px; }
+.hero-num {
+  width: 72px; height: 72px; border-radius: 18px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(249,115,22,0.25), rgba(249,115,22,0.08));
+  border: 2px solid rgba(249,115,22,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: 900; color: var(--ac);
+  box-shadow: 0 0 30px rgba(249,115,22,0.2);
+}
+.hero-info { flex: 1; }
+.hero-name { font-size: clamp(1.5rem, 6vw, 2.4rem); font-weight: 900; letter-spacing: -1px; line-height: 1.05; }
+.hero-name span { color: var(--ac); }
+.hero-club { font-size: 0.78rem; color: var(--muted); margin-top: 5px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.htag {
+  padding: 3px 11px; border-radius: 20px; font-size: 0.63rem; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.htag-or { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.35); color: #fb923c; }
+.htag-bl { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.35); color: #93c5fd; }
+.htag-gr { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+.htag-pu { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); color: #d8b4fe; }
+
+.hero-nl-badge {
+  flex-shrink: 0; text-align: center;
+}
+.nl-logo {
+  background: linear-gradient(135deg, var(--ac), #dc2626);
+  width: 52px; height: 52px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: white; letter-spacing: -1px;
+  box-shadow: 0 4px 20px rgba(249,115,22,0.35);
+}
+.nl-label { font-size: 0.55rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* KPI STRIP */
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 0; border-top: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+.kpi-s {
+  padding: 14px 8px; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  position: relative;
+}
+.kpi-s:last-child { border-right: none; }
+.kpi-s::before {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+  background: var(--kc, var(--ac)); border-radius: 0 0 3px 3px;
+}
+.kpi-s .kv { font-size: clamp(1.2rem, 3vw, 1.7rem); font-weight: 900; color: var(--kc, var(--ac)); line-height: 1; }
+.kpi-s .kl { font-size: 0.55rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+.kpi-s .ks { font-size: 0.6rem; color: #475569; margin-top: 2px; }
+
+@media (max-width: 600px) {
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .hero-num { width: 58px; height: 58px; font-size: 1.6rem; }
+  .hero-nl-badge { display: none; }
+}
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.wrap { max-width: 900px; margin: 0 auto; padding: 28px 18px 80px; }
+.sec-label {
+  font-size: 0.62rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--ac); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: rgba(249,115,22,0.2); }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.mb24 { margin-bottom: 24px; }
+.mb32 { margin-bottom: 32px; }
+
+.card {
+  background: var(--card); border-radius: var(--r);
+  border: 1px solid var(--border); padding: 20px;
+}
+.card-title {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 16px;
+}
+
+@media (max-width: 600px) {
+  .grid2 { grid-template-columns: 1fr; gap: 14px; }
+  .grid3 { grid-template-columns: 1fr; gap: 12px; }
+  .wrap { padding: 20px 14px 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div class="hero-num">14</div>
+      <div class="hero-info">
+        <div class="hero-name">Mía G. <span>Sánchez</span></div>
+        <div class="hero-club">Club Soc. y Dep. Berazategui · Infantiles Femenino (U13) · Temporada 2026</div>
+        <div class="hero-tags">
+          <span class="htag htag-or">⛹️ Escolta / Alero</span>
+          <span class="htag htag-bl">📅 2013 — 12 años</span>
+          <span class="htag htag-gr">✅ AFMB + Federal</span>
+          <span class="htag htag-pu">🏅 18 PJ · 9 titularidades</span>
+        </div>
+      </div>
+      <div class="hero-nl-badge">
+        <div class="nl-logo">NL</div>
+        <div class="nl-label">NextLevel<br>2026</div>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip">
+      <div class="kpi-s" style="--kc:#f97316"><div class="kv">8.6</div><div class="kl">PPP</div><div class="ks">155 total</div></div>
+      <div class="kpi-s" style="--kc:#22c55e"><div class="kv">4.1</div><div class="kl">RPP</div><div class="ks">74 total</div></div>
+      <div class="kpi-s" style="--kc:#3b82f6"><div class="kv">18.8</div><div class="kl">MPP</div><div class="ks">338 min</div></div>
+      <div class="kpi-s" style="--kc:#a855f7"><div class="kv">34.0%</div><div class="kl">T2%</div><div class="ks">54/159</div></div>
+      <div class="kpi-s" style="--kc:#facc15"><div class="kv">4.7</div><div class="kl">VAL</div><div class="ks">por partido</div></div>
+      <div class="kpi-s" style="--kc:#06b6d4"><div class="kv">16.8</div><div class="kl">PTS/36</div><div class="ks">pace adj.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NAV MÓDULOS ════════════════════════════════════════════ -->
+<div style="background:#060d1a;border-bottom:1px solid rgba(249,115,22,0.15);padding:10px 20px;
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:100">
+  <a href="intake_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">📋 Intake</a>
+  <span style="background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.5);color:#f97316;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:700">⭐ Dossier</span>
+  <a href="plan_mejora_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🎯 Plan</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html" style="text-decoration:none;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:#fbbf24;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">⚡ Análisis</a>
+  <a href="evaluacion_fisica_v2.html?player=mia14" style="text-decoration:none;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:#67e8f9;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🏋️ Prep. Física</a>
+</div>
+
+<!-- ══ MAIN CONTENT ════════════════════════════════════════════ -->
+<div class="wrap">
+
+<!-- ─── SECCIÓN 1: RADAR + HEATMAP ──────────────────────── -->
+<div class="sec-label">Perfil de Rendimiento</div>
+<div class="grid2 mb32">
+
+  <!-- RADAR PERCENTILES -->
+  <div class="card">
+    <div class="card-title">Radar de Percentiles — vs Plantel U13 (12 jugadoras ≥10 PJ)</div>
+    <div style="position:relative;height:280px">
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:#0f1e35;border-radius:8px;padding:8px 10px;font-size:0.68rem">
+        <div style="color:var(--muted);margin-bottom:2px">PUNTOS (PPG)</div>
+        <div style="color:var(--ac);font-weight:800;font-size:1rem">P90</div>
+        <div style="color:#475569;font-size:0.6rem">8.6 pts · top 10%</div>
+      </div>
+      <div style="background:#0f1e35;border-radius:8px;padding:8px 10px;font-size:0.68rem">
+        <div style="color:var(--muted);margin-bottom:2px">REBOTES (RPG)</div>
+        <div style="color:var(--blue);font-weight:800;font-size:1rem">P75</div>
+        <div style="color:#475569;font-size:0.6rem">4.1 reb · top 25%</div>
+      </div>
+      <div style="background:#0f1e35;border-radius:8px;padding:8px 10px;font-size:0.68rem">
+        <div style="color:var(--muted);margin-bottom:2px">RECUPEROS</div>
+        <div style="color:var(--green);font-weight:800;font-size:1rem">P85</div>
+        <div style="color:#475569;font-size:0.6rem">1.9/PJ · top 15%</div>
+      </div>
+      <div style="background:#0f1e35;border-radius:8px;padding:8px 10px;font-size:0.68rem">
+        <div style="color:var(--muted);margin-bottom:2px">IMPACTO (VAL)</div>
+        <div style="color:var(--yellow);font-weight:800;font-size:1rem">P70</div>
+        <div style="color:#475569;font-size:0.6rem">4.7 val · top 30%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEATMAP DE ZONAS DE TIRO -->
+  <div class="card">
+    <div class="card-title">Mapa de Calor — Zonas de Tiro (18 PJ)</div>
+    <svg id="shotmap" viewBox="0 0 340 320" style="width:100%;max-height:300px;display:block;margin:0 auto">
+      <!-- Cancha fondo -->
+      <rect x="10" y="10" width="320" height="300" rx="8" fill="#0a1628" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+
+      <!-- Medio campo (solo mitad atacante) -->
+      <!-- Línea de fondo -->
+      <line x1="10" y1="310" x2="330" y2="310" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <!-- Líneas laterales -->
+      <line x1="10" y1="10" x2="10" y2="310" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <line x1="330" y1="10" x2="330" y2="310" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <!-- Línea de medio campo -->
+      <line x1="10" y1="10" x2="330" y2="10" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+      <!-- ARO -->
+      <circle cx="170" cy="280" r="8" fill="none" stroke="#f97316" stroke-width="2"/>
+      <circle cx="170" cy="280" r="2.5" fill="#f97316"/>
+      <!-- Tablero -->
+      <rect x="140" y="292" width="60" height="8" rx="2" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+
+      <!-- ZONA RESTRINGIDA (pequeña) -->
+      <path d="M 148 280 A 22 22 0 0 1 192 280" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <!-- ZONA 3 segundos (pintura) -->
+      <rect x="110" y="230" width="120" height="72" rx="3" fill="rgba(249,115,22,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+      <!-- LÍNEA DE 3 PUNTOS -->
+      <path d="M 35 310 L 35 240 A 135 135 0 0 1 305 240 L 305 310" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      <!-- Línea TL izq/der -->
+      <line x1="110" y1="230" x2="110" y2="310" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <line x1="230" y1="230" x2="230" y2="310" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+      <!-- ════ ZONAS DE CALOR CON DATOS REALES ════ -->
+
+      <!-- ZONA 1: PINTURA CENTRO (43/120 = 35.8%) — ALTA ACTIVIDAD -->
+      <rect x="114" y="234" width="112" height="68" rx="3"
+        fill="rgba(249,115,22,0.32)" stroke="rgba(249,115,22,0.6)" stroke-width="1.5"/>
+      <text x="170" y="258" text-anchor="middle" fill="#f97316" font-size="10" font-weight="800">35.8%</text>
+      <text x="170" y="272" text-anchor="middle" fill="rgba(249,115,22,0.7)" font-size="8">43 / 120 att</text>
+      <text x="170" y="284" text-anchor="middle" fill="rgba(249,115,22,0.5)" font-size="7.5">🔥 ZONA PRINCIPAL</text>
+
+      <!-- ZONA 2: MEDIA DISTANCIA IZQ (11/39 total media → split ~5/20) -->
+      <rect x="36" y="180" width="74" height="50" rx="3"
+        fill="rgba(234,179,8,0.18)" stroke="rgba(234,179,8,0.4)" stroke-width="1"/>
+      <text x="73" y="201" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="700">28%</text>
+      <text x="73" y="213" text-anchor="middle" fill="rgba(251,191,36,0.6)" font-size="7.5">~5/18 att</text>
+      <text x="73" y="224" text-anchor="middle" fill="rgba(251,191,36,0.4)" font-size="7">Media Izq.</text>
+
+      <!-- ZONA 3: MEDIA DISTANCIA DER (similar) -->
+      <rect x="230" y="180" width="74" height="50" rx="3"
+        fill="rgba(234,179,8,0.18)" stroke="rgba(234,179,8,0.4)" stroke-width="1"/>
+      <text x="267" y="201" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="700">28%</text>
+      <text x="267" y="213" text-anchor="middle" fill="rgba(251,191,36,0.6)" font-size="7.5">~6/21 att</text>
+      <text x="267" y="224" text-anchor="middle" fill="rgba(251,191,36,0.4)" font-size="7">Media Der.</text>
+
+      <!-- ZONA 4: 3P ESQUINA IZQ (0/2) -->
+      <rect x="12" y="240" width="22" height="68" rx="2"
+        fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.3)" stroke-width="1"/>
+      <text x="23" y="276" text-anchor="middle" fill="#f87171" font-size="8" font-weight="700">0%</text>
+      <text x="23" y="287" text-anchor="middle" fill="rgba(248,113,113,0.5)" font-size="7">0/2</text>
+
+      <!-- ZONA 5: 3P ESQUINA DER (1/5) -->
+      <rect x="306" y="240" width="22" height="68" rx="2"
+        fill="rgba(239,68,68,0.2)" stroke="rgba(239,68,68,0.35)" stroke-width="1"/>
+      <text x="317" y="276" text-anchor="middle" fill="#f87171" font-size="8" font-weight="700">20%</text>
+      <text x="317" y="287" text-anchor="middle" fill="rgba(248,113,113,0.5)" font-size="7">1/5</text>
+
+      <!-- ZONA 6: 3P ARRIBA CENTRO (1/10) -->
+      <path d="M 110 150 A 135 135 0 0 1 230 150 L 230 180 L 110 180 Z"
+        fill="rgba(239,68,68,0.12)" stroke="rgba(239,68,68,0.25)" stroke-width="1"/>
+      <text x="170" y="167" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">10%</text>
+      <text x="170" y="178" text-anchor="middle" fill="rgba(248,113,113,0.5)" font-size="7">1/10</text>
+
+      <!-- ZONA 7: 3P ALA IZQ (0/0) -->
+      <path d="M 35 240 L 35 200 A 135 135 0 0 1 110 150 L 110 180 L 73 180 L 73 240 Z"
+        fill="rgba(100,116,139,0.08)" stroke="rgba(100,116,139,0.2)" stroke-width="1"/>
+      <text x="72" y="168" text-anchor="middle" fill="#475569" font-size="8">—</text>
+
+      <!-- ZONA 8: 3P ALA DER (0/0) -->
+      <path d="M 305 240 L 305 200 A 135 135 0 0 0 230 150 L 230 180 L 267 180 L 267 240 Z"
+        fill="rgba(100,116,139,0.08)" stroke="rgba(100,116,139,0.2)" stroke-width="1"/>
+      <text x="268" y="168" text-anchor="middle" fill="#475569" font-size="8">—</text>
+
+      <!-- ZONA 9: AREA ALTA (media larga ~2/15) -->
+      <rect x="110" y="150" width="120" height="30" rx="2"
+        fill="rgba(234,179,8,0.1)" stroke="rgba(234,179,8,0.2)" stroke-width="1"/>
+      <text x="170" y="163" text-anchor="middle" fill="#ca8a04" font-size="8.5" font-weight="600">13%</text>
+      <text x="170" y="174" text-anchor="middle" fill="rgba(202,138,4,0.5)" font-size="7">2/15</text>
+
+      <!-- LEYENDA -->
+      <rect x="12" y="12" width="140" height="56" rx="6" fill="rgba(0,0,0,0.55)"/>
+      <text x="20" y="26" fill="#94a3b8" font-size="8" font-weight="700">EFICIENCIA POR ZONA</text>
+      <circle cx="20" cy="36" r="4" fill="rgba(249,115,22,0.6)"/>
+      <text x="27" y="39" fill="#94a3b8" font-size="7.5">&gt;33% — Alta</text>
+      <circle cx="20" cy="47" r="4" fill="rgba(234,179,8,0.5)"/>
+      <text x="27" y="50" fill="#94a3b8" font-size="7.5">20-33% — Media</text>
+      <circle cx="20" cy="58" r="4" fill="rgba(239,68,68,0.4)"/>
+      <text x="27" y="61" fill="#94a3b8" font-size="7.5">&lt;20% — Baja</text>
+    </svg>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:#0f1e35;border-radius:8px;padding:7px 12px;font-size:0.7rem;flex:1;text-align:center">
+        <div style="color:#f97316;font-weight:800">120 att</div>
+        <div style="color:var(--muted)">en pintura</div>
+      </div>
+      <div style="background:#0f1e35;border-radius:8px;padding:7px 12px;font-size:0.7rem;flex:1;text-align:center">
+        <div style="color:#fbbf24;font-weight:800">39 att</div>
+        <div style="color:var(--muted)">media distancia</div>
+      </div>
+      <div style="background:#0f1e35;border-radius:8px;padding:7px 12px;font-size:0.7rem;flex:1;text-align:center">
+        <div style="color:#f87171;font-weight:800">17 att</div>
+        <div style="color:var(--muted)">triples</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 2: TENDENCIA TEMPORAL ───────────────────── -->
+<div class="sec-label">Evolución Temporal — Temporada 2026</div>
+<div class="card mb32">
+  <div class="card-title">Puntos, Rebotes &amp; Valoración por Partido (18 PJ)</div>
+  <div style="position:relative;height:220px">
+    <canvas id="trendChart"></canvas>
+  </div>
+  <div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
+    <div style="background:#0f1e35;border-radius:10px;padding:10px">
+      <div style="font-size:0.6rem;color:var(--muted);margin-bottom:3px">MEJORES 3 PARTIDOS</div>
+      <div style="font-size:0.85rem;font-weight:700;color:#f97316">20 · 13 · 12 pts</div>
+      <div style="font-size:0.62rem;color:#475569">vs Wilde · vs Korn · 2× Boca</div>
+    </div>
+    <div style="background:#0f1e35;border-radius:10px;padding:10px">
+      <div style="font-size:0.6rem;color:var(--muted);margin-bottom:3px">TENDENCIA 2da ETAPA</div>
+      <div style="font-size:0.85rem;font-weight:700;color:#22c55e">+17.4%</div>
+      <div style="font-size:0.62rem;color:#475569">9.3 pts últimos 9 PJ</div>
+    </div>
+    <div style="background:#0f1e35;border-radius:10px;padding:10px">
+      <div style="font-size:0.6rem;color:var(--muted);margin-bottom:3px">PICO REBOTES</div>
+      <div style="font-size:0.85rem;font-weight:700;color:#3b82f6">9 reb</div>
+      <div style="font-size:0.62rem;color:#475569">vs San Vicente (titular)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 3: EFICIENCIA DE TIRO DETALLADA ─────────── -->
+<div class="sec-label">Análisis de Tiro</div>
+<div class="grid2 mb32">
+
+  <!-- BARRAS POR ZONA -->
+  <div class="card">
+    <div class="card-title">Eficiencia por Zona &amp; Tipo de Tiro</div>
+
+    <div style="margin-bottom:6px">
+      <!-- Pintura -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.75rem;color:#cbd5e1">🏀 Pintura</span>
+        <span style="font-size:0.75rem;color:#f97316;font-weight:700">35.8%</span>
+      </div>
+      <div style="background:#0f172a;border-radius:4px;height:9px;overflow:hidden;margin-bottom:12px">
+        <div style="width:35.8%;height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:4px"></div>
+      </div>
+
+      <!-- Media distancia -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.75rem;color:#cbd5e1">📏 Media Distancia</span>
+        <span style="font-size:0.75rem;color:#fbbf24;font-weight:700">28.2%</span>
+      </div>
+      <div style="background:#0f172a;border-radius:4px;height:9px;overflow:hidden;margin-bottom:12px">
+        <div style="width:28.2%;height:100%;background:linear-gradient(90deg,#ca8a04,#fbbf24);border-radius:4px"></div>
+      </div>
+
+      <!-- T3 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.75rem;color:#cbd5e1">🎯 Triple</span>
+        <span style="font-size:0.75rem;color:#f87171;font-weight:700">11.8%</span>
+      </div>
+      <div style="background:#0f172a;border-radius:4px;height:9px;overflow:hidden;margin-bottom:12px">
+        <div style="width:11.8%;height:100%;background:linear-gradient(90deg,#dc2626,#f87171);border-radius:4px"></div>
+      </div>
+
+      <!-- TL -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.75rem;color:#cbd5e1">🆓 Tiro Libre</span>
+        <span style="font-size:0.75rem;color:#22c55e;font-weight:700">38.2%</span>
+      </div>
+      <div style="background:#0f172a;border-radius:4px;height:9px;overflow:hidden;margin-bottom:12px">
+        <div style="width:38.2%;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:4px"></div>
+      </div>
+
+      <!-- T2 general -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.75rem;color:#cbd5e1">📊 T2 General</span>
+        <span style="font-size:0.75rem;color:#a855f7;font-weight:700">34.0%</span>
+      </div>
+      <div style="background:#0f172a;border-radius:4px;height:9px;overflow:hidden;margin-bottom:12px">
+        <div style="width:34%;height:100%;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:4px"></div>
+      </div>
+    </div>
+
+    <!-- Métricas avanzadas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+      <div style="background:#0a1221;border-radius:9px;padding:10px;text-align:center">
+        <div style="font-size:1.1rem;font-weight:800;color:#06b6d4">32.4%</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">eFG%</div>
+        <div style="font-size:0.58rem;color:#334155">Eficiencia Tiro Efectiva</div>
+      </div>
+      <div style="background:#0a1221;border-radius:9px;padding:10px;text-align:center">
+        <div style="font-size:1.1rem;font-weight:800;color:#8b5cf6">33.3%</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">TS%</div>
+        <div style="font-size:0.58rem;color:#334155">True Shooting %</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:10px;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:9px;font-size:0.72rem;color:#94a3b8;line-height:1.6">
+      <strong style="color:#f97316">📌 Diagnóstico:</strong> Jugadora de impacto en pintura (68% de sus T2 en zona restringida). 
+      El triple no es su arma prioritaria (11.8%, 17 intentos). 
+      <strong style="color:#fbbf24">Prioridad de desarrollo: mecanica de tiro libre</strong> — mejorar del 38% actual al 55%+ impactaría directamente los puntos por partido.
+    </div>
+  </div>
+
+  <!-- DISTRIBUCIÓN DE TIROS DONUT -->
+  <div class="card">
+    <div class="card-title">Distribución de Intentos de Tiro (176 TC + 34 TL)</div>
+    <div style="position:relative;height:200px">
+      <canvas id="shotDistChart"></canvas>
+    </div>
+    <div style="margin-top:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#f97316;flex-shrink:0"></div>
+        <div style="flex:1;font-size:0.73rem;color:#cbd5e1">Pintura (T2)</div>
+        <div style="font-size:0.73rem;font-weight:700;color:#f97316">120 att</div>
+        <div style="font-size:0.68rem;color:var(--muted)">58.3%</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#fbbf24;flex-shrink:0"></div>
+        <div style="flex:1;font-size:0.73rem;color:#cbd5e1">Media Dist. (T2)</div>
+        <div style="font-size:0.73rem;font-weight:700;color:#fbbf24">39 att</div>
+        <div style="font-size:0.68rem;color:var(--muted)">18.9%</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#a855f7;flex-shrink:0"></div>
+        <div style="flex:1;font-size:0.73rem;color:#cbd5e1">Triple (T3)</div>
+        <div style="font-size:0.73rem;font-weight:700;color:#a855f7">17 att</div>
+        <div style="font-size:0.68rem;color:var(--muted)">8.3%</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;flex-shrink:0"></div>
+        <div style="flex:1;font-size:0.73rem;color:#cbd5e1">Tiro Libre</div>
+        <div style="font-size:0.73rem;font-weight:700;color:#22c55e">34 att</div>
+        <div style="font-size:0.68rem;color:var(--muted)">16.5%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 4: GAME LOG ──────────────────────────────── -->
+<div class="sec-label">Registro Partido a Partido</div>
+<div class="card mb32">
+  <div class="card-title">Game Log Oficial AFMB / Federal — Temporada 2026</div>
+  <div style="overflow-x:auto">
+    <table id="gameLog" style="width:100%;border-collapse:collapse;font-size:0.78rem">
+      <thead>
+        <tr style="background:#06101e">
+          <th style="padding:8px 10px;text-align:left;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">FECHA</th>
+          <th style="padding:8px 10px;text-align:left;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">RIVAL</th>
+          <th style="padding:8px 10px;text-align:center;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">FASE</th>
+          <th style="padding:8px 10px;text-align:center;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">TIT</th>
+          <th style="padding:8px 10px;text-align:right;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">PTS</th>
+          <th style="padding:8px 10px;text-align:right;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">REB</th>
+          <th style="padding:8px 10px;text-align:right;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">AST</th>
+          <th style="padding:8px 10px;text-align:right;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">VAL</th>
+          <th style="padding:8px 10px;text-align:center;color:#475569;font-size:0.62rem;letter-spacing:1px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06)">RES</th>
+        </tr>
+      </thead>
+      <tbody id="gameLogBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 5: IMPACTO ON/OFF ─────────────────────────── -->
+<div class="sec-label">Impacto &amp; Contexto de Equipo</div>
+<div class="grid3 mb32">
+  <div class="card" style="text-align:center">
+    <div class="card-title">Récord con Mía en cancha</div>
+    <div style="font-size:2.2rem;font-weight:900;color:#22c55e;line-height:1">11W</div>
+    <div style="font-size:1rem;font-weight:700;color:#f87171;margin-top:2px">7L</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:8px">61.1% victorias<br>en partidos donde jugó</div>
+    <div style="margin-top:10px;padding:8px;background:rgba(34,197,94,0.08);border-radius:8px;border:1px solid rgba(34,197,94,0.2);font-size:0.68rem;color:#86efac">
+      ✅ Más partidos titulares = más victorias (6W/3L en 9 como titular)
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div class="card-title">Uso ofensivo</div>
+    <div style="font-size:2.2rem;font-weight:900;color:#f97316;line-height:1">~22%</div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-top:6px">Usage Rate estimado</div>
+    <div style="font-size:0.72rem;color:#94a3b8;margin-top:8px;line-height:1.5">
+      176 intentos de campo<br>+ 34 TL en 18 PJ<br>≈ <strong style="color:#f97316">11.7 intentos/partido</strong>
+    </div>
+    <div style="margin-top:10px;padding:8px;background:rgba(249,115,22,0.06);border-radius:8px;border:1px solid rgba(249,115,22,0.15);font-size:0.68rem;color:#fb923c">
+      🏀 Principal opción ofensiva del equipo
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div class="card-title">Balance Total</div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-bottom:10px">Recuperos vs Pérdidas</div>
+    <div style="display:flex;justify-content:center;gap:16px;align-items:center">
+      <div>
+        <div style="font-size:1.8rem;font-weight:900;color:#22c55e">35</div>
+        <div style="font-size:0.62rem;color:var(--muted)">Recuperos</div>
+      </div>
+      <div style="font-size:1.4rem;color:#475569">⟷</div>
+      <div>
+        <div style="font-size:1.8rem;font-weight:900;color:#f87171">58</div>
+        <div style="font-size:0.62rem;color:var(--muted)">Pérdidas</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:8px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.15);font-size:0.68rem;color:#fca5a5">
+      ⚠️ Área clave de desarrollo: protección del balón
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 6: FORTALEZAS Y ÁREAS DE MEJORA ─────────── -->
+<div class="sec-label">Diagnóstico Técnico-Táctico</div>
+<div class="grid2 mb32">
+  <div class="card">
+    <div class="card-title" style="color:#22c55e">✅ Fortalezas Confirmadas</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="font-size:1.2rem;flex-shrink:0;line-height:1">🏀</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#86efac">Scorer de pintura</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">35.8% en zona restringida, volumen altísimo (120 att). Capacidad de buscar falta + convertir desde el poste bajo.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="font-size:1.2rem;flex-shrink:0;line-height:1">💪</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#86efac">Rebote defensivo</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">61 rebotes defensivos — posicionamiento y anticipación destacados para la categoría.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="font-size:1.2rem;flex-shrink:0;line-height:1">🔥</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#86efac">Motor defensivo</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">35 recuperos en 18 PJ (1.9/PJ) = top 15% del plantel. Alta intensidad defensiva.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="font-size:1.2rem;flex-shrink:0;line-height:1">📈</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#86efac">Curva de crecimiento</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">+17% en PPP en 2da etapa vs 1ra. Tendencia ascendente confirmada en 3 torneo seguidos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:#f97316">🎯 Áreas de Desarrollo Prioritarias</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:2px 8px;font-size:0.62rem;font-weight:700;color:#f87171;flex-shrink:0;margin-top:1px">P1</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#fca5a5">Tiro libre (38.2%)</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">34 intentos en 18 PJ. Mejorar al 55%+ = +5.8 pts por temporada "gratis". Mecánica + rutina de práctica.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);border-radius:6px;padding:2px 8px;font-size:0.62rem;font-weight:700;color:#fb923c;flex-shrink:0;margin-top:1px">P2</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#fca5a5">Protección del balón (58 pérdidas)</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">3.2 pérdidas/PJ es alto para escolta. Mejorar a ≤2.0/PJ con trabajo en manejo + decisiones 1c1.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:rgba(250,204,21,0.12);border:1px solid rgba(250,204,21,0.25);border-radius:6px;padding:2px 8px;font-size:0.62rem;font-weight:700;color:#fde047;flex-shrink:0;margin-top:1px">P3</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#fca5a5">Mecánica de triple (11.8%)</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">Reducir volumen (17→8 att) y trabajar la mecánica desde los 5.8m. Percentaje objetivo: 25%+ a fin de 2027.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);border-radius:6px;padding:2px 8px;font-size:0.62rem;font-weight:700;color:#93c5fd;flex-shrink:0;margin-top:1px">P4</div>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#fca5a5">Asistencias (0.3 APJ)</div>
+          <div style="font-size:0.7rem;color:#94a3b8;line-height:1.5">6 ast en 18 PJ. Desarrollar visión periférica y juego de pasador desde el poste alto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 7: PORTFOLIO NCAA/BECA ───────────────────── -->
+<div class="sec-label" style="--ac:#a855f7">Portfolio · Becas Universitarias &amp; Fichajes</div>
+<div class="card mb32" style="background:linear-gradient(135deg,#0c1a35 0%,#120c30 100%);border-color:rgba(168,85,247,0.25)">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
+    <div style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(59,130,246,0.2));border:1px solid rgba(168,85,247,0.4);border-radius:12px;padding:10px 16px;font-size:0.78rem;font-weight:700;color:#d8b4fe">
+      🎓 NCAA D2/D3 · NAIA
+    </div>
+    <div style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:12px;padding:10px 16px;font-size:0.78rem;font-weight:700;color:#fb923c">
+      🏆 Liga Nacional Argentina
+    </div>
+    <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:10px 16px;font-size:0.78rem;font-weight:700;color:#86efac">
+      🌎 Fichaje Exterior
+    </div>
+  </div>
+
+  <!-- Stats resumen estilo recruiting -->
+  <div style="background:rgba(0,0,0,0.3);border-radius:12px;padding:18px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.05)">
+    <div style="font-size:0.62rem;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Perfil Estadístico — Temporada 2026</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px">
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#f97316">8.6</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">PPG</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#22c55e">4.1</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">RPG</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#3b82f6">18.8</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">MPG</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#a855f7">16.8</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">PTS/36</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#facc15">34.0%</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">FG%</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.6rem;font-weight:900;color:#06b6d4">38.2%</div>
+        <div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">FT%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrative scouting -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:14px;border-left:3px solid #a855f7">
+      <div style="font-size:0.62rem;color:#a855f7;font-weight:700;letter-spacing:1px;margin-bottom:6px">PROYECCIÓN SCOUT</div>
+      <div style="font-size:0.75rem;color:#cbd5e1;line-height:1.7">
+        Jugadora de <strong style="color:#f97316">alto impacto de campo</strong> a los 12 años. Perfil de ala-pivot con capacidad de jugar en los dos extremos. Crecimiento confirmado en 3 torneos consecutivos. 
+        <strong style="color:#22c55e">Física y competitiva</strong> — busca el contacto y convierte en situaciones de alta presión.
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:14px;border-left:3px solid #3b82f6">
+      <div style="font-size:0.62rem;color:#3b82f6;font-weight:700;letter-spacing:1px;margin-bottom:6px">POTENCIAL A 2028</div>
+      <div style="font-size:0.75rem;color:#cbd5e1;line-height:1.7">
+        Con desarrollo técnico en TL + mecánica de triple, proyecta como <strong style="color:#93c5fd">escolta scorer completa</strong> para U15/U17. 
+        Nivel físico actual permite aspirar a <strong style="color:#93c5fd">selecciones zonales</strong> en 2027-2028.
+      </div>
+    </div>
+  </div>
+
+  <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+    <div style="font-size:1.4rem;flex-shrink:0">🏀</div>
+    <div>
+      <div style="font-size:0.72rem;font-weight:700;color:#fb923c;margin-bottom:4px">Nota para reclutadores</div>
+      <div style="font-size:0.72rem;color:#94a3b8;line-height:1.65">
+        Mía G. Sánchez (#14) jugó <strong style="color:#e2e8f0">18 de 20 partidos oficiales</strong> en la temporada 2026 (2 WOs de Bera) con 9 titularidades. 
+        Datos estadísticos extraídos de la <strong style="color:#e2e8f0">base oficial AFMB / GesDeportiva</strong> (CABB). 
+        Informe generado por <strong style="color:#f97316">NextLevel Analytics</strong> — sistema de análisis de rendimiento individual certificado.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────────── -->
+<div style="text-align:center;padding:20px;font-size:0.65rem;color:#1e293b;border-top:1px solid var(--border)">
+  <div style="color:#334155;margin-bottom:4px">
+    <strong style="color:#f97316">NextLevel Analytics</strong> · Dossier de Rendimiento Individual · Temporada 2026
+  </div>
+  <div style="color:#1e293b">
+    Datos oficiales AFMB / GesDeportiva (CABB) · Última actualización: septiembre 2026 · Confidencial
+  </div>
+</div>
+
+</div><!-- end .wrap -->
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script>
+// ── DATOS ─────────────────────────────────────────────────
+const PARTIDOS = [
+  {f:'17/03',rival:'Boca Jrs (A)',fase:'1',tit:false,pts:10,reb:2,ast:1,val:6,res:'G',sc:'91-34'},
+  {f:'29/03',rival:'San Vicente',fase:'1',tit:false,pts:12,reb:4,ast:0,val:10,res:'G',sc:'53-25'},
+  {f:'12/04',rival:'Wilde SC',fase:'1',tit:false,pts:4,reb:1,ast:0,val:-4,res:'G',sc:'63-39'},
+  {f:'19/04',rival:'Olimpo',fase:'1',tit:true,pts:8,reb:4,ast:0,val:10,res:'G',sc:'73-30'},
+  {f:'26/04',rival:'Alejandro Korn',fase:'1',tit:false,pts:7,reb:3,ast:0,val:3,res:'L',sc:'40-61'},
+  {f:'17/05',rival:'Boca Jrs (A)',fase:'1',tit:false,pts:12,reb:6,ast:0,val:12,res:'G',sc:'47-46'},
+  {f:'24/05',rival:'San Vicente',fase:'1',tit:true,pts:9,reb:9,ast:0,val:4,res:'G',sc:'54-47'},
+  {f:'31/05',rival:'Wilde SC',fase:'1',tit:true,pts:20,reb:5,ast:1,val:7,res:'G',sc:'58-52'},
+  {f:'28/06',rival:'Olimpo',fase:'1',tit:true,pts:6,reb:4,ast:0,val:3,res:'G',sc:'73-36'},
+  {f:'14/06',rival:'Alejandro Korn',fase:'1',tit:true,pts:13,reb:4,ast:0,val:9,res:'L',sc:'37-70'},
+  {f:'02/08',rival:'Unión Florida',fase:'2',tit:true,pts:6,reb:7,ast:0,val:-1,res:'L',sc:'49-60'},
+  {f:'09/08',rival:'Obras Basket',fase:'2',tit:false,pts:4,reb:4,ast:0,val:3,res:'L',sc:'41-66'},
+  {f:'01/09',rival:'C.A. Lanús',fase:'2',tit:true,pts:10,reb:2,ast:0,val:5,res:'L',sc:'40-55'},
+  {f:'30/08',rival:'Vélez Sarsfield',fase:'2',tit:true,pts:7,reb:5,ast:1,val:1,res:'G',sc:'54-53'},
+  {f:'13/09',rival:'Cen. Galicia',fase:'2',tit:false,pts:9,reb:4,ast:0,val:13,res:'G',sc:'71-23'},
+  {f:'15/09',rival:'Alejandro Korn',fase:'FED',tit:false,pts:5,reb:2,ast:0,val:-5,res:'L',sc:'46-59'},
+  {f:'16/09',rival:'SITAS',fase:'FED',tit:true,pts:7,reb:1,ast:1,val:6,res:'L',sc:'46-64'},
+  {f:'17/09',rival:'Unión Florida',fase:'FED',tit:false,pts:6,reb:6,ast:0,val:2,res:'G',sc:'49-46'},
+];
+
+// ── GAME LOG ──────────────────────────────────────────────
+const tbody = document.getElementById('gameLogBody');
+const faseColor = {
+  '1':'rgba(34,197,94,0.15)',
+  '2':'rgba(249,115,22,0.15)',
+  'FED':'rgba(168,85,247,0.15)'
+};
+const faseTextColor = {'1':'#86efac','2':'#fb923c','FED':'#c4b5fd'};
+const faseLabel = {'1':'1ª Etapa','2':'2ª Etapa','FED':'Federal'};
+
+PARTIDOS.forEach(p => {
+  const tr = document.createElement('tr');
+  tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+  tr.onmouseover = () => tr.style.background = 'rgba(249,115,22,0.04)';
+  tr.onmouseout  = () => tr.style.background = '';
+  const valColor = p.val >= 8 ? '#22c55e' : p.val >= 3 ? '#86efac' : p.val >= 0 ? '#94a3b8' : '#f87171';
+  const ptsColor = p.pts >= 12 ? '#f97316' : p.pts >= 8 ? '#fbbf24' : '#e2e8f0';
+  tr.innerHTML = `
+    <td style="padding:7px 10px;color:#94a3b8;font-size:0.73rem">${p.f}</td>
+    <td style="padding:7px 10px;font-size:0.73rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.rival}</td>
+    <td style="padding:7px 10px;text-align:center">
+      <span style="font-size:0.6rem;padding:2px 8px;border-radius:10px;font-weight:700;background:${faseColor[p.fase]};color:${faseTextColor[p.fase]}">${faseLabel[p.fase]}</span>
+    </td>
+    <td style="padding:7px 10px;text-align:center;font-size:0.75rem">${p.tit ? '<span style="color:#f97316;font-weight:800">T</span>' : '<span style="color:#475569">S</span>'}</td>
+    <td style="padding:7px 10px;text-align:right;font-weight:800;font-size:0.85rem;color:${ptsColor}">${p.pts}</td>
+    <td style="padding:7px 10px;text-align:right;color:#93c5fd;font-weight:600">${p.reb}</td>
+    <td style="padding:7px 10px;text-align:right;color:#94a3b8">${p.ast}</td>
+    <td style="padding:7px 10px;text-align:right;font-weight:700;color:${valColor}">${p.val > 0 ? '+' : ''}${p.val}</td>
+    <td style="padding:7px 10px;text-align:center">
+      <span style="font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:700;background:${p.res==='G'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.12)'};color:${p.res==='G'?'#4ade80':'#f87171'}">${p.sc}</span>
+    </td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ── RADAR ─────────────────────────────────────────────────
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Anotación', 'Rebote', 'Defensa', 'Motor', 'Impacto', 'Regularidad'],
+    datasets: [{
+      label: 'Mía #14',
+      data: [90, 75, 80, 85, 70, 78],
+      fill: true,
+      backgroundColor: 'rgba(249,115,22,0.18)',
+      borderColor: '#f97316',
+      pointBackgroundColor: '#f97316',
+      pointBorderColor: '#fff',
+      pointRadius: 4,
+      borderWidth: 2.5
+    }, {
+      label: 'Promedio plantel',
+      data: [50, 50, 50, 50, 50, 50],
+      fill: false,
+      borderColor: 'rgba(100,116,139,0.4)',
+      pointBackgroundColor: 'rgba(100,116,139,0.4)',
+      pointRadius: 2,
+      borderWidth: 1,
+      borderDash: [4, 4]
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom', labels: { color: '#64748b', font: { size: 10 }, padding: 12 } } },
+    scales: {
+      r: {
+        min: 0, max: 100, ticks: { display: false, stepSize: 25 },
+        grid: { color: 'rgba(255,255,255,0.07)' },
+        pointLabels: { color: '#94a3b8', font: { size: 10, weight: '600' } },
+        angleLines: { color: 'rgba(255,255,255,0.06)' }
+      }
+    }
+  }
+});
+
+// ── TENDENCIA ─────────────────────────────────────────────
+const labels = PARTIDOS.map((p,i) => `PJ${i+1}`);
+const ptsData = PARTIDOS.map(p => p.pts);
+const rebData = PARTIDOS.map(p => p.reb);
+const valData = PARTIDOS.map(p => p.val);
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Puntos',
+        data: ptsData,
+        borderColor: '#f97316',
+        backgroundColor: 'rgba(249,115,22,0.08)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        borderWidth: 2,
+      },
+      {
+        label: 'Rebotes',
+        data: rebData,
+        borderColor: '#3b82f6',
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.3,
+        pointRadius: 2,
+        borderWidth: 1.5,
+        borderDash: [4, 2],
+      },
+      {
+        label: 'Valoración',
+        data: valData,
+        borderColor: '#a855f7',
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.3,
+        pointRadius: 2,
+        borderWidth: 1.5,
+        borderDash: [2, 4],
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { color: '#64748b', font: { size: 10 }, padding: 12 } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { size: 9 }, maxRotation: 0 } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#475569', font: { size: 10 } } }
+    }
+  }
+});
+
+// ── DISTRIBUCIÓN DE TIROS ─────────────────────────────────
+new Chart(document.getElementById('shotDistChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Pintura (T2)', 'Media Dist.', 'Triple (T3)', 'Tiro Libre'],
+    datasets: [{
+      data: [120, 39, 17, 34],
+      backgroundColor: [
+        'rgba(249,115,22,0.85)',
+        'rgba(251,191,36,0.8)',
+        'rgba(168,85,247,0.8)',
+        'rgba(34,197,94,0.8)'
+      ],
+      borderColor: '#0b1528',
+      borderWidth: 3,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.raw} att (${(ctx.raw/210*100).toFixed(1)}%)`
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
