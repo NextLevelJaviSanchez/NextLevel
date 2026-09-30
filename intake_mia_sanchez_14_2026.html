@@ -481,17 +481,22 @@ textarea::placeholder { color: #2d4a6a; }
   </div>
 
   <!-- MENSAJES DEL COACH ─────────────────────────────────────── -->
-  <div class="sec" id="sec-mensajes" style="display:none">
-    <div class="sec-hd">
+  <div class="sec" id="sec-mensajes" style="display:none;padding:0;overflow:hidden">
+
+    <!-- Header -->
+    <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px">
       <div class="sec-ico">💬</div>
-      <div>
+      <div style="flex:1">
         <div class="sec-ttl">Mensajes de tu entrenador</div>
-        <div class="sec-sub">Feedback y comentarios personalizados</div>
+        <div class="sec-sub" id="msg-unread-badge">Feedback y comentarios personalizados</div>
       </div>
     </div>
-    <div id="coach-messages-list">
-      <div style="text-align:center;padding:16px;font-size:0.75rem;color:#475569">⏳ Cargando…</div>
+
+    <!-- Lista de mensajes / thread -->
+    <div id="coach-messages-list" style="padding:14px 16px 4px">
+      <div style="text-align:center;padding:20px;font-size:0.75rem;color:#475569">⏳ Cargando…</div>
     </div>
+
   </div>
 
   <!-- SUBMIT -->
@@ -815,38 +820,209 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ─── MENSAJES DEL COACH ───────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// MENSAJES DEL COACH — thread completo con replies + reacciones
+// ════════════════════════════════════════════════════════════════════
+
+const REACTIONS = ['👍','❤️','💪','🔥','🙏'];
+
+// Cache global de mensajes, replies y reacciones
+let _msgs = [], _replies = {}, _reactions = {};
+
 async function loadCoachMessages() {
+  const sec  = document.getElementById('sec-mensajes');
+  const list = document.getElementById('coach-messages-list');
+  try {
+    const supa = await getSupa();
+
+    // Carga paralela: mensajes + replies + reacciones
+    const [mRes, rRes, rxRes] = await Promise.all([
+      supa.from('messages')
+          .select('id,body,pinned,created_at')
+          .eq('player_id', PLAYER_UUID)
+          .order('pinned', { ascending: false })
+          .order('created_at', { ascending: false }),
+      supa.from('message_replies')
+          .select('id,message_id,body,created_at')
+          .eq('player_id', PLAYER_UUID)
+          .order('created_at', { ascending: true }),
+      supa.from('message_reactions')
+          .select('message_id,emoji')
+          .eq('player_id', PLAYER_UUID),
+    ]);
+
+    _msgs = mRes.data || [];
+    // indexar replies por message_id
+    _replies = {};
+    (rRes.data || []).forEach(r => {
+      (_replies[r.message_id] = _replies[r.message_id] || []).push(r);
+    });
+    // indexar reacciones propias por message_id
+    _reactions = {};
+    (rxRes.data || []).forEach(rx => { _reactions[rx.message_id] = rx.emoji; });
+
+    if(!_msgs.length){ sec.style.display = 'none'; return; }
+
+    sec.style.display = 'block';
+
+    // Badge de mensajes
+    const badge = document.getElementById('msg-unread-badge');
+    badge.textContent = _msgs.length + ' mensaje' + (_msgs.length !== 1 ? 's' : '') + ' · tocá para responder';
+
+    renderAllThreads(list);
+
+  } catch(e) {
+    sec.style.display = 'none';
+  }
+}
+
+function renderAllThreads(container) {
+  container.innerHTML = '';
+  _msgs.forEach(m => {
+    const myReaction = _reactions[m.message_id] || _reactions[m.id] || null;
+    const myReplies  = _replies[m.id] || [];
+    const div = document.createElement('div');
+    div.id = 'thread-' + m.id;
+    div.style.cssText = `
+      background:${m.pinned ? 'rgba(249,115,22,0.06)' : '#0c1828'};
+      border:1.5px solid ${m.pinned ? 'rgba(249,115,22,0.35)' : 'rgba(255,255,255,0.07)'};
+      border-radius:14px;margin-bottom:14px;overflow:hidden`;
+    div.innerHTML = buildThread(m, myReplies, myReaction);
+    container.appendChild(div);
+  });
+}
+
+function buildThread(m, replies, myReaction) {
+  // ── Burbuja del coach ──
+  const coachBubble = `
+    <div style="padding:14px 16px 10px">
+      ${m.pinned ? `<div style="font-size:0.58rem;font-weight:800;color:#f97316;letter-spacing:1.2px;margin-bottom:7px;display:flex;align-items:center;gap:4px"><span>📌</span> FIJADO</div>` : ''}
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f97316,#facc15);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900;color:#000;flex-shrink:0">🏀</div>
+        <div>
+          <div style="font-size:0.7rem;font-weight:800;color:#f97316">Coach NextLevel</div>
+          <div style="font-size:0.58rem;color:#475569">${fmtMsgDate(m.created_at)}</div>
+        </div>
+      </div>
+      <div style="font-size:0.85rem;color:#e2e8f0;line-height:1.7;white-space:pre-wrap">${escHtml(m.body)}</div>
+    </div>`;
+
+  // ── Barra de reacciones ──
+  const reactBar = `
+    <div style="padding:6px 16px 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-top:1px solid rgba(255,255,255,0.05)">
+      <span style="font-size:0.6rem;color:#475569;margin-right:2px">Reaccioná:</span>
+      ${REACTIONS.map(e => `
+        <button onclick="toggleReaction('${m.id}','${e}')"
+          style="background:${myReaction===e?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.04)'};
+          border:1px solid ${myReaction===e?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.08)'};
+          border-radius:20px;padding:3px 9px;cursor:pointer;font-size:0.85rem;
+          transition:all .15s;outline:none">${e}</button>
+      `).join('')}
+    </div>`;
+
+  // ── Replies previas de la jugadora ──
+  const repliesHtml = replies.length ? `
+    <div style="background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.05);padding:10px 16px">
+      ${replies.map(r => `
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:flex-start">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(59,130,246,0.2);border:1.5px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:#93c5fd;flex-shrink:0;margin-top:1px">14</div>
+          <div style="flex:1">
+            <div style="font-size:0.8rem;color:#cbd5e1;line-height:1.6;white-space:pre-wrap">${escHtml(r.body)}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <span style="font-size:0.58rem;color:#334155">${fmtMsgDate(r.created_at)}</span>
+              <button onclick="deleteReply('${r.id}','${m.id}')" style="background:none;border:none;font-size:0.6rem;color:#334155;cursor:pointer;padding:0">✕ borrar</button>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>` : '';
+
+  // ── Caja de respuesta ──
+  const replyBox = `
+    <div style="padding:10px 14px 14px;border-top:1px solid rgba(255,255,255,0.05)">
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="width:24px;height:24px;border-radius:50%;background:rgba(59,130,246,0.2);border:1.5px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:#93c5fd;flex-shrink:0">14</div>
+        <textarea id="reply-${m.id}"
+          placeholder="Respondé al coach…"
+          maxlength="280"
+          style="flex:1;background:#0f1f35;border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;
+          color:#e2e8f0;font-family:inherit;font-size:0.82rem;padding:8px 10px;
+          resize:none;height:60px;outline:none;transition:border .15s"
+          onfocus="this.style.borderColor='#3b82f6'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.08)'"
+        ></textarea>
+        <button onclick="sendReply('${m.id}')"
+          style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;border:none;
+          border-radius:10px;padding:10px 14px;font-size:0.8rem;font-weight:800;cursor:pointer;
+          white-space:nowrap;flex-shrink:0">
+          Enviar ↗
+        </button>
+      </div>
+    </div>`;
+
+  return coachBubble + reactBar + repliesHtml + replyBox;
+}
+
+// ── Enviar reply ──────────────────────────────────────────────────────
+async function sendReply(msgId) {
+  const ta   = document.getElementById('reply-' + msgId);
+  const body = ta.value.trim();
+  if(!body) return;
+
   try {
     const supa = await getSupa();
     const { data, error } = await supa
-      .from('messages')
-      .select('id, body, pinned, created_at')
-      .eq('player_id', PLAYER_UUID)
-      .order('pinned', { ascending: false })
-      .order('created_at', { ascending: false });
+      .from('message_replies')
+      .insert({ message_id: msgId, player_id: PLAYER_UUID, body })
+      .select().single();
+    if(error) throw error;
 
-    const sec = document.getElementById('sec-mensajes');
-    const list = document.getElementById('coach-messages-list');
+    ta.value = '';
+    // Actualizar cache y re-render solo este thread
+    (_replies[msgId] = _replies[msgId] || []).push(data);
+    const thread = document.getElementById('thread-' + msgId);
+    const msg = _msgs.find(m => m.id === msgId);
+    if(thread && msg) thread.innerHTML = buildThread(msg, _replies[msgId], _reactions[msgId]||null);
+  } catch(e) {
+    alert('Error al enviar: ' + e.message);
+  }
+}
 
-    if(error || !data || data.length === 0){
-      sec.style.display = 'none';
-      return;
+// ── Borrar reply ──────────────────────────────────────────────────────
+async function deleteReply(replyId, msgId) {
+  try {
+    const supa = await getSupa();
+    await supa.from('message_replies').delete().eq('id', replyId);
+    _replies[msgId] = (_replies[msgId] || []).filter(r => r.id !== replyId);
+    const thread = document.getElementById('thread-' + msgId);
+    const msg = _msgs.find(m => m.id === msgId);
+    if(thread && msg) thread.innerHTML = buildThread(msg, _replies[msgId]||[], _reactions[msgId]||null);
+  } catch(e) {}
+}
+
+// ── Reaccionar / quitar reacción ──────────────────────────────────────
+async function toggleReaction(msgId, emoji) {
+  try {
+    const supa  = await getSupa();
+    const current = _reactions[msgId];
+
+    if(current === emoji) {
+      // Quitar reacción
+      await supa.from('message_reactions')
+        .delete().eq('message_id', msgId).eq('player_id', PLAYER_UUID);
+      delete _reactions[msgId];
+    } else {
+      // Upsert reacción
+      await supa.from('message_reactions')
+        .upsert({ message_id: msgId, player_id: PLAYER_UUID, emoji }, { onConflict: 'message_id,player_id' });
+      _reactions[msgId] = emoji;
     }
 
-    sec.style.display = 'block';
-    list.innerHTML = data.map(m => `
-      <div style="background:${m.pinned ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.03)'};
-        border:1px solid ${m.pinned ? 'rgba(249,115,22,0.3)' : 'rgba(255,255,255,0.06)'};
-        border-radius:10px;padding:12px 14px;margin-bottom:10px">
-        ${m.pinned ? '<div style="font-size:0.6rem;font-weight:800;color:#f97316;letter-spacing:1px;margin-bottom:6px">📌 FIJADO</div>' : ''}
-        <div style="font-size:0.82rem;color:#e2e8f0;line-height:1.65;white-space:pre-wrap">${escHtml(m.body)}</div>
-        <div style="font-size:0.6rem;color:#475569;margin-top:6px">${fmtMsgDate(m.created_at)}</div>
-      </div>
-    `).join('');
-  } catch(e) {
-    document.getElementById('sec-mensajes').style.display = 'none';
-  }
+    // Re-render solo este thread
+    const thread = document.getElementById('thread-' + msgId);
+    const msg = _msgs.find(m => m.id === msgId);
+    if(thread && msg) thread.innerHTML = buildThread(msg, _replies[msgId]||[], _reactions[msgId]||null);
+  } catch(e) {}
 }
 
 function escHtml(str) {
