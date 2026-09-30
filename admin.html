@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin · NextLevel Basketball</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#060c18;color:#e2e8f0;min-height:100vh;padding-bottom:40px}
+:root{
+  --ac:#f97316;--green:#22c55e;--blue:#38bdf8;--purple:#a78bfa;--red:#ef4444;--yellow:#facc15;
+  --card:#0f1827;--card2:#141e2e;--input:#1a2537;
+  --border:rgba(255,255,255,0.07);--muted:#64748b;--r:14px;--rs:9px;
+}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:var(--rs);font-weight:700;transition:all .15s}
+button:active{transform:scale(0.97)}
+a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:200;background:#060c18;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.topbar-title{font-size:1rem;font-weight:900;flex:1}
+.topbar-sub{font-size:0.68rem;color:var(--muted)}
+.btn-sm{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#e2e8f0;padding:6px 12px;border-radius:var(--rs);font-size:0.75rem}
+.btn-sm:hover{border-color:rgba(249,115,22,0.4);background:rgba(249,115,22,0.08)}
+.btn-danger-sm{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:6px 12px;border-radius:var(--rs);font-size:0.75rem}
+.btn-primary{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:11px 18px;font-size:0.85rem;border-radius:var(--r)}
+.btn-primary:hover{background:linear-gradient(135deg,#fb923c,#f97316)}
+.wrap{max-width:720px;margin:0 auto;padding:14px}
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:18px}
+.sh-icon{font-size:1rem}
+.sh-title{font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.sh-line{flex:1;height:1px;background:var(--border);margin-left:8px}
+.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 10px;text-align:center}
+.stat-v{font-size:1.5rem;font-weight:900;color:var(--ac);line-height:1}
+.stat-l{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.player-row{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.player-row:hover{border-color:rgba(249,115,22,0.3)}
+.pr-av{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f97316,#facc15);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:#000;flex-shrink:0;overflow:hidden}
+.pr-av img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.pr-info{flex:1;min-width:0}
+.pr-name{font-size:0.88rem;font-weight:800;line-height:1.2}
+.pr-meta{font-size:0.63rem;color:var(--muted);margin-top:2px}
+.pr-stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pr-tag{font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#94a3b8}
+.pr-tag.green{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25);color:#4ade80}
+.pr-tag.blue{background:rgba(56,189,248,0.1);border-color:rgba(56,189,248,0.25);color:#38bdf8}
+.pr-tag.orange{background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.25);color:#fb923c}
+.pr-tag.muted{color:#475569}
+.pr-actions{display:flex;gap:6px;flex-shrink:0;flex-direction:column}
+.uid-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.uid-dot.linked{background:var(--green)}
+.uid-dot.unlinked{background:#334155}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card-title{font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row.full{grid-template-columns:1fr}
+.form-row.trio{grid-template-columns:1fr 1fr 1fr}
+.form-label{font-size:0.68rem;font-weight:600;color:var(--muted);margin-bottom:4px;display:block}
+.form-group{display:flex;flex-direction:column}
+input,select{font-family:inherit;font-size:0.9rem;color:#e2e8f0;background:var(--input);border:1px solid var(--border);border-radius:var(--rs);padding:9px 11px;width:100%;outline:none;transition:border .15s}
+input:focus,select:focus{border-color:var(--ac)}
+select option{background:#1a2537}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1e293b;border:1px solid rgba(249,115,22,0.3);border-radius:var(--r);padding:10px 20px;font-size:0.82rem;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;align-items:flex-end;justify-content:center}
+.modal-bg.on{display:flex}
+.modal{background:#0f1827;border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;border:1px solid var(--border);border-bottom:none}
+.modal-title{font-size:0.92rem;font-weight:800;margin-bottom:16px;color:var(--ac)}
+.modal-close{float:right;font-size:1.2rem;background:none;border:none;color:var(--muted);cursor:pointer}
+.empty{text-align:center;padding:30px 20px;color:var(--muted);font-size:0.82rem}
+.empty-icon{font-size:2rem;margin-bottom:8px}
+#loading-overlay{position:fixed;inset:0;background:#060c18;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#loading-overlay .spin{font-size:2.5rem;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading-overlay p{font-size:0.82rem;color:var(--muted)}
+.section-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.stab{padding:7px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);cursor:pointer}
+.stab.on{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3);color:var(--ac)}
+.panel{display:none}.panel.on{display:block}
+.eval-mini{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.eval-mini-date{font-size:0.75rem;font-weight:800;color:var(--ac)}
+.eval-mini-stats{display:flex;gap:8px;flex-wrap:wrap}
+.ems{font-size:0.62rem;color:#94a3b8}
+.ems span{color:#e2e8f0;font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay">
+  <div class="spin">🏀</div>
+  <p>Cargando panel admin…</p>
+</div>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">🛡️ NextLevel Admin</div>
+    <div class="topbar-sub" id="coach-email">coach@nextlevel.com</div>
+  </div>
+  <button class="btn-sm" onclick="doLogout()">🚪 Salir</button>
+</div>
+
+<div class="wrap">
+
+  <!-- STATS GLOBALES -->
+  <div class="sh"><span class="sh-icon">📊</span><span class="sh-title">Resumen</span><div class="sh-line"></div></div>
+  <div class="stat-bar">
+    <div class="stat-card"><div class="stat-v" id="st-jugadoras">—</div><div class="stat-l">Jugadoras</div></div>
+    <div class="stat-card"><div class="stat-v" id="st-evals">—</div><div class="stat-l">Evaluaciones</div></div>
+    <div class="stat-card"><div class="stat-v" id="st-vinculadas">—</div><div class="stat-l">Con login</div></div>
+    <div class="stat-card"><div class="stat-v" id="st-fotos">—</div><div class="stat-l">Con foto</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="section-tabs">
+    <button class="stab on" onclick="showSection('jugadoras')">👥 Jugadoras</button>
+    <button class="stab"    onclick="showSection('evaluaciones')">📋 Evaluaciones</button>
+    <button class="stab"    onclick="showSection('stats')">🏀 Stats CABB</button>
+  </div>
+
+  <!-- PANEL: JUGADORAS -->
+  <div id="panel-jugadoras" class="panel on">
+    <div id="players-list"></div>
+  </div>
+
+  <!-- PANEL: EVALUACIONES (todas) -->
+  <div id="panel-evaluaciones" class="panel">
+    <div id="all-evals-list"></div>
+  </div>
+
+  <!-- PANEL: STATS CABB -->
+  <div id="panel-stats" class="panel">
+    <div class="card">
+      <div class="card-title">📥 Cargar stats de temporada</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Jugadora</label>
+          <select id="st-player"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Temporada</label>
+          <input type="text" id="st-season" value="2026" placeholder="2026">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Torneo</label>
+          <input type="text" id="st-tournament" placeholder="AFMB, Federal…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">PJ</label>
+          <input type="number" id="st-pj" placeholder="18" min="0">
+        </div>
+      </div>
+      <div class="form-row trio">
+        <div class="form-group">
+          <label class="form-label">PPG</label>
+          <input type="number" id="st-ppg" placeholder="8.4" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">RPG</label>
+          <input type="number" id="st-rpg" placeholder="4.2" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">APG</label>
+          <input type="number" id="st-apg" placeholder="2.1" step="0.1">
+        </div>
+      </div>
+      <div class="form-row trio">
+        <div class="form-group">
+          <label class="form-label">eFG%</label>
+          <input type="number" id="st-efg" placeholder="48.2" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">TS%</label>
+          <input type="number" id="st-ts" placeholder="52.1" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">VAL/PG</label>
+          <input type="number" id="st-val" placeholder="9.3" step="0.1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">SPG</label>
+          <input type="number" id="st-spg" placeholder="1.8" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">MIN/PG</label>
+          <input type="number" id="st-min" placeholder="22.5" step="0.1">
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:4px" onclick="saveStats()">💾 Guardar stats</button>
+    </div>
+    <div id="stats-list"></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- MODAL: DETALLE JUGADORA -->
+<div id="modal-player" class="modal-bg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-player')">✕</button>
+    <div class="modal-title" id="modal-player-title">Jugadora</div>
+    <div id="modal-player-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPA_URL = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const UUID_TO_SHORT = {
+  '11111111-0000-0000-0000-000000000014': 'mia14',
+  '11111111-0000-0000-0000-000000000008': 'cat8',
+  '11111111-0000-0000-0000-000000000006': 'luba6',
+  '11111111-0000-0000-0000-000000000012': 'alma12',
+  '11111111-0000-0000-0000-000000000010': 'martina10',
+};
+
+let allPlayers = [];
+let allEvals   = [];
+let allStats   = [];
+let allPhotos  = [];
+
+// ═══════════════ INIT ════════════════════════════════════════════════
+async function init(){
+  const { data: { session } } = await supa.auth.getSession();
+  if(!session || session.user.email !== 'coach@nextlevel.com'){
+    window.location.href = 'login.html';
+    return;
+  }
+  document.getElementById('coach-email').textContent = session.user.email;
+  await loadAll();
+  hideOverlay();
+  renderSummary();
+  renderPlayers();
+  renderAllEvals();
+  renderStatsPanel();
+}
+
+async function loadAll(){
+  const [p, e, s, ph] = await Promise.all([
+    supa.from('players').select('*').order('dorsal'),
+    supa.from('evaluations').select('*').order('date', { ascending: false }),
+    supa.from('stats_seasons').select('*').order('season', { ascending: false }),
+    supa.from('photos').select('player_id'),
+  ]);
+  allPlayers = p.data || [];
+  allEvals   = e.data || [];
+  allStats   = s.data || [];
+  allPhotos  = (ph.data || []).map(x => x.player_id);
+}
+
+async function doLogout(){
+  await supa.auth.signOut();
+  window.location.href = 'login.html';
+}
+
+function hideOverlay(){ document.getElementById('loading-overlay').style.display = 'none'; }
+
+// ═══════════════ SUMMARY ══════════════════════════════════════════════
+function renderSummary(){
+  document.getElementById('st-jugadoras').textContent  = allPlayers.length;
+  document.getElementById('st-evals').textContent      = allEvals.length;
+  document.getElementById('st-vinculadas').textContent = allPlayers.filter(p => p.user_id).length;
+  document.getElementById('st-fotos').textContent      = allPhotos.length;
+}
+
+// ═══════════════ JUGADORAS ════════════════════════════════════════════
+function renderPlayers(){
+  const el = document.getElementById('players-list');
+  el.innerHTML = '';
+  allPlayers.forEach(p => {
+    const evs    = allEvals.filter(e => e.player_id === p.id);
+    const last   = evs.length ? evs[0] : null; // ya ordenado desc
+    const short  = UUID_TO_SHORT[p.id] || '';
+    const linked = !!p.user_id;
+    const hasPhoto = allPhotos.includes(p.id);
+
+    const div = document.createElement('div');
+    div.className = 'player-row';
+    div.innerHTML = `
+      <div class="pr-av"><span>#${p.dorsal}</span></div>
+      <div class="pr-info">
+        <div class="pr-name">${p.name}</div>
+        <div class="pr-meta">${p.category} · ${p.club} · ${p.position || '—'}</div>
+        <div class="pr-stats">
+          <span class="pr-tag ${linked ? 'green' : 'muted'}">${linked ? '🔗 Auth' : '⚠️ Sin login'}</span>
+          <span class="pr-tag ${hasPhoto ? 'blue' : 'muted'}">${hasPhoto ? '📷 Foto' : 'Sin foto'}</span>
+          <span class="pr-tag ${evs.length ? 'orange' : 'muted'}">${evs.length} eval${evs.length !== 1 ? 's' : ''}</span>
+          ${last ? `<span class="pr-tag blue">Última: ${fmtDate(last.date)}</span>` : ''}
+          ${last && last.height_cm ? `<span class="pr-tag">${last.height_cm} cm</span>` : ''}
+          ${last && last.yoyo_result ? `<span class="pr-tag">Beep ${last.yoyo_result}</span>` : ''}
+          ${last && last.sprint_20m_best ? `<span class="pr-tag">Sprint ${last.sprint_20m_best}s</span>` : ''}
+        </div>
+      </div>
+      <div class="pr-actions">
+        <button class="btn-sm" onclick="openPlayerDetail('${p.id}')">👁 Ver</button>
+        ${short ? `<a href="evaluacion_fisica_v2.html?player=${short}" class="btn-sm" style="text-align:center">🏋️ Prep</a>` : ''}
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function openPlayerDetail(playerId){
+  const p    = allPlayers.find(x => x.id === playerId);
+  const evs  = allEvals.filter(e => e.player_id === playerId).sort((a,b) => b.date.localeCompare(a.date));
+  const sts  = allStats.filter(s => s.player_id === playerId);
+  const short = UUID_TO_SHORT[playerId] || '';
+
+  document.getElementById('modal-player-title').textContent = p.name + ' #' + p.dorsal;
+
+  const statsHtml = sts.length ? sts.map(s => `
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px">
+      <div style="font-size:0.7rem;font-weight:800;color:var(--ac);margin-bottom:6px">${s.tournament} ${s.season} · ${s.pj} PJ</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.68rem;color:#94a3b8">
+        ${s.ppg ? '<span><b style="color:#e2e8f0">'+s.ppg+'</b> PPG</span>' : ''}
+        ${s.rpg ? '<span><b style="color:#e2e8f0">'+s.rpg+'</b> RPG</span>' : ''}
+        ${s.apg ? '<span><b style="color:#e2e8f0">'+s.apg+'</b> APG</span>' : ''}
+        ${s.efg_pct ? '<span><b style="color:#38bdf8">'+s.efg_pct+'%</b> eFG</span>' : ''}
+        ${s.ts_pct  ? '<span><b style="color:#a78bfa">'+s.ts_pct+'%</b> TS</span>' : ''}
+        ${s.val_pg  ? '<span><b style="color:#facc15">'+s.val_pg+'</b> VAL</span>' : ''}
+      </div>
+    </div>`).join('') : '<div class="empty"><div class="empty-icon">🏀</div>Sin stats CABB cargadas</div>';
+
+  const evHtml = evs.length ? evs.map((e,i) => `
+    <div class="eval-mini">
+      <div class="eval-mini-date">📅 ${fmtDate(e.date)}</div>
+      <div class="eval-mini-stats">
+        ${e.height_cm ? `<span class="ems"><span>${e.height_cm}</span> cm</span>` : ''}
+        ${e.weight_kg ? `<span class="ems"><span>${e.weight_kg}</span> kg</span>` : ''}
+        ${e.yoyo_result ? `<span class="ems">Beep <span>${e.yoyo_result}</span></span>` : ''}
+        ${e.lane_agility_best ? `<span class="ems">Lane <span>${e.lane_agility_best}s</span></span>` : ''}
+        ${e.sprint_20m_best ? `<span class="ems">Sprint <span>${e.sprint_20m_best}s</span></span>` : ''}
+      </div>
+    </div>`).join('') : '<div class="empty"><div class="empty-icon">📋</div>Sin evaluaciones físicas</div>';
+
+  document.getElementById('modal-player-body').innerHTML = `
+    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:14px">
+      ${p.position || '—'} · ${p.club} · ${p.category}<br>
+      ${p.user_id ? '🔗 Auth vinculada: <span style="color:#4ade80">'+p.user_id.slice(0,8)+'…</span>' : '⚠️ Sin cuenta de usuario vinculada'}
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      ${short ? `<a href="dossier_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal}_bera_u13_2026.html" class="btn-sm">📊 Dossier</a>` : ''}
+      ${short ? `<a href="evaluacion_fisica_v2.html?player=${short}" class="btn-sm">🏋️ Prep. Física</a>` : ''}
+      ${short ? `<a href="plan_mejora_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal}.html" class="btn-sm">🎯 Plan</a>` : ''}
+    </div>
+
+    <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">📋 Evaluaciones físicas</div>
+    ${evHtml}
+
+    <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px">🏀 Stats CABB</div>
+    ${statsHtml}
+    <div style="height:8px"></div>
+  `;
+  openModal('modal-player');
+}
+
+// ═══════════════ TODAS LAS EVALUACIONES ════════════════════════════════
+function renderAllEvals(){
+  const el = document.getElementById('all-evals-list');
+  if(!allEvals.length){
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>Sin evaluaciones registradas aún.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  allEvals.forEach(e => {
+    const p = allPlayers.find(x => x.id === e.player_id);
+    const div = document.createElement('div');
+    div.className = 'eval-mini';
+    div.style.flexDirection = 'column';
+    div.style.alignItems = 'flex-start';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;margin-bottom:6px">
+        <div style="font-size:0.78rem;font-weight:800">${p ? p.name + ' #' + p.dorsal : '?'}</div>
+        <div class="eval-mini-date">${fmtDate(e.date)}</div>
+      </div>
+      <div class="eval-mini-stats">
+        ${e.height_cm   ? `<span class="ems"><span>${e.height_cm}</span> cm</span>` : ''}
+        ${e.weight_kg   ? `<span class="ems"><span>${e.weight_kg}</span> kg</span>` : ''}
+        ${e.yoyo_result ? `<span class="ems">Beep <span>${e.yoyo_result}</span></span>` : ''}
+        ${e.lane_agility_best ? `<span class="ems">Lane <span>${e.lane_agility_best}s</span></span>` : ''}
+        ${e.sprint_20m_best   ? `<span class="ems">Sprint <span>${e.sprint_20m_best}s</span></span>` : ''}
+        ${e.notes ? `<span class="ems" style="font-style:italic">"${e.notes.slice(0,40)}"</span>` : ''}
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+// ═══════════════ STATS CABB ═══════════════════════════════════════════
+function renderStatsPanel(){
+  // Poblar select de jugadoras
+  const sel = document.getElementById('st-player');
+  sel.innerHTML = allPlayers.map(p =>
+    `<option value="${p.id}">${p.name} #${p.dorsal}</option>`
+  ).join('');
+
+  // Listar stats existentes
+  const el = document.getElementById('stats-list');
+  if(!allStats.length){
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🏀</div>Sin stats cargadas aún.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  allStats.forEach(s => {
+    const p = allPlayers.find(x => x.id === s.player_id);
+    const div = document.createElement('div');
+    div.className = 'eval-mini';
+    div.style.flexDirection = 'column';
+    div.style.alignItems = 'flex-start';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:6px">
+        <div style="font-size:0.78rem;font-weight:800">${p ? p.name : '?'}</div>
+        <div style="font-size:0.7rem;font-weight:700;color:var(--ac)">${s.tournament} ${s.season}</div>
+      </div>
+      <div class="eval-mini-stats">
+        <span class="ems"><span>${s.pj||0}</span> PJ</span>
+        ${s.ppg  ? `<span class="ems">PPG <span>${s.ppg}</span></span>` : ''}
+        ${s.rpg  ? `<span class="ems">RPG <span>${s.rpg}</span></span>` : ''}
+        ${s.apg  ? `<span class="ems">APG <span>${s.apg}</span></span>` : ''}
+        ${s.efg_pct ? `<span class="ems">eFG <span>${s.efg_pct}%</span></span>` : ''}
+        ${s.ts_pct  ? `<span class="ems">TS <span>${s.ts_pct}%</span></span>` : ''}
+        ${s.val_pg  ? `<span class="ems">VAL <span>${s.val_pg}</span></span>` : ''}
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+async function saveStats(){
+  const playerId   = document.getElementById('st-player').value;
+  const season     = document.getElementById('st-season').value.trim();
+  const tournament = document.getElementById('st-tournament').value.trim();
+  if(!season || !tournament){ toast('⚠️ Completá temporada y torneo'); return; }
+
+  const row = {
+    player_id:  playerId,
+    season,
+    tournament,
+    pj:     parseInt(document.getElementById('st-pj').value)  || null,
+    ppg:    parseFloat(document.getElementById('st-ppg').value) || null,
+    rpg:    parseFloat(document.getElementById('st-rpg').value) || null,
+    apg:    parseFloat(document.getElementById('st-apg').value) || null,
+    spg:    parseFloat(document.getElementById('st-spg').value) || null,
+    efg_pct:parseFloat(document.getElementById('st-efg').value) || null,
+    ts_pct: parseFloat(document.getElementById('st-ts').value)  || null,
+    val_pg: parseFloat(document.getElementById('st-val').value) || null,
+    min_pg: parseFloat(document.getElementById('st-min').value) || null,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { error } = await supa.from('stats_seasons').upsert(row, { onConflict: 'player_id,season,tournament' });
+  if(error){ toast('⚠️ ' + error.message); return; }
+
+  toast('✅ Stats guardadas');
+  // Recargar
+  const { data } = await supa.from('stats_seasons').select('*').order('season', { ascending: false });
+  allStats = data || [];
+  renderStatsPanel();
+  // Limpiar form
+  ['st-pj','st-ppg','st-rpg','st-apg','st-spg','st-efg','st-ts','st-val','st-min'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// ═══════════════ NAVEGACIÓN ═══════════════════════════════════════════
+function showSection(name){
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('panel-' + name).classList.add('on');
+  document.querySelectorAll('.stab')[['jugadoras','evaluaciones','stats'].indexOf(name)]?.classList.add('on');
+}
+
+function openModal(id){
+  document.getElementById(id).classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('on');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if(e.target === bg) closeModal(bg.id); });
+});
+
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function fmtDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return d + '/' + m + '/' + y;
+}
+
+init();
+</script>
+</body>
+</html>
