@@ -482,5 +482,28 @@ function generar() {
   panel.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 </script>
+
+<!-- ── LOGOUT ───────────────────────────────────────────── -->
+<div style="position:fixed;top:0;right:0;z-index:500;padding:10px 14px">
+  <button onclick="doLogout()" title="Cerrar sesión"
+    style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#f87171;
+    border-radius:9px;padding:6px 12px;font-size:0.72rem;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:5px;font-family:inherit">
+    🚪 Salir
+  </button>
+</div>
+<script>
+const _SUPA_URL = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+async function doLogout() {
+  try {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+    await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    await window.supabase.createClient(_SUPA_URL, _SUPA_KEY).auth.signOut();
+  } catch(e) {}
+  window.location.href = 'login.html';
+}
+</script>
 </body>
 </html>

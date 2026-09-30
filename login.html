@@ -35,6 +35,25 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
 .msg.info{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc}
 
 .footer{margin-top:28px;font-size:0.62rem;color:#1e3a5a;text-align:center;letter-spacing:1px;text-transform:uppercase}
+
+/* ── ACCESO RÁPIDO ──────────────────────────────────────── */
+.qbtn{
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:#0f1f35;border:1.5px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:10px 12px;cursor:pointer;
+  color:var(--text,#e2e8f0);text-align:left;
+  transition:border-color .15s,background .15s;
+}
+.qbtn:hover{background:#152a45;border-color:rgba(249,115,22,0.4)}
+.qbtn:active{background:#1a3252}
+.qnum{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:rgba(249,115,22,0.18);border:1.5px solid rgba(249,115,22,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:900;color:#f97316;line-height:1;
+}
+.qname{font-size:0.78rem;font-weight:700;color:#e2e8f0}
+.qsub{font-size:0.62rem;color:#475569;margin-top:1px}
 </style>
 </head>
 <body>
@@ -54,14 +73,45 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
 
   <div class="field">
     <label>Email</label>
-    <input type="email" id="inp-email" placeholder="tu@email.com" autocomplete="email" inputmode="email">
+    <input type="email" id="inp-email" name="email" placeholder="tu@email.com" autocomplete="email" inputmode="email">
   </div>
   <div class="field">
     <label>Contraseña</label>
-    <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="current-password">
+    <input type="password" id="inp-pass" name="password" placeholder="••••••••" autocomplete="current-password">
   </div>
 
   <button class="btn" id="btn-login" onclick="doLogin()">Ingresar →</button>
+
+  <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px">
+    <div style="font-size:0.62rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;text-align:center">
+      — Acceso rápido —
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="quick-btns">
+      <button class="qbtn" onclick="quickLogin('mia@nextlevel.com','Mia2026!')">
+        <span class="qnum">14</span>
+        <div><div class="qname">Mía Sánchez</div><div class="qsub">U13 · Escolta</div></div>
+      </button>
+      <button class="qbtn" onclick="quickLogin('cat@nextlevel.com','Cat2026!')">
+        <span class="qnum">8</span>
+        <div><div class="qname">Catalina Grillo</div><div class="qsub">U13</div></div>
+      </button>
+      <button class="qbtn" onclick="quickLogin('luba@nextlevel.com','Luba2026!')">
+        <span class="qnum">6</span>
+        <div><div class="qname">Luba Portinari</div><div class="qsub">U13</div></div>
+      </button>
+      <button class="qbtn" onclick="quickLogin('alma@nextlevel.com','Alma2026!')">
+        <span class="qnum">12</span>
+        <div><div class="qname">Alma Smigiel</div><div class="qsub">U13</div></div>
+      </button>
+      <button class="qbtn" onclick="quickLogin('martina@nextlevel.com','Martina2026!')" style="grid-column:span 2">
+        <span class="qnum">10</span>
+        <div><div class="qname">Martina Bailón</div><div class="qsub">Infantiles</div></div>
+      </button>
+    </div>
+    <div style="margin-top:10px;font-size:0.62rem;color:#1e3a5a;text-align:center">
+      🔒 Cada jugadora accede solo a su propio perfil
+    </div>
+  </div>
 </div>
 
 <div class="footer">NextLevel Basketball · Demo 2.0</div>
@@ -94,6 +144,13 @@ function setBusy(on) {
 
 // ─── Enter key ─────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+
+// ─── QUICK LOGIN (botones de acceso rápido) ────────────────────────────
+function quickLogin(email, pass) {
+  document.getElementById('inp-email').value = email;
+  document.getElementById('inp-pass').value  = pass;
+  doLogin();
+}
 
 // ─── LOGIN ─────────────────────────────────────────────────────────────
 async function doLogin() {
