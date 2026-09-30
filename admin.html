@@ -82,6 +82,30 @@ select option{background:#1a2537}
 .eval-mini-stats{display:flex;gap:8px;flex-wrap:wrap}
 .ems{font-size:0.62rem;color:#94a3b8}
 .ems span{color:#e2e8f0;font-weight:700}
+
+/* ── MENSAJES ──────────────────────────────────────────────── */
+.msg-compose{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.msg-compose textarea{width:100%;background:var(--input);border:1.5px solid var(--border);border-radius:var(--rs);color:#e2e8f0;font-family:inherit;font-size:0.88rem;padding:10px 12px;resize:vertical;min-height:80px;outline:none;transition:border .15s}
+.msg-compose textarea:focus{border-color:var(--ac)}
+.msg-compose-footer{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.msg-pin-label{font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer}
+.msg-pin-label input{width:auto;accent-color:var(--ac)}
+
+.msg-player-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.mptab{padding:5px 12px;border-radius:20px;font-size:0.7rem;font-weight:700;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s}
+.mptab.on{background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.4);color:var(--ac)}
+
+.msg-bubble{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;position:relative}
+.msg-bubble.pinned{border-color:rgba(249,115,22,0.4);background:rgba(249,115,22,0.06)}
+.msg-pin-badge{position:absolute;top:8px;right:10px;font-size:0.6rem;font-weight:700;color:var(--ac);background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);padding:2px 7px;border-radius:10px}
+.msg-body{font-size:0.82rem;line-height:1.65;color:#e2e8f0;white-space:pre-wrap}
+.msg-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:6px}
+.msg-date{font-size:0.62rem;color:var(--muted)}
+.msg-actions{display:flex;gap:6px}
+.msg-del{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:3px 9px;border-radius:8px;font-size:0.65rem;font-weight:700;cursor:pointer}
+.msg-del:hover{background:rgba(239,68,68,0.18)}
+.msg-toggle-pin{background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);color:#fb923c;padding:3px 9px;border-radius:8px;font-size:0.65rem;font-weight:700;cursor:pointer}
+.msg-toggle-pin:hover{background:rgba(249,115,22,0.18)}
 </style>
 </head>
 <body>
@@ -114,6 +138,8 @@ select option{background:#1a2537}
   <div class="section-tabs">
     <button class="stab on" onclick="showSection('jugadoras')">👥 Jugadoras</button>
     <button class="stab"    onclick="showSection('evaluaciones')">📋 Evaluaciones</button>
+    <button class="stab"    onclick="showSection('intakes')">🧠 Intakes</button>
+    <button class="stab"    onclick="showSection('mensajes')">💬 Mensajes</button>
     <button class="stab"    onclick="showSection('stats')">🏀 Stats CABB</button>
   </div>
 
@@ -125,6 +151,39 @@ select option{background:#1a2537}
   <!-- PANEL: EVALUACIONES (todas) -->
   <div id="panel-evaluaciones" class="panel">
     <div id="all-evals-list"></div>
+  </div>
+
+  <!-- PANEL: INTAKES ──────────────────────────────────────────── -->
+  <div id="panel-intakes" class="panel">
+    <div id="intakes-list"></div>
+  </div>
+
+  <!-- PANEL: MENSAJES ─────────────────────────────────────────── -->
+  <div id="panel-mensajes" class="panel">
+
+    <!-- Selector de jugadora -->
+    <div class="msg-player-tabs" id="msg-player-tabs">
+      <!-- Se genera dinámicamente -->
+    </div>
+
+    <!-- Redactar mensaje -->
+    <div class="msg-compose">
+      <div class="card-title" style="margin-bottom:10px">✍️ Nuevo mensaje</div>
+      <textarea id="msg-body-input" placeholder="Escribí tu comentario, feedback o instrucción para la jugadora…"></textarea>
+      <div class="msg-compose-footer">
+        <button class="btn-primary" style="padding:9px 20px;font-size:0.82rem" onclick="sendMessage()">
+          📤 Enviar
+        </button>
+        <label class="msg-pin-label">
+          <input type="checkbox" id="msg-pin-check"> 📌 Fijar arriba
+        </label>
+        <span style="font-size:0.65rem;color:var(--muted);margin-left:auto" id="msg-char-count">0 / 500</span>
+      </div>
+    </div>
+
+    <!-- Lista de mensajes -->
+    <div id="msg-list"></div>
+
   </div>
 
   <!-- PANEL: STATS CABB -->
@@ -226,6 +285,8 @@ let allPlayers = [];
 let allEvals   = [];
 let allStats   = [];
 let allPhotos  = [];
+let allMessages = [];
+let msgCurrentPlayer = null;
 
 // ═══════════════ INIT ════════════════════════════════════════════════
 async function init(){
@@ -241,19 +302,28 @@ async function init(){
   renderPlayers();
   renderAllEvals();
   renderStatsPanel();
+  renderMsgPlayerTabs();
+
+  // contador de chars en textarea de mensaje
+  document.getElementById('msg-body-input').addEventListener('input', function(){
+    document.getElementById('msg-char-count').textContent = this.value.length + ' / 500';
+    if(this.value.length > 500) this.value = this.value.slice(0, 500);
+  });
 }
 
 async function loadAll(){
-  const [p, e, s, ph] = await Promise.all([
+  const [p, e, s, ph, m] = await Promise.all([
     supa.from('players').select('*').order('dorsal'),
     supa.from('evaluations').select('*').order('date', { ascending: false }),
     supa.from('stats_seasons').select('*').order('season', { ascending: false }),
     supa.from('photos').select('player_id'),
+    supa.from('messages').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false }),
   ]);
-  allPlayers = p.data || [];
-  allEvals   = e.data || [];
-  allStats   = s.data || [];
-  allPhotos  = (ph.data || []).map(x => x.player_id);
+  allPlayers  = p.data || [];
+  allEvals    = e.data || [];
+  allStats    = s.data || [];
+  allPhotos   = (ph.data || []).map(x => x.player_id);
+  allMessages = m.data || [];
 }
 
 async function doLogout(){
@@ -471,12 +541,136 @@ async function saveStats(){
   });
 }
 
+// ═══════════════ MENSAJES ═════════════════════════════════════════════
+
+function renderMsgPlayerTabs(){
+  const cont = document.getElementById('msg-player-tabs');
+  cont.innerHTML = '';
+  allPlayers.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mptab' + (i === 0 ? ' on' : '');
+    btn.textContent = '#' + p.dorsal + ' ' + p.name.split(' ')[0];
+    btn.dataset.pid = p.id;
+    btn.onclick = () => selectMsgPlayer(p.id);
+    cont.appendChild(btn);
+  });
+  // seleccionar la primera por defecto
+  if(allPlayers.length) selectMsgPlayer(allPlayers[0].id);
+}
+
+function selectMsgPlayer(playerId){
+  msgCurrentPlayer = playerId;
+  document.querySelectorAll('.mptab').forEach(b => {
+    b.classList.toggle('on', b.dataset.pid === playerId);
+  });
+  renderMsgList();
+}
+
+function renderMsgList(){
+  const el = document.getElementById('msg-list');
+  const msgs = allMessages.filter(m => m.player_id === msgCurrentPlayer);
+  if(!msgs.length){
+    el.innerHTML = `<div class="empty"><div class="empty-icon">💬</div>
+      Sin mensajes aún para esta jugadora.<br>
+      <span style="font-size:0.75rem;color:#334155">Los mensajes aparecen en su pantalla de intake.</span>
+    </div>`;
+    return;
+  }
+  el.innerHTML = '';
+  msgs.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'msg-bubble' + (m.pinned ? ' pinned' : '');
+    div.innerHTML = `
+      ${m.pinned ? '<span class="msg-pin-badge">📌 Fijado</span>' : ''}
+      <div class="msg-body">${escHtml(m.body)}</div>
+      <div class="msg-footer">
+        <span class="msg-date">${fmtDateTime(m.created_at)}</span>
+        <div class="msg-actions">
+          <button class="msg-toggle-pin" onclick="togglePin('${m.id}', ${m.pinned})">
+            ${m.pinned ? '📌 Desfijar' : '📌 Fijar'}
+          </button>
+          <button class="msg-del" onclick="deleteMsg('${m.id}')">🗑 Borrar</button>
+        </div>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+async function sendMessage(){
+  const body = document.getElementById('msg-body-input').value.trim();
+  if(!body){ toast('⚠️ Escribí algo antes de enviar'); return; }
+  if(!msgCurrentPlayer){ toast('⚠️ Seleccioná una jugadora'); return; }
+
+  const pinned = document.getElementById('msg-pin-check').checked;
+  const { data, error } = await supa.from('messages').insert({
+    player_id: msgCurrentPlayer,
+    body,
+    pinned,
+  }).select().single();
+
+  if(error){ toast('⚠️ ' + error.message); return; }
+
+  // Insertar al inicio del array (o al final de fijados)
+  if(pinned){
+    allMessages.unshift(data);
+  } else {
+    const lastPinned = allMessages.filter(m => m.player_id === msgCurrentPlayer && m.pinned).length;
+    allMessages.splice(lastPinned, 0, data);
+  }
+
+  document.getElementById('msg-body-input').value = '';
+  document.getElementById('msg-pin-check').checked = false;
+  document.getElementById('msg-char-count').textContent = '0 / 500';
+  renderMsgList();
+  toast('✅ Mensaje enviado');
+}
+
+async function togglePin(msgId, currentPinned){
+  const { error } = await supa.from('messages')
+    .update({ pinned: !currentPinned })
+    .eq('id', msgId);
+  if(error){ toast('⚠️ ' + error.message); return; }
+  const m = allMessages.find(x => x.id === msgId);
+  if(m) m.pinned = !currentPinned;
+  // Reordenar: fijados primero
+  allMessages.sort((a, b) => {
+    if(a.player_id !== b.player_id) return 0;
+    if(a.pinned && !b.pinned) return -1;
+    if(!a.pinned && b.pinned) return 1;
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+  renderMsgList();
+  toast(currentPinned ? '📌 Mensaje desfijado' : '📌 Mensaje fijado');
+}
+
+async function deleteMsg(msgId){
+  if(!confirm('¿Borrar este mensaje?')) return;
+  const { error } = await supa.from('messages').delete().eq('id', msgId);
+  if(error){ toast('⚠️ ' + error.message); return; }
+  allMessages = allMessages.filter(m => m.id !== msgId);
+  renderMsgList();
+  toast('🗑 Mensaje borrado');
+}
+
+function escHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDateTime(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+}
+
 // ═══════════════ NAVEGACIÓN ═══════════════════════════════════════════
 function showSection(name){
   document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
   document.getElementById('panel-' + name).classList.add('on');
-  document.querySelectorAll('.stab')[['jugadoras','evaluaciones','stats'].indexOf(name)]?.classList.add('on');
+  const idx = ['jugadoras','evaluaciones','intakes','mensajes','stats'].indexOf(name);
+  document.querySelectorAll('.stab')[idx]?.classList.add('on');
 }
 
 function openModal(id){

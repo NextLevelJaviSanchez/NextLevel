@@ -532,10 +532,98 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STORAGE KEY ──────────────────────────────────────────────────
-const SK = 'plan_mia14_v2';
+// ══════════════════════════════════════════════════════════════════
+// PLAN DE MEJORA — Supabase persistence + localStorage fallback
+// ══════════════════════════════════════════════════════════════════
+const SUPA_URL    = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const SUPA_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const PLAYER_UUID = '11111111-0000-0000-0000-000000000014';
+const MODULE      = 'plan_mejora';
+const SK          = 'plan_mia14_v2';   // localStorage fallback key
+
+let _supa = null;
+let _saveTimer = null;
+
+async function _getSupa() {
+  if (_supa) return _supa;
+  if (!window.supabase) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  _supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  return _supa;
+}
+
 let state = JSON.parse(localStorage.getItem(SK) || '{}');
-function save() { localStorage.setItem(SK, JSON.stringify(state)); }
+
+// Guardar: siempre localStorage inmediato + debounce 800ms para Supabase
+function save() {
+  localStorage.setItem(SK, JSON.stringify(state));
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(_saveToSupa, 800);
+}
+
+async function _saveToSupa() {
+  try {
+    const supa = await _getSupa();
+    const { error } = await supa.from('player_data').upsert(
+      { player_id: PLAYER_UUID, module: MODULE, data: state, updated_at: new Date().toISOString() },
+      { onConflict: 'player_id,module' }
+    );
+    if (!error) _showSavedBadge();
+  } catch(e) {}
+}
+
+async function _loadFromSupa() {
+  try {
+    const supa = await _getSupa();
+    const { data, error } = await supa
+      .from('player_data')
+      .select('data')
+      .eq('player_id', PLAYER_UUID)
+      .eq('module', MODULE)
+      .maybeSingle();
+    if (!error && data?.data && Object.keys(data.data).length > 0) {
+      state = data.data;
+      localStorage.setItem(SK, JSON.stringify(state));
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// También cargar el intake desde Supabase para el banner
+async function _loadIntakeFromSupa() {
+  try {
+    const supa = await _getSupa();
+    const { data, error } = await supa
+      .from('intake_responses')
+      .select('tipo,mental,foco,q1,q2,q3,meta')
+      .eq('player_id', PLAYER_UUID)
+      .maybeSingle();
+    if (!error && data) return data;
+  } catch(e) {}
+  return null;
+}
+
+function _showSavedBadge() {
+  let el = document.getElementById('_saved_badge');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_saved_badge';
+    el.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);' +
+      'background:rgba(34,197,94,0.9);color:#fff;padding:6px 16px;border-radius:20px;' +
+      'font-size:0.72rem;font-weight:700;z-index:999;pointer-events:none;transition:opacity .4s';
+    document.body.appendChild(el);
+  }
+  el.textContent = '☁️ Guardado';
+  el.style.opacity = '1';
+  setTimeout(() => { el.style.opacity = '0'; }, 1800);
+}
 
 // ── PLAN MENTAL — datos y render ─────────────────────────────────
 const MENTAL_TIPS = {
@@ -805,20 +893,13 @@ function renderIntake(p) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────
-(function init() {
-  const p = new URLSearchParams(location.search);
+(async function init() {
+  // 1. Intentar cargar state desde Supabase (sobreescribe localStorage si hay datos)
+  await _loadFromSupa();
 
-  // Restaurar state guardado desde URL (compartir)
-  const stateParam = p.get('state');
-  if (stateParam) {
-    try { state = JSON.parse(decodeURIComponent(stateParam)); save(); toast('Progreso restaurado ✓'); } catch(e){}
-  }
-
+  // 2. Restaurar UI con el state (de Supabase o localStorage)
   restoreChecks();
   ['tl','ratio','pin','reb'].forEach(renderHist);
-
-  // Intake params
-  if ([...p.keys()].length > 0) renderIntake(p);
 
   // Restaurar progreso visual
   if (state.prog) {
@@ -828,23 +909,51 @@ function renderIntake(p) {
       if (bar) bar.style.width = Math.min(v.pct, 100) + '%';
     });
   }
+
+  // 3. Cargar intake desde Supabase (para el banner)
+  const intake = await _loadIntakeFromSupa();
+  if (intake) {
+    // Convertir el objeto de Supabase al formato que espera renderIntake (URLSearchParams)
+    const p = new URLSearchParams();
+    Object.entries(intake).forEach(([k, v]) => { if (v) p.set(k, v); });
+    renderIntake(p);
+  } else {
+    // Fallback: leer desde URL params (compatibilidad con links viejos)
+    const p = new URLSearchParams(location.search);
+    if ([...p.keys()].length > 0) renderIntake(p);
+  }
 })();
 </script>
 <!-- ── NAV MÍA ───────────────────────────────────────────────────────── -->
 <style>
 .mia-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
-.mia-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s}
-.mia-nav a .ni{font-size:1.2rem;line-height:1}
+.mia-nav a,.mia-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s;background:none;border:none;cursor:pointer;font-family:inherit}
+.mia-nav a .ni,.mia-nav button .ni{font-size:1.2rem;line-height:1}
 .mia-nav a.on{color:#f97316}
 .mia-nav a:hover{color:#94a3b8}
+.mia-nav button:hover{color:#f87171}
 </style>
 <nav class="mia-nav">
   <a href="dossier_mia_sanchez_14_bera_u13_2026.html"><span class="ni">📊</span>Dossier</a>
   <a href="intake_mia_sanchez_14_2026.html"><span class="ni">📋</span>Intake</a>
   <a href="plan_mejora_mia_sanchez_14_2026.html" class="on"><span class="ni">🎯</span>Plan</a>
   <a href="analisis_avanzado_mia_sanchez_14_2026.html"><span class="ni">⚡</span>Análisis</a>
-  <a href="evaluacion_fisica.html?player=mia14"><span class="ni">🏋️</span>Prep. Física</a>
+  <a href="evaluacion_fisica_v2.html?player=mia14"><span class="ni">🏋️</span>Física</a>
+  <button onclick="doLogout()"><span class="ni">🚪</span>Salir</button>
 </nav>
-<script>document.body.style.paddingBottom='62px'</script>
+<script>
+document.body.style.paddingBottom='62px';
+const _SU = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+async function doLogout() {
+  try {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+    await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    await window.supabase.createClient(_SU,_SK).auth.signOut();
+  } catch(e) {}
+  window.location.href = 'login.html';
+}
+</script>
 </body>
 </html>

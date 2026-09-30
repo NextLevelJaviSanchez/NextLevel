@@ -480,8 +480,29 @@ textarea::placeholder { color: #2d4a6a; }
     </div>
   </div>
 
+  <!-- MENSAJES DEL COACH ─────────────────────────────────────── -->
+  <div class="sec" id="sec-mensajes" style="display:none">
+    <div class="sec-hd">
+      <div class="sec-ico">💬</div>
+      <div>
+        <div class="sec-ttl">Mensajes de tu entrenador</div>
+        <div class="sec-sub">Feedback y comentarios personalizados</div>
+      </div>
+    </div>
+    <div id="coach-messages-list">
+      <div style="text-align:center;padding:16px;font-size:0.75rem;color:#475569">⏳ Cargando…</div>
+    </div>
+  </div>
+
   <!-- SUBMIT -->
-  <button class="btn" onclick="generar()">📊 Generar mi Dossier y Plan de Mejora</button>
+  <div style="display:flex;gap:10px;margin-bottom:0">
+    <button class="btn" onclick="intakeSave(true)" style="flex:0 0 auto;background:linear-gradient(135deg,#155e2a,#22c55e);font-size:0.82rem;padding:12px 18px">
+      💾 Guardar
+    </button>
+    <button class="btn" onclick="generar()" style="flex:1">
+      📊 Generar Dossier →
+    </button>
+  </div>
 
   <!-- RESULTADO -->
   <div class="result" id="result">
@@ -501,14 +522,188 @@ textarea::placeholder { color: #2d4a6a; }
 <div class="foot">CABB Scout Analytics · Mía G. Sánchez #14 · Dep. Berazategui · 2026 · Datos AFMB / GesDeportiva</div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════════
+// INTAKE — Supabase persistence + localStorage fallback
+// ══════════════════════════════════════════════════════════════════════
+const SUPA_URL  = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const PLAYER_UUID = '11111111-0000-0000-0000-000000000014';
+const LS_KEY    = 'nl_intake_mia14_v1';
+
+let _supa = null;
+
+// ── SDK loader ────────────────────────────────────────────────────────
+async function getSupa() {
+  if (_supa) return _supa;
+  if (!window.supabase) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  _supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  return _supa;
+}
+
+// ── Recoger todos los campos del formulario ───────────────────────────
+function collectForm() {
+  return {
+    player_id:  PLAYER_UUID,
+    tipo:       gc('chips-tipo').join('|'),
+    mental:     gc('chips-mental').join('|'),
+    foco:       gc('chips-foco').join('|'),
+    objetivos:  getObjs().join('|'),
+    q1:         document.getElementById('q1').value.trim(),
+    q2:         document.getElementById('q2').value.trim(),
+    q3:         document.getElementById('q3').value.trim(),
+    meta:       document.getElementById('meta').value.trim(),
+    height_cm:  parseFloat(document.getElementById('ia-height').value)  || null,
+    weight_kg:  parseFloat(document.getElementById('ia-weight').value)  || null,
+    wingspan_cm:parseFloat(document.getElementById('ia-wingspan').value) || null,
+    sitting_cm: parseFloat(document.getElementById('ia-sitting').value) || null,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+// ── Aplicar datos guardados al formulario ─────────────────────────────
+function applyToForm(d) {
+  if (!d) return;
+
+  // Chips tipo (selección única sel-a)
+  if (d.tipo) {
+    d.tipo.split('|').forEach(val => {
+      document.querySelectorAll('#chips-tipo .chip').forEach(c => {
+        if (c.dataset.val === val) c.classList.add('sel-a');
+      });
+    });
+  }
+  // Chips mental (sel-b)
+  if (d.mental) {
+    d.mental.split('|').forEach(val => {
+      document.querySelectorAll('#chips-mental .chip').forEach(c => {
+        if (c.dataset.val === val) c.classList.add('sel-b');
+      });
+    });
+  }
+  // Chips foco (sel-c)
+  if (d.foco) {
+    d.foco.split('|').forEach(val => {
+      document.querySelectorAll('#chips-foco .chip').forEach(c => {
+        if (c.dataset.val === val) c.classList.add('sel-c');
+      });
+    });
+  }
+  // Objetivos
+  if (d.objetivos) {
+    const ids = d.objetivos.split('|');
+    document.querySelectorAll('#obj-grid .obj').forEach(o => {
+      o.classList.toggle('active', ids.includes(o.dataset.id));
+    });
+  }
+  // Textos
+  ['q1','q2','q3','meta'].forEach(id => {
+    if (d[id]) {
+      document.getElementById(id).value = d[id];
+      // actualizar contadores
+      const cid = id === 'meta' ? 'cmeta' : 'c' + id.slice(1);
+      const cel = document.getElementById(cid);
+      if (cel) cel.textContent = d[id].length;
+    }
+  });
+  // Antropometría
+  if (d.height_cm)   { document.getElementById('ia-height').value   = d.height_cm;   }
+  if (d.weight_kg)   { document.getElementById('ia-weight').value   = d.weight_kg;   }
+  if (d.wingspan_cm) { document.getElementById('ia-wingspan').value = d.wingspan_cm; }
+  if (d.sitting_cm)  { document.getElementById('ia-sitting').value  = d.sitting_cm;  }
+  if (d.height_cm || d.weight_kg) intakeCalcAntro();
+}
+
+// ── Cargar datos (Supabase → fallback localStorage) ───────────────────
+async function intakeLoad() {
+  showStatus('⏳ Cargando tu perfil…', 'info');
+  try {
+    const supa = await getSupa();
+    const { data, error } = await supa
+      .from('intake_responses')
+      .select('*')
+      .eq('player_id', PLAYER_UUID)
+      .maybeSingle();
+
+    if (!error && data) {
+      applyToForm(data);
+      // actualizar localStorage como caché local
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+      showStatus('✅ Perfil cargado', 'ok');
+      return;
+    }
+  } catch(e) {}
+
+  // Fallback: localStorage
+  try {
+    const cached = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+    if (cached) { applyToForm(cached); showStatus('📱 Datos locales cargados', 'warn'); return; }
+  } catch(e) {}
+
+  hideStatus();
+}
+
+// ── Guardar datos (Supabase upsert + localStorage) ────────────────────
+async function intakeSave(showFeedback = true) {
+  const row = collectForm();
+
+  // Siempre guardamos en localStorage primero (instantáneo)
+  localStorage.setItem(LS_KEY, JSON.stringify(row));
+
+  if (showFeedback) showStatus('💾 Guardando…', 'info');
+  try {
+    const supa = await getSupa();
+    const { error } = await supa
+      .from('intake_responses')
+      .upsert(row, { onConflict: 'player_id' });
+
+    if (error) throw error;
+    if (showFeedback) showStatus('✅ Guardado en la nube', 'ok');
+  } catch(e) {
+    if (showFeedback) showStatus('⚠️ Guardado solo localmente', 'warn');
+  }
+  setTimeout(hideStatus, 2500);
+}
+
+// ── UI de estado ──────────────────────────────────────────────────────
+function showStatus(msg, type) {
+  let el = document.getElementById('intake-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'intake-status';
+    el.style.cssText = 'position:fixed;bottom:72px;left:50%;transform:translateX(-50%);' +
+      'z-index:999;padding:8px 18px;border-radius:20px;font-size:0.75rem;font-weight:700;' +
+      'transition:opacity .3s;white-space:nowrap;pointer-events:none';
+    document.body.appendChild(el);
+  }
+  const styles = {
+    info: 'background:rgba(59,130,246,0.9);color:#fff',
+    ok:   'background:rgba(34,197,94,0.9);color:#fff',
+    warn: 'background:rgba(249,115,22,0.9);color:#fff',
+    err:  'background:rgba(239,68,68,0.9);color:#fff',
+  };
+  el.style.cssText += ';' + (styles[type] || styles.info);
+  el.textContent = msg;
+  el.style.opacity = '1';
+}
+function hideStatus() {
+  const el = document.getElementById('intake-status');
+  if (el) el.style.opacity = '0';
+}
+
 // ─── FOTO EN INTAKE ──────────────────────────────────────────────────
-const FOTO_SK = 'nl_ef_photos_v1';  // misma clave que evaluacion_fisica.html
-const PLAYER_ID = 'mia14';
+const FOTO_SK = 'nl_ef_photos_v1';
 
 function intakeLoadFoto(){
   try {
     const photos = JSON.parse(localStorage.getItem(FOTO_SK) || '{}');
-    const src = photos[PLAYER_ID];
+    const src = photos['mia14'];
     const avTxt = document.getElementById('intake-avatar-txt');
     const avImg = document.getElementById('intake-avatar-img');
     if(src){ avImg.src = src; avImg.style.display = 'block'; avTxt.style.display = 'none'; }
@@ -531,11 +726,9 @@ function intakeSaveFoto(input){
       canvas.height = Math.round(img.height * scale);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       const compressed = canvas.toDataURL('image/jpeg', 0.78);
-      // guardar en misma clave que evaluacion_fisica.html
       const photos = JSON.parse(localStorage.getItem(FOTO_SK) || '{}');
-      photos[PLAYER_ID] = compressed;
+      photos['mia14'] = compressed;
       localStorage.setItem(FOTO_SK, JSON.stringify(photos));
-      // actualizar avatar
       const avTxt = document.getElementById('intake-avatar-txt');
       const avImg = document.getElementById('intake-avatar-img');
       avImg.src = compressed; avImg.style.display = 'block'; avTxt.style.display = 'none';
@@ -545,7 +738,7 @@ function intakeSaveFoto(input){
   reader.readAsDataURL(file);
 }
 
-// ─── ANTROPOMETRÍA EN INTAKE ──────────────────────────────────────────
+// ─── ANTROPOMETRÍA ────────────────────────────────────────────────────
 function intakeCalcAntro(){
   const h  = parseFloat(document.getElementById('ia-height').value);
   const w  = parseFloat(document.getElementById('ia-weight').value);
@@ -559,25 +752,14 @@ function intakeCalcAntro(){
     (sh > 0 && h > 0) ? (sh/h*100).toFixed(1) + '%' : '—';
 }
 
-// ─── CHIPS ───────────────────────────────────────────────────────────
-// Pregunta 1: selección única (tipo de jugadora)
+// ─── CHIPS ────────────────────────────────────────────────────────────
 function tc(el, cls) {
   const others = ['sel-a','sel-b','sel-c'];
-  if (el.classList.contains(cls)) {
-    el.classList.remove(cls);
-  } else {
-    others.forEach(c => el.classList.remove(c));
-    el.classList.add(cls);
-  }
+  if (el.classList.contains(cls)) { el.classList.remove(cls); }
+  else { others.forEach(c => el.classList.remove(c)); el.classList.add(cls); }
 }
-// Pregunta 2: selección múltiple (desafío mental)
-function tm(el) {
-  el.classList.toggle('sel-b');
-}
-// Pregunta 3: selección múltiple (áreas a mejorar)
-function tf(el) {
-  el.classList.toggle('sel-c');
-}
+function tm(el) { el.classList.toggle('sel-b'); }
+function tf(el) { el.classList.toggle('sel-c'); }
 function gc(groupId) {
   return [...document.querySelectorAll('#' + groupId + ' .chip')]
     .filter(c => ['sel-a','sel-b','sel-c'].some(s => c.classList.contains(s)))
@@ -586,13 +768,17 @@ function gc(groupId) {
 function uc(inputId, counterId) {
   document.getElementById(counterId).textContent = document.getElementById(inputId).value.length;
 }
-function toggleObj(el) {
-  el.classList.toggle('active');
-}
+function toggleObj(el) { el.classList.toggle('active'); }
 function getObjs() {
   return [...document.querySelectorAll('#obj-grid .obj.active')].map(o => o.dataset.id);
 }
-function generar() {
+
+// ─── GENERAR DOSSIER ──────────────────────────────────────────────────
+async function generar() {
+  // 1. Guardar en Supabase antes de generar
+  await intakeSave(false);
+
+  // 2. Armar URL params para los links estáticos
   const params = new URLSearchParams({
     nombre:    'Mia Geraldine',
     apellido:  'Sanchez',
@@ -613,13 +799,70 @@ function generar() {
   const ps = params.toString();
   document.getElementById('link-d').href = 'dossier_mia_sanchez_14_bera_u13_2026.html?' + ps;
   document.getElementById('link-p').href = 'plan_mejora_mia_sanchez_14_2026.html?' + ps;
+
+  showStatus('✅ Guardado en la nube', 'ok');
+  setTimeout(hideStatus, 2500);
+
   const r = document.getElementById('result');
   r.classList.add('show');
   r.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
+// ─── AUTO-SAVE al perder foco en cualquier input/textarea ─────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('blur', () => intakeSave(false));
+  });
+});
+
+// ─── MENSAJES DEL COACH ───────────────────────────────────────────────
+async function loadCoachMessages() {
+  try {
+    const supa = await getSupa();
+    const { data, error } = await supa
+      .from('messages')
+      .select('id, body, pinned, created_at')
+      .eq('player_id', PLAYER_UUID)
+      .order('pinned', { ascending: false })
+      .order('created_at', { ascending: false });
+
+    const sec = document.getElementById('sec-mensajes');
+    const list = document.getElementById('coach-messages-list');
+
+    if(error || !data || data.length === 0){
+      sec.style.display = 'none';
+      return;
+    }
+
+    sec.style.display = 'block';
+    list.innerHTML = data.map(m => `
+      <div style="background:${m.pinned ? 'rgba(249,115,22,0.07)' : 'rgba(255,255,255,0.03)'};
+        border:1px solid ${m.pinned ? 'rgba(249,115,22,0.3)' : 'rgba(255,255,255,0.06)'};
+        border-radius:10px;padding:12px 14px;margin-bottom:10px">
+        ${m.pinned ? '<div style="font-size:0.6rem;font-weight:800;color:#f97316;letter-spacing:1px;margin-bottom:6px">📌 FIJADO</div>' : ''}
+        <div style="font-size:0.82rem;color:#e2e8f0;line-height:1.65;white-space:pre-wrap">${escHtml(m.body)}</div>
+        <div style="font-size:0.6rem;color:#475569;margin-top:6px">${fmtMsgDate(m.created_at)}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('sec-mensajes').style.display = 'none';
+  }
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtMsgDate(iso) {
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────
 intakeLoadFoto();
+intakeLoad();           // carga datos del intake desde Supabase
+loadCoachMessages();    // carga mensajes del coach
 </script>
 <!-- ── NAV MÍA ───────────────────────────────────────────────────────── -->
 <style>
