@@ -120,18 +120,31 @@ select option{background:#1a2537}
     <div class="topbar-title">🛡️ NextLevel Admin</div>
     <div class="topbar-sub" id="coach-email">coach@nextlevel.com</div>
   </div>
-  <button class="btn-sm" onclick="doLogout()">🚪 Salir</button>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button class="btn-sm" id="btn-refresh" onclick="doRefresh()" title="Actualizar todos los datos">🔄 Actualizar</button>
+    <button class="btn-sm" onclick="doLogout()">🚪 Salir</button>
+  </div>
 </div>
 
 <div class="wrap">
 
   <!-- STATS GLOBALES -->
-  <div class="sh"><span class="sh-icon">📊</span><span class="sh-title">Resumen</span><div class="sh-line"></div></div>
+  <div class="sh" style="justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="sh-icon">📊</span><span class="sh-title">Resumen</span>
+    </div>
+    <span style="font-size:0.6rem;color:#334155" id="last-update-label"></span>
+  </div>
   <div class="stat-bar">
     <div class="stat-card"><div class="stat-v" id="st-jugadoras">—</div><div class="stat-l">Jugadoras</div></div>
     <div class="stat-card"><div class="stat-v" id="st-evals">—</div><div class="stat-l">Evaluaciones</div></div>
     <div class="stat-card"><div class="stat-v" id="st-vinculadas">—</div><div class="stat-l">Con login</div></div>
     <div class="stat-card"><div class="stat-v" id="st-fotos">—</div><div class="stat-l">Con foto</div></div>
+  </div>
+  <!-- 5ta stat card: intakes + mensajes -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+    <div class="stat-card"><div class="stat-v" id="st-intakes" style="color:var(--purple)">—</div><div class="stat-l">Intakes guardados</div></div>
+    <div class="stat-card"><div class="stat-v" id="st-msgs" style="color:var(--blue)">—</div><div class="stat-l">Mensajes enviados</div></div>
   </div>
 
   <!-- TABS -->
@@ -288,6 +301,7 @@ let allPhotos  = [];
 let allMessages  = [];
 let allReplies   = [];
 let allReactions = [];
+let allIntakes   = [];
 let msgCurrentPlayer = null;
 
 // ═══════════════ INIT ════════════════════════════════════════════════
@@ -303,6 +317,7 @@ async function init(){
   renderSummary();
   renderPlayers();
   renderAllEvals();
+  renderIntakes();
   renderStatsPanel();
   renderMsgPlayerTabs();
 
@@ -314,7 +329,7 @@ async function init(){
 }
 
 async function loadAll(){
-  const [p, e, s, ph, m, rp, rx] = await Promise.all([
+  const [p, e, s, ph, m, rp, rx, ir] = await Promise.all([
     supa.from('players').select('*').order('dorsal'),
     supa.from('evaluations').select('*').order('date', { ascending: false }),
     supa.from('stats_seasons').select('*').order('season', { ascending: false }),
@@ -322,6 +337,7 @@ async function loadAll(){
     supa.from('messages').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false }),
     supa.from('message_replies').select('*').order('created_at', { ascending: true }),
     supa.from('message_reactions').select('message_id,player_id,emoji'),
+    supa.from('intake_responses').select('player_id,updated_at').order('updated_at', { ascending: false }),
   ]);
   allPlayers   = p.data  || [];
   allEvals     = e.data  || [];
@@ -330,6 +346,7 @@ async function loadAll(){
   allMessages  = m.data  || [];
   allReplies   = rp.data || [];
   allReactions = rx.data || [];
+  allIntakes   = ir.data || [];
 }
 
 async function doLogout(){
@@ -345,6 +362,11 @@ function renderSummary(){
   document.getElementById('st-evals').textContent      = allEvals.length;
   document.getElementById('st-vinculadas').textContent = allPlayers.filter(p => p.user_id).length;
   document.getElementById('st-fotos').textContent      = allPhotos.length;
+  document.getElementById('st-intakes').textContent    = allIntakes.length;
+  document.getElementById('st-msgs').textContent       = allMessages.length;
+  const now = new Date();
+  document.getElementById('last-update-label').textContent =
+    'Actualizado ' + now.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
 }
 
 // ═══════════════ JUGADORAS ════════════════════════════════════════════
@@ -695,6 +717,73 @@ function fmtDateTime(iso){
   const d = new Date(iso);
   return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' +
          d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ═══════════════ REFRESH ══════════════════════════════════════════════
+async function doRefresh(){
+  const btn = document.getElementById('btn-refresh');
+  btn.textContent = '⏳ Cargando…';
+  btn.disabled = true;
+  try {
+    await loadAll();
+    renderSummary();
+    renderPlayers();
+    renderAllEvals();
+    renderIntakes();
+    renderStatsPanel();
+    renderMsgPlayerTabs();
+    toast('✅ Datos actualizados');
+  } catch(e) {
+    toast('⚠️ Error al actualizar: ' + e.message);
+  } finally {
+    btn.textContent = '🔄 Actualizar';
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════ INTAKES ══════════════════════════════════════════════
+function renderIntakes(){
+  const el = document.getElementById('intakes-list');
+  if(!allIntakes.length){
+    el.innerHTML = `<div class="empty"><div class="empty-icon">🧠</div>Sin intakes guardados aún.</div>`;
+    return;
+  }
+  // Agrupar por jugadora (player_id), mostrar la más reciente por jugadora
+  const byPlayer = {};
+  allIntakes.forEach(r => {
+    if(!byPlayer[r.player_id]) byPlayer[r.player_id] = r;
+  });
+
+  const INTAKE_LINKS = {
+    '11111111-0000-0000-0000-000000000014': 'intake_mia_sanchez_14_2026.html',
+    '11111111-0000-0000-0000-000000000008': 'intake_catalina_grillo.html',
+    '11111111-0000-0000-0000-000000000006': 'intake_luba_portinari.html',
+    '11111111-0000-0000-0000-000000000012': 'intake_alma_smigiel.html',
+    '11111111-0000-0000-0000-000000000010': 'intake_martina_bailon.html',
+  };
+
+  el.innerHTML = '';
+  allPlayers.forEach(p => {
+    const intake = byPlayer[p.id];
+    const link   = INTAKE_LINKS[p.id] || '#';
+    const div = document.createElement('div');
+    div.className = 'eval-mini';
+    div.style.flexDirection = 'column';
+    div.style.alignItems    = 'flex-start';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;margin-bottom:6px">
+        <div style="font-size:0.82rem;font-weight:800">${p.name} <span style="color:var(--muted)">#${p.dorsal}</span></div>
+        ${intake
+          ? `<span style="font-size:0.62rem;color:var(--green);font-weight:700">✅ Guardado ${fmtDateTime(intake.updated_at)}</span>`
+          : `<span style="font-size:0.62rem;color:var(--muted)">Sin datos</span>`}
+      </div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <a href="${link}" class="btn-sm" style="font-size:0.68rem;padding:4px 10px">✏️ Ver intake</a>
+        ${intake ? `<span style="font-size:0.65rem;color:#475569;align-self:center">${p.category}</span>` : ''}
+      </div>
+    `;
+    el.appendChild(div);
+  });
 }
 
 // ═══════════════ NAVEGACIÓN ═══════════════════════════════════════════
