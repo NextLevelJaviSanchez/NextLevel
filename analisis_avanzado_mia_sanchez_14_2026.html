@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis Avanzado — Mía Sánchez #14 | NextLevel 2026</title>
+<style>
+  :root {
+    --gold: #F5A623;
+    --gold2: #FFD166;
+    --dark: #0D0D1A;
+    --card: #13132A;
+    --card2: #1A1A35;
+    --border: #2A2A50;
+    --text: #E8E8F5;
+    --muted: #8888AA;
+    --green: #06D6A0;
+    --red: #EF476F;
+    --blue: #4CC9F0;
+    --purple: #9B72CF;
+    --pe-color: #4CC9F0;
+    --se-color: #F5A623;
+    --fed-color: #06D6A0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #0D0D1A 0%, #1A1040 50%, #0D0D1A 100%); padding: 28px 24px 20px; border-bottom: 2px solid var(--gold); text-align: center; position: relative; }
+  .header-badge { display: inline-block; background: var(--gold); color: #000; font-size: 10px; font-weight: 800; letter-spacing: 2px; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; text-transform: uppercase; }
+  .header h1 { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--gold); }
+  .header-sub { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+  .nav-back { position: absolute; top: 20px; left: 20px; color: var(--gold); text-decoration: none; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--gold); padding: 5px 12px; border-radius: 20px; transition: all 0.2s; }
+  .nav-back:hover { background: var(--gold); color: #000; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--card); overflow-x: auto; }
+  .tab { padding: 14px 20px; cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; letter-spacing: 0.5px; text-transform: uppercase; }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(245,166,35,0.06); }
+  .tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  /* PANELS */
+  .panel { display: none; padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* STAT CARDS GRID */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 12px; text-align: center; }
+  .stat-card .val { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+  .stat-card .lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .stat-card.gold .val { color: var(--gold); }
+  .stat-card.green .val { color: var(--green); }
+  .stat-card.red .val { color: var(--red); }
+  .stat-card.blue .val { color: var(--blue); }
+
+  /* ETAPA COMPARISON CARDS */
+  .etapa-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  @media (max-width: 600px) { .etapa-cards { grid-template-columns: 1fr; } }
+  .etapa-card { background: var(--card); border-radius: 14px; padding: 18px 14px; border-top: 3px solid var(--border); }
+  .etapa-card.pe { border-top-color: var(--pe-color); }
+  .etapa-card.se { border-top-color: var(--se-color); }
+  .etapa-card.fed { border-top-color: var(--fed-color); }
+  .etapa-card .etapa-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .etapa-card.pe .etapa-name { color: var(--pe-color); }
+  .etapa-card.se .etapa-name { color: var(--se-color); }
+  .etapa-card.fed .etapa-name { color: var(--fed-color); }
+  .etapa-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .etapa-row:last-child { border-bottom: none; }
+  .etapa-row .k { font-size: 0.72rem; color: var(--muted); }
+  .etapa-row .v { font-size: 0.88rem; font-weight: 700; }
+
+  /* CHART CONTAINER */
+  .chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; margin-bottom: 20px; position: relative; overflow: hidden; }
+  .chart-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  canvas { width: 100% !important; }
+
+  /* BARRA COMPARATIVA */
+  .bar-compare { margin-bottom: 10px; }
+  .bar-compare .bar-label { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; }
+  .bar-compare .bar-label .name { color: var(--text); font-weight: 600; }
+  .bar-compare .bar-label .num { color: var(--gold); font-weight: 700; }
+  .bar-track { background: rgba(255,255,255,0.05); border-radius: 6px; height: 10px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
+
+  /* SHOOTING ZONE VISUAL */
+  .court-wrap { position: relative; width: 100%; max-width: 400px; margin: 0 auto; }
+  .court-svg { width: 100%; height: auto; }
+  .zone-stat { position: absolute; text-align: center; }
+  .zone-stat .pct { font-size: 1.1rem; font-weight: 900; }
+  .zone-stat .vol { font-size: 0.65rem; color: var(--muted); }
+
+  /* TIMELINE TABLE */
+  .timeline-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .timeline-table th { background: var(--card2); color: var(--muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; padding: 10px 8px; text-align: center; border-bottom: 2px solid var(--border); }
+  .timeline-table td { padding: 9px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .timeline-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .badge-pe { background: rgba(76,201,240,0.15); color: var(--pe-color); padding: 2px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; }
+  .badge-se { background: rgba(245,166,35,0.15); color: var(--se-color); padding: 2px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; }
+  .badge-fed { background: rgba(6,214,160,0.15); color: var(--fed-color); padding: 2px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; }
+  .pts-hot { color: var(--green); font-weight: 800; }
+  .pts-cold { color: var(--red); }
+  .pts-avg { color: var(--text); }
+
+  /* ROL TABLE */
+  .rol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .rol-card { background: var(--card); border-radius: 12px; padding: 18px; border: 1px solid var(--border); text-align: center; }
+  .rol-card .big { font-size: 2rem; font-weight: 900; }
+  .rol-card .sub { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .rol-card .delta { font-size: 0.8rem; margin-top: 6px; font-weight: 700; }
+
+  /* INSIGHT BOX */
+  .insight { background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 10px; }
+  .insight .icon { font-size: 1.2rem; flex-shrink: 0; }
+  .insight .txt { font-size: 0.82rem; line-height: 1.5; }
+  .insight .txt strong { color: var(--gold); }
+  .insight.green-insight { background: rgba(6,214,160,0.06); border-color: rgba(6,214,160,0.2); }
+  .insight.red-insight { background: rgba(239,71,111,0.06); border-color: rgba(239,71,111,0.2); }
+
+  /* TENDENCIA BADGE */
+  .tendencia-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 16px; }
+  .tendencia-badge.mejorando { background: rgba(6,214,160,0.15); color: var(--green); }
+  .tendencia-badge.bajando { background: rgba(239,71,111,0.15); color: var(--red); }
+  .tendencia-badge.estable { background: rgba(245,166,35,0.15); color: var(--gold); }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 24px; color: var(--muted); font-size: 0.72rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .panel { padding: 16px 12px; }
+    .tab { padding: 12px 14px; font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="nav-back" href="dossier_mia_sanchez_14_bera_u13_2026.html">← Dossier</a>
+  <div class="header-badge">⚡ Análisis Avanzado B2C</div>
+  <h1>Mía Sánchez <span>#14</span></h1>
+  <div class="header-sub">Club Dep. Berazategui · Infantiles Femenino · Temporada 2026 · 18 PJ analizados</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('tendencia')">📈 Tendencia</div>
+  <div class="tab" onclick="showTab('etapas')">⚖️ Por Etapa</div>
+  <div class="tab" onclick="showTab('shooting')">🎯 Zonas de Tiro</div>
+  <div class="tab" onclick="showTab('rol')">👤 Rol & Impacto</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ TAB 1: TENDENCIA -->
+<div id="tab-tendencia" class="panel active">
+
+  <div class="section-title">Resumen de forma</div>
+  <div class="stat-grid">
+    <div class="stat-card gold"><div class="val">8.6</div><div class="lbl">PPG Global</div></div>
+    <div class="stat-card blue"><div class="val">7.4</div><div class="lbl">Forma Reciente (5PJ)</div></div>
+    <div class="stat-card green"><div class="val">20</div><div class="lbl">Máx. PTS Partido</div></div>
+    <div class="stat-card"><div class="val">18</div><div class="lbl">PJ Analizados</div></div>
+  </div>
+
+  <div class="tendencia-badge bajando">📉 Tendencia reciente: BAJANDO — promedio de los últimos 5 PJ por debajo de su media global</div>
+
+  <div class="insight red-insight">
+    <div class="icon">⚠️</div>
+    <div class="txt">La <strong>forma reciente (5 PJ = 7.4 PPG)</strong> está por debajo del promedio global de 8.6 PPG. Esto es esperable: los últimos partidos corresponden a la <strong>Segunda Etapa AFMB y el Federal</strong>, donde la competencia es más intensa y el rol suplente aumentó. No es una caída de rendimiento, es una <strong>transición de nivel competitivo</strong>.</div>
+  </div>
+  <div class="insight green-insight">
+    <div class="icon">🔥</div>
+    <div class="txt">Mejor racha: <strong>4 partidos consecutivos de 9+ puntos</strong> (J7 a J10, mayo–junio 2026), con pico de <strong>20 puntos vs Wilde</strong>. En esa ventana su rolling 3-PJ llegó a 14.0 PPG — su mejor momento de la temporada.</div>
+  </div>
+
+  <div class="section-title">Evolución partido a partido</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Puntos por partido + Rolling Average 3 PJ</div>
+    <canvas id="chartTendencia" height="200"></canvas>
+  </div>
+
+  <div class="section-title">Valoración (VAL) — evolución</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Valoración FIBA por partido — positivo = aporte neto</div>
+    <canvas id="chartVal" height="160"></canvas>
+  </div>
+
+  <div class="section-title">Registro completo partido a partido</div>
+  <div style="overflow-x:auto;">
+  <table class="timeline-table">
+    <thead>
+      <tr><th>#</th><th>Fecha</th><th>Rival</th><th>Etapa</th><th>Tit</th><th>PTS</th><th>REB</th><th>AST</th><th>VAL</th><th>Roll3 PTS</th></tr>
+    </thead>
+    <tbody id="timeline-body"></tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ TAB 2: POR ETAPA -->
+<div id="tab-etapas" class="panel">
+
+  <div class="section-title">Estadísticas por etapa</div>
+  <div class="etapa-cards">
+    <div class="etapa-card pe">
+      <div class="etapa-name">1ª Etapa AFMB</div>
+      <div class="etapa-row"><span class="k">PJ</span><span class="v">10</span></div>
+      <div class="etapa-row"><span class="k">Titularidades</span><span class="v">5/10</span></div>
+      <div class="etapa-row"><span class="k">PPG</span><span class="v" style="color:var(--pe-color)">10.1</span></div>
+      <div class="etapa-row"><span class="k">RPG</span><span class="v">4.2</span></div>
+      <div class="etapa-row"><span class="k">VPG (val)</span><span class="v">6.0</span></div>
+      <div class="etapa-row"><span class="k">Doble dígito</span><span class="v">5/10</span></div>
+      <div class="etapa-row"><span class="k">Máx. PTS</span><span class="v">20</span></div>
+      <div class="etapa-row"><span class="k">Partidos pos.</span><span class="v">9/10</span></div>
+    </div>
+    <div class="etapa-card se">
+      <div class="etapa-name">2ª Etapa AFMB</div>
+      <div class="etapa-row"><span class="k">PJ</span><span class="v">5</span></div>
+      <div class="etapa-row"><span class="k">Titularidades</span><span class="v">3/5</span></div>
+      <div class="etapa-row"><span class="k">PPG</span><span class="v" style="color:var(--se-color)">7.2</span></div>
+      <div class="etapa-row"><span class="k">RPG</span><span class="v">4.4</span></div>
+      <div class="etapa-row"><span class="k">VPG (val)</span><span class="v">4.2</span></div>
+      <div class="etapa-row"><span class="k">Doble dígito</span><span class="v">1/5</span></div>
+      <div class="etapa-row"><span class="k">Máx. PTS</span><span class="v">10</span></div>
+      <div class="etapa-row"><span class="k">Partidos pos.</span><span class="v">3/5</span></div>
+    </div>
+    <div class="etapa-card fed">
+      <div class="etapa-name">Torneo Federal</div>
+      <div class="etapa-row"><span class="k">PJ</span><span class="v">3</span></div>
+      <div class="etapa-row"><span class="k">Titularidades</span><span class="v">1/3</span></div>
+      <div class="etapa-row"><span class="k">PPG</span><span class="v" style="color:var(--fed-color)">6.0</span></div>
+      <div class="etapa-row"><span class="k">RPG</span><span class="v">3.0</span></div>
+      <div class="etapa-row"><span class="k">VPG (val)</span><span class="v">1.0</span></div>
+      <div class="etapa-row"><span class="k">Doble dígito</span><span class="v">0/3</span></div>
+      <div class="etapa-row"><span class="k">Máx. PTS</span><span class="v">7</span></div>
+      <div class="etapa-row"><span class="k">Partidos pos.</span><span class="v">1/3</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Comparativa visual PPG por etapa</div>
+  <div class="chart-wrap">
+    <div class="chart-title">PPG · RPG · VPG por etapa</div>
+    <canvas id="chartEtapas" height="200"></canvas>
+  </div>
+
+  <div class="section-title">Barras comparativas</div>
+
+  <div style="margin-bottom:20px;">
+    <div class="bar-compare">
+      <div class="bar-label"><span class="name">1ª Etapa AFMB</span><span class="num">10.1 PPG</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%; background: var(--pe-color);"></div></div>
+    </div>
+    <br>
+    <div class="bar-compare">
+      <div class="bar-label"><span class="name">2ª Etapa AFMB</span><span class="num">7.2 PPG</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:71%; background: var(--se-color);"></div></div>
+    </div>
+    <br>
+    <div class="bar-compare">
+      <div class="bar-label"><span class="name">Torneo Federal</span><span class="num">6.0 PPG</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:59%; background: var(--fed-color);"></div></div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="icon">📊</div>
+    <div class="txt"><strong>Interpretación competitiva:</strong> La reducción de PPG entre etapas refleja un <strong>aumento progresivo del nivel rival</strong>. En 1ª Etapa jugó contra equipos de su zona (máximo 10 equipos locales). En 2ª Etapa enfrentó a Union Florida, Obras, Vélez y Lanús — clubes de mayor jerarquía metropolitana. El Federal representa el nivel nacional U13. La caída es <strong>esperada y normal para una jugadora de 13 años en expansión competitiva</strong>.</div>
+  </div>
+  <div class="insight green-insight">
+    <div class="icon">🏆</div>
+    <div class="txt"><strong>Dato destacado:</strong> Sus <strong>rebotes mejoran progresivamente</strong> — 4.2 RPG (1ª Etapa) → 4.4 RPG (2ª Etapa) → 3.0 RPG (Federal). El impacto en el juego interior <strong>se mantiene</strong> incluso subiendo de nivel, lo que indica adaptación física real.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ TAB 3: ZONAS DE TIRO -->
+<div id="tab-shooting" class="panel">
+
+  <div class="section-title">Distribución de volumen de tiro</div>
+  <div class="stat-grid">
+    <div class="stat-card gold"><div class="val">176</div><div class="lbl">Intentos Totales</div></div>
+    <div class="stat-card"><div class="val">56</div><div class="lbl">TC Convertidos</div></div>
+    <div class="stat-card red"><div class="val">31.8%</div><div class="lbl">FG%</div></div>
+    <div class="stat-card blue"><div class="val">32.4%</div><div class="lbl">eFG%</div></div>
+  </div>
+
+  <div class="section-title">Mapa de zonas (temporada completa)</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Intentos por zona — volumen y efectividad</div>
+    <canvas id="chartZonas" height="200"></canvas>
+  </div>
+
+  <!-- COURT VISUAL -->
+  <div class="chart-wrap">
+    <div class="chart-title">Visualización de cancha — zonas de tiro</div>
+    <div style="position:relative; max-width:420px; margin:0 auto;">
+      <svg viewBox="0 0 280 180" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cancha fondo -->
+        <rect width="280" height="180" fill="#111130" rx="6"/>
+        <!-- Líneas de cancha -->
+        <rect x="10" y="10" width="260" height="160" fill="none" stroke="#2A2A50" stroke-width="1.5"/>
+        <!-- Zona restricción (pintura) -->
+        <rect x="10" y="60" width="70" height="60" fill="rgba(76,201,240,0.12)" stroke="#4CC9F0" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Arco de 3 puntos (semicírculo) -->
+        <path d="M10,50 Q80,10 150,40" fill="none" stroke="#9B72CF" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Línea de 3pts media cancha -->
+        <line x1="10" y1="25" x2="10" y2="155" stroke="#9B72CF" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <!-- Aro -->
+        <circle cx="40" cy="90" r="5" fill="none" stroke="#F5A623" stroke-width="2"/>
+        <line x1="10" y1="90" x2="35" y2="90" stroke="#F5A623" stroke-width="1.5"/>
+
+        <!-- ZONA PINTURA — 43/120 = 35.8% -->
+        <rect x="12" y="62" width="66" height="56" fill="rgba(76,201,240,0.18)" rx="4"/>
+        <text x="45" y="83" text-anchor="middle" fill="#4CC9F0" font-size="11" font-weight="bold">35.8%</text>
+        <text x="45" y="97" text-anchor="middle" fill="#8888AA" font-size="8.5">43/120 int.</text>
+        <text x="45" y="109" text-anchor="middle" fill="#8888AA" font-size="8">PINTURA</text>
+
+        <!-- ZONA MEDIA DISTANCIA — 11/39 = 28.2% -->
+        <rect x="82" y="45" width="80" height="90" fill="rgba(245,166,35,0.12)" rx="4"/>
+        <text x="122" y="83" text-anchor="middle" fill="#F5A623" font-size="11" font-weight="bold">28.2%</text>
+        <text x="122" y="97" text-anchor="middle" fill="#8888AA" font-size="8.5">11/39 int.</text>
+        <text x="122" y="109" text-anchor="middle" fill="#8888AA" font-size="8">MEDIA</text>
+
+        <!-- ZONA TRIPLE — 2/17 = 11.8% -->
+        <rect x="168" y="20" width="100" height="140" fill="rgba(155,114,207,0.12)" rx="4"/>
+        <text x="218" y="83" text-anchor="middle" fill="#9B72CF" font-size="11" font-weight="bold">11.8%</text>
+        <text x="218" y="97" text-anchor="middle" fill="#8888AA" font-size="8.5">2/17 int.</text>
+        <text x="218" y="109" text-anchor="middle" fill="#8888AA" font-size="8">TRIPLE</text>
+
+        <!-- TL label al costado -->
+        <text x="260" y="170" text-anchor="end" fill="#06D6A0" font-size="8">TL: 13/34 = 38.2%</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="section-title">Análisis por zona</div>
+  <div style="margin-bottom:20px;">
+    <div class="bar-compare">
+      <div class="bar-label">
+        <span class="name" style="color:var(--pe-color)">🟦 Pintura (zona dominante)</span>
+        <span class="num">43/120 — 35.8%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%; background: var(--pe-color);"></div></div>
+    </div>
+    <br>
+    <div class="bar-compare">
+      <div class="bar-label">
+        <span class="name" style="color:var(--gold)">🟨 Media distancia</span>
+        <span class="num">11/39 — 28.2%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:39%; background: var(--gold);"></div></div>
+    </div>
+    <br>
+    <div class="bar-compare">
+      <div class="bar-label">
+        <span class="name" style="color:var(--fed-color)">🟩 Tiros Libres</span>
+        <span class="num">13/34 — 38.2%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:42%; background: var(--fed-color);"></div></div>
+    </div>
+    <br>
+    <div class="bar-compare">
+      <div class="bar-label">
+        <span class="name" style="color:var(--purple)">🟪 Triple</span>
+        <span class="num">2/17 — 11.8%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:24%; background: var(--purple);"></div></div>
+    </div>
+  </div>
+
+  <div class="insight green-insight">
+    <div class="icon">💡</div>
+    <div class="txt"><strong>Fortaleza:</strong> El <strong>68% de sus intentos son en pintura</strong> (120/176). Es una atacante interior que busca el contacto y genera línea. El 35.8% en pintura es funcional para U13 — muchos intentos son en condiciones de contacto. La llave es <strong>mejorar la terminación en bandeja y gancho corto</strong>.</div>
+  </div>
+  <div class="insight red-insight">
+    <div class="icon">🎯</div>
+    <div class="txt"><strong>Área de desarrollo prioritaria:</strong> El <strong>triple (11.8%, 17 intentos)</strong> representa un volumen demasiado alto para tan baja conversión. Debe <strong>reducir intentos de 3 pts</strong> y convertirlos en ataques al aro o media vuelta. La media a 28.2% tampoco es eficiente — el foco debe ser pintura + línea.</div>
+  </div>
+  <div class="insight">
+    <div class="icon">📌</div>
+    <div class="txt"><strong>eFG% = 32.4% · TS% = 33.3%</strong> — son métricas en construcción para una jugadora de 13 años. El promedio AFMB U13 ronda el 30-35% eFG%. Mía está en rango. Con mejora técnica en terminación, proyectamos <strong>40%+ eFG% en temporada 2027</strong>.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ TAB 4: ROL & IMPACTO -->
+<div id="tab-rol" class="panel">
+
+  <div class="section-title">Rol en el equipo</div>
+  <div class="rol-grid">
+    <div class="rol-card">
+      <div class="big" style="color:var(--gold)">50%</div>
+      <div class="sub">Tasa de titularidad</div>
+      <div class="delta">9 partidos de titular / 18 PJ</div>
+    </div>
+    <div class="rol-card">
+      <div class="big" style="color:var(--blue)">9.6</div>
+      <div class="sub">PPG como titular</div>
+      <div class="delta" style="color:var(--green)">+1.9 vs suplente</div>
+    </div>
+    <div class="rol-card">
+      <div class="big" style="color:var(--muted)">7.7</div>
+      <div class="sub">PPG como suplente</div>
+      <div class="delta">también productiva desde el banco</div>
+    </div>
+    <div class="rol-card">
+      <div class="big" style="color:var(--green)">+8.3</div>
+      <div class="sub">PPG Total 2026</div>
+      <div class="delta">AFMB + Federal combinado</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">PPG · Titular vs Suplente · por etapa</div>
+    <canvas id="chartRol" height="200"></canvas>
+  </div>
+
+  <div class="section-title">Impacto colectivo</div>
+  <div class="stat-grid">
+    <div class="stat-card green"><div class="val">35</div><div class="lbl">Recuperos</div></div>
+    <div class="stat-card red"><div class="val">58</div><div class="lbl">Pérdidas</div></div>
+    <div class="stat-card blue"><div class="val">0.60</div><div class="lbl">Ratio R/P</div></div>
+    <div class="stat-card"><div class="val">2</div><div class="lbl">Tapones</div></div>
+    <div class="stat-card"><div class="val">34</div><div class="lbl">Faltas Com.</div></div>
+    <div class="stat-card gold"><div class="val">32</div><div class="lbl">Faltas Rec.</div></div>
+  </div>
+
+  <div class="insight red-insight">
+    <div class="icon">⚡</div>
+    <div class="txt"><strong>Pérdidas (58 en 18 PJ = 3.2/partido):</strong> Es el principal área de mejora colectiva. Con ball-handling activo y presión defensiva rival, las pérdidas son esperables en U13 pero hay margen de reducción. Objetivo 2027: bajar a <strong>menos de 2.5 pérdidas/partido</strong>.</div>
+  </div>
+  <div class="insight green-insight">
+    <div class="icon">✅</div>
+    <div class="txt"><strong>Recuperos (35 = 1.9/partido):</strong> Refleja una mentalidad defensiva activa. Como comparativa, el promedio de recuperos en U13 AFMB ronda 1.2/partido — Mía está <strong>58% por encima del promedio</strong> en esta categoría.</div>
+  </div>
+  <div class="insight">
+    <div class="icon">📋</div>
+    <div class="txt"><strong>Conclusión de rol:</strong> Mía cumple un rol de <strong>jugadora de impacto alta rotación</strong> — 50% titular, efectiva saliendo del banco. Su perfil es <strong>base-escolta interior</strong> con capacidad de buscar línea y generar contacto. En el contexto de becas NCAA/NAIA, el perfil de "jugadora versátil que puede jugar titular o 6ta mujer de alto impacto" es uno de los más valorados.</div>
+  </div>
+
+  <div class="section-title">Proyección de desarrollo</div>
+  <div class="chart-wrap">
+    <div class="chart-title">PPG proyectado 2026→2028 (curva de desarrollo)</div>
+    <canvas id="chartProyeccion" height="180"></canvas>
+  </div>
+  <div style="font-size:0.72rem; color:var(--muted); margin-top:8px; text-align:center;">* Proyección basada en curvas de desarrollo FIBA U13→U15→U17. No garantiza rendimiento futuro.</div>
+</div>
+
+<div class="footer">
+  <strong>NextLevel Basketball Analytics</strong> · Análisis Avanzado B2C · Mía Sánchez #14 · Temporada 2026<br>
+  Datos oficiales CABB/AFMB · 18 PJ analizados · Generado con metodología FIBA
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const timeline = [
+  {n:1,  rival:'Boca Jrs.',   etapa:'PE', pts:10, reb:2, ast:1, val:6,   roll3:10.0, tit:false},
+  {n:2,  rival:'San Vicente', etapa:'PE', pts:12, reb:4, ast:0, val:10,  roll3:11.0, tit:false},
+  {n:3,  rival:'Wilde',       etapa:'PE', pts:4,  reb:1, ast:0, val:-4,  roll3:8.7,  tit:false},
+  {n:4,  rival:'Olimpo',      etapa:'PE', pts:8,  reb:4, ast:0, val:10,  roll3:8.0,  tit:true},
+  {n:5,  rival:'Alex. Korn',  etapa:'PE', pts:7,  reb:3, ast:0, val:3,   roll3:6.3,  tit:false},
+  {n:6,  rival:'Boca Jrs.',   etapa:'PE', pts:12, reb:6, ast:0, val:12,  roll3:9.0,  tit:false},
+  {n:7,  rival:'San Vicente', etapa:'PE', pts:9,  reb:9, ast:0, val:4,   roll3:9.3,  tit:true},
+  {n:8,  rival:'Wilde',       etapa:'PE', pts:20, reb:5, ast:1, val:7,   roll3:13.7, tit:true},
+  {n:9,  rival:'Alex. Korn',  etapa:'PE', pts:13, reb:4, ast:0, val:9,   roll3:14.0, tit:true},
+  {n:10, rival:'Olimpo',      etapa:'PE', pts:6,  reb:4, ast:0, val:3,   roll3:13.0, tit:true},
+  {n:11, rival:'Unión Fda.',  etapa:'SE', pts:6,  reb:7, ast:0, val:-1,  roll3:8.3,  tit:true},
+  {n:12, rival:'Obras',       etapa:'SE', pts:4,  reb:4, ast:0, val:3,   roll3:5.3,  tit:false},
+  {n:13, rival:'Vélez',       etapa:'SE', pts:7,  reb:5, ast:1, val:1,   roll3:5.7,  tit:true},
+  {n:14, rival:'Lanús',       etapa:'SE', pts:10, reb:2, ast:0, val:5,   roll3:7.0,  tit:true},
+  {n:15, rival:'C. Galicia',  etapa:'SE', pts:9,  reb:4, ast:0, val:13,  roll3:8.7,  tit:false},
+  {n:16, rival:'Alex. Korn',  etapa:'FED',pts:5,  reb:2, ast:0, val:-5,  roll3:8.0,  tit:false},
+  {n:17, rival:'SITAS',       etapa:'FED',pts:7,  reb:1, ast:1, val:6,   roll3:7.0,  tit:true},
+  {n:18, rival:'Unión Fda.',  etapa:'FED',pts:6,  reb:6, ast:0, val:2,   roll3:6.0,  tit:false},
+];
+
+const PPG_GLOBAL = 8.6;
+const etapaColors = {PE: '#4CC9F0', SE: '#F5A623', FED: '#06D6A0'};
+
+// ─── TABLA TIMELINE ───────────────────────────────────────────────────────────
+const tbody = document.getElementById('timeline-body');
+timeline.forEach(t => {
+  const ptsClass = t.pts >= 10 ? 'pts-hot' : (t.pts <= 4 ? 'pts-cold' : 'pts-avg');
+  const badge = `<span class="badge-${t.etapa.toLowerCase()}">${t.etapa}</span>`;
+  const titIcon = t.tit ? '⬛' : '▫️';
+  const valColor = t.val > 0 ? '#06D6A0' : (t.val < 0 ? '#EF476F' : '#888');
+  tbody.innerHTML += `<tr>
+    <td style="color:#888">${t.n}</td>
+    <td>${t.rival}</td>
+    <td>${badge}</td>
+    <td>${titIcon}</td>
+    <td class="${ptsClass}">${t.pts}</td>
+    <td>${t.reb}</td>
+    <td>${t.ast}</td>
+    <td style="color:${valColor};font-weight:700">${t.val > 0 ? '+' : ''}${t.val}</td>
+    <td style="color:#F5A623;font-weight:600">${t.roll3}</td>
+  </tr>`;
+});
+
+// ─── CHART: TENDENCIA PTS ─────────────────────────────────────────────────────
+const labels = timeline.map(t => `${t.n}. ${t.rival}`);
+const ptsBars = timeline.map(t => t.pts);
+const rollLine = timeline.map(t => t.roll3);
+const barColors = timeline.map(t => {
+  if (t.etapa === 'PE') return 'rgba(76,201,240,0.7)';
+  if (t.etapa === 'SE') return 'rgba(245,166,35,0.7)';
+  return 'rgba(6,214,160,0.7)';
+});
+
+const chartOpts = {
+  responsive: true,
+  plugins: { legend: { labels: { color: '#888', font: { size: 10 } } } },
+  scales: {
+    x: { ticks: { color: '#666', font: { size: 9 }, maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+    y: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' }, beginAtZero: true }
+  }
+};
+
+new Chart(document.getElementById('chartTendencia'), {
+  data: {
+    labels,
+    datasets: [
+      { type: 'bar',  label: 'PTS',         data: ptsBars,  backgroundColor: barColors, borderRadius: 4 },
+      { type: 'line', label: 'Roll.3 PTS',  data: rollLine, borderColor: '#FFD166', borderWidth: 2.5, pointRadius: 3, tension: 0.3, fill: false },
+      { type: 'line', label: 'PPG Global',  data: Array(18).fill(PPG_GLOBAL), borderColor: 'rgba(255,255,255,0.2)', borderWidth: 1, borderDash: [6,4], pointRadius: 0, fill: false },
+    ]
+  },
+  options: chartOpts
+});
+
+// ─── CHART: VALORACIÓN ────────────────────────────────────────────────────────
+const valData = timeline.map(t => t.val);
+const valColors = valData.map(v => v >= 0 ? 'rgba(6,214,160,0.7)' : 'rgba(239,71,111,0.7)');
+new Chart(document.getElementById('chartVal'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{ label: 'Valoración', data: valData, backgroundColor: valColors, borderRadius: 3 }]
+  },
+  options: {
+    ...chartOpts,
+    plugins: { legend: { display: false } },
+    scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, beginAtZero: false } }
+  }
+});
+
+// ─── CHART: ETAPAS GROUPED BAR ────────────────────────────────────────────────
+new Chart(document.getElementById('chartEtapas'), {
+  type: 'bar',
+  data: {
+    labels: ['1ª Etapa AFMB', '2ª Etapa AFMB', 'Federal'],
+    datasets: [
+      { label: 'PPG', data: [10.1, 7.2, 6.0], backgroundColor: ['rgba(76,201,240,0.8)','rgba(245,166,35,0.8)','rgba(6,214,160,0.8)'], borderRadius: 6 },
+      { label: 'RPG', data: [4.2, 4.4, 3.0], backgroundColor: ['rgba(76,201,240,0.35)','rgba(245,166,35,0.35)','rgba(6,214,160,0.35)'], borderRadius: 6 },
+      { label: 'VPG', data: [6.0, 4.2, 1.0], backgroundColor: ['rgba(76,201,240,0.15)','rgba(245,166,35,0.15)','rgba(6,214,160,0.15)'], borderRadius: 6, borderWidth:1, borderColor:['#4CC9F0','#F5A623','#06D6A0'] },
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, beginAtZero: true } } }
+});
+
+// ─── CHART: ZONAS TIRO ────────────────────────────────────────────────────────
+new Chart(document.getElementById('chartZonas'), {
+  type: 'bar',
+  data: {
+    labels: ['Pintura', 'Media Dist.', 'Triple', 'Tiros Libres'],
+    datasets: [
+      { label: 'Convertidos', data: [43, 11, 2, 13], backgroundColor: 'rgba(76,201,240,0.8)', borderRadius: 5 },
+      { label: 'Fallados',    data: [77, 28, 15, 21], backgroundColor: 'rgba(239,71,111,0.35)', borderRadius: 5 },
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, x: { ...chartOpts.scales.x, stacked: false }, y: { ...chartOpts.scales.y, beginAtZero: true } } }
+});
+
+// ─── CHART: ROL TITULAR/SUPLENTE ─────────────────────────────────────────────
+new Chart(document.getElementById('chartRol'), {
+  type: 'bar',
+  data: {
+    labels: ['1ª Etapa\nAFMB', '2ª Etapa\nAFMB', 'Federal'],
+    datasets: [
+      { label: 'PPG Titular',   data: [9.5, 7.7, 7.0], backgroundColor: 'rgba(245,166,35,0.85)', borderRadius: 5 },
+      { label: 'PPG Suplente',  data: [10.6, 6.0, 5.5], backgroundColor: 'rgba(76,201,240,0.55)', borderRadius: 5 },
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, beginAtZero: true } } }
+});
+
+// ─── CHART: PROYECCIÓN ────────────────────────────────────────────────────────
+new Chart(document.getElementById('chartProyeccion'), {
+  type: 'line',
+  data: {
+    labels: ['2025\n(U11)', '2026\n(U13)', '2027\n(U15 est.)', '2028\n(U17 est.)'],
+    datasets: [
+      { label: 'PPG Proyectado', data: [null, 8.3, 10.5, 13.0], borderColor: '#F5A623', backgroundColor: 'rgba(245,166,35,0.1)', fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#F5A623', borderWidth: 2.5 },
+      { label: 'Percentil 75% U13 AFMB', data: [null, 9.2, 11.5, 14.0], borderColor: 'rgba(255,255,255,0.2)', borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false },
+    ]
+  },
+  options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, beginAtZero: false, min: 5 } } }
+});
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+<!-- ── NAV MÍA ───────────────────────────────────────────────────────── -->
+<style>
+.mia-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.mia-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s}
+.mia-nav a .ni{font-size:1.2rem;line-height:1}
+.mia-nav a.on{color:#f97316}
+.mia-nav a:hover{color:#94a3b8}
+</style>
+<nav class="mia-nav">
+  <a href="dossier_mia_sanchez_14_bera_u13_2026.html"><span class="ni">📊</span>Dossier</a>
+  <a href="intake_mia_sanchez_14_2026.html"><span class="ni">📋</span>Intake</a>
+  <a href="plan_mejora_mia_sanchez_14_2026.html"><span class="ni">🎯</span>Plan</a>
+  <a href="analisis_avanzado_mia_sanchez_14_2026.html" class="on"><span class="ni">⚡</span>Análisis</a>
+  <a href="evaluacion_fisica.html?player=mia14"><span class="ni">🏋️</span>Prep. Física</a>
+</nav>
+<script>document.body.style.paddingBottom='62px'</script>
+</body>
+</html>
