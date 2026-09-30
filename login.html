@@ -154,12 +154,23 @@ async function doLogin() {
 
   if (players && players.length > 0) {
     const shortId = SHORT_IDS[players[0].id];
-    window.location.href = shortId
-      ? 'evaluacion_fisica_v2.html?player=' + shortId
-      : 'evaluacion_fisica_v2.html';
+    window.location.href = getPlayerHome(shortId);
   } else {
     window.location.href = 'admin.html';
   }
+}
+
+// ─── Home por jugadora ─────────────────────────────────────────────────
+// Cada jugadora entra a su hub principal al hacer login
+function getPlayerHome(shortId) {
+  const homes = {
+    'mia14':     'intake_mia_sanchez_14_2026.html',
+    'cat8':      'intake_catalina_grillo.html',
+    'luba6':     'intake_luba_portinari.html',
+    'alma12':    'intake_alma_smigiel.html',
+    'martina10': 'intake_martina_bailon.html',
+  };
+  return homes[shortId] || 'evaluacion_fisica_v2.html';
 }
 
 // ─── Carga dinámica de script ──────────────────────────────────────────
@@ -183,8 +194,7 @@ window.addEventListener('load', async () => {
       showInfo('✅ Sesión activa — redirigiendo…');
       const { data: players } = await client.from('players').select('id').eq('user_id', session.user.id).limit(1);
       if (players && players.length > 0) {
-        const shortId = SHORT_IDS[players[0].id];
-        window.location.href = shortId ? 'evaluacion_fisica_v2.html?player=' + shortId : 'evaluacion_fisica_v2.html';
+        window.location.href = getPlayerHome(SHORT_IDS[players[0].id]);
       } else {
         window.location.href = 'admin.html';
       }
