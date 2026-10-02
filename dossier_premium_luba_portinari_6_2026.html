@@ -74,12 +74,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
       <div class="hero-nl-badge"><div class="nl-logo">NL</div><div class="nl-label">NextLevel<br>2026</div></div>
     </div>
     <div class="kpi-strip">
-      <div class="kpi-s" style="--kc:#22c55e"><div class="kv">9.1</div><div class="kl">PPP</div><div class="ks">137 total</div></div>
-      <div class="kpi-s" style="--kc:#3b82f6"><div class="kv">5.3</div><div class="kl">RPP</div><div class="ks">80 total</div></div>
-      <div class="kpi-s" style="--kc:#f97316"><div class="kv">20.4</div><div class="kl">MPP</div><div class="ks">306 min</div></div>
+      <div class="kpi-s" style="--kc:#22c55e"><div class="kv" id="kpi-ppg">9.1</div><div class="kl">PPP</div><div class="ks" id="kpi-pj">15 PJ</div></div>
+      <div class="kpi-s" style="--kc:#3b82f6"><div class="kv" id="kpi-rpg">5.3</div><div class="kl">RPP</div><div class="ks">80 total</div></div>
+      <div class="kpi-s" style="--kc:#f97316"><div class="kv" id="kpi-mpg">20.4</div><div class="kl">MPP</div><div class="ks" id="kpi-min-total">306 min</div></div>
       <div class="kpi-s" style="--kc:#a855f7"><div class="kv">43.2%</div><div class="kl">T2%</div><div class="ks">48/111</div></div>
-      <div class="kpi-s" style="--kc:#facc15"><div class="kv">6.8</div><div class="kl">VAL</div><div class="ks">por partido</div></div>
-      <div class="kpi-s" style="--kc:#06b6d4"><div class="kv">16.0</div><div class="kl">PTS/36</div><div class="ks">pace adj.</div></div>
+      <div class="kpi-s" style="--kc:#facc15"><div class="kv" id="kpi-val">6.8</div><div class="kl">VAL</div><div class="ks">por partido</div></div>
+      <div class="kpi-s" style="--kc:#06b6d4"><div class="kv" id="kpi-pts36">16.0</div><div class="kl">PTS/36</div><div class="ks">pace adj.</div></div>
+    </div>
+    <div id="sync-badge" style="display:none;margin-top:8px;text-align:right;padding-right:4px">
+      <span style="font-size:0.58rem;color:#22c55e;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);padding:2px 8px;border-radius:10px" id="sync-label">🔄 datos en vivo</span>
     </div>
   </div>
 </div>
@@ -88,6 +91,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <a href="intake_luba_portinari.html" style="text-decoration:none;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);color:#67e8f9;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">📋 Intake</a>
   <span style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.5);color:#22c55e;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:700">⭐ Dossier</span>
   <a href="plan_mejora_luba_portinari_6.html" style="text-decoration:none;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:#fb923c;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🎯 Plan</a>
+  <a href="analisis_personalizado_luba_portinari_6_2026.html" style="text-decoration:none;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🔬 Análisis</a>
   <a href="evaluacion_fisica_v2.html?player=luba6" style="text-decoration:none;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#d8b4fe;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🏋️ Física</a>
   <button onclick="doLogout()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:inherit">🚪 Salir</button>
 </div>
@@ -101,14 +105,34 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <a href="dossier_luba_portinari_6_bera_u13_2026.html"><span class="ni">📊</span>Dossier</a>
   <a href="intake_luba_portinari.html"><span class="ni">📋</span>Intake</a>
   <a href="plan_mejora_luba_portinari_6.html"><span class="ni">🎯</span>Plan</a>
+  <a href="analisis_personalizado_luba_portinari_6_2026.html" style="text-decoration:none;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600">🔬 Análisis</a>
   <a href="evaluacion_fisica_v2.html?player=luba6"><span class="ni">🏋️</span>Física</a>
   <button onclick="doLogout()"><span class="ni">🚪</span>Salir</button>
 </nav>
 <script>
-document.addEventListener('DOMContentLoaded',()=>document.body.style.paddingBottom='62px');
+document.addEventListener('DOMContentLoaded',()=>{ document.body.style.paddingBottom='62px'; loadStats(); });
 const _SU='https://yjcxwfkedxzkcspddghz.supabase.co';
 const _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
-async function doLogout(){try{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';await new Promise((r,j)=>{s.onload=r;s.onerror=j;document.head.appendChild(s);});await window.supabase.createClient(_SU,_SK).auth.signOut();}catch(e){}window.location.href='login.html';}
+const _supa = supabase.createClient(_SU,_SK);
+const PLAYER_ID = '11111111-0000-0000-0000-000000000006'; // Luba #6
+async function loadStats(){
+  try{
+    const {data,error}=await _supa.from('stats_seasons').select('ppg,rpg,apg,val_pg,min_pg,pj')
+      .eq('player_id',PLAYER_ID).eq('season','2026').order('updated_at',{ascending:false}).limit(1).single();
+    if(error||!data)return;
+    const set=(id,val)=>{const el=document.getElementById(id);if(el&&val!=null)el.textContent=val;};
+    if(data.ppg)    set('kpi-ppg',data.ppg.toFixed(1));
+    if(data.pj)     set('kpi-pj',data.pj+' PJ');
+    if(data.rpg)    set('kpi-rpg',data.rpg.toFixed(1));
+    if(data.min_pg) {set('kpi-mpg',data.min_pg.toFixed(1));if(data.pj)set('kpi-min-total',Math.round(data.min_pg*data.pj)+' min');}
+    if(data.val_pg) set('kpi-val',data.val_pg.toFixed(1));
+    if(data.ppg&&data.min_pg&&data.min_pg>0) set('kpi-pts36',(data.ppg/data.min_pg*36).toFixed(1));
+    const b=document.getElementById('sync-badge'),l=document.getElementById('sync-label');
+    if(b)b.style.display='block';
+    if(l)l.textContent='🔄 Sincronizado '+new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'});
+  }catch(e){}
+}
+async function doLogout(){try{await _supa.auth.signOut();}catch(e){}window.location.href='login.html';}
 </script>
 
 <div class="wrap">

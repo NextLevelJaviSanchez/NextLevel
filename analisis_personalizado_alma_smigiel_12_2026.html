@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Análisis Personalizado · Alma Smigiel #12 · NextLevel 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{--bg:#03080f;--card:#0b1528;--card2:#0f1e35;--border:rgba(255,255,255,0.07);--ac:#a855f7;--text:#e2e8f0;--muted:#64748b;--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.top-nav{background:#060d1a;border-bottom:1px solid rgba(168,85,247,0.15);padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:100}
+.top-nav a,.top-nav button{text-decoration:none;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:inherit}
+.top-nav .active{background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.5);color:#a855f7;font-weight:700}
+.top-nav .inactive{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#94a3b8}
+.top-nav .logout{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171}
+.hero{background:linear-gradient(145deg,#010608,#100828,rgba(168,85,247,0.07));border-bottom:1px solid rgba(168,85,247,0.12);padding:20px 24px 16px;max-width:900px;margin:0 auto}
+.hero-row{display:flex;align-items:center;gap:14px}
+.hero-num{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(168,85,247,0.1));border:2px solid rgba(168,85,247,0.5);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#a855f7;flex-shrink:0}
+.hero-name{font-size:1.4rem;font-weight:900;letter-spacing:-0.5px}.hero-name span{color:#a855f7}
+.hero-sub{font-size:0.7rem;color:var(--muted);margin-top:3px}
+.hero-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hbadge{padding:2px 10px;border-radius:12px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
+.hb-pu{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#d8b4fe}
+.hb-bl{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93c5fd}
+.hb-gr{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+.hb-or{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:#fb923c}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);max-width:900px;margin:0 auto;overflow-x:auto}
+.tab-btn{padding:12px 20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tab-btn.on{color:#a855f7;border-bottom-color:#a855f7}
+.tab-content{display:none;max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.tab-content.on{display:block}
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.card-title{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:rgba(168,85,247,0.15)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.tab-btn{padding:10px 14px}}
+.ia-box{background:linear-gradient(135deg,rgba(168,85,247,0.05),rgba(59,130,246,0.03));border:1px solid rgba(168,85,247,0.2);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.ia-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ia-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6d28d9,#a855f7);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ia-title{font-size:0.8rem;font-weight:800;color:#d8b4fe}
+.ia-subtitle{font-size:0.62rem;color:#6d28d9;margin-top:1px}
+.ia-section{margin-bottom:14px}
+.ia-label{font-size:0.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.ia-label.verde{color:#22c55e}.ia-label.naranja{color:#f97316}.ia-label.azul{color:#3b82f6}.ia-label.purpura{color:#a855f7}
+.ia-text{font-size:0.78rem;color:#94a3b8;line-height:1.7}
+.ia-drill{background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);border-radius:10px;padding:12px 14px;margin-top:6px}
+.ia-drill-title{font-size:0.65rem;font-weight:700;color:#d8b4fe;margin-bottom:4px}
+.ia-drill-text{font-size:0.73rem;color:#94a3b8;line-height:1.6}
+.ia-footer{font-size:0.58rem;color:#334155;margin-top:14px;text-align:right;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px}
+.trend-stat{background:#0f1e35;border-radius:10px;padding:12px 14px;text-align:center}
+.trend-val{font-size:1.4rem;font-weight:900;line-height:1}
+.trend-lbl{font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px}
+.ncaa-card{background:linear-gradient(145deg,#060d1a,#0a1525);border:1px solid rgba(168,85,247,0.2);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.ncaa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a855f7,#3b82f6,#06b6d4)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.sg-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center}
+.sg-val{font-size:1.1rem;font-weight:900;color:#a855f7;line-height:1}
+.sg-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:3px}
+.ncaa-quote{background:rgba(168,85,247,0.04);border-left:3px solid #a855f7;border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.75rem;color:#94a3b8;line-height:1.65;font-style:italic;margin:14px 0}
+.radar-item{display:flex;align-items:center;gap:10px}
+.radar-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.radar-bar-fill{height:100%;border-radius:3px}
+.radar-item-label{font-size:0.6rem;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
+.radar-item-pct{font-size:0.6rem;font-weight:700;width:30px;text-align:left;flex-shrink:0}
+.btn-export{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6d28d9,#a855f7);border:none;border-radius:10px;color:white;padding:10px 20px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:14px;width:100%;justify-content:center}
+.alma-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.alma-nav a,.alma-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s;background:none;border:none;cursor:pointer;font-family:inherit}
+.alma-nav a .ni,.alma-nav button .ni{font-size:1.2rem;line-height:1}
+.alma-nav a.on{color:#a855f7}.alma-nav a:hover{color:#94a3b8}.alma-nav button:hover{color:#f87171}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <a href="dossier_premium_alma_smigiel_12_2026.html" class="inactive">⭐ Dossier</a>
+  <span class="active">🔬 Análisis</span>
+  <a href="plan_mejora_alma_smigiel_12.html" class="inactive">🎯 Plan</a>
+  <a href="intake_alma_smigiel.html" class="inactive">📋 Intake</a>
+  <button class="logout" onclick="doLogout()">🚪 Salir</button>
+</div>
+<div style="background:linear-gradient(145deg,#010608,#100828,rgba(168,85,247,0.05));border-bottom:1px solid rgba(168,85,247,0.1)">
+<div class="hero">
+  <div class="hero-row">
+    <div class="hero-num">12</div>
+    <div>
+      <div class="hero-name">Alma <span>Smigiel</span></div>
+      <div class="hero-sub">Berazategui · Infantiles Femenino U13 · Temporada 2026</div>
+      <div class="hero-badges">
+        <span class="hbadge hb-pu">⛹️ Pívot / Ala</span>
+        <span class="hbadge hb-gr">✅ 20 PJ AFMB · 5 PJ Federal</span>
+        <span class="hbadge hb-bl">🏅 #1 en Rebotes del plantel</span>
+        <span class="hbadge hb-or">📊 3.2 PPG · 6.1 RPG · 22.1 MPP</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="tabs">
+  <button class="tab-btn on" onclick="showTab('ia',this)">🤖 Diagnóstico IA</button>
+  <button class="tab-btn" onclick="showTab('tendencia',this)">📈 Tendencia</button>
+  <button class="tab-btn" onclick="showTab('portfolio',this)">🎓 Portfolio NCAA</button>
+</div>
+
+<!-- TAB IA -->
+<div id="tab-ia" class="tab-content on">
+  <div class="ia-box">
+    <div class="ia-header">
+      <div class="ia-icon">🤖</div>
+      <div><div class="ia-title">Análisis del Coach Digital — Alma Smigiel #12</div>
+      <div class="ia-subtitle">Generado automáticamente · 25 PJ reales · Temporada 2026</div></div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label purpura">📊 PERFIL DE JUEGO</div>
+      <div class="ia-text">Alma es la <strong>reboteadora dominante del plantel</strong>. Con <strong>6.1 RPG — top 2% U13 en AFMB</strong>, es la #1 en rebotes de todo el equipo. Sus <strong>22.1 MPP (la más alta del plantel)</strong> reflejan que el entrenador la necesita en cancha para controlar el vidrio. A los 12 años, dominar en rebotes a ese nivel es un indicador de <strong>posicionamiento, anticipación y motor</strong> — atributos que se desarrollan con la edad, no se enseñan fácilmente. Su PPG (3.2) es secundario frente a su impacto en posesiones.</div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label naranja">🏋️ DRILL PRIORITARIO</div>
+      <div class="ia-drill">
+        <div class="ia-drill-title">🎯 Rebote → Outlet + Finalización cerca del aro</div>
+        <div class="ia-drill-text"><strong>Rutina 15 min:</strong> (1) Box-out competitivo — 3v3 rebote, la pívot bloquea, toma el rebote y hace outlet al base en 2 dribbles. 10 repeticiones. Objetivo: exportar dominio del rebote a puntos del equipo. (2) Mikan drill — 20 makes alternando manos. Objetivo: llevar la efectividad en zona interior de 38.5% hacia 48%+. (3) Put-back drill — 10 segundas pelotas transformadas en canastas, sin salir de la pintura.</div>
+      </div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label azul">📈 PROYECCIÓN 2027</div>
+      <div class="ia-text">Si mejora la conversión interior (38.5% → 48%), Alma puede proyectar <strong>6-7 PPG en Cadetes</strong> manteniendo su dominio en el rebote. Perfil de <strong>pívot interior de alta demanda</strong> en nivel Cadetes y superior. Con físico en desarrollo, puede llegar a ser la jugadora más dominante del equipo en 2-3 años.</div>
+    </div>
+    <div class="ia-footer">Análisis · Fuente: API oficial CABB/GesDeportiva · AFMB + Federal 2026 · 25 PJ totales</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Radar Percentil — vs plantel U13 (posición: Pívot)</div>
+    <div style="position:relative;height:260px"><canvas id="iaRadar"></canvas></div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="pct-legend"></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" style="color:#22c55e">✅ Fortalezas</div>
+      <div id="fortalezas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#f97316">⚠️ Áreas de mejora</div>
+      <div id="areas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB TENDENCIA -->
+<div id="tab-tendencia" class="tab-content">
+  <div class="card">
+    <div class="card-title">Stats Destacadas de Temporada 2026</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px">
+      <div class="trend-stat"><div class="trend-val" style="color:#a855f7">6.1</div><div class="trend-lbl">RPG — #1 plantel</div></div>
+      <div class="trend-stat"><div class="trend-val" style="color:#3b82f6">22.1</div><div class="trend-lbl">MPP — más alta plantel</div></div>
+      <div class="trend-stat"><div class="trend-val" style="color:#facc15">12</div><div class="trend-lbl">Titularidades</div></div>
+      <div class="trend-stat"><div class="trend-val" style="color:#22c55e">104</div><div class="trend-lbl">Rebotes totales AFMB</div></div>
+    </div>
+    <div style="background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:10px 12px;font-size:0.72rem;color:#94a3b8">
+      💡 <strong style="color:#d8b4fe">104 rebotes en 17 PJ AFMB</strong> (6.1 RPG) coloca a Alma en el <strong style="color:#e2e8f0">percentil 98</strong> del plantel. Solo la #1 reboteadora del torneo metropolitano. Este número es difícil de igualar en categoría U13 donde el box-out no siempre se enseña sistemáticamente.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hitos de Temporada 2026</div>
+    <div id="hitos-alma" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<!-- TAB PORTFOLIO -->
+<div id="tab-portfolio" class="tab-content">
+  <div class="ncaa-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-size:0.6rem;font-weight:700;color:#c084fc;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Player Profile — Recruiting 2026</div>
+        <div style="font-size:1.2rem;font-weight:900;letter-spacing:-0.5px">Alma <span style="color:#a855f7">Smigiel</span></div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:4px">Center / Power Forward · DOB: 2013 · Argentina 🇦🇷</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">Elite Rebounder</span>
+          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🌐 Federal Level</span>
+          <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">P98 RPG U13</span>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#6d28d9,#7c3aed);border-radius:10px;padding:8px 12px;text-align:center;flex-shrink:0">
+        <div style="font-size:0.5rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#c084fc">Season</div>
+        <div style="font-size:0.9rem;font-weight:900;color:#fff;line-height:1">2026</div>
+        <div style="font-size:0.5rem;color:#c084fc;margin-top:2px">Argentina</div>
+      </div>
+    </div>
+    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · 25 GP (AFMB + Federal)</div>
+    <div class="stat-grid">
+      <div class="sg-item"><div class="sg-val">3.2</div><div class="sg-lbl">PPG</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#3b82f6">6.1</div><div class="sg-lbl">RPG ★</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#f97316">22.1</div><div class="sg-lbl">MPG</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#facc15">7.2</div><div class="sg-lbl">VAL</div></div>
+    </div>
+    <div class="ncaa-quote"><strong>"#1 rebounder in the metropolitan association — 6.1 RPG at age 12 is an elite indicator."</strong> Alma leads her entire U13 metropolitan league in rebounds (6.1 RPG, P98) with the highest minutes per game on the roster (22.1 MPG). Her rebounding dominance is not incidental — it reflects positioning instinct, physical strength, and motor that scouts actively recruit at post positions. Scoring production (3.2 PPG) understates her impact; her VAL of 7.2 per game tells the full story. National Federal experience at age 12.</div>
+    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Skill Profile</div>
+    <div id="radar-bars" style="display:flex;flex-direction:column;gap:8px"></div>
+    <button class="btn-export" onclick="exportPDF()">📄 Exportar PDF — Scout Report</button>
+    <div style="font-size:0.58rem;color:#334155;margin-top:8px;text-align:center">Chrome: Ctrl+P → Guardar como PDF</div>
+  </div>
+</div>
+
+<nav class="alma-nav">
+  <a href="dossier_premium_alma_smigiel_12_2026.html"><span class="ni">⭐</span>Dossier</a>
+  <a href="analisis_personalizado_alma_smigiel_12_2026.html" class="on"><span class="ni">🔬</span>Análisis</a>
+  <a href="plan_mejora_alma_smigiel_12.html"><span class="ni">🎯</span>Plan</a>
+  <a href="intake_alma_smigiel.html"><span class="ni">📋</span>Intake</a>
+  <button onclick="doLogout()"><span class="ni">🚪</span>Salir</button>
+</nav>
+
+<script>
+const PERCENTILES = [
+  {lbl:'Rebotes',    pct:98, color:'#a855f7', val:'6.1 RPG · #1'},
+  {lbl:'Minutos',    pct:95, color:'#3b82f6', val:'22.1 MPP'},
+  {lbl:'Motor',      pct:92, color:'#22c55e', val:'104 total'},
+  {lbl:'VAL',        pct:88, color:'#facc15', val:'7.2 val/PJ'},
+  {lbl:'Titulares',  pct:85, color:'#06b6d4', val:'12 titulares'},
+  {lbl:'Puntos',     pct:48, color:'#f97316', val:'3.2 PPG'},
+];
+const FORTALEZAS = [
+  {icon:'💪', t:'#1 reboteadora del plantel — P98',tx:'6.1 RPG en 17 PJ AFMB. 104 rebotes totales. Dominancia absoluta en el vidrio — top 2% de la liga metropolitana.'},
+  {icon:'⏱️', t:'Más minutos del plantel (22.1 MPP)',tx:'La jugadora que más tiempo pasa en cancha. El entrenador la necesita cuando el partido está complicado y hay que controlar los rebotes.'},
+  {icon:'⭐', t:'12 titularidades en 17 PJ AFMB',tx:'La jugadora que más veces salió como titular del equipo. Confianza total del cuerpo técnico.'},
+  {icon:'🌐', t:'Federal CABB a los 12 años',tx:'Seleccionada para el torneo nacional. Reboteadora dominante también a nivel país.'},
+];
+const AREAS = [
+  {icon:'🎯', t:'Conversión interior (38.5% T2)',tx:'Principal área de trabajo. Con 104 rebotes y presencia constante en la zona, mejorar la conversión cerca del aro puede multiplicar el PPG.'},
+  {icon:'🏀', t:'Finalización con contacto',tx:'Trabajar floaters y lay-ups en situaciones de contacto. Actualmente pierde algunas posesiones en el aro frente a defensoras físicas.'},
+  {icon:'⚡', t:'Salida de rebote en transición',tx:'Outlet rápido después del rebote defensivo. Iniciar contraataques desde el rebote es la próxima evolución natural de su juego.'},
+];
+const SKILLS_NCAA = [
+  {lbl:'Rebounding',pct:98,color:'#a855f7'},
+  {lbl:'Court Time',pct:95,color:'#3b82f6'},
+  {lbl:'Motor/Effort',pct:92,color:'#22c55e'},
+  {lbl:'Valoration',pct:88,color:'#facc15'},
+  {lbl:'Nat.Experience',pct:85,color:'#06b6d4'},
+  {lbl:'Interior Finish',pct:48,color:'#f97316'},
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.paddingBottom = '62px';
+  buildIA(); buildPortfolio();
+  buildHitos([
+    {icon:'💪',f:'#1 Reboteadora AFMB',t:'6.1 RPG en 17 PJ — la mejor reboteadora del plantel y top de la liga metropolitana. 104 rebotes totales.'},
+    {icon:'⭐',f:'12 titularidades',t:'La jugadora con más titularidades del equipo. Referencia del cuerpo técnico en partidos difíciles.'},
+    {icon:'🌐',f:'Federal CABB',t:'5 partidos a nivel nacional como pívot titular. Mantuvo dominio en el rebote frente a equipos de todo el país.'},
+    {icon:'⏱️',f:'22.1 MPP',t:'La jugadora con más minutos promedio del plantel entero. Pieza insustituible del sistema.'},
+  ], 'hitos-alma');
+});
+
+function showTab(id, btn) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('on')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on')); document.getElementById('tab-'+id).classList.add('on'); btn.classList.add('on'); }
+function buildIA() {
+  const leg = document.getElementById('pct-legend');
+  PERCENTILES.forEach(p => { leg.innerHTML += `<div style="background:#0f1e35;border-radius:8px;padding:8px;text-align:center"><div style="font-size:1rem;font-weight:900;color:${p.color}">P${p.pct}</div><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${p.lbl}</div><div style="font-size:0.58rem;color:#334155;margin-top:2px">${p.val}</div></div>`; });
+  new Chart(document.getElementById('iaRadar'), {
+    type:'radar',
+    data:{labels:PERCENTILES.map(p=>p.lbl),datasets:[
+      {label:'Alma',data:PERCENTILES.map(p=>p.pct),backgroundColor:'rgba(168,85,247,0.1)',borderColor:'#a855f7',borderWidth:2,pointBackgroundColor:'#a855f7',pointRadius:3},
+      {label:'Promedio',data:[50,50,50,50,50,50],backgroundColor:'rgba(255,255,255,0.02)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'#64748b',font:{size:11}}}},plugins:{legend:{display:false}}}
+  });
+  const fList = document.getElementById('fortalezas-list');
+  FORTALEZAS.forEach(f => { fList.innerHTML += itemCard(f,'rgba(168,85,247,0.04)','rgba(168,85,247,0.1)','#d8b4fe'); });
+  const aList = document.getElementById('areas-list');
+  AREAS.forEach(a => { aList.innerHTML += itemCard(a,'rgba(249,115,22,0.04)','rgba(249,115,22,0.1)','#fb923c'); });
+}
+function itemCard(i,bg,border,c){ return `<div style="display:flex;gap:8px;align-items:flex-start;background:${bg};border:1px solid ${border};border-radius:8px;padding:8px 10px"><span style="font-size:1rem;flex-shrink:0">${i.icon}</span><div><div style="font-size:0.7rem;font-weight:700;color:${c};margin-bottom:2px">${i.t}</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">${i.tx}</div></div></div>`; }
+function buildHitos(hitos, id) { const el = document.getElementById(id); hitos.forEach(h => { el.innerHTML += `<div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">${h.icon}</span><div><span style="font-size:0.6rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.5px">${h.f}</span><div style="font-size:0.75rem;color:#94a3b8;line-height:1.6;margin-top:2px">${h.t}</div></div></div>`; }); }
+function buildPortfolio() { const bars = document.getElementById('radar-bars'); SKILLS_NCAA.forEach(s => { bars.innerHTML += `<div class="radar-item"><div class="radar-item-label">${s.lbl}</div><div class="radar-bar-bg"><div class="radar-bar-fill" style="width:${s.pct}%;background:${s.color}"></div></div><div class="radar-item-pct" style="color:${s.color}">P${s.pct}</div></div>`; }); }
+function exportPDF() { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('on')); document.getElementById('tab-portfolio').classList.add('on'); setTimeout(()=>window.print(),300); }
+const _SU='https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const _supa = supabase.createClient(_SU,_SK);
+async function doLogout(){try{await _supa.auth.signOut();}catch(e){}window.location.href='login.html';}
+</script>
+<style>@media print{.top-nav,.tabs,.alma-nav{display:none!important}body{background:#fff!important;color:#000!important;padding:0!important}.tab-content{display:block!important;padding:0!important}.ncaa-card{border:2px solid #a855f7!important;background:#fff!important;color:#000!important}.btn-export{display:none!important}.card{border:1px solid #ddd!important;background:#f9f9f9!important}@page{margin:1.5cm}}</style>
+</body>
+</html>

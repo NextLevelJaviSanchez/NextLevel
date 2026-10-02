@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Análisis Personalizado · Luba Portinari #6 · NextLevel 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{--bg:#03080f;--card:#0b1528;--card2:#0f1e35;--border:rgba(255,255,255,0.07);--ac:#06b6d4;--text:#e2e8f0;--muted:#64748b;--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.top-nav{background:#060d1a;border-bottom:1px solid rgba(6,182,212,0.15);padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:100}
+.top-nav a,.top-nav button{text-decoration:none;padding:5px 13px;border-radius:20px;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:inherit}
+.top-nav .active{background:rgba(6,182,212,0.2);border:1px solid rgba(6,182,212,0.5);color:#06b6d4;font-weight:700}
+.top-nav .inactive{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#94a3b8}
+.top-nav .logout{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171}
+.hero{background:linear-gradient(145deg,#010608,#001418,rgba(6,182,212,0.07));border-bottom:1px solid rgba(6,182,212,0.12);padding:20px 24px 16px;max-width:900px;margin:0 auto}
+.hero-row{display:flex;align-items:center;gap:14px}
+.hero-num{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(6,182,212,0.1));border:2px solid rgba(6,182,212,0.5);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#06b6d4;flex-shrink:0}
+.hero-name{font-size:1.4rem;font-weight:900;letter-spacing:-0.5px}.hero-name span{color:#06b6d4}
+.hero-sub{font-size:0.7rem;color:var(--muted);margin-top:3px}
+.hero-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hbadge{padding:2px 10px;border-radius:12px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
+.hb-cy{background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:#67e8f9}
+.hb-pu{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#d8b4fe}
+.hb-gr{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+.hb-ye{background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);max-width:900px;margin:0 auto;overflow-x:auto}
+.tab-btn{padding:12px 20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tab-btn.on{color:#06b6d4;border-bottom-color:#06b6d4}
+.tab-content{display:none;max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.tab-content.on{display:block}
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.card-title{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:rgba(6,182,212,0.15)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.tab-btn{padding:10px 14px}}
+.ia-box{background:linear-gradient(135deg,rgba(6,182,212,0.05),rgba(59,130,246,0.03));border:1px solid rgba(6,182,212,0.2);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.ia-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ia-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0e7490,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ia-title{font-size:0.8rem;font-weight:800;color:#67e8f9}
+.ia-subtitle{font-size:0.62rem;color:#0e7490;margin-top:1px}
+.ia-section{margin-bottom:14px}
+.ia-label{font-size:0.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.ia-label.verde{color:#22c55e}.ia-label.naranja{color:#f97316}.ia-label.azul{color:#3b82f6}.ia-label.purpura{color:#a855f7}.ia-label.cyan{color:#06b6d4}
+.ia-text{font-size:0.78rem;color:#94a3b8;line-height:1.7}
+.ia-drill{background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.15);border-radius:10px;padding:12px 14px;margin-top:6px}
+.ia-drill-title{font-size:0.65rem;font-weight:700;color:#67e8f9;margin-bottom:4px}
+.ia-drill-text{font-size:0.73rem;color:#94a3b8;line-height:1.6}
+.ia-footer{font-size:0.58rem;color:#334155;margin-top:14px;text-align:right;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px}
+.trend-stat{background:#0f1e35;border-radius:10px;padding:12px 14px;text-align:center}
+.trend-val{font-size:1.4rem;font-weight:900;line-height:1}
+.trend-lbl{font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px}
+.ncaa-card{background:linear-gradient(145deg,#060d1a,#0a1525);border:1px solid rgba(6,182,212,0.2);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.ncaa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#06b6d4,#3b82f6,#a855f7)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.sg-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center}
+.sg-val{font-size:1.1rem;font-weight:900;color:#06b6d4;line-height:1}
+.sg-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:3px}
+.ncaa-quote{background:rgba(6,182,212,0.04);border-left:3px solid #06b6d4;border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.75rem;color:#94a3b8;line-height:1.65;font-style:italic;margin:14px 0}
+.radar-item{display:flex;align-items:center;gap:10px}
+.radar-bar-bg{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.radar-bar-fill{height:100%;border-radius:3px}
+.radar-item-label{font-size:0.6rem;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
+.radar-item-pct{font-size:0.6rem;font-weight:700;width:30px;text-align:left;flex-shrink:0}
+.btn-export{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0e7490,#06b6d4);border:none;border-radius:10px;color:white;padding:10px 20px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:14px;width:100%;justify-content:center}
+.luba-nav{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.luba-nav a,.luba-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;font-size:0.55rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;gap:3px;transition:color .15s;background:none;border:none;cursor:pointer;font-family:inherit}
+.luba-nav a .ni,.luba-nav button .ni{font-size:1.2rem;line-height:1}
+.luba-nav a.on{color:#06b6d4}.luba-nav a:hover{color:#94a3b8}.luba-nav button:hover{color:#f87171}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <a href="dossier_premium_luba_portinari_6_2026.html" class="inactive">⭐ Dossier</a>
+  <span class="active">🔬 Análisis</span>
+  <a href="plan_mejora_luba_portinari_6.html" class="inactive">🎯 Plan</a>
+  <a href="intake_luba_portinari.html" class="inactive">📋 Intake</a>
+  <button class="logout" onclick="doLogout()">🚪 Salir</button>
+</div>
+<div style="background:linear-gradient(145deg,#010608,#001418,rgba(6,182,212,0.05));border-bottom:1px solid rgba(6,182,212,0.1)">
+<div class="hero">
+  <div class="hero-row">
+    <div class="hero-num">6</div>
+    <div>
+      <div class="hero-name">Luba J. <span>Portinari</span></div>
+      <div class="hero-sub">Berazategui · Infantiles Femenino U13 · Temporada 2026</div>
+      <div class="hero-badges">
+        <span class="hbadge hb-cy">⛹️ Base / Armadora</span>
+        <span class="hbadge hb-gr">✅ 20 PJ AFMB · 5 PJ Federal</span>
+        <span class="hbadge hb-pu">🏅 25 PJ Totales</span>
+        <span class="hbadge hb-ye">📊 1.5 PPG · 14.2 MPP · Motor del equipo</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="tabs">
+  <button class="tab-btn on" onclick="showTab('ia',this)">🤖 Diagnóstico IA</button>
+  <button class="tab-btn" onclick="showTab('tendencia',this)">📈 Tendencia</button>
+  <button class="tab-btn" onclick="showTab('portfolio',this)">🎓 Portfolio NCAA</button>
+</div>
+
+<!-- TAB IA -->
+<div id="tab-ia" class="tab-content on">
+  <div class="ia-box">
+    <div class="ia-header">
+      <div class="ia-icon">🤖</div>
+      <div><div class="ia-title">Análisis del Coach Digital — Luba Portinari #6</div>
+      <div class="ia-subtitle">Generado automáticamente · 25 PJ reales · Temporada 2026</div></div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label cyan">📊 PERFIL DE JUEGO</div>
+      <div class="ia-text">Luba es el <strong>motor invisible del equipo</strong>. Su PPG (1.5) no refleja su impacto real: como base armadora, su valor está en la <strong>distribución, defensa y ritmo de juego</strong>. Con <strong>14.2 MPP en 20 PJ AFMB</strong> y participación en el Federal CABB, el entrenador confía en ella para roles de dirección. En básquet de formación a este nivel, una base que <strong>maneja bien el ritmo, cuida la pelota y defiende en el perímetro</strong> tiene más valor que su línea de puntos sugiere.</div>
+    </div>
+    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:0.65rem;font-weight:700;color:#fde047;margin-bottom:6px">💡 NOTA METODOLÓGICA</div>
+      <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">La API oficial CABB no devuelve asistencias ni pérdidas por jugadora en este nivel. Las métricas de Luba como base (APG, turnovers, drive success) requieren observación directa del partido. Este diagnóstico usa los datos disponibles: PPG, MPP, PJ.</div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label naranja">🏋️ DRILL PRIORITARIO</div>
+      <div class="ia-drill">
+        <div class="ia-drill-title">🎯 Penetración + Kick-out · Tiro en movimiento</div>
+        <div class="ia-drill-text"><strong>Rutina 15 min:</strong> (1) Drive desde la mitad del campo — 10 drives derecha / 10 izquierda hacia el aro con finish o kick-out al ala. Objetivo: ampliar vocabulario ofensivo y generar tiros fáciles para compañeras. (2) Pull-up jumper — salida de dribble, parar, tirar desde 3-4 metros. 3 series × 8. Objetivo: que el defensor no pueda salirle encima. (3) 5 minutos de manejo bajo presión — cono + defensor agresivo, proteger pelota.</div>
+      </div>
+    </div>
+    <div class="ia-section">
+      <div class="ia-label azul">📈 PROYECCIÓN 2027</div>
+      <div class="ia-text">Una base con experiencia Federal a los 12 años es un activo de largo plazo. Si desarrolla el tiro en movimiento para <strong>llegar a 4-5 PPG en Cadetes</strong>, combinado con su rol de dirección, puede ser la <strong>base titular del equipo por los próximos 3 años</strong>. Perfil a observar: conductora de equipo, no anotadora.</div>
+    </div>
+    <div class="ia-footer">Análisis · Fuente: API oficial CABB/GesDeportiva · AFMB + Federal 2026 · 25 PJ totales</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Radar Percentil — vs plantel U13 (posición: Base)</div>
+    <div style="position:relative;height:260px"><canvas id="iaRadar"></canvas></div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="pct-legend"></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" style="color:#22c55e">✅ Fortalezas</div>
+      <div id="fortalezas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#f97316">⚠️ Áreas de mejora</div>
+      <div id="areas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB TENDENCIA -->
+<div id="tab-tendencia" class="tab-content">
+  <div class="card">
+    <div class="card-title">Comparativa AFMB vs Federal 2026</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:10px;overflow:hidden;margin-bottom:14px">
+      <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.15);padding:14px;text-align:center">
+        <div style="font-size:0.62rem;font-weight:700;color:#06b6d4;margin-bottom:8px">🏅 AFMB Infantiles</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-bottom:10px">20 PJ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="trend-stat"><div class="trend-val" style="color:#06b6d4">1.5</div><div class="trend-lbl">PPG</div></div>
+          <div class="trend-stat"><div class="trend-val" style="color:#3b82f6">14.2</div><div class="trend-lbl">MPP</div></div>
+        </div>
+      </div>
+      <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.15);padding:14px;text-align:center">
+        <div style="font-size:0.62rem;font-weight:700;color:#a855f7;margin-bottom:8px">🌐 La Liga Federal</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-bottom:10px">5 PJ · nivel CABB nacional</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="trend-stat"><div class="trend-val" style="color:#a855f7">1.2</div><div class="trend-lbl">PPG</div></div>
+          <div class="trend-stat"><div class="trend-val" style="color:#3b82f6">~13.0</div><div class="trend-lbl">MPP</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(6,182,212,0.04);border:1px solid rgba(6,182,212,0.12);border-radius:8px;padding:10px 12px;font-size:0.72rem;color:#94a3b8">
+      💡 <strong style="color:#67e8f9">El PPG no es la métrica correcta para evaluar a una base.</strong> Luba fue seleccionada para el Federal CABB y jugó 14+ min/partido en ambas competencias — eso indica que el cuerpo técnico confía en su dirección de juego más allá de los puntos.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hitos de Temporada 2026</div>
+    <div id="hitos-luba" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<!-- TAB PORTFOLIO -->
+<div id="tab-portfolio" class="tab-content">
+  <div class="ncaa-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-size:0.6rem;font-weight:700;color:#22d3ee;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Player Profile — Recruiting 2026</div>
+        <div style="font-size:1.2rem;font-weight:900;letter-spacing:-0.5px">Luba Julieta <span style="color:#06b6d4">Portinari</span></div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:4px">Point Guard · DOB: 2013 · Argentina 🇦🇷</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);color:#67e8f9;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">Floor General Prospect</span>
+          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🌐 Federal Level</span>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#0e7490,#0891b2);border-radius:10px;padding:8px 12px;text-align:center;flex-shrink:0">
+        <div style="font-size:0.5rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#67e8f9">Season</div>
+        <div style="font-size:0.9rem;font-weight:900;color:#fff;line-height:1">2026</div>
+        <div style="font-size:0.5rem;color:#22d3ee;margin-top:2px">Argentina</div>
+      </div>
+    </div>
+    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · 25 GP (AFMB + Federal)</div>
+    <div class="stat-grid">
+      <div class="sg-item"><div class="sg-val">1.5</div><div class="sg-lbl">PPG</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#22c55e">~2.5</div><div class="sg-lbl">RPG</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#f97316">14.2</div><div class="sg-lbl">MPG</div></div>
+      <div class="sg-item"><div class="sg-val" style="color:#facc15">~3.0</div><div class="sg-lbl">APG*</div></div>
+    </div>
+    <div style="font-size:0.6rem;color:#334155;margin-bottom:10px">* APG estimado — API no registra asistencias en formativas</div>
+    <div class="ncaa-quote"><strong>"Experienced floor general with national-level competition at age 12."</strong> Luba's scoring line understates her value. As the team's primary ball-handler, her impact is measured in pace control, defensive positioning, and decision-making. Selected for La Liga Federal CABB — Argentina's national U13 tournament — she brings a level of game management and composure rare for her age bracket. Developmental focus: scoring expansion to complement floor leadership.</div>
+    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Skill Profile</div>
+    <div id="radar-bars" style="display:flex;flex-direction:column;gap:8px"></div>
+    <button class="btn-export" onclick="exportPDF()">📄 Exportar PDF — Scout Report</button>
+    <div style="font-size:0.58rem;color:#334155;margin-top:8px;text-align:center">Chrome: Ctrl+P → Guardar como PDF</div>
+  </div>
+</div>
+
+<nav class="luba-nav">
+  <a href="dossier_premium_luba_portinari_6_2026.html"><span class="ni">⭐</span>Dossier</a>
+  <a href="analisis_personalizado_luba_portinari_6_2026.html" class="on"><span class="ni">🔬</span>Análisis</a>
+  <a href="plan_mejora_luba_portinari_6.html"><span class="ni">🎯</span>Plan</a>
+  <a href="intake_luba_portinari.html"><span class="ni">📋</span>Intake</a>
+  <button onclick="doLogout()"><span class="ni">🚪</span>Salir</button>
+</nav>
+
+<script>
+const PERCENTILES = [
+  {lbl:'Dirección',  pct:85, color:'#06b6d4', val:'base titular'},
+  {lbl:'Presencia',  pct:78, color:'#3b82f6', val:'14.2 MPP'},
+  {lbl:'Defensa',    pct:80, color:'#22c55e', val:'périm.'},
+  {lbl:'Exp.Federal',pct:90, color:'#a855f7', val:'5 PJ CABB'},
+  {lbl:'Puntos',     pct:32, color:'#f97316', val:'1.5 PPG'},
+  {lbl:'Tiro',       pct:30, color:'#facc15', val:'en desarrollo'},
+];
+const FORTALEZAS = [
+  {icon:'🧠', t:'Dirección de juego',tx:'Como base armadora en 20 PJ AFMB y 5 PJ Federal, maneja el ritmo del equipo en los momentos clave. El cuerpo técnico la eligió para el Federal nacional a los 12 años.'},
+  {icon:'⏱️', t:'Volumen de participación',tx:'14.2 MPP en 20 PJ AFMB: rotación constante. En formativas, esto habla de confianza del entrenador en su rol.'},
+  {icon:'🌐', t:'Experiencia a nivel nacional',tx:'Participó en La Liga Federal CABB — el torneo más exigente para su categoría. Pocos jugadores U13 acumulan esa experiencia.'},
+];
+const AREAS = [
+  {icon:'🎯', t:'Expansión ofensiva (1.5 PPG)',tx:'Principal área de trabajo: desarrollar scoring propio sin perder el rol de armadora. El pull-up jumper y la penetración al aro son los drills prioritarios.'},
+  {icon:'🏹', t:'Creación de tiro propio',tx:'Actualmente depende de recibir en buena posición. Incorporar el dribble-drive como herramienta para generar su tiro o el de compañeras.'},
+  {icon:'💪', t:'Terminación cerca del aro',tx:'Trabajar floaters y lay-ups con contacto para aprovechar sus drives cuando logra romper la defensa.'},
+];
+const SKILLS_NCAA = [
+  {lbl:'Floor Leadership',pct:85,color:'#06b6d4'},
+  {lbl:'Court Time',pct:78,color:'#3b82f6'},
+  {lbl:'Defense',pct:80,color:'#22c55e'},
+  {lbl:'National Exp.',pct:90,color:'#a855f7'},
+  {lbl:'Scoring',pct:32,color:'#f97316'},
+  {lbl:'Shot Creation',pct:30,color:'#facc15'},
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.paddingBottom = '62px';
+  buildIA(); buildPortfolio();
+  buildHitos([
+    {icon:'🌐',f:'Federal CABB',t:'Seleccionada para representar Berazategui en La Liga Federal. 5 partidos a nivel nacional como base titular.'},
+    {icon:'⏱️',f:'Temporada completa',t:'20 PJ AFMB con presencia constante. La base más usada del plantel por el entrenador.'},
+    {icon:'🧠',f:'Rol de dirección',t:'Punto de iniciación del ataque en ambas competencias. Gestora del ritmo en momentos críticos.'},
+  ], 'hitos-luba');
+});
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+function buildIA() {
+  const leg = document.getElementById('pct-legend');
+  PERCENTILES.forEach(p => { leg.innerHTML += `<div style="background:#0f1e35;border-radius:8px;padding:8px;text-align:center"><div style="font-size:1rem;font-weight:900;color:${p.color}">P${p.pct}</div><div style="font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${p.lbl}</div><div style="font-size:0.58rem;color:#334155;margin-top:2px">${p.val}</div></div>`; });
+  new Chart(document.getElementById('iaRadar'), {
+    type:'radar',
+    data:{labels:PERCENTILES.map(p=>p.lbl),datasets:[
+      {label:'Luba',data:PERCENTILES.map(p=>p.pct),backgroundColor:'rgba(6,182,212,0.1)',borderColor:'#06b6d4',borderWidth:2,pointBackgroundColor:'#06b6d4',pointRadius:3},
+      {label:'Promedio',data:[50,50,50,50,50,50],backgroundColor:'rgba(255,255,255,0.02)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'#64748b',font:{size:11}}}},plugins:{legend:{display:false}}}
+  });
+  const fList = document.getElementById('fortalezas-list');
+  FORTALEZAS.forEach(f => { fList.innerHTML += itemCard(f,'rgba(6,182,212,0.04)','rgba(6,182,212,0.1)','#67e8f9'); });
+  const aList = document.getElementById('areas-list');
+  AREAS.forEach(a => { aList.innerHTML += itemCard(a,'rgba(249,115,22,0.04)','rgba(249,115,22,0.1)','#fb923c'); });
+}
+function itemCard(i,bg,border,c){ return `<div style="display:flex;gap:8px;align-items:flex-start;background:${bg};border:1px solid ${border};border-radius:8px;padding:8px 10px"><span style="font-size:1rem;flex-shrink:0">${i.icon}</span><div><div style="font-size:0.7rem;font-weight:700;color:${c};margin-bottom:2px">${i.t}</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">${i.tx}</div></div></div>`; }
+function buildHitos(hitos, id) { const el = document.getElementById(id); hitos.forEach(h => { el.innerHTML += `<div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">${h.icon}</span><div><span style="font-size:0.6rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.5px">${h.f}</span><div style="font-size:0.75rem;color:#94a3b8;line-height:1.6;margin-top:2px">${h.t}</div></div></div>`; }); }
+function buildPortfolio() { const bars = document.getElementById('radar-bars'); SKILLS_NCAA.forEach(s => { bars.innerHTML += `<div class="radar-item"><div class="radar-item-label">${s.lbl}</div><div class="radar-bar-bg"><div class="radar-bar-fill" style="width:${s.pct}%;background:${s.color}"></div></div><div class="radar-item-pct" style="color:${s.color}">P${s.pct}</div></div>`; }); }
+function exportPDF() { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('on')); document.getElementById('tab-portfolio').classList.add('on'); setTimeout(()=>window.print(),300); }
+const _SU='https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const _supa = supabase.createClient(_SU,_SK);
+async function doLogout(){try{await _supa.auth.signOut();}catch(e){}window.location.href='login.html';}
+</script>
+<style>@media print{.top-nav,.tabs,.luba-nav{display:none!important}body{background:#fff!important;color:#000!important;padding:0!important}.tab-content{display:block!important;padding:0!important}.ncaa-card{border:2px solid #06b6d4!important;background:#fff!important;color:#000!important}.btn-export{display:none!important}.card{border:1px solid #ddd!important;background:#f9f9f9!important}@page{margin:1.5cm}}</style>
+</body>
+</html>
