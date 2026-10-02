@@ -1,0 +1,76 @@
+# ══════════════════════════════════════════════════════════════════════
+#  .github/workflows/sync_cabb.yml
+#  Sincroniza CABB → Supabase automáticamente
+#
+#  INSTRUCCIONES:
+#  1. Copiá este archivo a: <repo_nextlevel>/.github/workflows/sync_cabb.yml
+#  2. Copiá cabb_app_api.py y sync_cabb_supabase.py a la raíz del repo
+#  3. En GitHub → Settings → Secrets → Actions, agregá:
+#       SUPA_URL  = https://yjcxwfkedxzkcspddghz.supabase.co
+#       SUPA_KEY  = eyJhbGci...  (la anon key)
+#  4. El workflow corre automáticamente los sábados a las 23hs (AR)
+#     y también se puede disparar manualmente desde la UI de GitHub
+# ══════════════════════════════════════════════════════════════════════
+
+name: Sync CABB → Supabase
+
+on:
+  # Cron: domingos a las 23:00 AR (UTC-3) = lunes 02:00 UTC
+  schedule:
+    - cron: '0 2 * * 1'
+
+  # También se puede disparar manualmente desde GitHub UI
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Modo de sync'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - only-stats
+          - only-gamelog
+          - dry-run
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install supabase
+
+      - name: Run sync (scheduled — full)
+        if: github.event_name == 'schedule'
+        env:
+          SUPA_URL: ${{ secrets.SUPA_URL }}
+          SUPA_KEY: ${{ secrets.SUPA_KEY }}
+        run: python sync_cabb_supabase.py
+
+      - name: Run sync (manual)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          SUPA_URL: ${{ secrets.SUPA_URL }}
+          SUPA_KEY: ${{ secrets.SUPA_KEY }}
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          if [ "$MODE" = "full" ]; then
+            python sync_cabb_supabase.py
+          else
+            python sync_cabb_supabase.py --$MODE
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "::warning::Sync CABB falló. Revisá los logs."
