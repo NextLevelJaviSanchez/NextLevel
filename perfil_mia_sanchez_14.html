@@ -134,15 +134,94 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .plan-tag{display:inline-block;padding:1px 8px;border-radius:8px;font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
 
 /* FÍSICO */
-.fis-bar{margin-bottom:12px}
-.fis-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.fis-lbl{font-size:0.65rem;color:var(--text);font-weight:600}
-.fis-val{font-size:0.7rem;font-weight:800}
-.fis-bg{height:10px;background:rgba(255,255,255,0.05);border-radius:5px;overflow:hidden;position:relative}
-.fis-fill{height:100%;border-radius:5px;position:relative}
-.fis-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);animation:shimmer 2s infinite}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.fis-note{font-size:0.6rem;color:var(--muted);margin-top:3px}
+/* ── TAB FÍSICO — rediseño completo ── */
+.antro-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.antro-pill{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;align-items:center;flex:1;min-width:72px}
+.antro-v{font-size:1.05rem;font-weight:900;line-height:1}
+.antro-l{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.antro-src-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:20px;padding:2px 9px;font-size:0.6rem;font-weight:700;color:#38bdf8}
+/* tarjeta de test */
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}
+.test-card:hover{border-color:rgba(255,255,255,0.12)}
+.tc-head{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer}
+.tc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.tc-info{flex:1;min-width:0}
+.tc-cap{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:1px}
+.tc-name{font-size:0.82rem;font-weight:800;line-height:1.2}
+.tc-result-wrap{text-align:right;flex-shrink:0}
+.tc-result{font-size:1.3rem;font-weight:900;line-height:1}
+.tc-result-lbl{font-size:0.56rem;color:var(--muted);margin-top:1px}
+.tc-chevron{color:var(--muted);font-size:0.85rem;flex-shrink:0;transition:transform .2s}
+.test-card.open .tc-chevron{transform:rotate(90deg)}
+/* panel de detalle expandible */
+.tc-detail{display:none;border-top:1px solid var(--border)}
+.test-card.open .tc-detail{display:block}
+.tc-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border)}
+.tc-stat{text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
+.tc-stat:last-child{border-right:none}
+.tc-stat-v{font-size:0.92rem;font-weight:900;line-height:1}
+.tc-stat-l{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.tc-stat-d{font-size:0.65rem;font-weight:700;margin-top:2px}
+.delta-up{color:#22c55e}.delta-dn{color:#ef4444}.delta-eq{color:var(--muted)}
+/* minigráfico */
+.tc-chart-wrap{padding:12px 14px 0}
+.tc-chart-title{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px}
+.tc-chart-canvas{width:100%!important;height:80px!important}
+/* historial compacto */
+.tc-history{padding:0 14px 12px}
+.tc-hist-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.tc-hist-item:last-child{border-bottom:none}
+.tc-hist-date{font-size:0.65rem;color:var(--muted);min-width:72px}
+.tc-hist-val{font-size:0.78rem;font-weight:700;flex:1}
+.tc-hist-src{font-size:0.6rem;padding:1px 7px;border-radius:8px;font-weight:600}
+.src-self{background:rgba(249,115,22,0.12);color:#f97316}
+.src-coach{background:rgba(56,189,248,0.12);color:#38bdf8}
+/* botones del test */
+.tc-btns{display:flex;gap:8px;padding:12px 14px}
+.btn-reg{flex:1;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:9px 12px;border:none;border-radius:9px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-how{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:9px 12px;border-radius:9px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-how:hover{border-color:rgba(255,255,255,0.15);color:#e2e8f0}
+/* formulario de registro */
+.tc-form{display:none;border-top:1px solid var(--border);padding:14px}
+.test-card.reg-open .tc-form{display:block}
+.fl{font-size:0.67rem;font-weight:600;color:var(--muted);margin-bottom:4px;display:block}
+.fi{font-family:inherit;font-size:0.9rem;color:#e2e8f0;background:#0a1525;border:1px solid var(--border);border-radius:8px;padding:9px 11px;width:100%;outline:none;transition:border .15s}
+.fi:focus{border-color:var(--ac)}
+.fi[readonly]{background:#07101f;cursor:default;color:var(--muted)}
+.form-g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.calc-strip{background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:9px;padding:10px;margin:6px 0 10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.cs-v{font-size:1rem;font-weight:900;color:var(--ac);line-height:1}
+.cs-l{font-size:0.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.best-box{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.18);border-radius:8px;padding:8px 12px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.best-lbl{font-size:0.65rem;color:#4ade80;font-weight:600}
+.best-val{font-size:1.05rem;font-weight:900;color:#4ade80}
+.btn-save-test{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:10px;width:100%;font-size:0.85rem;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:inherit}
+/* modal instrucciones */
+.how-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;align-items:flex-end;justify-content:center}
+.how-modal-bg.on{display:flex}
+.how-modal{background:#0d1829;border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-bottom:none;padding:0 0 32px}
+.how-modal-hd{position:sticky;top:0;background:#0d1829;padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;z-index:1}
+.how-modal-title{font-size:0.92rem;font-weight:800;color:var(--ac)}
+.how-modal-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:0 4px}
+.how-body{padding:16px}
+.how-h{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:14px 0 6px}
+.how-h:first-child{margin-top:0}
+.how-p{font-size:0.78rem;color:#94a3b8;line-height:1.7}
+.how-steps{list-style:none;counter-reset:steps;display:flex;flex-direction:column;gap:6px}
+.how-steps li{counter-increment:steps;display:flex;gap:10px;font-size:0.78rem;color:#94a3b8;line-height:1.6}
+.how-steps li::before{content:counter(steps);min-width:22px;height:22px;border-radius:50%;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:#f97316;font-weight:900;font-size:0.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.how-pill{display:inline-block;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;padding:1px 8px;font-size:0.72rem;font-weight:700;color:#f97316;margin:2px}
+.how-warn{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:8px;padding:9px 12px;font-size:0.73rem;color:#fca5a5;line-height:1.6;margin-top:8px}
+.how-diagram{margin:10px 0;border-radius:10px;overflow:hidden;background:var(--card2);padding:14px;text-align:center}
+/* audio beep */
+.beep-audio-box{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.18);border-radius:10px;padding:12px 14px;margin-top:10px}
+.beep-audio-title{font-size:0.7rem;font-weight:700;color:#38bdf8;margin-bottom:8px}
+.btn-play-beep{display:flex;align-items:center;gap:8px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:10px 14px;border-radius:9px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%;justify-content:center}
+.btn-play-beep:hover{background:rgba(56,189,248,0.2)}
+/* no-data */
+.tc-nodata{text-align:center;padding:18px 0;color:var(--muted);font-size:0.78rem}
+.coach-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);border-radius:20px;padding:3px 10px;font-size:0.62rem;font-weight:700;color:#38bdf8}
 .alerta-box{background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:10px;padding:12px 14px;margin-bottom:12px}
 .alerta-ttl{font-size:0.62rem;font-weight:700;color:var(--yellow);margin-bottom:5px}
 .alerta-txt{font-size:0.71rem;color:#94a3b8;line-height:1.65}
@@ -651,72 +730,322 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ══════════════════════════════════════════ -->
 <div id="tab-fis" class="tab-pane">
 
-  <div class="alerta-box">
-    <div class="alerta-ttl">⚠️ Nota — Evaluación física</div>
-    <div class="alerta-txt">Datos físicos actualizados con cada evaluación formal del cuerpo técnico. Los valores actuales corresponden al <strong>inicio de temporada 2026</strong>. Completar el formulario de evaluación física para actualizar.</div>
-  </div>
-
+  <!-- ══ 1. ANTROPOMETRÍA (read-only, datos de Mi Perfil) ══ -->
   <div class="card">
-    <div class="card-ttl">📏 Métricas Físicas — Perfil Escolta/Alero</div>
-    <div class="g2" style="margin-bottom:14px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">~158</div><div class="sc-lbl">Altura (cm)</div><div class="sc-sub flat">Promedio U13</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~160</div><div class="sc-lbl">Envergadura (cm)</div><div class="sc-sub flat">+2 cm ratio</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">~46</div><div class="sc-lbl">Peso (kg)</div><div class="sc-sub flat">Apropiado</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~21.4</div><div class="sc-lbl">MPG</div><div class="sc-sub up">Alta resistencia</div></div>
+    <div class="card-ttl" style="display:flex;justify-content:space-between;align-items:center">
+      <span>📏 Antropometría</span>
+      <span class="antro-src-badge">📋 Datos desde Mi Perfil</span>
     </div>
-    <div style="font-size:0.68rem;color:#94a3b8;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:10px 12px;line-height:1.65">
-      📌 <strong style="color:var(--ac2)">Análisis de perfil:</strong> Los 21.4 MPG confirman que Mía tiene la resistencia aeróbica necesaria para ser rotación extendida. El perfil Escolta/Alero no requiere ventaja física extrema — la técnica y la inteligencia de juego compensan. Mía lo demuestra con sus números.
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-ttl">💪 Capacidades Físicas — Evaluación Formativa</div>
-    <div class="fis-bar">
-      <div class="fis-hdr"><span class="fis-lbl">Velocidad / Primer Paso</span><span class="fis-val" style="color:var(--ac)">8.0/10 — Alta</span></div>
-      <div class="fis-bg"><div class="fis-fill" style="width:80%;background:linear-gradient(90deg,#c2410c,#f97316)"></div></div>
-      <div class="fis-note">Drives y penetraciones frecuentes confirman buen primer paso explosivo</div>
-    </div>
-    <div class="fis-bar">
-      <div class="fis-hdr"><span class="fis-lbl">Coordinación / Mecánica de Tiro</span><span class="fis-val" style="color:var(--yellow)">8.5/10 — Muy Alta</span></div>
-      <div class="fis-bg"><div class="fis-fill" style="width:85%;background:linear-gradient(90deg,#a16207,#facc15)"></div></div>
-      <div class="fis-note">~42% FG en creación propia confirma mecánica de tiro sólida y repetible</div>
-    </div>
-    <div class="fis-bar">
-      <div class="fis-hdr"><span class="fis-lbl">Resistencia Aeróbica</span><span class="fis-val" style="color:var(--green)">8.0/10 — Alta</span></div>
-      <div class="fis-bg"><div class="fis-fill" style="width:80%;background:linear-gradient(90deg,#16a34a,#22c55e)"></div></div>
-      <div class="fis-note">21.4 MPG en 25 partidos = excelente base aeróbica para su edad</div>
-    </div>
-    <div class="fis-bar">
-      <div class="fis-hdr"><span class="fis-lbl">Agilidad / Cambios de Dirección</span><span class="fis-val" style="color:var(--blue)">7.5/10 — Buena</span></div>
-      <div class="fis-bg"><div class="fis-fill" style="width:75%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)"></div></div>
-      <div class="fis-note">Penetraciones efectivas indican buena agilidad — continuar con trabajo de cambios de ritmo</div>
-    </div>
-    <div class="fis-bar">
-      <div class="fis-hdr"><span class="fis-lbl">Fuerza Funcional</span><span class="fis-val" style="color:var(--purple)">6.5/10 — En desarrollo</span></div>
-      <div class="fis-bg"><div class="fis-fill" style="width:65%;background:linear-gradient(90deg,#7c3aed,#a855f7)"></div></div>
-      <div class="fis-note">Normal para 12-13 años — trabajo progresivo de core y piernas 3×/semana</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-ttl">🎯 Objetivos Físicos 2026–2027</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(249,115,22,0.1)">
-        <span style="font-size:1rem;flex-shrink:0">⚡</span>
-        <div><div style="font-size:0.7rem;font-weight:700;color:var(--ac);margin-bottom:2px">Explosividad de Arranque</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Sprints 5m y 10m, salidas desde posición estática y en movimiento. El primer paso explosivo marca la diferencia en el drive al aro en Cadetes contra defensas más atléticas.</div></div>
+    <div class="antro-strip">
+      <div class="antro-pill">
+        <div class="antro-v" id="fis-altura" style="color:var(--ac)">—</div>
+        <div class="antro-l">Altura cm</div>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(59,130,246,0.1)">
-        <span style="font-size:1rem;flex-shrink:0">🏋️</span>
-        <div><div style="font-size:0.7rem;font-weight:700;color:var(--blue);margin-bottom:2px">Core y Estabilidad</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Plancha, rotaciones de tronco, sentadillas. El core estable mejora la mecánica de tiro bajo cansancio — clave para mantener el FG% en el 4° cuarto.</div></div>
+      <div class="antro-pill">
+        <div class="antro-v" id="fis-peso" style="color:var(--yellow)">—</div>
+        <div class="antro-l">Peso kg</div>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(34,197,94,0.1)">
-        <span style="font-size:1rem;flex-shrink:0">🏃</span>
-        <div><div style="font-size:0.7rem;font-weight:700;color:var(--green);margin-bottom:2px">Resistencia de Alta Intensidad</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Intervalos: 10s sprint + 20s recuperación × 10 series. Simula el ritmo real de un partido de básquet. Objetivo: mantener el nivel de juego en los últimos 5 minutos igual que en los primeros.</div></div>
+      <div class="antro-pill">
+        <div class="antro-v" id="fis-enverg" style="color:var(--green)">—</div>
+        <div class="antro-l">Enverg. cm</div>
+      </div>
+      <div class="antro-pill" id="fis-sentado-pill" style="display:none">
+        <div class="antro-v" id="fis-sentado" style="color:var(--purple)">—</div>
+        <div class="antro-l">Alt. sent. cm</div>
+      </div>
+      <div class="antro-pill">
+        <div class="antro-v" id="fis-imc" style="color:var(--muted)">—</div>
+        <div class="antro-l">IMC</div>
+      </div>
+    </div>
+    <div id="fis-antro-aviso" style="font-size:0.63rem;color:var(--muted);display:none;margin-top:4px">
+      ➜ Completá tus datos en <strong>👤 Mi Perfil</strong> para ver la antropometría aquí.
+    </div>
+  </div>
+
+  <!-- ══ 2. TARJETAS DE TESTS ══ -->
+
+  <!-- ─ T1: BEEP TEST ─ -->
+  <div class="test-card" id="tc-beep">
+    <div class="tc-head" onclick="tcToggle('beep')">
+      <div class="tc-icon" style="background:rgba(34,197,94,0.12)">❤️</div>
+      <div class="tc-info">
+        <div class="tc-cap">Resistencia</div>
+        <div class="tc-name">Beep Test 20 m</div>
+      </div>
+      <div class="tc-result-wrap">
+        <div class="tc-result" id="tc-beep-result" style="color:var(--green)">—</div>
+        <div class="tc-result-lbl" id="tc-beep-date">Sin registro</div>
+      </div>
+      <div class="tc-chevron">▸</div>
+    </div>
+    <div class="tc-detail">
+      <div class="tc-stats-row">
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-beep-best" style="color:var(--green)">—</div>
+          <div class="tc-stat-l">Mejor marca</div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-beep-prev">—</div>
+          <div class="tc-stat-l">Anterior</div>
+          <div class="tc-stat-d" id="tc-beep-delta"></div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-beep-dist" style="color:var(--cyan)">—</div>
+          <div class="tc-stat-l">Distancia</div>
+        </div>
+      </div>
+      <div class="tc-chart-wrap"><div class="tc-chart-title">Evolución</div><canvas id="chart-beep" class="tc-chart-canvas"></canvas></div>
+      <div class="tc-history" id="hist-beep"></div>
+      <div class="tc-btns">
+        <button class="btn-reg" onclick="tcOpenForm('beep',event)">＋ Registrar test</button>
+        <button class="btn-how" onclick="tcOpenHow('beep',event)">¿Cómo hacer este test?</button>
+      </div>
+      <div class="tc-form" id="form-beep">
+        <div class="form-g2" style="margin-bottom:10px">
+          <div><label class="fl">Fecha <span style="color:var(--ac)">*</span></label><input class="fi" type="date" id="f-beep-date"></div>
+          <div><label class="fl">Notas</label><input class="fi" type="text" id="f-beep-notes" placeholder="Condición, lugar…"></div>
+        </div>
+        <div class="form-g2">
+          <div><label class="fl">Nivel alcanzado</label><input class="fi" type="number" id="f-beep-level" min="1" max="21" step="1" placeholder="8" oninput="calcBeep()"></div>
+          <div><label class="fl">Lanzadera</label><input class="fi" type="number" id="f-beep-shuttle" min="1" max="16" step="1" placeholder="6" oninput="calcBeep()"></div>
+        </div>
+        <div class="calc-strip">
+          <div><div class="cs-v" id="c-beep-res">—</div><div class="cs-l">Resultado</div></div>
+          <div><div class="cs-v" id="c-beep-dist">—</div><div class="cs-l">Distancia</div></div>
+          <div><div class="cs-v" id="c-beep-lanz">—</div><div class="cs-l">Lanzaderas tot.</div></div>
+        </div>
+        <input type="hidden" id="f-beep-id">
+        <button class="btn-save-test" onclick="saveTest('beep')">💾 Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ T2: SPRINT REPETIDO ─ -->
+  <div class="test-card" id="tc-sprint">
+    <div class="tc-head" onclick="tcToggle('sprint')">
+      <div class="tc-icon" style="background:rgba(249,115,22,0.12)">⚡</div>
+      <div class="tc-info">
+        <div class="tc-cap">Velocidad</div>
+        <div class="tc-name">Sprint repetido 15 m · 30 seg</div>
+      </div>
+      <div class="tc-result-wrap">
+        <div class="tc-result" id="tc-sprint-result" style="color:var(--ac)">—</div>
+        <div class="tc-result-lbl" id="tc-sprint-date">Sin registro</div>
+      </div>
+      <div class="tc-chevron">▸</div>
+    </div>
+    <div class="tc-detail">
+      <div class="tc-stats-row">
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-sprint-best" style="color:var(--ac)">—</div>
+          <div class="tc-stat-l">Mejor marca</div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-sprint-prev">—</div>
+          <div class="tc-stat-l">Anterior</div>
+          <div class="tc-stat-d" id="tc-sprint-delta"></div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-sprint-dist" style="color:var(--yellow)">—</div>
+          <div class="tc-stat-l">Distancia</div>
+        </div>
+      </div>
+      <div class="tc-chart-wrap"><div class="tc-chart-title">Evolución</div><canvas id="chart-sprint" class="tc-chart-canvas"></canvas></div>
+      <div class="tc-history" id="hist-sprint"></div>
+      <div class="tc-btns">
+        <button class="btn-reg" onclick="tcOpenForm('sprint',event)">＋ Registrar test</button>
+        <button class="btn-how" onclick="tcOpenHow('sprint',event)">¿Cómo hacer este test?</button>
+      </div>
+      <div class="tc-form" id="form-sprint">
+        <div class="form-g2" style="margin-bottom:10px">
+          <div><label class="fl">Fecha <span style="color:var(--ac)">*</span></label><input class="fi" type="date" id="f-sprint-date"></div>
+          <div><label class="fl">Notas</label><input class="fi" type="text" id="f-sprint-notes" placeholder="Condición, lugar…"></div>
+        </div>
+        <div><label class="fl">Líneas completadas (permite 0.5)</label><input class="fi" type="number" id="f-sprint-lines" min="0" max="30" step="0.5" placeholder="7.5" oninput="calcSprint()"></div>
+        <div class="calc-strip" style="margin-top:8px">
+          <div><div class="cs-v" id="c-sprint-lines">—</div><div class="cs-l">Líneas</div></div>
+          <div><div class="cs-v" id="c-sprint-dist">—</div><div class="cs-l">Distancia</div></div>
+          <div><div class="cs-v" id="c-sprint-vs">—</div><div class="cs-l">vs anterior</div></div>
+        </div>
+        <input type="hidden" id="f-sprint-id">
+        <button class="btn-save-test" onclick="saveTest('sprint')">💾 Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ T3: LANE AGILITY ─ -->
+  <div class="test-card" id="tc-lane">
+    <div class="tc-head" onclick="tcToggle('lane')">
+      <div class="tc-icon" style="background:rgba(167,139,250,0.12)">🔄</div>
+      <div class="tc-info">
+        <div class="tc-cap">Agilidad</div>
+        <div class="tc-name">Lane Agility Test</div>
+      </div>
+      <div class="tc-result-wrap">
+        <div class="tc-result" id="tc-lane-result" style="color:var(--purple)">—</div>
+        <div class="tc-result-lbl" id="tc-lane-date">Sin registro</div>
+      </div>
+      <div class="tc-chevron">▸</div>
+    </div>
+    <div class="tc-detail">
+      <div class="tc-stats-row">
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-lane-best" style="color:var(--purple)">—</div>
+          <div class="tc-stat-l">Mejor marca</div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-lane-prev">—</div>
+          <div class="tc-stat-l">Anterior</div>
+          <div class="tc-stat-d" id="tc-lane-delta"></div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" style="color:var(--muted);font-size:0.7rem">↓ mejor</div>
+          <div class="tc-stat-l">menor = mejor</div>
+        </div>
+      </div>
+      <div class="tc-chart-wrap"><div class="tc-chart-title">Evolución (↓ mejora)</div><canvas id="chart-lane" class="tc-chart-canvas"></canvas></div>
+      <div class="tc-history" id="hist-lane"></div>
+      <div class="tc-btns">
+        <button class="btn-reg" onclick="tcOpenForm('lane',event)">＋ Registrar test</button>
+        <button class="btn-how" onclick="tcOpenHow('lane',event)">¿Cómo hacer este test?</button>
+      </div>
+      <div class="tc-form" id="form-lane">
+        <div class="form-g2" style="margin-bottom:10px">
+          <div><label class="fl">Fecha <span style="color:var(--ac)">*</span></label><input class="fi" type="date" id="f-lane-date"></div>
+          <div><label class="fl">Notas</label><input class="fi" type="text" id="f-lane-notes" placeholder="Condición, lugar…"></div>
+        </div>
+        <div class="form-g2">
+          <div><label class="fl">Intento 1 (s)</label><input class="fi" type="number" id="f-lane-1" min="5" max="30" step="0.01" placeholder="13.4" oninput="calcLane()"></div>
+          <div><label class="fl">Intento 2 (s)</label><input class="fi" type="number" id="f-lane-2" min="5" max="30" step="0.01" placeholder="12.9" oninput="calcLane()"></div>
+        </div>
+        <div class="best-box">
+          <span class="best-lbl">⏱ Mejor intento</span>
+          <span class="best-val" id="c-lane-best">—</span>
+        </div>
+        <input type="hidden" id="f-lane-id">
+        <button class="btn-save-test" onclick="saveTest('lane')">💾 Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ T4: SALTO HORIZONTAL ─ -->
+  <div class="test-card" id="tc-jump">
+    <div class="tc-head" onclick="tcToggle('jump')">
+      <div class="tc-icon" style="background:rgba(250,204,21,0.12)">🚀</div>
+      <div class="tc-info">
+        <div class="tc-cap">Potencia</div>
+        <div class="tc-name">Salto horizontal desde parado</div>
+      </div>
+      <div class="tc-result-wrap">
+        <div class="tc-result" id="tc-jump-result" style="color:var(--yellow)">—</div>
+        <div class="tc-result-lbl" id="tc-jump-date">Sin registro</div>
+      </div>
+      <div class="tc-chevron">▸</div>
+    </div>
+    <div class="tc-detail">
+      <div class="tc-stats-row">
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-jump-best" style="color:var(--yellow)">—</div>
+          <div class="tc-stat-l">Mejor marca</div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-jump-prev">—</div>
+          <div class="tc-stat-l">Anterior</div>
+          <div class="tc-stat-d" id="tc-jump-delta"></div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" style="color:var(--muted);font-size:0.7rem">↑ mejor</div>
+          <div class="tc-stat-l">mayor = mejor</div>
+        </div>
+      </div>
+      <div class="tc-chart-wrap"><div class="tc-chart-title">Evolución (↑ mejora)</div><canvas id="chart-jump" class="tc-chart-canvas"></canvas></div>
+      <div class="tc-history" id="hist-jump"></div>
+      <div class="tc-btns">
+        <button class="btn-reg" onclick="tcOpenForm('jump',event)">＋ Registrar test</button>
+        <button class="btn-how" onclick="tcOpenHow('jump',event)">¿Cómo hacer este test?</button>
+      </div>
+      <div class="tc-form" id="form-jump">
+        <div class="form-g2" style="margin-bottom:10px">
+          <div><label class="fl">Fecha <span style="color:var(--ac)">*</span></label><input class="fi" type="date" id="f-jump-date"></div>
+          <div><label class="fl">Notas</label><input class="fi" type="text" id="f-jump-notes" placeholder="Condición, lugar…"></div>
+        </div>
+        <div class="form-g3">
+          <div><label class="fl">Intento 1 (cm)</label><input class="fi" type="number" id="f-jump-1" min="50" max="400" step="1" placeholder="142" oninput="calcJump()"></div>
+          <div><label class="fl">Intento 2 (cm)</label><input class="fi" type="number" id="f-jump-2" min="50" max="400" step="1" placeholder="147" oninput="calcJump()"></div>
+          <div><label class="fl">Intento 3 (cm)</label><input class="fi" type="number" id="f-jump-3" min="50" max="400" step="1" placeholder="145" oninput="calcJump()"></div>
+        </div>
+        <div class="best-box">
+          <span class="best-lbl">🏆 Mejor intento</span>
+          <span class="best-val" id="c-jump-best">—</span>
+        </div>
+        <input type="hidden" id="f-jump-id">
+        <button class="btn-save-test" onclick="saveTest('jump')">💾 Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ T5: SENTADILLAS 30s ─ -->
+  <div class="test-card" id="tc-squat">
+    <div class="tc-head" onclick="tcToggle('squat')">
+      <div class="tc-icon" style="background:rgba(168,85,247,0.12)">💪</div>
+      <div class="tc-info">
+        <div class="tc-cap">Fuerza-Resistencia</div>
+        <div class="tc-name">Sentadillas en 30 segundos</div>
+      </div>
+      <div class="tc-result-wrap">
+        <div class="tc-result" id="tc-squat-result" style="color:var(--purple)">—</div>
+        <div class="tc-result-lbl" id="tc-squat-date">Sin registro</div>
+      </div>
+      <div class="tc-chevron">▸</div>
+    </div>
+    <div class="tc-detail">
+      <div class="tc-stats-row">
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-squat-best" style="color:var(--purple)">—</div>
+          <div class="tc-stat-l">Mejor marca</div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" id="tc-squat-prev">—</div>
+          <div class="tc-stat-l">Anterior</div>
+          <div class="tc-stat-d" id="tc-squat-delta"></div>
+        </div>
+        <div class="tc-stat">
+          <div class="tc-stat-v" style="color:var(--muted);font-size:0.7rem">↑ mejor</div>
+          <div class="tc-stat-l">mayor = mejor</div>
+        </div>
+      </div>
+      <div class="tc-chart-wrap"><div class="tc-chart-title">Evolución (↑ mejora)</div><canvas id="chart-squat" class="tc-chart-canvas"></canvas></div>
+      <div class="tc-history" id="hist-squat"></div>
+      <div class="tc-btns">
+        <button class="btn-reg" onclick="tcOpenForm('squat',event)">＋ Registrar test</button>
+        <button class="btn-how" onclick="tcOpenHow('squat',event)">¿Cómo hacer este test?</button>
+      </div>
+      <div class="tc-form" id="form-squat">
+        <div class="form-g2" style="margin-bottom:10px">
+          <div><label class="fl">Fecha <span style="color:var(--ac)">*</span></label><input class="fi" type="date" id="f-squat-date"></div>
+          <div><label class="fl">Notas</label><input class="fi" type="text" id="f-squat-notes" placeholder="Condición, lugar…"></div>
+        </div>
+        <div><label class="fl">Repeticiones válidas en 30 s</label><input class="fi" type="number" id="f-squat-reps" min="0" max="60" step="1" placeholder="22"></div>
+        <div style="margin-top:8px;font-size:0.65rem;color:var(--muted);line-height:1.55">ℹ️ Contá solo las repeticiones técnicamente válidas: muslos paralelos al piso, talones apoyados, rodillas sobre pies.</div>
+        <input type="hidden" id="f-squat-id">
+        <button class="btn-save-test" style="margin-top:10px" onclick="saveTest('squat')">💾 Guardar</button>
       </div>
     </div>
   </div>
 
 </div><!-- /tab-fis -->
+
+<!-- ══ MODAL: CÓMO HACER ESTE TEST ══ -->
+<div class="how-modal-bg" id="how-modal-bg" onclick="howModalClose(event)">
+  <div class="how-modal">
+    <div class="how-modal-hd">
+      <div class="how-modal-title" id="how-modal-title">¿Cómo hacer este test?</div>
+      <button class="how-modal-close" onclick="howModalHide()">✕</button>
+    </div>
+    <div class="how-body" id="how-modal-body"></div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════
      TAB 6 — MI PERFIL
@@ -1036,6 +1365,7 @@ const NCAA_SKILLS = [
 ];
 
 /* ─── TABS ─────────────────────────────── */
+let _fisInited = false;
 function showTab(id, btn, navIdx) {
   document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
@@ -1046,6 +1376,10 @@ function showTab(id, btn, navIdx) {
     document.querySelectorAll('.bnav-btn')[navIdx].classList.add('on');
     document.querySelectorAll('.tab-btn')[navIdx].classList.add('on');
   }
+  // Inicializar tab físico la primera vez que se abre
+  if (id === 'fis' && !_fisInited) { _fisInited = true; fisInit(); }
+  // Re-leer antropometría cada vez (puede haber cambiado en Mi Perfil)
+  if (id === 'fis') { fisLoadAntro(); }
 }
 
 /* ─── INIT ─────────────────────────────── */
@@ -1262,6 +1596,576 @@ async function doLogout() {
   try { await _supa.auth.signOut(); } catch(e) {}
   window.location.href = 'login.html';
 }
+
+/* ══════════════════════════════════════════════════════════
+   TAB FÍSICO — rediseño completo v2
+   ══════════════════════════════════════════════════════════ */
+const FIS_PLAYER_ID = '11111111-0000-0000-0000-000000000014';
+
+/* Configuración por tipo de test
+   lowerIsBetter: true → menor valor = mejor (Lane Agility)
+   valueKey: columna principal de Supabase
+*/
+const TEST_CFG = {
+  beep:   { table:'physical_test_results', type:'beep_test',      lowerIsBetter:false,
+            fmtVal: r => r.attempt_1 ? `${r.attempt_1}` : '—',
+            fmtUnit: r => r.attempt_1 ? `Nivel ${r.attempt_1}` : '',
+            secondary: r => r.value ? `${r.value} m` : '' },
+  sprint: { table:'physical_test_results', type:'sprint_rep_15',  lowerIsBetter:false,
+            fmtVal: r => r.value != null ? `${r.value}` : '—',
+            fmtUnit: r => r.value != null ? `líneas` : '',
+            secondary: r => r.value != null ? `${(r.value*15).toFixed(0)} m` : '' },
+  lane:   { table:'physical_test_results', type:'lane_agility',   lowerIsBetter:true,
+            fmtVal: r => r.value != null ? `${r.value}s` : '—',
+            fmtUnit: r => r.value != null ? 'seg' : '',
+            secondary: () => '' },
+  jump:   { table:'physical_test_results', type:'broad_jump',     lowerIsBetter:false,
+            fmtVal: r => r.value != null ? `${r.value}` : '—',
+            fmtUnit: r => r.value != null ? 'cm' : '',
+            secondary: () => '' },
+  squat:  { table:'physical_test_results', type:'squat_30s',      lowerIsBetter:false,
+            fmtVal: r => r.value != null ? `${r.value}` : '—',
+            fmtUnit: r => r.value != null ? 'reps' : '',
+            secondary: () => '' },
+};
+
+// Cache local de resultados por tipo
+const _testData = { beep:[], sprint:[], lane:[], jump:[], squat:[] };
+// Charts activos
+const _charts = {};
+
+/* ── ANTROPOMETRÍA — leer desde localStorage de Mi Perfil ── */
+function fisLoadAntro() {
+  try {
+    const raw = localStorage.getItem('nl_pf_mia14');
+    const pf  = raw ? JSON.parse(raw) : {};
+    const alt = parseFloat(pf.altura)  || null;
+    const pes = parseFloat(pf.peso)    || null;
+    const env = parseFloat(pf.enverg)  || null;
+    const sent = parseFloat(pf.sentado) || null;
+
+    const set = (id, val, fmt) => { document.getElementById(id).textContent = val != null ? (fmt ? fmt(val) : val) : '—'; };
+    set('fis-altura', alt);
+    set('fis-peso',   pes);
+    set('fis-enverg', env);
+    if (sent) {
+      set('fis-sentado', sent);
+      document.getElementById('fis-sentado-pill').style.display = 'flex';
+    }
+    let imc = '—';
+    if (alt && pes) imc = (pes / ((alt/100)**2)).toFixed(1);
+    document.getElementById('fis-imc').textContent = imc;
+    document.getElementById('fis-antro-aviso').style.display = (alt || pes || env) ? 'none' : 'block';
+  } catch(e) { console.warn('fisLoadAntro:', e); }
+}
+
+/* ── TOGGLE tarjeta ── */
+function tcToggle(key) {
+  const card = document.getElementById('tc-' + key);
+  card.classList.toggle('open');
+  // Si es la primera vez que se abre, cargar datos
+  if (card.classList.contains('open') && !card._loaded) {
+    card._loaded = true;
+    fisLoadTest(key);
+  }
+}
+
+/* ── ABRIR formulario de registro ── */
+function tcOpenForm(key, e) {
+  if (e) e.stopPropagation();
+  const card = document.getElementById('tc-' + key);
+  // Asegurar que el detalle esté abierto
+  if (!card.classList.contains('open')) card.classList.add('open');
+  const isOpen = card.classList.contains('reg-open');
+  card.classList.toggle('reg-open', !isOpen);
+  if (!isOpen) {
+    // Setear fecha de hoy
+    const df = document.getElementById('f-' + key + '-date');
+    if (df && !df.value) df.valueAsDate = new Date();
+    // Limpiar campos de resultado
+    ['f-'+key+'-id'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  }
+}
+
+/* ── CÁLCULOS EN TIEMPO REAL ── */
+const BEEP_SPL = [7,8,8,9,9,10,10,11,11,11,12,12,13,13,13]; // lanzaderas por nivel
+
+function calcBeep() {
+  const lvl  = parseInt(document.getElementById('f-beep-level').value)   || 0;
+  const shut = parseInt(document.getElementById('f-beep-shuttle').value) || 0;
+  if (!lvl || !shut) { ['c-beep-res','c-beep-dist','c-beep-lanz'].forEach(id => document.getElementById(id).textContent='—'); return; }
+  let tot = shut;
+  for (let i=0; i<lvl-1 && i<BEEP_SPL.length; i++) tot += BEEP_SPL[i];
+  document.getElementById('c-beep-res').textContent  = `${lvl}.${shut}`;
+  document.getElementById('c-beep-dist').textContent = `${tot*20} m`;
+  document.getElementById('c-beep-lanz').textContent = tot;
+}
+
+function calcSprint() {
+  const v = parseFloat(document.getElementById('f-sprint-lines').value);
+  if (!v) { ['c-sprint-lines','c-sprint-dist','c-sprint-vs'].forEach(id => document.getElementById(id).textContent='—'); return; }
+  document.getElementById('c-sprint-lines').textContent = v;
+  document.getElementById('c-sprint-dist').textContent  = `${(v*15).toFixed(0)} m`;
+  // vs anterior
+  const prev = _testData.sprint[1]?.value;
+  if (prev != null) {
+    const d = v - prev;
+    document.getElementById('c-sprint-vs').textContent = `${d>=0?'+':''}${d.toFixed(1)}`;
+    document.getElementById('c-sprint-vs').style.color = d>0?'#22c55e':d<0?'#ef4444':'#64748b';
+  } else {
+    document.getElementById('c-sprint-vs').textContent = 'primero';
+  }
+}
+
+function calcLane() {
+  const a = parseFloat(document.getElementById('f-lane-1').value) || null;
+  const b = parseFloat(document.getElementById('f-lane-2').value) || null;
+  const best = (a&&b) ? Math.min(a,b) : (a||b||null);
+  document.getElementById('c-lane-best').textContent = best!=null ? `${best} s` : '—';
+}
+
+function calcJump() {
+  const vals = [
+    parseFloat(document.getElementById('f-jump-1').value)||null,
+    parseFloat(document.getElementById('f-jump-2').value)||null,
+    parseFloat(document.getElementById('f-jump-3').value)||null,
+  ].filter(v=>v!=null);
+  const best = vals.length ? Math.max(...vals) : null;
+  document.getElementById('c-jump-best').textContent = best!=null ? `${best} cm` : '—';
+}
+
+/* ── GUARDAR TEST ── */
+async function saveTest(key) {
+  const date  = document.getElementById('f-' + key + '-date').value;
+  const notes = document.getElementById('f-' + key + '-notes')?.value?.trim() || null;
+  const editId = document.getElementById('f-' + key + '-id').value || null;
+  if (!date) { alert('La fecha es obligatoria'); return; }
+
+  let value = null, attempt_1 = null, attempt_2 = null, attempt_3 = null;
+
+  if (key === 'beep') {
+    const lvl  = parseInt(document.getElementById('f-beep-level').value)   || null;
+    const shut = parseInt(document.getElementById('f-beep-shuttle').value) || null;
+    if (!lvl || !shut) { alert('Completá nivel y lanzadera'); return; }
+    attempt_1 = lvl; attempt_2 = shut;
+    let tot = shut;
+    for (let i=0; i<lvl-1 && i<BEEP_SPL.length; i++) tot += BEEP_SPL[i];
+    value = tot * 20; // distancia en metros como valor numérico comparable
+    attempt_3 = tot;  // lanzaderas totales
+  } else if (key === 'sprint') {
+    value = parseFloat(document.getElementById('f-sprint-lines').value) || null;
+    if (!value) { alert('Ingresá la cantidad de líneas'); return; }
+  } else if (key === 'lane') {
+    const a = parseFloat(document.getElementById('f-lane-1').value) || null;
+    const b = parseFloat(document.getElementById('f-lane-2').value) || null;
+    attempt_1 = a; attempt_2 = b;
+    value = (a&&b) ? Math.min(a,b) : (a||b||null);
+    if (!value) { alert('Ingresá al menos un intento'); return; }
+  } else if (key === 'jump') {
+    const a = parseFloat(document.getElementById('f-jump-1').value)||null;
+    const b = parseFloat(document.getElementById('f-jump-2').value)||null;
+    const c = parseFloat(document.getElementById('f-jump-3').value)||null;
+    attempt_1=a; attempt_2=b; attempt_3=c;
+    const vals=[a,b,c].filter(v=>v!=null);
+    value = vals.length ? Math.max(...vals) : null;
+    if (!value) { alert('Ingresá al menos un intento'); return; }
+  } else if (key === 'squat') {
+    value = parseInt(document.getElementById('f-squat-reps').value) || null;
+    if (!value) { alert('Ingresá las repeticiones'); return; }
+  }
+
+  const payload = {
+    player_id: FIS_PLAYER_ID,
+    test_type:  TEST_CFG[key].type,
+    date,
+    value,
+    unit: key==='beep'?'m': key==='sprint'?'lineas': key==='lane'?'s': key==='jump'?'cm':'reps',
+    attempt_1, attempt_2, attempt_3,
+    notes,
+    source: 'self',
+  };
+
+  const btn = document.querySelector(`#form-${key} .btn-save-test`);
+  btn.textContent = '⏳ Guardando…'; btn.disabled = true;
+
+  let err;
+  if (editId) {
+    ({ error: err } = await _supa.from('physical_test_results').update(payload).eq('id', editId));
+  } else {
+    ({ error: err } = await _supa.from('physical_test_results').insert(payload));
+  }
+  btn.textContent = '💾 Guardar'; btn.disabled = false;
+
+  if (err) {
+    alert('Error: ' + err.message);
+  } else {
+    // Cerrar form, recargar
+    document.getElementById('tc-' + key).classList.remove('reg-open');
+    _testData[key] = [];
+    fisLoadTest(key);
+  }
+}
+
+/* ── CARGAR datos de un test desde Supabase ── */
+async function fisLoadTest(key) {
+  const { data, error } = await _supa
+    .from('physical_test_results')
+    .select('*')
+    .eq('player_id', FIS_PLAYER_ID)
+    .eq('test_type', TEST_CFG[key].type)
+    .order('date', { ascending: false })
+    .limit(20);
+
+  if (error || !data) return;
+  _testData[key] = data;
+  fisRenderTest(key, data);
+}
+
+/* ── RENDERIZAR tarjeta con datos ── */
+function fisRenderTest(key, data) {
+  const cfg = TEST_CFG[key];
+  if (!data || data.length === 0) {
+    document.getElementById('tc-' + key + '-result').textContent = '—';
+    document.getElementById('tc-' + key + '-date').textContent   = 'Sin registro';
+    document.getElementById('hist-' + key).innerHTML = '<div class="tc-nodata">Todavía sin registros · Presioná "+ Registrar test"</div>';
+    return;
+  }
+
+  const last = data[0];
+  const prev = data[1] || null;
+  const best = cfg.lowerIsBetter
+    ? data.reduce((a,b) => (b.value < a.value ? b : a), last)
+    : data.reduce((a,b) => (b.value > a.value ? b : a), last);
+
+  // Cabecera
+  const d = new Date(last.date + 'T00:00:00');
+  document.getElementById('tc-'+key+'-result').textContent = cfg.fmtVal(last);
+  document.getElementById('tc-'+key+'-date').textContent   = d.toLocaleDateString('es-AR',{day:'2-digit',month:'short'});
+
+  // Stats row
+  document.getElementById('tc-'+key+'-best').textContent = cfg.fmtVal(best);
+  document.getElementById('tc-'+key+'-prev').textContent = prev ? cfg.fmtVal(prev) : '—';
+
+  // Delta
+  const deltaEl = document.getElementById('tc-'+key+'-delta');
+  if (prev && last.value != null && prev.value != null) {
+    const d = last.value - prev.value;
+    const improved = cfg.lowerIsBetter ? d < 0 : d > 0;
+    const same = Math.abs(d) < 0.01;
+    const sign = d > 0 ? '+' : '';
+    const unit = key==='lane'?'s':key==='jump'?'cm':key==='squat'?'rep':'';
+    deltaEl.textContent = same ? '=' : `${sign}${key==='lane'||key==='sprint'?d.toFixed(1):Math.round(d)}${unit}`;
+    deltaEl.className   = 'tc-stat-d ' + (same?'delta-eq':improved?'delta-up':'delta-dn');
+  } else { deltaEl.textContent = '—'; deltaEl.className = 'tc-stat-d delta-eq'; }
+
+  // Secundario (distancia beep / sprint)
+  const secId = { beep:'tc-beep-dist', sprint:'tc-sprint-dist' }[key];
+  if (secId) document.getElementById(secId).textContent = cfg.secondary(last) || '—';
+
+  // Historial
+  fisRenderHistorial(key, data);
+
+  // Gráfico
+  fisRenderChart(key, data);
+}
+
+/* ── HISTORIAL ── */
+function fisRenderHistorial(key, data) {
+  const cfg = TEST_CFG[key];
+  const el  = document.getElementById('hist-' + key);
+  if (!data.length) { el.innerHTML='<div class="tc-nodata">Sin registros</div>'; return; }
+
+  el.innerHTML = data.slice(0,6).map(r => {
+    const d = new Date(r.date+'T00:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'2-digit'});
+    const srcCls = r.source==='coach' ? 'src-coach' : 'src-self';
+    const srcLbl = r.source==='coach' ? '🏅 coach' : '👤 vos';
+    const sec = cfg.secondary(r) ? ` <span style="color:var(--muted);font-size:0.62rem">· ${cfg.secondary(r)}</span>` : '';
+    return `<div class="tc-hist-item">
+      <div class="tc-hist-date">${d}</div>
+      <div class="tc-hist-val">${cfg.fmtVal(r)}${sec}</div>
+      <span class="tc-hist-src ${srcCls}">${srcLbl}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ── GRÁFICO ── */
+function fisRenderChart(key, data) {
+  const cfg = TEST_CFG[key];
+  const canvas = document.getElementById('chart-' + key);
+  if (!canvas || data.length < 2) { if(canvas)canvas.style.display='none'; return; }
+  canvas.style.display = '';
+
+  const sorted = [...data].reverse(); // cronológico
+  const labels = sorted.map(r => new Date(r.date+'T00:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'short'}));
+  const vals   = sorted.map(r => r.value);
+  const colors = { beep:'#22c55e', sprint:'#f97316', lane:'#a855f7', jump:'#facc15', squat:'#a855f7' };
+  const col    = colors[key] || '#f97316';
+
+  if (_charts[key]) _charts[key].destroy();
+  _charts[key] = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: vals,
+        borderColor: col,
+        backgroundColor: col + '18',
+        borderWidth: 2.5,
+        pointBackgroundColor: col,
+        pointRadius: 4,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{ display:false } },
+      scales: {
+        x:{ grid:{color:'rgba(255,255,255,0.03)'}, ticks:{color:'#64748b',font:{size:9}} },
+        y:{ grid:{color:'rgba(255,255,255,0.03)'}, ticks:{color:'#64748b',font:{size:9}},
+            reverse: cfg.lowerIsBetter }  // Lane Agility: eje invertido
+      }
+    }
+  });
+}
+
+/* ── MODAL "CÓMO HACER ESTE TEST" ── */
+const HOW_CONTENT = {
+  beep: {
+    title: '❤️ Beep Test 20 m — Instrucciones',
+    body: `
+<div class="how-h">¿Qué mide?</div>
+<p class="how-p">Tu <strong>resistencia aeróbica</strong>. Es uno de los tests de campo más usados en el deporte profesional para medir cuánto podés sostener el esfuerzo.</p>
+
+<div class="how-h">¿Qué necesitás?</div>
+<p class="how-p">Un espacio de <strong>20 metros planos</strong> (puede ser en el gimnasio o afuera). Dos líneas o conos marcando los extremos. El audio del Beep Test.</p>
+
+<div class="how-diagram">
+<svg viewBox="0 0 300 60" width="100%" style="max-width:280px">
+  <line x1="20" y1="30" x2="280" y2="30" stroke="#334155" stroke-width="2"/>
+  <rect x="14" y="10" width="12" height="40" rx="3" fill="#f97316" opacity=".8"/>
+  <rect x="274" y="10" width="12" height="40" rx="3" fill="#f97316" opacity=".8"/>
+  <text x="150" y="26" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">← 20 metros →</text>
+  <text x="20" y="58" text-anchor="middle" fill="#f97316" font-size="9" font-family="sans-serif">Línea A</text>
+  <text x="280" y="58" text-anchor="middle" fill="#f97316" font-size="9" font-family="sans-serif">Línea B</text>
+</svg></div>
+
+<div class="how-h">Instrucciones paso a paso</div>
+<ol class="how-steps">
+  <li>Marcá dos líneas separadas exactamente <strong>20 metros</strong>.</li>
+  <li>Arrancá parado sobre la Línea A.</li>
+  <li>Cuando suene el primer beep, <strong>empezá a correr hacia la Línea B</strong>.</li>
+  <li>Tenés que llegar a la Línea B antes del siguiente beep. Si llegás antes, esperás ahí.</li>
+  <li>Al sonar el beep, salís hacia la Línea A nuevamente.</li>
+  <li>Continuás de esta forma: A→B, B→A, A→B… sin parar.</li>
+  <li>El sonido se hace más rápido con cada nivel.</li>
+</ol>
+
+<div class="how-h">¿Cuándo termina?</div>
+<p class="how-p">Cuando no podés llegar a la línea antes del beep por <strong>segunda vez consecutiva</strong>. Anotá el número de nivel y la lanzadera donde llegaste.</p>
+
+<div class="how-h">¿Cómo registrás el resultado?</div>
+<p class="how-p">Resultado = <span class="how-pill">Nivel.Lanzadera</span>. Ejemplo: si llegaste al nivel 8 lanzadera 6 → <span class="how-pill">8.6</span>. Mayor número = mayor resistencia.</p>
+
+<div class="how-h">Descanso recomendado</div>
+<p class="how-p">Hacé el test solo una vez por sesión. Descansá al menos <strong>48 horas</strong> antes de repetirlo.</p>
+
+<div class="how-warn">⚠️ <strong>Seguridad:</strong> Entrá en calor 5-10 minutos antes. Si sentís mareos o dolor de pecho, detenete inmediatamente.</div>
+
+<div class="beep-audio-box">
+  <div class="beep-audio-title">🎧 Audio para realizar el test</div>
+  <p class="how-p" style="margin-bottom:10px">Necesitás el audio oficial del Beep Test para realizar el test. Usá auriculares o parlante externo para escucharlo bien mientras corrés.</p>
+  <button class="btn-play-beep" id="btn-beep-audio" onclick="playBeepAudio()">▶ Abrir audio del Beep Test en YouTube</button>
+  <p class="how-p" style="margin-top:8px;font-size:0.68rem">📌 Marcá dos líneas separadas por <strong>20 metros</strong> y seguí las señales del audio. Podés dejar el video sonando con la pantalla apagada.</p>
+</div>`
+  },
+  sprint: {
+    title: '⚡ Sprint repetido 15 m · 30 seg — Instrucciones',
+    body: `
+<div class="how-h">¿Qué mide?</div>
+<p class="how-p">Tu <strong>velocidad con cambios de dirección repetidos</strong>. Simula las acciones reales de un partido de básquet: no se corre 100 metros en línea, se hacen muchos sprints cortos con frenadas y arranques.</p>
+
+<div class="how-h">¿Qué necesitás?</div>
+<p class="how-p">Dos líneas separadas <strong>15 metros</strong> (puede ser en la cancha). Un cronómetro o celular con temporizador de 30 segundos.</p>
+
+<div class="how-diagram">
+<svg viewBox="0 0 280 80" width="100%" style="max-width:260px">
+  <rect x="14" y="10" width="10" height="60" rx="2" fill="#f97316" opacity=".7"/>
+  <rect x="256" y="10" width="10" height="60" rx="2" fill="#f97316" opacity=".7"/>
+  <line x1="24" y1="40" x2="256" y2="40" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <path d="M 50 40 Q 80 20 110 40 Q 140 60 170 40 Q 200 20 230 40" stroke="#38bdf8" stroke-width="2" fill="none"/>
+  <text x="140" y="75" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="sans-serif">← 15 metros →</text>
+  <text x="19" y="8" text-anchor="middle" fill="#f97316" font-size="8" font-family="sans-serif">A</text>
+  <text x="261" y="8" text-anchor="middle" fill="#f97316" font-size="8" font-family="sans-serif">B</text>
+</svg></div>
+
+<div class="how-h">Instrucciones paso a paso</div>
+<ol class="how-steps">
+  <li>Marcá dos líneas separadas exactamente <strong>15 metros</strong>.</li>
+  <li>Parás en la Línea A. Pedís que alguien active el cronómetro (o lo activás vos).</li>
+  <li>Al sonar "¡YA!", corrés <strong>a máxima velocidad</strong> hacia la Línea B.</li>
+  <li>Al llegar a la Línea B, <strong>pisás la línea con un pie</strong>, frenás y volvés hacia la Línea A.</li>
+  <li>Repetís esto sin parar durante <strong>30 segundos</strong>.</li>
+  <li>Cada vez que pisás una línea = <strong>1 línea completada</strong>.</li>
+</ol>
+
+<div class="how-h">¿Cómo contás?</div>
+<p class="how-p">Cada línea pisada = 1. Si al terminar el tiempo estás a mitad de camino = <span class="how-pill">0.5</span> líneas extra. La app calcula la distancia automáticamente (líneas × 15 m).</p>
+
+<div class="how-h">Cantidad de intentos</div>
+<p class="how-p">Un solo intento por sesión. Es un test de máximo esfuerzo durante 30 segundos.</p>
+
+<div class="how-warn">⚠️ <strong>Seguridad:</strong> Hacé un calentamiento de al menos 5 minutos antes. El piso debe estar seco para evitar resbalones en los cambios de dirección.</div>`
+  },
+  lane: {
+    title: '🔄 Lane Agility Test — Instrucciones',
+    body: `
+<div class="how-h">¿Qué mide?</div>
+<p class="how-p">Tu <strong>agilidad alrededor de la zona pintada</strong>. Mide la velocidad de desplazamiento lateral, hacia atrás y hacia adelante en el espacio de juego más importante de una cancha de básquet. En este test, <strong>menor tiempo = mejor resultado</strong>.</p>
+
+<div class="how-h">¿Qué necesitás?</div>
+<p class="how-p">La zona pintada de una cancha de básquet estándar (o 4 conos marcando los vértices). Un cronómetro.</p>
+
+<div class="how-diagram">
+<svg viewBox="0 0 220 160" width="100%" style="max-width:200px">
+  <!-- zona pintada -->
+  <rect x="30" y="20" width="160" height="120" rx="4" fill="none" stroke="#334155" stroke-width="2"/>
+  <!-- conos -->
+  <circle cx="30" cy="20"  r="5" fill="#f97316"/>
+  <circle cx="190" cy="20"  r="5" fill="#f97316"/>
+  <circle cx="30" cy="140" r="5" fill="#f97316"/>
+  <circle cx="190" cy="140" r="5" fill="#f97316"/>
+  <!-- punto de inicio -->
+  <circle cx="30" cy="80" r="6" fill="#38bdf8"/>
+  <text x="15" y="84" fill="#38bdf8" font-size="8" font-family="sans-serif">★</text>
+  <!-- flechas del recorrido -->
+  <path d="M 30 80 L 30 22 L 190 22 L 190 140 L 30 140 L 30 80" stroke="#22c55e" stroke-width="1.8" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/></marker></defs>
+  <text x="110" y="155" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="sans-serif">★ = inicio/fin</text>
+</svg></div>
+
+<div class="how-h">Instrucciones paso a paso</div>
+<ol class="how-steps">
+  <li>Parás en el <strong>centro del lado izquierdo</strong> de la zona pintada (o en el cono inferior izquierdo).</li>
+  <li>Al sonido de salida, corrés hacia la esquina superior izquierda.</li>
+  <li>Seguís corriendo hacia la esquina superior derecha.</li>
+  <li>Bajás hacia la esquina inferior derecha.</li>
+  <li>Volvés al punto de inicio corriendo por el lado izquierdo.</li>
+  <li>Parás el cronómetro cuando cruzás el punto de inicio.</li>
+  <li>Repetís el recorrido en sentido contrario (segundo intento).</li>
+</ol>
+
+<div class="how-h">¿Cuántos intentos?</div>
+<p class="how-p">Dos intentos. Descansá <strong>2 minutos</strong> entre cada uno. La app toma automáticamente el <strong>mejor tiempo (el menor)</strong>.</p>
+
+<div class="how-warn">⚠️ No uses zapatillas con suela mojada. Pisá firmemente en cada cambio de dirección para no resbalarte.</div>`
+  },
+  jump: {
+    title: '🚀 Salto horizontal desde parado — Instrucciones',
+    body: `
+<div class="how-h">¿Qué mide?</div>
+<p class="how-p">La <strong>potencia explosiva de tus piernas</strong>. Es un indicador directo de qué tan explosivo es tu primer paso y tu capacidad de salto en el juego.</p>
+
+<div class="how-h">¿Qué necesitás?</div>
+<p class="how-p">Una línea en el piso (puede ser la línea de la cancha), una cinta métrica o regla de al menos 2 metros.</p>
+
+<div class="how-diagram">
+<svg viewBox="0 0 280 80" width="100%" style="max-width:260px">
+  <rect x="30" y="55" width="220" height="4" rx="2" fill="#334155"/>
+  <!-- persona -->
+  <circle cx="50" cy="28" r="8" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="50" y1="36" x2="50" y2="52" stroke="#94a3b8" stroke-width="2"/>
+  <!-- flecha salto -->
+  <path d="M 55 45 Q 110 10 190 45" stroke="#f97316" stroke-width="2.5" fill="none" stroke-dasharray="4,3"/>
+  <polygon points="190,40 196,50 184,50" fill="#f97316"/>
+  <!-- medida -->
+  <line x1="50" y1="62" x2="190" y2="62" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="120" y="76" text-anchor="middle" fill="#38bdf8" font-size="9" font-family="sans-serif">← distancia →</text>
+  <text x="30" y="66" fill="#f97316" font-size="8" font-family="sans-serif">Línea</text>
+</svg></div>
+
+<div class="how-h">Instrucciones paso a paso</div>
+<ol class="how-steps">
+  <li>Parás con <strong>los dos pies juntos</strong> detrás de la línea, punteras sobre la línea.</li>
+  <li>Doblás las rodillas y balanceás los brazos.</li>
+  <li>Saltás hacia adelante con los <strong>dos pies</strong> a la vez, tan lejos como puedas.</li>
+  <li>Caés con los dos pies juntos y te quedás parado.</li>
+  <li>Se mide desde la línea de salida hasta <strong>el talón más cercano a la línea</strong> (el que quedó más atrás).</li>
+</ol>
+
+<div class="how-h">¿Cuántos intentos?</div>
+<p class="how-p">Hasta <strong>3 intentos</strong>. Descansá 1 minuto entre cada uno. La app toma el mejor automáticamente.</p>
+
+<div class="how-h">Errores que invalidan el intento</div>
+<p class="how-p">❌ Caer hacia atrás y apoyar las manos. ❌ Despegar de a un pie. ❌ No quedarte parado al caer.</p>
+
+<div class="how-warn">⚠️ Hacé 5 saltos suaves de calentamiento antes. Si el piso es resbaladizo, no lo hagas.</div>`
+  },
+  squat: {
+    title: '💪 Sentadillas en 30 segundos — Instrucciones',
+    body: `
+<div class="how-h">¿Qué mide?</div>
+<p class="how-p">La <strong>fuerza-resistencia del tren inferior</strong>. Cuántas veces podés hacer una sentadilla técnicamente correcta en 30 segundos. No es un test de fuerza máxima, sino de resistencia a la potencia.</p>
+
+<div class="how-h">¿Qué necesitás?</div>
+<p class="how-p">Solo vos misma, un piso plano y un cronómetro. No hace falta ningún equipamiento.</p>
+
+<div class="how-h">Instrucciones paso a paso</div>
+<ol class="how-steps">
+  <li>Parás con los <strong>pies a la altura de los hombros</strong>, puntas ligeramente hacia afuera.</li>
+  <li>Brazos extendidos hacia adelante para equilibrio.</li>
+  <li>Bajás hasta que los <strong>muslos queden paralelos al piso</strong> (o más abajo si podés).</li>
+  <li>Los talones deben estar apoyados en el piso en todo momento.</li>
+  <li>Las rodillas siguen la dirección de los pies, sin caerse hacia adentro.</li>
+  <li>Subís volviendo a la posición inicial. Eso es <strong>1 repetición válida</strong>.</li>
+  <li>Repetís lo más rápido que podés durante <strong>30 segundos</strong>.</li>
+</ol>
+
+<div class="how-h">¿Qué cuenta como válida?</div>
+<p class="how-p">Solo la repetición donde <strong>los muslos llegaron a paralelo</strong> y los talones no se despegaron. Si hacés un movimiento incompleto, no cuenta.</p>
+
+<div class="how-h">Cantidad de intentos</div>
+<p class="how-p">Un solo intento por sesión.</p>
+
+<div class="how-warn">⚠️ Si sentís dolor en las rodillas o espalda baja, detenete. Hacé 10 sentadillas lentas de calentamiento antes del test.</div>`
+  }
+};
+
+function tcOpenHow(key, e) {
+  if (e) e.stopPropagation();
+  const content = HOW_CONTENT[key];
+  if (!content) return;
+  document.getElementById('how-modal-title').textContent = content.title;
+  document.getElementById('how-modal-body').innerHTML    = content.body;
+  document.getElementById('how-modal-bg').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function howModalHide() {
+  document.getElementById('how-modal-bg').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function howModalClose(e) {
+  if (e.target === document.getElementById('how-modal-bg')) howModalHide();
+}
+
+// Audio Beep Test — URL configurable
+const BEEP_AUDIO_URL = 'https://www.youtube.com/watch?v=44Od78CnL8A';
+function playBeepAudio() {
+  if (!BEEP_AUDIO_URL) {
+    alert('🎧 El audio del Beep Test todavía no está configurado.\n\nPedile el link al coach o buscá "Beep Test audio 20m" en YouTube.');
+    return;
+  }
+  window.open(BEEP_AUDIO_URL, '_blank');
+}
+
+/* ── Init Tab Físico ── */
+function fisInit() {
+  fisLoadAntro();
+  // Precargar solo el primer test visible
+}
+
 </script>
 </body>
 </html>
