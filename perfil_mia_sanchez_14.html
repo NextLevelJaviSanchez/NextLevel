@@ -41,7 +41,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .kpi-val{font-size:1.25rem;font-weight:900;color:var(--ac);line-height:1}
 .kpi-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
 .nl-badge{flex-shrink:0;text-align:center}
-.nl-logo{background:linear-gradient(135deg,var(--ac),#dc2626);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;color:white;letter-spacing:-1px;margin:0 auto}
+.nl-logo{width:90px;height:auto;display:block;margin:0 auto}
 .nl-text{font-size:0.48rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
 
 /* TAB BAR */
@@ -195,8 +195,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         </div>
       </div>
       <div class="nl-badge">
-        <div class="nl-logo">NL</div>
-        <div class="nl-text">NextLevel</div>
+        <img class="nl-logo" src="logo_nextlevel.svg" alt="Next Level Basketball">
       </div>
     </div>
     <div class="hero-kpis">
@@ -724,55 +723,236 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ══════════════════════════════════════════ -->
 <div id="tab-perfil" class="tab-pane">
 
-  <div class="ncaa-box">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
-      <div>
-        <div style="font-size:0.58rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Player Profile — Recruiting Portfolio · Season 2026</div>
-        <div style="font-size:1.25rem;font-weight:900;letter-spacing:-0.5px">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
-        <div style="font-size:0.63rem;color:var(--muted);margin-top:3px">Shooting Guard / Small Forward · DOB: 2013 · Argentina 🇦🇷</div>
-        <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">
-          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🔥 #1 Scorer</span>
-          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">6.8 PPP Federal</span>
-          <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🌐 Federal Level</span>
+  <!-- ── FOTO + NOMBRE (header editable) ─────────────────────── -->
+  <div class="card" style="padding:20px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+      <!-- Avatar con upload -->
+      <div style="position:relative;flex-shrink:0">
+        <div id="pf-avatar"
+             onclick="document.getElementById('pf-foto-input').click()"
+             style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#c2410c,#f97316);
+                    display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;
+                    color:#fff;cursor:pointer;overflow:hidden;border:2.5px solid rgba(249,115,22,0.5);
+                    box-shadow:0 0 20px rgba(249,115,22,0.2)">
+          <span id="pf-avatar-txt">14</span>
+          <img id="pf-avatar-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:18px">
+        </div>
+        <div onclick="document.getElementById('pf-foto-input').click()"
+             style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;
+                    background:var(--ac);border:2px solid var(--bg);display:flex;align-items:center;
+                    justify-content:center;font-size:0.7rem;cursor:pointer;z-index:2" title="Cambiar foto">📷</div>
+        <input type="file" id="pf-foto-input" accept="image/*" style="display:none" onchange="pfLoadFoto(this)">
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:1.2rem;font-weight:900;color:var(--text)">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:2px">Dep. Berazategui · Escolta/Alero · #14</div>
+        <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">
+          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🔥 #1 Anotadora</span>
+          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🌐 Federal CABB</span>
         </div>
       </div>
-      <div style="background:linear-gradient(135deg,#c2410c,#f97316);border-radius:10px;padding:8px 11px;text-align:center;flex-shrink:0">
-        <div style="font-size:0.48rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#fed7aa">Season</div>
-        <div style="font-size:0.95rem;font-weight:900;color:#fff;line-height:1">2026</div>
-        <div style="font-size:0.48rem;color:#ffedd5;margin-top:1px">Argentina</div>
-      </div>
     </div>
-
-    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · 25 GP (AFMB + Federal CABB)</div>
-    <div class="g4" style="margin-bottom:14px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.8</div><div class="sc-lbl">PPP Federal</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.6</div><div class="sc-lbl">PPP AFMB</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPG</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">GP</div></div>
-    </div>
-
-    <div class="ncaa-quote">
-      <strong>"Elite scorer at metropolitan level (8.6 PPP / 20 GP in AFMB) and competitive at national level (6.8 PPP / 5 GP in La Liga Federal CABB)."</strong> Mía G. Sánchez is the primary offensive option for Berazategui U13, demonstrating a two-dimensional scoring profile: catch-and-shoot perimeter threat combined with drive-and-finish ability. Maintaining 6.8 PPP against top national programs confirms her scoring is not a product of weak local competition. Trajectory: 12-14 PPP in Cadetes 2027-2028.
-    </div>
-
-    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Skill Percentiles — vs U13 Argentina Shooting Guards</div>
-    <div id="ncaaRadarBars"></div>
-    <button class="btn-cv" onclick="exportCV()">📄 Exportar Mi Currículum (PDF)</button>
-    <div style="font-size:0.57rem;color:#334155;text-align:center;margin-top:6px">Chrome/Edge: Ctrl+P → Guardar como PDF</div>
+    <button onclick="document.getElementById('pf-foto-input').click()"
+            style="width:100%;padding:9px;border-radius:8px;background:rgba(249,115,22,0.08);
+                   border:1px solid rgba(249,115,22,0.25);color:#fb923c;font-size:0.7rem;
+                   font-weight:700;cursor:pointer;font-family:inherit">
+      📷 Cambiar foto de perfil
+    </button>
   </div>
 
+  <!-- ── DATOS FIJOS (solo lectura) ──────────────────────────── -->
   <div class="card">
-    <div class="card-ttl">👤 Datos del Perfil</div>
+    <div class="card-ttl">🔒 Datos Oficiales <span style="font-size:0.5rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(solo lectura — gestionados por el club)</span></div>
     <div class="profile-grid">
       <div class="profile-field"><div class="pf-lbl">Nombre completo</div><div class="pf-val">Mía G. Sánchez</div></div>
       <div class="profile-field"><div class="pf-lbl">Dorsal</div><div class="pf-val">#14</div></div>
-      <div class="profile-field"><div class="pf-lbl">Posición</div><div class="pf-val">Escolta / Alero (SG/SF)</div></div>
+      <div class="profile-field"><div class="pf-lbl">Posición</div><div class="pf-val">Escolta / Alero</div></div>
       <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
-      <div class="profile-field"><div class="pf-lbl">Competencias</div><div class="pf-val">AFMB + Federal CABB</div></div>
+      <div class="profile-field"><div class="pf-lbl">Competencias 2026</div><div class="pf-val">AFMB + Federal CABB</div></div>
       <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val">25 PJ totales</div></div>
-      <div class="profile-field"><div class="pf-lbl">Distinción</div><div class="pf-val">🔥 #1 Anotadora</div></div>
-      <div class="profile-field"><div class="pf-lbl">Temporada</div><div class="pf-val">2026</div></div>
     </div>
+  </div>
+
+  <!-- ── DATOS PERSONALES EDITABLES ──────────────────────────── -->
+  <div class="card">
+    <div class="card-ttl" style="justify-content:space-between">
+      ✏️ Mis Datos Personales
+      <span id="pf-saved-badge" style="font-size:0.55rem;color:var(--green);display:none">✅ Guardado</span>
+    </div>
+    <div class="g2" style="margin-bottom:12px">
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Fecha de nacimiento</div>
+        <input id="pf-fnac" type="date" oninput="pfSave()"
+               style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                      border-radius:8px;color:var(--text);font-size:0.82rem;padding:9px 11px;
+                      outline:none;font-family:inherit;transition:border .15s"
+               onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Mano hábil</div>
+        <select id="pf-mano" onchange="pfSave()"
+                style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                       border-radius:8px;color:var(--text);font-size:0.82rem;padding:9px 11px;
+                       outline:none;font-family:inherit;transition:border .15s"
+                onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <option value="">Seleccionar...</option>
+          <option value="D">Derecha</option>
+          <option value="I">Izquierda</option>
+          <option value="A">Ambidiestra</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="pf-lbl" style="margin-bottom:5px">Email de contacto</div>
+      <input id="pf-email" type="email" placeholder="tu@email.com" oninput="pfSave()"
+             style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                    border-radius:8px;color:var(--text);font-size:0.82rem;padding:9px 11px;
+                    outline:none;font-family:inherit"
+             onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    </div>
+    <div style="margin-bottom:0">
+      <div class="pf-lbl" style="margin-bottom:5px">WhatsApp (familia / representante)</div>
+      <input id="pf-wsp" type="tel" placeholder="+54 11 ..." oninput="pfSave()"
+             style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                    border-radius:8px;color:var(--text);font-size:0.82rem;padding:9px 11px;
+                    outline:none;font-family:inherit"
+             onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    </div>
+  </div>
+
+  <!-- ── ANTROPOMETRÍA EDITABLE ───────────────────────────────── -->
+  <div class="card">
+    <div class="card-ttl">📏 Antropometría</div>
+    <div style="font-size:0.65rem;color:var(--muted);margin-bottom:12px;line-height:1.5">
+      Actualizá tus medidas después de cada evaluación física. El coach puede ver los cambios en tiempo real.
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Altura (cm)</div>
+        <input id="pf-altura" type="number" min="100" max="220" placeholder="ej: 162" oninput="pfSave();pfCalcAntro()"
+               style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                      border-radius:8px;color:var(--text);font-size:1rem;font-weight:700;
+                      padding:10px 11px;outline:none;font-family:inherit;text-align:center"
+               onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Peso (kg)</div>
+        <input id="pf-peso" type="number" min="30" max="120" step="0.1" placeholder="ej: 54.5" oninput="pfSave();pfCalcAntro()"
+               style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                      border-radius:8px;color:var(--text);font-size:1rem;font-weight:700;
+                      padding:10px 11px;outline:none;font-family:inherit;text-align:center"
+               onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Envergadura (cm)</div>
+        <input id="pf-enverg" type="number" min="100" max="230" placeholder="ej: 165" oninput="pfSave();pfCalcAntro()"
+               style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                      border-radius:8px;color:var(--text);font-size:1rem;font-weight:700;
+                      padding:10px 11px;outline:none;font-family:inherit;text-align:center"
+               onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+      <div>
+        <div class="pf-lbl" style="margin-bottom:5px">Alcance parada (cm)</div>
+        <input id="pf-alcance" type="number" min="150" max="320" placeholder="ej: 210" oninput="pfSave()"
+               style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                      border-radius:8px;color:var(--text);font-size:1rem;font-weight:700;
+                      padding:10px 11px;outline:none;font-family:inherit;text-align:center"
+               onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+    </div>
+    <!-- Valores calculados automáticamente -->
+    <div id="pf-antro-derived" style="display:none;background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:12px;margin-top:4px">
+      <div style="font-size:0.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Calculado automáticamente</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+        <div>
+          <div id="pf-imc" style="font-size:1.1rem;font-weight:900;color:var(--ac)">—</div>
+          <div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">IMC</div>
+        </div>
+        <div>
+          <div id="pf-ratio-env" style="font-size:1.1rem;font-weight:900;color:var(--cyan)">—</div>
+          <div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Env/Altura</div>
+        </div>
+        <div>
+          <div id="pf-talla-jug" style="font-size:0.75rem;font-weight:700;color:var(--green);line-height:1.2">—</div>
+          <div style="font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Perfil físico</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div class="pf-lbl" style="margin-bottom:5px">Talla de calzado</div>
+      <input id="pf-calzado" type="number" min="30" max="50" step="0.5" placeholder="ej: 39" oninput="pfSave()"
+             style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                    border-radius:8px;color:var(--text);font-size:0.9rem;padding:9px 11px;
+                    outline:none;font-family:inherit"
+             onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    </div>
+    <div style="font-size:0.58rem;color:var(--muted);margin-top:8px">
+      📅 Última actualización: <span id="pf-antro-fecha">—</span>
+    </div>
+  </div>
+
+  <!-- ── OBJETIVO Y ÁREA DE TRABAJO ──────────────────────────── -->
+  <div class="card">
+    <div class="card-ttl">🎯 Mi Objetivo esta Temporada</div>
+    <div style="margin-bottom:12px">
+      <div class="pf-lbl" style="margin-bottom:5px">¿Cuál es tu objetivo principal?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px" id="pf-obj-chips">
+        <div class="pf-chip" onclick="pfSelectObj(this,'Liga Nacional')" data-val="Liga Nacional">🏀 Liga Nacional</div>
+        <div class="pf-chip" onclick="pfSelectObj(this,'Beca NCAA/NAIA')" data-val="Beca NCAA/NAIA">🎓 Beca NCAA/NAIA</div>
+        <div class="pf-chip" onclick="pfSelectObj(this,'Selección Argentina')" data-val="Selección Argentina">🇦🇷 Selección Argentina</div>
+        <div class="pf-chip" onclick="pfSelectObj(this,'Mejorar técnica')" data-val="Mejorar técnica">📈 Mejorar técnica</div>
+        <div class="pf-chip" onclick="pfSelectObj(this,'Disfrutar el juego')" data-val="Disfrutar el juego" style="grid-column:span 2">❤️ Disfrutar el juego</div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="pf-lbl" style="margin-bottom:5px">Área que más querés mejorar</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px" id="pf-area-chips">
+        <div class="pf-chip" onclick="pfSelectArea(this,'Tiro exterior')" data-val="Tiro exterior">🏹 Tiro exterior</div>
+        <div class="pf-chip" onclick="pfSelectArea(this,'Defensa')" data-val="Defensa">🛡️ Defensa</div>
+        <div class="pf-chip" onclick="pfSelectArea(this,'Físico')" data-val="Físico">💪 Físico</div>
+        <div class="pf-chip" onclick="pfSelectArea(this,'Manejo pelota')" data-val="Manejo pelota">🔄 Manejo pelota</div>
+        <div class="pf-chip" onclick="pfSelectArea(this,'Mental')" data-val="Mental">🧠 Mental</div>
+        <div class="pf-chip" onclick="pfSelectArea(this,'Tiro libre')" data-val="Tiro libre">🎯 Tiro libre</div>
+      </div>
+    </div>
+    <div>
+      <div class="pf-lbl" style="margin-bottom:5px">Algo más que quieras que sepa el coach</div>
+      <textarea id="pf-nota" rows="3" placeholder="Ej: Quiero mejorar mi mano izquierda para Cadetes..." oninput="pfSave()"
+                style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,0.08);
+                       border-radius:8px;color:var(--text);font-size:0.82rem;padding:10px 12px;
+                       outline:none;font-family:inherit;resize:vertical;min-height:70px;line-height:1.55"
+                onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
+    </div>
+  </div>
+
+  <!-- ── MI CURRÍCULUM (PDF export) ──────────────────────────── -->
+  <div class="ncaa-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <div style="font-size:0.56rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Player Profile — Recruiting Portfolio · Season 2026</div>
+        <div style="font-size:1.15rem;font-weight:900;letter-spacing:-0.5px">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">Shooting Guard / SF · DOB: 2013 · Argentina 🇦🇷</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#c2410c,#f97316);border-radius:10px;padding:7px 10px;text-align:center;flex-shrink:0">
+        <div style="font-size:0.45rem;font-weight:800;text-transform:uppercase;color:#fed7aa">Season</div>
+        <div style="font-size:0.9rem;font-weight:900;color:#fff">2026</div>
+      </div>
+    </div>
+    <div class="g4" style="margin-bottom:12px">
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.8</div><div class="sc-lbl">PPP Fed</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.6</div><div class="sc-lbl">PPP AFMB</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPP</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">PJ</div></div>
+    </div>
+    <div class="ncaa-quote">
+      <strong>"Elite scorer at metropolitan level (8.6 PPP / 20 GP in AFMB) and competitive at national level (6.8 PPP / 5 GP in La Liga Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. Trajectory: 12-14 PPP in Cadetes 2027-2028.
+    </div>
+    <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Skill Percentiles — vs U13 Argentina SG</div>
+    <div id="ncaaRadarBars"></div>
+    <button class="btn-cv" onclick="exportCV()" style="margin-top:14px">📄 Exportar Mi Currículum (PDF)</button>
+    <div style="font-size:0.55rem;color:#334155;text-align:center;margin-top:5px">Chrome/Edge: Ctrl+P → Guardar como PDF</div>
   </div>
 
 </div><!-- /tab-perfil -->
