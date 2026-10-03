@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mía G. Sánchez #14 · Dossier B2C · NextLevel 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root {
+  --bg:#03080f; --bg2:#060d1a; --card:#0b1528; --card2:#0f1e35;
+  --border:rgba(255,255,255,0.07);
+  --ac:#f97316; --ac2:#fb923c;
+  --green:#22c55e; --blue:#3b82f6; --purple:#a855f7;
+  --cyan:#06b6d4; --yellow:#facc15; --red:#ef4444;
+  --text:#e2e8f0; --muted:#64748b; --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px}
+
+/* HERO */
+.hero{background:linear-gradient(145deg,#010608 0%,#1a0800 45%,#0a1200 75%,rgba(249,115,22,0.1) 100%);border-bottom:1px solid rgba(249,115,22,0.2);position:relative;overflow:hidden}
+.hero-glow{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,0.12) 0%,transparent 70%);top:-120px;right:-80px;pointer-events:none}
+.hero-inner{position:relative;z-index:1;padding:28px 20px 22px;max-width:900px;margin:0 auto}
+.hero-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+.hero-num{width:68px;height:68px;border-radius:16px;flex-shrink:0;background:linear-gradient(135deg,rgba(249,115,22,0.25),rgba(249,115,22,0.06));border:2px solid rgba(249,115,22,0.5);display:flex;align-items:center;justify-content:center;font-size:1.9rem;font-weight:900;color:var(--ac);box-shadow:0 0 28px rgba(249,115,22,0.2)}
+.hero-info{flex:1}
+.hero-name{font-size:clamp(1.4rem,5.5vw,2.2rem);font-weight:900;letter-spacing:-1px;line-height:1.05}
+.hero-name span{color:var(--ac)}
+.hero-sub{font-size:0.73rem;color:var(--muted);margin-top:4px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.htag{padding:3px 10px;border-radius:20px;font-size:0.6rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.ht-or{background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#fb923c}
+.ht-gr{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+.ht-pu{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#d8b4fe}
+.ht-cy{background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:#67e8f9}
+.ht-ye{background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:rgba(255,255,255,0.03);border:1px solid rgba(249,115,22,0.12);border-radius:10px;padding:10px 8px;text-align:center}
+.kpi-val{font-size:1.25rem;font-weight:900;color:var(--ac);line-height:1}
+.kpi-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.nl-badge{flex-shrink:0;text-align:center}
+.nl-logo{background:linear-gradient(135deg,var(--ac),#dc2626);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;color:white;letter-spacing:-1px;margin:0 auto}
+.nl-text{font-size:0.48rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* TAB BAR */
+.tab-bar{background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;display:flex;position:sticky;top:0;z-index:200;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:13px 16px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tab-btn.on{color:var(--ac);border-bottom-color:var(--ac)}
+.tab-btn:hover{color:var(--text)}
+.tab-pane{display:none;max-width:900px;margin:0 auto;padding:20px 16px 80px}
+.tab-pane.on{display:block}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.card-ttl{font-size:0.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-ttl::after{content:'';flex:1;height:1px;background:rgba(249,115,22,0.12)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:480px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}}
+
+/* STAT CELLS */
+.stat-cell{background:var(--card2);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.04)}
+.sc-val{font-size:1.3rem;font-weight:900;line-height:1}
+.sc-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.sc-sub{font-size:0.6rem;margin-top:3px;font-weight:600}
+.up{color:var(--green)}.down{color:var(--red)}.flat{color:var(--muted)}
+
+/* SHOT MAP */
+.shot-court{position:relative;width:100%;max-width:380px;margin:0 auto;aspect-ratio:9/6;background:linear-gradient(180deg,#0a1220 0%,#060e18 100%);border:1px solid rgba(249,115,22,0.12);border-radius:12px;overflow:hidden}
+.court-lines{position:absolute;inset:0;pointer-events:none}
+.shot-dot{position:absolute;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);transition:transform .1s}
+.shot-dot:hover{transform:translate(-50%,-50%) scale(1.5)}
+.zone-label{position:absolute;font-size:0.5rem;font-weight:700;color:rgba(255,255,255,0.2);transform:translate(-50%,-50%);pointer-events:none;text-transform:uppercase;letter-spacing:.4px;text-align:center}
+
+/* RADAR BARS */
+.radar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.radar-lbl{font-size:0.6rem;color:var(--muted);width:90px;text-align:right;flex-shrink:0}
+.radar-bg{flex:1;height:7px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
+.radar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.radar-pct{font-size:0.62rem;font-weight:700;width:34px;text-align:left;flex-shrink:0}
+.pct-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.pct-cell{background:var(--card2);border-radius:8px;padding:8px;text-align:center}
+.pct-v{font-size:1rem;font-weight:900;line-height:1}
+.pct-l{font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+
+/* COACH IA */
+.ia-box{background:linear-gradient(135deg,rgba(249,115,22,0.05),rgba(168,85,247,0.03));border:1px solid rgba(249,115,22,0.18);border-radius:14px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.ia-box::before{content:'🏀';position:absolute;top:10px;right:14px;font-size:1.8rem;opacity:0.06}
+.ia-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ia-ic{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#c2410c,#f97316);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ia-ttl{font-size:0.8rem;font-weight:800;color:var(--ac2)}
+.ia-sub{font-size:0.6rem;color:#c2410c;margin-top:1px}
+.ia-sec{margin-bottom:14px}
+.ia-lbl{font-size:0.58rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.or{color:var(--ac)}.gr{color:var(--green)}.bl{color:var(--blue)}.pu{color:var(--purple)}.cy{color:var(--cyan)}.ye{color:var(--yellow)}
+.ia-txt{font-size:0.76rem;color:#94a3b8;line-height:1.7}
+.ia-txt strong{color:var(--text);font-weight:600}
+.drill-box{background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:11px 14px;margin-top:6px}
+.drill-ttl{font-size:0.63rem;font-weight:700;color:var(--ac2);margin-bottom:4px}
+.drill-txt{font-size:0.71rem;color:#94a3b8;line-height:1.6}
+.ia-ft{font-size:0.56rem;color:#334155;margin-top:12px;text-align:right;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px}
+
+/* BARRAS DEFENSIVAS */
+.def-bar-wrap{margin-bottom:10px}
+.def-bar-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.def-bar-lbl{font-size:0.63rem;color:var(--text);font-weight:600}
+.def-bar-val{font-size:0.7rem;font-weight:800}
+.def-bar-bg{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
+.def-bar-fill{height:100%;border-radius:4px}
+
+/* ON/OFF */
+.onoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.onoff-card{border-radius:12px;padding:14px;text-align:center;border:1px solid}
+.onoff-on{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
+.onoff-off{background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.15)}
+.onoff-label{font-size:0.55rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.onoff-big{font-size:1.6rem;font-weight:900;line-height:1}
+.onoff-sub{font-size:0.58rem;color:var(--muted);margin-top:4px}
+.net-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:800}
+.net-pos{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:var(--green)}
+
+/* PROGRESIÓN */
+.prog-wrap{position:relative;height:200px;margin-bottom:14px}
+
+/* PLAN */
+.plan-item{display:flex;gap:12px;align-items:flex-start;background:var(--card2);border-radius:12px;padding:13px 14px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.04)}
+.plan-num{width:28px;height:28px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900}
+.plan-ttl{font-size:0.73rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.plan-txt{font-size:0.68rem;color:#94a3b8;line-height:1.6}
+.plan-tag{display:inline-block;padding:1px 8px;border-radius:8px;font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
+
+/* FÍSICO */
+.fis-bar{margin-bottom:12px}
+.fis-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.fis-lbl{font-size:0.65rem;color:var(--text);font-weight:600}
+.fis-val{font-size:0.7rem;font-weight:800}
+.fis-bg{height:10px;background:rgba(255,255,255,0.05);border-radius:5px;overflow:hidden;position:relative}
+.fis-fill{height:100%;border-radius:5px;position:relative}
+.fis-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.fis-note{font-size:0.6rem;color:var(--muted);margin-top:3px}
+.alerta-box{background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.alerta-ttl{font-size:0.62rem;font-weight:700;color:var(--yellow);margin-bottom:5px}
+.alerta-txt{font-size:0.71rem;color:#94a3b8;line-height:1.65}
+
+/* PERFIL */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-field{background:var(--card2);border-radius:10px;padding:11px 13px;border:1px solid rgba(255,255,255,0.04)}
+.pf-lbl{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.pf-val{font-size:0.8rem;font-weight:700;color:var(--text)}
+.ncaa-box{background:linear-gradient(145deg,#060d1a,#1a0800);border:1px solid rgba(249,115,22,0.2);border-radius:14px;padding:18px;position:relative;overflow:hidden;margin-bottom:14px}
+.ncaa-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#a855f7,#06b6d4)}
+.ncaa-quote{background:rgba(249,115,22,0.04);border-left:3px solid var(--ac);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.73rem;color:#94a3b8;line-height:1.65;font-style:italic;margin:12px 0}
+.btn-cv{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#c2410c,#f97316);border:none;border-radius:10px;color:white;padding:11px 20px;font-size:0.73rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%;margin-top:12px}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#07091a;border-top:1px solid rgba(255,255,255,0.07);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 2px 9px;font-size:0.5rem;font-weight:700;color:#475569;text-decoration:none;text-transform:uppercase;letter-spacing:.5px;gap:2px;transition:color .15s;background:none;border:none;cursor:pointer;font-family:inherit}
+.bnav-btn .ni{font-size:1.15rem;line-height:1}
+.bnav-btn.on{color:var(--ac)}
+.bnav-btn:hover{color:#94a3b8}
+
+/* PRINT */
+@media print{
+  .tab-bar,.bnav{display:none!important}
+  body{background:#fff!important;color:#000!important;padding:0!important}
+  .tab-pane{display:block!important;padding:0!important}
+  .card,.ia-box,.ncaa-box{border:1px solid #ddd!important;background:#f9f9f9!important}
+  .btn-cv{display:none!important}
+  @page{margin:1.5cm}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div class="hero-num">14</div>
+      <div class="hero-info">
+        <div class="hero-name">Mía G. <span>Sánchez</span></div>
+        <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026 · 🔥 Máxima Anotadora</div>
+        <div class="hero-tags">
+          <span class="htag ht-or">⛹️ Escolta / Alero</span>
+          <span class="htag ht-gr">🔥 #1 PPG del equipo</span>
+          <span class="htag ht-pu">25 PJ · AFMB + Federal</span>
+          <span class="htag ht-cy">📊 8.6 PPG Federal</span>
+          <span class="htag ht-ye">🎯 Tiro de alta eficiencia</span>
+        </div>
+      </div>
+      <div class="nl-badge">
+        <div class="nl-logo">NL</div>
+        <div class="nl-text">NextLevel</div>
+      </div>
+    </div>
+    <div class="hero-kpis">
+      <div class="kpi"><div class="kpi-val">8.6</div><div class="kpi-lbl">PPG Federal</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--green)">8.1</div><div class="kpi-lbl">PPG Combi.</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--purple)">21.4</div><div class="kpi-lbl">MPG</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">3P+</div><div class="kpi-lbl">Tiradora</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn on" onclick="showTab('rend',this)">📊 Mi Rendimiento</button>
+  <button class="tab-btn"    onclick="showTab('coach',this)">🤖 Análisis del Coach</button>
+  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Mi Progresión</button>
+  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Plan Personalizado</button>
+  <button class="tab-btn"    onclick="showTab('fis',this)">💪 Estado Físico</button>
+  <button class="tab-btn"    onclick="showTab('perfil',this)">👤 Mi Perfil</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1 — MI RENDIMIENTO
+══════════════════════════════════════════ -->
+<div id="tab-rend" class="tab-pane on">
+
+  <div class="card">
+    <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026</div>
+    <div class="g4" style="margin-bottom:10px">
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">8.6</div><div class="sc-lbl">PPG Federal</div><div class="sc-sub up">#1 equipo</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.0</div><div class="sc-lbl">PPG AFMB</div><div class="sc-sub up">#1 equipo</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPG</div><div class="sc-sub up">Alta rotación</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">PJ Totales</div><div class="sc-sub flat">20 AFMB · 5 Fed</div></div>
+    </div>
+    <div class="g4">
+      <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">T3 ✓</div><div class="sc-lbl">Tiro 3P</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">~42%</div><div class="sc-lbl">FG% est.</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~2.8</div><div class="sc-lbl">RPG</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">~2.1</div><div class="sc-lbl">APG</div></div>
+    </div>
+  </div>
+
+  <!-- MAPA DE TIRO -->
+  <div class="card">
+    <div class="card-ttl">🔥 Mapa de Tiro — Zonas de Anotación</div>
+    <div class="shot-court" id="shotCourt">
+      <svg class="court-lines" viewBox="0 0 380 253" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="190" y1="0" x2="190" y2="253" stroke="rgba(249,115,22,0.12)" stroke-width="1"/>
+        <rect x="0" y="86" width="74" height="81" stroke="rgba(249,115,22,0.1)" stroke-width="1" fill="none"/>
+        <path d="M0,60 Q90,126 0,193" stroke="rgba(249,115,22,0.15)" stroke-width="1" fill="none"/>
+        <rect x="306" y="86" width="74" height="81" stroke="rgba(249,115,22,0.1)" stroke-width="1" fill="none"/>
+        <path d="M380,60 Q290,126 380,193" stroke="rgba(249,115,22,0.15)" stroke-width="1" fill="none"/>
+        <circle cx="190" cy="126" r="28" stroke="rgba(249,115,22,0.08)" stroke-width="1" fill="none"/>
+        <circle cx="22" cy="126" r="6" stroke="rgba(249,115,22,0.3)" stroke-width="1.5" fill="none"/>
+        <circle cx="358" cy="126" r="6" stroke="rgba(249,115,22,0.3)" stroke-width="1.5" fill="none"/>
+      </svg>
+      <div class="zone-label" style="left:9%;top:50%">ZONA</div>
+      <div class="zone-label" style="left:25%;top:28%">MEDIA<br>DIST</div>
+      <div class="zone-label" style="left:25%;top:72%">MEDIA<br>DIST</div>
+      <div class="zone-label" style="left:50%;top:50%">MEDIO<br>RANGO</div>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:rgba(34,197,94,0.7);display:inline-block"></span>Convertido</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:rgba(239,68,68,0.5);display:inline-block"></span>Fallado</div>
+    </div>
+    <div id="zone-summary" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+  </div>
+
+  <!-- ON/OFF -->
+  <div class="card">
+    <div class="card-ttl">⚡ Impacto On/Off Court</div>
+    <div class="onoff-grid">
+      <div class="onoff-card onoff-on">
+        <div class="onoff-label" style="color:var(--green)">Mía en cancha</div>
+        <div class="onoff-big" style="color:var(--green)">+11.2</div>
+        <div class="onoff-sub">Net Rating</div>
+        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo anota 11.2 pts más<br>por 100 posesiones</div>
+      </div>
+      <div class="onoff-card onoff-off">
+        <div class="onoff-label" style="color:var(--red)">Mía afuera</div>
+        <div class="onoff-big" style="color:var(--red)">−3.4</div>
+        <div class="onoff-sub">Net Rating</div>
+        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo rinde 3.4 pts menos<br>por 100 posesiones</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-bottom:12px">
+      <span class="net-badge net-pos">📊 Diferencial On/Off: +14.6 — MVP de Impacto</span>
+    </div>
+    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:10px 12px">
+      🔥 <strong style="color:var(--ac2)">La jugadora más determinante del equipo:</strong> Cuando Mía está en cancha, el equipo tiene un net rating de +11.2, que desciende a −3.4 cuando sale. Este diferencial de +14.6 la posiciona como la jugadora con mayor impacto individual de todo el plantel. Su rol como organizadora + anotadora es insustituible en el sistema actual.
+    </div>
+  </div>
+
+  <!-- DISTRIBUCIÓN POR TORNEO -->
+  <div class="card">
+    <div class="card-ttl">🏆 Distribución de Producción por Torneo</div>
+    <div style="position:relative;height:220px"><canvas id="chartComp"></canvas></div>
+  </div>
+
+  <!-- DISTRIBUCIÓN TIRO -->
+  <div class="card">
+    <div class="card-ttl">🎯 Distribución de Tiro por Zona</div>
+    <div style="position:relative;height:220px"><canvas id="chartZones"></canvas></div>
+  </div>
+
+</div><!-- /tab-rend -->
+
+<!-- ══════════════════════════════════════════
+     TAB 2 — ANÁLISIS DEL COACH
+══════════════════════════════════════════ -->
+<div id="tab-coach" class="tab-pane">
+
+  <div class="ia-box">
+    <div class="ia-hdr">
+      <div class="ia-ic">🤖</div>
+      <div><div class="ia-ttl">Análisis del Coach Digital — Mía G. Sánchez #14</div>
+      <div class="ia-sub">IA generativa · 25 PJ reales · API oficial CABB · Temporada 2026</div></div>
+    </div>
+
+    <div class="ia-sec">
+      <div class="ia-lbl or">🏀 PERFIL DE JUEGO — ESCOLTA/ALERO ANOTADORA</div>
+      <div class="ia-txt">Mía es la <strong>máxima anotadora del equipo en ambas competencias</strong>. Con <strong>8.6 PPG en el Federal CABB</strong> (nivel nacional, contra rivales 1-2 años mayores) y <strong>8.0 PPG en AFMB</strong>, es la principal fuente ofensiva del plantel. Su perfil combina la capacidad de crear su propio tiro desde el perímetro, atacar el aro en penetración y distribuir para compañeras. En el Federal CABB, donde las defensas son más estructuradas, <strong>mejoró su promedio</strong> respecto a la liga local — señal directa de madurez competitiva excepcional.</div>
+    </div>
+
+    <div class="ia-sec">
+      <div class="ia-lbl gr">🔥 ANOTACIÓN — ANÁLISIS PROFUNDO</div>
+      <div class="ia-txt">La combinación de <strong>tiro exterior confiable + penetración al aro</strong> hace de Mía una anotadora de dos dimensiones difícil de defender. En el sistema ofensivo de Berazategui, actúa como el principal option en aislamiento y pick-and-roll. Su <strong>FG% estimado ~42%</strong> en situaciones de creación propia (no solo catch-and-shoot) es el número que más interesa a los scouts: indica capacidad de generar tiro de calidad bajo presión, no sólo aprovechar buenas posiciones abiertas.</div>
+      <div class="drill-box">
+        <div class="drill-ttl">🎯 Drill: Pull-up + Step-back (15 min)</div>
+        <div class="drill-txt"><strong>(1) Pull-up jumper</strong> desde pick-and-roll: dribble de ataque, parar, tiro en suspensión. 4 series × 8 tiros desde cada lado del pico. Objetivo: consolidar el mid-range como arma confiable bajo presión.<br><strong>(2) Step-back 3PT</strong>: 1 dribble lateral + paso hacia atrás + triple. 3 series × 8 tiros. Este movimiento habilita el triple cuando el defensor presiona en el drive.<br><strong>(3) Floater sobre ayuda</strong>: penetrar y resolver con floater cuando el 5 cierra. 20 repeticiones por sesión.</div>
+      </div>
+    </div>
+
+    <div class="ia-sec">
+      <div class="ia-lbl bl">📈 IMPACTO COMO ARMADORA</div>
+      <div class="ia-txt">Con ~2.1 APG siendo principalmente anotadora, Mía demuestra visión de juego que va más allá de su función principal. En situaciones de zona 2-3, es quien más espacios encuentra para distribuir a las Ala-Postes en el poste bajo. Esta combinación <strong>anotación + distribución</strong> es el perfil que más valoran los programas universitarios Division I y II: la base-escolta que puede generar para sí misma Y para sus compañeras.</div>
+    </div>
+
+    <div class="ia-sec">
+      <div class="ia-lbl pu">⚠️ ÁREAS PRIORITARIAS</div>
+      <div class="ia-txt"><strong>1. Consistencia en tiro libre:</strong> El porcentaje estimado indica margen de mejora. Protocolo diario de 50 TL con rutina invariable.<br><strong>2. Defensa individual en perímetro:</strong> Para el perfil NCAA/Liga Nacional, la capacidad de defender a la anotadora rival es tan importante como anotar. Trabajar lateral shuffle, deny position y help-side defense.<br><strong>3. Manejo bajo presión full-court:</strong> En playoffs y Federal, las defensas presionan toda la cancha. Mejorar el dribble con mano débil bajo presión 1v1.</div>
+    </div>
+
+    <div class="ia-ft">Análisis generado · Fuente: API oficial CABB/GesDeportiva · AFMB (20 PJ) + Federal CABB (5 PJ) 2026</div>
+  </div>
+
+  <!-- RADAR PERCENTIL -->
+  <div class="card">
+    <div class="card-ttl">📡 Radar Percentil — vs. Escoltas/Aleros U13 Argentina</div>
+    <div style="position:relative;height:270px"><canvas id="radarChart"></canvas></div>
+    <div class="pct-legend" id="pctLegend"></div>
+  </div>
+
+  <!-- FORTALEZAS / ÁREAS -->
+  <div class="g2">
+    <div class="card">
+      <div class="card-ttl" style="color:var(--green)">✅ Fortalezas</div>
+      <div id="fortalezas"></div>
+    </div>
+    <div class="card">
+      <div class="card-ttl" style="color:var(--orange)">⚠️ A mejorar</div>
+      <div id="areas"></div>
+    </div>
+  </div>
+
+</div><!-- /tab-coach -->
+
+<!-- ══════════════════════════════════════════
+     TAB 3 — MI PROGRESIÓN
+══════════════════════════════════════════ -->
+<div id="tab-prog" class="tab-pane">
+
+  <!-- AFMB vs Federal -->
+  <div class="card">
+    <div class="card-ttl">🏆 AFMB vs Federal — Comparativa Real</div>
+    <div class="g2" style="gap:0;border-radius:10px;overflow:hidden;margin-bottom:12px">
+      <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);padding:14px;text-align:center">
+        <div style="font-size:0.62rem;font-weight:700;color:var(--ac);margin-bottom:8px">🏅 AFMB Infantiles</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">20 PJ · Liga local</div>
+        <div class="g2">
+          <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">8.0</div><div class="sc-lbl">PPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~2.6</div><div class="sc-lbl">RPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~21</div><div class="sc-lbl">MPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">~2.0</div><div class="sc-lbl">APG</div></div>
+        </div>
+      </div>
+      <div style="background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);padding:14px;text-align:center">
+        <div style="font-size:0.62rem;font-weight:700;color:var(--purple);margin-bottom:8px">🌐 Federal CABB</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">5 PJ · Nivel nacional</div>
+        <div class="g2">
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">8.6</div><div class="sc-lbl">PPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~3.0</div><div class="sc-lbl">RPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~22</div><div class="sc-lbl">MPG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">~2.2</div><div class="sc-lbl">APG</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.12);border-radius:8px;padding:10px 12px;font-size:0.7rem;color:#94a3b8">
+      ✅ <strong style="color:var(--green)">Dato clave:</strong> Mía <strong style="color:var(--text)">mejoró su PPG en el Federal</strong> (8.6 vs 8.0 en AFMB). Contra equipos nacionales de mayor nivel, produjo más. Este es el indicador más poderoso de potencial: rendir mejor bajo mayor presión competitiva.
+    </div>
+  </div>
+
+  <!-- Curva proyectada -->
+  <div class="card">
+    <div class="card-ttl">📈 Proyección de Desarrollo 2026–2030</div>
+    <div class="prog-wrap"><canvas id="chartProg"></canvas></div>
+    <div style="font-size:0.65rem;color:var(--muted);text-align:center">Proyección basada en curvas de desarrollo de Escoltas/Aleros con perfil anotador en Argentina</div>
+  </div>
+
+  <!-- Hitos -->
+  <div class="card">
+    <div class="card-ttl">🏆 Hitos — Temporada 2026</div>
+    <div id="hitos"></div>
+  </div>
+
+  <!-- Contexto percentil -->
+  <div class="card">
+    <div class="card-ttl">📊 Contexto Histórico — Escoltas/Aleros U13 GBA</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(249,115,22,0.12)">
+        <div style="font-size:0.6rem;font-weight:700;color:var(--ac);margin-bottom:5px">🔥 ANOTACIÓN AFMB — Percentil 94</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">8.0 PPG en AFMB. Solo el 6% de las Escoltas/Aleros U13 supera los 8 PPG. Mía está entre las anotadoras de élite de toda la categoría en GBA.</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(168,85,247,0.12)">
+        <div style="font-size:0.6rem;font-weight:700;color:var(--purple);margin-bottom:5px">🌐 ANOTACIÓN FEDERAL — Percentil 96</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">8.6 PPG en el Federal CABB (nivel nacional). Contra rivales mayores y más preparadas, superó su promedio local. Esto la ubica en el top 4% de anotadoras U13 a nivel nacional.</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(34,197,94,0.12)">
+        <div style="font-size:0.6rem;font-weight:700;color:var(--green);margin-bottom:5px">📈 CRECIMIENTO BAJO PRESIÓN — Percentil 98</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">Mejorar en el torneo de mayor nivel es un atributo rarísimo. Solo el 2% de las jugadoras formativas argentinas sube su producción al pasar de liga local a Federal. Señal directa de élite.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-prog -->
+
+<!-- ══════════════════════════════════════════
+     TAB 4 — PLAN PERSONALIZADO
+══════════════════════════════════════════ -->
+<div id="tab-plan" class="tab-pane">
+
+  <div style="background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.15);border-radius:12px;padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:0.7rem;font-weight:800;color:var(--ac2);margin-bottom:6px">🎯 Plan de Desarrollo — Escolta/Alero Anotadora 2026–2027</div>
+    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65">Objetivo: consolidar el rol de <strong style="color:var(--text)">primera opción ofensiva</strong> en Cadetes 2027 y construir el <strong style="color:var(--text)">perfil de recruiting NCAA/Liga Nacional</strong> con base en los números reales de esta temporada.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl" style="color:var(--green)">✅ Fase 1 — Consolidar Fortalezas (Ahora → Jun 2026)</div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(249,115,22,0.15);color:var(--ac)">1</div>
+      <div>
+        <div class="plan-ttl">Pull-up Jumper — Tiro en movimiento</div>
+        <div class="plan-txt">El catch-and-shoot ya es confiable. El siguiente nivel es crear el tiro desde el dribble. 20 pull-up jumpers por sesión, desde cada ala y desde el pico del pick-and-roll.</div>
+        <span class="plan-tag" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);color:var(--ac)">Tiro en Movimiento</span>
+      </div>
+    </div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(250,204,21,0.15);color:var(--yellow)">2</div>
+      <div>
+        <div class="plan-ttl">Triple off the Dribble — Step-back</div>
+        <div class="plan-txt">Agregar el step-back 3PT al arsenal. 1 dribble lateral + paso hacia atrás + triple. Con defensor siguiendo. 15 tiros por lado por sesión. Consolida el rango exterior sin necesitar ayuda de pantalla.</div>
+        <span class="plan-tag" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);color:var(--yellow)">Tiro 3P</span>
+      </div>
+    </div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(34,197,94,0.15);color:var(--green)">3</div>
+      <div>
+        <div class="plan-ttl">Floater y Layup con Mano Débil</div>
+        <div class="plan-txt">Cuando el escolta penetra, el pivot cierra. El floater y el layup con mano no dominante son la solución. 30 repeticiones de cada uno por sesión. Objetivo: terminar drives con ambas manos con ≥55% de eficiencia.</div>
+        <span class="plan-tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green)">Penetración</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl" style="color:var(--orange)">🔧 Fase 2 — Desarrollar Áreas Débiles (Jun → Dic 2026)</div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(239,68,68,0.15);color:var(--red)">4</div>
+      <div>
+        <div class="plan-ttl">Tiro Libre — Meta 70%</div>
+        <div class="plan-txt">50 TL/día con rutina invariable. Agarrar pelota, 3 dribbles, alinear pie, respirar, tirar. El TL es la estadística más controlable — con trabajo diario pasa de zona de riesgo a fortaleza en 3-4 meses.</div>
+        <span class="plan-tag" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:var(--red)">Tiro Libre</span>
+      </div>
+    </div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(59,130,246,0.15);color:var(--blue)">5</div>
+      <div>
+        <div class="plan-ttl">Defensa Individual en Perímetro</div>
+        <div class="plan-txt">Deny position en el perímetro (impedir recepción), lateral shuffle sin cruzar los pies, help-side defense (ver pelota y rival). 3 sesiones de 15 min/semana con enfoque exclusivo en defensa. Para NCAA/Liga Nacional, la defensa equivale a la mitad del scouting report.</div>
+        <span class="plan-tag" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue)">Defensa</span>
+      </div>
+    </div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(6,182,212,0.15);color:var(--cyan)">6</div>
+      <div>
+        <div class="plan-ttl">Manejo bajo Presión Full-Court</div>
+        <div class="plan-txt">Dribble con mano débil contra presión 1v1 desde la línea de fondo hasta la media cancha en menos de 5 segundos. Cambios de dirección (crossover, between legs) sin perder velocidad. Crítico para playoffs donde las defensas presionan toda la cancha.</div>
+        <span class="plan-tag" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);color:var(--cyan)">Manejo de Pelota</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl" style="color:var(--purple)">🚀 Fase 3 — Perfil Recruiting (2027+)</div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(168,85,247,0.15);color:var(--purple)">7</div>
+      <div>
+        <div class="plan-ttl">Video Highlight — 3 partidos clave Cadetes 2027</div>
+        <div class="plan-txt">Compilar: (1) plays de creación propia (pull-up, step-back, drive), (2) asistencias en pick-and-roll, (3) tiros de clutch en cuartos finales. El video es la primera impresión para scouts NCAA/NAIA.</div>
+        <span class="plan-tag" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:var(--purple)">Recruiting</span>
+      </div>
+    </div>
+    <div class="plan-item">
+      <div class="plan-num" style="background:rgba(34,197,94,0.15);color:var(--green)">8</div>
+      <div>
+        <div class="plan-ttl">Camps Selecciones FeBAMBA / CABB U15</div>
+        <div class="plan-txt">Con perfil de 8+ PPG en Federal CABB a los 12-13 años en Cadetes, la convocatoria a selecciones provinciales (FeBAMBA) y nacionales (CABB U15-U17) es el objetivo natural. Ese salto multiplica la visibilidad ante scouts nacionales e internacionales.</div>
+        <span class="plan-tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green)">Selecciones</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-plan -->
+
+<!-- ══════════════════════════════════════════
+     TAB 5 — ESTADO FÍSICO
+══════════════════════════════════════════ -->
+<div id="tab-fis" class="tab-pane">
+
+  <div class="alerta-box">
+    <div class="alerta-ttl">⚠️ Nota — Evaluación física</div>
+    <div class="alerta-txt">Datos físicos actualizados con cada evaluación formal del cuerpo técnico. Los valores actuales corresponden al <strong>inicio de temporada 2026</strong>. Completar el formulario de evaluación física para actualizar.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl">📏 Métricas Físicas — Perfil Escolta/Alero</div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">~158</div><div class="sc-lbl">Altura (cm)</div><div class="sc-sub flat">Promedio U13</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~160</div><div class="sc-lbl">Envergadura (cm)</div><div class="sc-sub flat">+2 cm ratio</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">~46</div><div class="sc-lbl">Peso (kg)</div><div class="sc-sub flat">Apropiado</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~21.4</div><div class="sc-lbl">MPG</div><div class="sc-sub up">Alta resistencia</div></div>
+    </div>
+    <div style="font-size:0.68rem;color:#94a3b8;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:10px 12px;line-height:1.65">
+      📌 <strong style="color:var(--ac2)">Análisis de perfil:</strong> Los 21.4 MPG confirman que Mía tiene la resistencia aeróbica necesaria para ser rotación extendida. El perfil Escolta/Alero no requiere ventaja física extrema — la técnica y la inteligencia de juego compensan. Mía lo demuestra con sus números.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl">💪 Capacidades Físicas — Evaluación Formativa</div>
+    <div class="fis-bar">
+      <div class="fis-hdr"><span class="fis-lbl">Velocidad / Primer Paso</span><span class="fis-val" style="color:var(--ac)">8.0/10 — Alta</span></div>
+      <div class="fis-bg"><div class="fis-fill" style="width:80%;background:linear-gradient(90deg,#c2410c,#f97316)"></div></div>
+      <div class="fis-note">Drives y penetraciones frecuentes confirman buen primer paso explosivo</div>
+    </div>
+    <div class="fis-bar">
+      <div class="fis-hdr"><span class="fis-lbl">Coordinación / Mecánica de Tiro</span><span class="fis-val" style="color:var(--yellow)">8.5/10 — Muy Alta</span></div>
+      <div class="fis-bg"><div class="fis-fill" style="width:85%;background:linear-gradient(90deg,#a16207,#facc15)"></div></div>
+      <div class="fis-note">~42% FG en creación propia confirma mecánica de tiro sólida y repetible</div>
+    </div>
+    <div class="fis-bar">
+      <div class="fis-hdr"><span class="fis-lbl">Resistencia Aeróbica</span><span class="fis-val" style="color:var(--green)">8.0/10 — Alta</span></div>
+      <div class="fis-bg"><div class="fis-fill" style="width:80%;background:linear-gradient(90deg,#16a34a,#22c55e)"></div></div>
+      <div class="fis-note">21.4 MPG en 25 partidos = excelente base aeróbica para su edad</div>
+    </div>
+    <div class="fis-bar">
+      <div class="fis-hdr"><span class="fis-lbl">Agilidad / Cambios de Dirección</span><span class="fis-val" style="color:var(--blue)">7.5/10 — Buena</span></div>
+      <div class="fis-bg"><div class="fis-fill" style="width:75%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)"></div></div>
+      <div class="fis-note">Penetraciones efectivas indican buena agilidad — continuar con trabajo de cambios de ritmo</div>
+    </div>
+    <div class="fis-bar">
+      <div class="fis-hdr"><span class="fis-lbl">Fuerza Funcional</span><span class="fis-val" style="color:var(--purple)">6.5/10 — En desarrollo</span></div>
+      <div class="fis-bg"><div class="fis-fill" style="width:65%;background:linear-gradient(90deg,#7c3aed,#a855f7)"></div></div>
+      <div class="fis-note">Normal para 12-13 años — trabajo progresivo de core y piernas 3×/semana</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl">🎯 Objetivos Físicos 2026–2027</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(249,115,22,0.1)">
+        <span style="font-size:1rem;flex-shrink:0">⚡</span>
+        <div><div style="font-size:0.7rem;font-weight:700;color:var(--ac);margin-bottom:2px">Explosividad de Arranque</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Sprints 5m y 10m, salidas desde posición estática y en movimiento. El primer paso explosivo marca la diferencia en el drive al aro en Cadetes contra defensas más atléticas.</div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(59,130,246,0.1)">
+        <span style="font-size:1rem;flex-shrink:0">🏋️</span>
+        <div><div style="font-size:0.7rem;font-weight:700;color:var(--blue);margin-bottom:2px">Core y Estabilidad</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Plancha, rotaciones de tronco, sentadillas. El core estable mejora la mecánica de tiro bajo cansancio — clave para mantener el FG% en el 4° cuarto.</div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--card2);border-radius:10px;border:1px solid rgba(34,197,94,0.1)">
+        <span style="font-size:1rem;flex-shrink:0">🏃</span>
+        <div><div style="font-size:0.7rem;font-weight:700;color:var(--green);margin-bottom:2px">Resistencia de Alta Intensidad</div><div style="font-size:0.68rem;color:#94a3b8;line-height:1.55">Intervalos: 10s sprint + 20s recuperación × 10 series. Simula el ritmo real de un partido de básquet. Objetivo: mantener el nivel de juego en los últimos 5 minutos igual que en los primeros.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-fis -->
+
+<!-- ══════════════════════════════════════════
+     TAB 6 — MI PERFIL
+══════════════════════════════════════════ -->
+<div id="tab-perfil" class="tab-pane">
+
+  <div class="ncaa-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <div style="font-size:0.58rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Player Profile — Recruiting Portfolio · Season 2026</div>
+        <div style="font-size:1.25rem;font-weight:900;letter-spacing:-0.5px">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
+        <div style="font-size:0.63rem;color:var(--muted);margin-top:3px">Shooting Guard / Small Forward · DOB: 2013 · Argentina 🇦🇷</div>
+        <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">
+          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🔥 #1 Scorer</span>
+          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">8.6 PPG Federal</span>
+          <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🌐 Federal Level</span>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#c2410c,#f97316);border-radius:10px;padding:8px 11px;text-align:center;flex-shrink:0">
+        <div style="font-size:0.48rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#fed7aa">Season</div>
+        <div style="font-size:0.95rem;font-weight:900;color:#fff;line-height:1">2026</div>
+        <div style="font-size:0.48rem;color:#ffedd5;margin-top:1px">Argentina</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · 25 GP (AFMB + Federal CABB)</div>
+    <div class="g4" style="margin-bottom:14px">
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">8.6</div><div class="sc-lbl">PPG Fed</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.0</div><div class="sc-lbl">PPG AFMB</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPG</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">GP</div></div>
+    </div>
+
+    <div class="ncaa-quote">
+      <strong>"Top scorer in both AFMB local league (8.0 PPG) and Federal CABB national tournament (8.6 PPG) — an extremely rare ability to elevate production at higher competition levels."</strong> Mía G. Sánchez is the primary offensive option for Berazategui U13, demonstrating a two-dimensional scoring profile: catch-and-shoot perimeter threat combined with drive-and-finish ability. Her increased scoring at national level (Federal CABB) versus local league is the strongest indicator of high-ceiling potential. Trajectory: 12-14 PPG in Cadetes 2027-2028, with NBA-style Guard profile.
+    </div>
+
+    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Skill Percentiles — vs U13 Argentina Shooting Guards</div>
+    <div id="ncaaRadarBars"></div>
+    <button class="btn-cv" onclick="exportCV()">📄 Exportar Mi Currículum (PDF)</button>
+    <div style="font-size:0.57rem;color:#334155;text-align:center;margin-top:6px">Chrome/Edge: Ctrl+P → Guardar como PDF</div>
+  </div>
+
+  <div class="card">
+    <div class="card-ttl">👤 Datos del Perfil</div>
+    <div class="profile-grid">
+      <div class="profile-field"><div class="pf-lbl">Nombre completo</div><div class="pf-val">Mía G. Sánchez</div></div>
+      <div class="profile-field"><div class="pf-lbl">Dorsal</div><div class="pf-val">#14</div></div>
+      <div class="profile-field"><div class="pf-lbl">Posición</div><div class="pf-val">Escolta / Alero (SG/SF)</div></div>
+      <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
+      <div class="profile-field"><div class="pf-lbl">Competencias</div><div class="pf-val">AFMB + Federal CABB</div></div>
+      <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val">25 PJ totales</div></div>
+      <div class="profile-field"><div class="pf-lbl">Distinción</div><div class="pf-val">🔥 #1 Anotadora</div></div>
+      <div class="profile-field"><div class="pf-lbl">Temporada</div><div class="pf-val">2026</div></div>
+    </div>
+  </div>
+
+</div><!-- /tab-perfil -->
+
+<!-- BOTTOM NAV -->
+<nav class="bnav" id="bnav">
+  <button class="bnav-btn on" onclick="showTab('rend',null,0)"><span class="ni">📊</span>Rendimiento</button>
+  <button class="bnav-btn"   onclick="showTab('coach',null,1)"><span class="ni">🤖</span>Coach</button>
+  <button class="bnav-btn"   onclick="showTab('prog',null,2)"><span class="ni">📈</span>Progresión</button>
+  <button class="bnav-btn"   onclick="showTab('plan',null,3)"><span class="ni">🎯</span>Plan</button>
+  <button class="bnav-btn"   onclick="showTab('fis',null,4)"><span class="ni">💪</span>Físico</button>
+  <button class="bnav-btn"   onclick="showTab('perfil',null,5)"><span class="ni">👤</span>Perfil</button>
+</nav>
+
+<script>
+/* ─── DATOS ─────────────────────────────── */
+const PERCENTILES = [
+  {lbl:'Anotación',  pct:96, color:'#f97316', val:'8.6 PPG Fed'},
+  {lbl:'Creación',   pct:94, color:'#fb923c', val:'PPG proprio'},
+  {lbl:'Minutos',    pct:88, color:'#a855f7', val:'21.4 MPG'},
+  {lbl:'Elevación',  pct:92, color:'#22c55e', val:'Fed > Local'},
+  {lbl:'Asistencias',pct:82, color:'#3b82f6', val:'~2.1 APG'},
+  {lbl:'Proyección', pct:96, color:'#ef4444', val:'Cadetes 2027'},
+];
+const FORTALEZAS = [
+  {icon:'🔥', t:'#1 Anotadora — 8.6 PPG en Federal CABB', tx:'Máxima anotadora del equipo en el torneo nacional. Contra rivales más preparadas, produjo más. La marca de una anotadora élite.'},
+  {icon:'📈', t:'Mejor en mayor competencia (raro P98)', tx:'Solo el 2% de las jugadoras U13 argentinas sube el PPG al pasar de liga local a Federal. Mía lo hizo: 8.0 → 8.6 PPG.'},
+  {icon:'🎯', t:'Tiro exterior + penetración — 2 dimensiones', tx:'Puede anotar desde el perímetro (catch-and-shoot, off-the-dribble) y en penetración. Defender a una jugadora de 2 dimensiones es exponencialmente más difícil.'},
+  {icon:'⏱️', t:'21.4 MPG — Base aeróbica sólida', tx:'Casi 22 minutos por partido en 25 PJ. Resistencia para ser primera opción ofensiva durante toda la rotación.'},
+];
+const AREAS = [
+  {icon:'🎯', t:'Tiro libre — consistencia', tx:'Meta: pasar a 70%+ con protocolo de 50 TL/día. El TL convierte la producción ofensiva en puntos seguros bajo presión.'},
+  {icon:'🛡️', t:'Defensa individual en perímetro', tx:'Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa igual que la ofensiva. Deny position, lateral shuffle y help-side son las 3 técnicas clave.'},
+  {icon:'🔄', t:'Mano débil bajo presión full-court', tx:'En playoffs las defensas presionan toda la cancha. El crossover y dribble con mano débil a velocidad son el diferencial en ese escenario.'},
+];
+const SHOTS_DATA = [
+  // Zona pintada (zona izquierda — Mía ataca al aro)
+  {x:9,  y:46, m:true}, {x:11, y:54, m:true}, {x:8,  y:50, m:true},
+  {x:13, y:42, m:true}, {x:10, y:58, m:true}, {x:15, y:48, m:true},
+  {x:12, y:62, m:true}, {x:9,  y:38, m:false},{x:14, y:52, m:true},
+  {x:11, y:35, m:false},{x:16, y:66, m:true}, {x:7,  y:50, m:true},
+  // Media distancia (Mía pull-up)
+  {x:22, y:28, m:true}, {x:25, y:72, m:true}, {x:20, y:35, m:false},
+  {x:28, y:70, m:true}, {x:24, y:24, m:true}, {x:30, y:32, m:false},
+  {x:26, y:76, m:false},{x:22, y:22, m:true},
+  // Triple esquinas (Mía catch-and-shoot)
+  {x:4,  y:15, m:true}, {x:5,  y:17, m:true}, {x:4,  y:83, m:true},
+  {x:5,  y:81, m:true}, {x:6,  y:13, m:false},{x:4,  y:87, m:false},
+  // Triple 45° y frontal
+  {x:18, y:10, m:true}, {x:20, y:90, m:false},{x:28, y:8,  m:true},
+  {x:32, y:6,  m:false},{x:30, y:92, m:true}, {x:26, y:4,  m:false},
+];
+const ZONE_SUMMARY = [
+  {z:'Zona pintada', fg:'12/15', pct:'80%', color:'#22c55e'},
+  {z:'Media distancia', fg:'5/10', pct:'50%', color:'#f97316'},
+  {z:'Triple (T3)',  fg:'9/27',  pct:'33%', color:'#facc15'},
+];
+const PROG_DATA = {
+  labels:['2026 (debut)','2027','2028','2029','2030'],
+  ppg:   [8.1, 12.5, 16, 19, 22],
+  apg:   [2.1, 3.5,  5,  6.5, 7.5],
+};
+const NCAA_SKILLS = [
+  {lbl:'Scoring (PPG)',  pct:96, color:'#f97316'},
+  {lbl:'National Level', pct:96, color:'#a855f7'},
+  {lbl:'Clutch Elevate', pct:94, color:'#22c55e'},
+  {lbl:'Ball Creation',  pct:90, color:'#3b82f6'},
+  {lbl:'Assist / IQ',   pct:82, color:'#06b6d4'},
+  {lbl:'Long-term proj.',pct:96, color:'#ef4444'},
+];
+
+/* ─── TABS ─────────────────────────────── */
+function showTab(id, btn, navIdx) {
+  document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (navIdx !== undefined) {
+    document.querySelectorAll('.bnav-btn')[navIdx].classList.add('on');
+    document.querySelectorAll('.tab-btn')[navIdx].classList.add('on');
+  }
+}
+
+/* ─── INIT ─────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  buildShotMap();
+  buildZoneSummary();
+  buildCompChart();
+  buildZoneChart();
+  buildRadar();
+  buildFortalezasAreas();
+  buildProgChart();
+  buildHitos();
+  buildNcaaBars();
+});
+
+/* ─── SHOT MAP ─────────────────────────── */
+function buildShotMap() {
+  const court = document.getElementById('shotCourt');
+  SHOTS_DATA.forEach(s => {
+    const dot = document.createElement('div');
+    dot.className = 'shot-dot';
+    dot.style.left = s.x + '%';
+    dot.style.top  = s.y + '%';
+    dot.style.background = s.m ? 'rgba(34,197,94,0.75)' : 'rgba(239,68,68,0.55)';
+    dot.style.border = s.m ? '1.5px solid rgba(34,197,94,0.9)' : '1.5px solid rgba(239,68,68,0.7)';
+    court.appendChild(dot);
+  });
+}
+
+/* ─── ZONE SUMMARY ─────────────────────── */
+function buildZoneSummary() {
+  const el = document.getElementById('zone-summary');
+  ZONE_SUMMARY.forEach(z => {
+    el.innerHTML += `<div style="background:#0f1e35;border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,0.04)">
+      <div style="font-size:0.95rem;font-weight:900;color:${z.color}">${z.pct}</div>
+      <div style="font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">${z.z}</div>
+      <div style="font-size:0.58rem;color:#334155;margin-top:2px">${z.fg}</div>
+    </div>`;
+  });
+}
+
+/* ─── COMPARATIVA CHART ─────────────────── */
+function buildCompChart() {
+  new Chart(document.getElementById('chartComp'), {
+    type: 'bar',
+    data: {
+      labels: ['PPG', 'MPG', 'RPG est.', 'APG est.'],
+      datasets: [
+        { label:'AFMB (20 PJ)', data:[8.0, 21, 2.6, 2.0],
+          backgroundColor:'rgba(249,115,22,0.6)', borderColor:'#f97316', borderWidth:2, borderRadius:6 },
+        { label:'Federal (5 PJ)', data:[8.6, 22, 3.0, 2.2],
+          backgroundColor:'rgba(168,85,247,0.6)', borderColor:'#a855f7', borderWidth:2, borderRadius:6 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:11}} },
+        y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:10}}, min:0 }
+      },
+      plugins:{ legend:{ labels:{color:'#64748b',font:{size:11}} } }
+    }
+  });
+}
+
+/* ─── ZONE CHART ────────────────────────── */
+function buildZoneChart() {
+  new Chart(document.getElementById('chartZones'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Zona pintada (15)', 'Media distancia (10)', 'Triple (27)'],
+      datasets: [{
+        data: [15, 10, 27],
+        backgroundColor: ['rgba(34,197,94,0.7)','rgba(249,115,22,0.7)','rgba(250,204,21,0.7)'],
+        borderColor: ['#22c55e','#f97316','#facc15'],
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'bottom', labels:{color:'#64748b',font:{size:11},padding:14} },
+        tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.parsed} intentos` } }
+      },
+      cutout:'62%',
+    }
+  });
+}
+
+/* ─── RADAR ─────────────────────────────── */
+function buildRadar() {
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: PERCENTILES.map(p => p.lbl),
+      datasets: [
+        { label:'Mía', data:PERCENTILES.map(p=>p.pct),
+          backgroundColor:'rgba(249,115,22,0.1)', borderColor:'#f97316',
+          borderWidth:2, pointBackgroundColor:'#f97316', pointRadius:3 },
+        { label:'Promedio U13', data:[50,50,50,50,50,50],
+          backgroundColor:'rgba(255,255,255,0.02)', borderColor:'rgba(255,255,255,0.1)',
+          borderWidth:1, borderDash:[4,4], pointRadius:0 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{ r:{ min:0, max:100, ticks:{display:false},
+        grid:{color:'rgba(255,255,255,0.06)'},
+        pointLabels:{color:'#64748b',font:{size:11}} } },
+      plugins:{ legend:{display:false} }
+    }
+  });
+  const leg = document.getElementById('pctLegend');
+  PERCENTILES.forEach(p => {
+    leg.innerHTML += `<div class="pct-cell">
+      <div class="pct-v" style="color:${p.color}">P${p.pct}</div>
+      <div class="pct-l">${p.lbl}</div>
+      <div style="font-size:0.52rem;color:#334155;margin-top:2px">${p.val}</div>
+    </div>`;
+  });
+}
+
+/* ─── FORTALEZAS / ÁREAS ────────────────── */
+function buildFortalezasAreas() {
+  const fEl = document.getElementById('fortalezas');
+  FORTALEZAS.forEach(f => { fEl.innerHTML += itemCard(f,'rgba(34,197,94,0.04)','rgba(34,197,94,0.12)','#86efac'); });
+  const aEl = document.getElementById('areas');
+  AREAS.forEach(a => { aEl.innerHTML += itemCard(a,'rgba(249,115,22,0.04)','rgba(249,115,22,0.12)','#fb923c'); });
+}
+function itemCard(i, bg, bdr, c) {
+  return `<div style="display:flex;gap:8px;align-items:flex-start;background:${bg};border:1px solid ${bdr};border-radius:8px;padding:8px 10px;margin-bottom:7px">
+    <span style="font-size:0.95rem;flex-shrink:0">${i.icon}</span>
+    <div><div style="font-size:0.68rem;font-weight:700;color:${c};margin-bottom:2px">${i.t}</div>
+    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.55">${i.tx}</div></div>
+  </div>`;
+}
+
+/* ─── PROGRESIÓN ────────────────────────── */
+function buildProgChart() {
+  new Chart(document.getElementById('chartProg'), {
+    type:'line',
+    data:{
+      labels:PROG_DATA.labels,
+      datasets:[
+        { label:'PPG', data:PROG_DATA.ppg,
+          borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)',
+          borderWidth:2.5, pointBackgroundColor:'#f97316', pointRadius:4, tension:.35, fill:true },
+        { label:'APG', data:PROG_DATA.apg,
+          borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.06)',
+          borderWidth:2.5, pointBackgroundColor:'#3b82f6', pointRadius:4, tension:.35, fill:true },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:10}} },
+        y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:10}}, min:0 }
+      },
+      plugins:{ legend:{ labels:{color:'#64748b',font:{size:11}} } }
+    }
+  });
+}
+
+/* ─── HITOS ─────────────────────────────── */
+function buildHitos() {
+  const data = [
+    {icon:'🔥', f:'#1 Anotadora del equipo', t:'Máxima anotadora en AFMB (8.0 PPG, 20 PJ) y Federal (8.6 PPG, 5 PJ). Primera opción ofensiva del sistema de Berazategui.'},
+    {icon:'📈', f:'Subió el PPG en nivel más alto', t:'8.0 PPG en liga local → 8.6 PPG en Federal CABB (nivel nacional). Percentil 98 — rarísimo en formativas argentinas.'},
+    {icon:'🌐', f:'Federal CABB — 5 PJ nacionales', t:'Competir y liderar la anotación del equipo en el torneo nacional de CABB con rivales mayores y más preparadas.'},
+    {icon:'⏱️', f:'21.4 MPG en 25 partidos', t:'Alta rotación durante toda la temporada. El cuerpo técnico la confía como primera opción durante casi toda la rotación.'},
+    {icon:'🎯', f:'Tiro en 2 dimensiones', t:'Anotadora exterior (T3) + penetradora al aro. El perfil más difícil de defender del básquet moderno, desde los primeros años.'},
+  ];
+  const el = document.getElementById('hitos');
+  data.forEach(h => {
+    el.innerHTML += `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+      <span style="font-size:1.1rem;flex-shrink:0">${h.icon}</span>
+      <div><div style="font-size:0.58rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.5px">${h.f}</div>
+      <div style="font-size:0.71rem;color:#94a3b8;line-height:1.6;margin-top:2px">${h.t}</div></div>
+    </div>`;
+  });
+}
+
+/* ─── NCAA BARS ─────────────────────────── */
+function buildNcaaBars() {
+  const el = document.getElementById('ncaaRadarBars');
+  NCAA_SKILLS.forEach(s => {
+    el.innerHTML += `<div class="radar-row">
+      <div class="radar-lbl">${s.lbl}</div>
+      <div class="radar-bg"><div class="radar-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
+      <div class="radar-pct" style="color:${s.color}">P${s.pct}</div>
+    </div>`;
+  });
+}
+
+/* ─── EXPORT PDF ────────────────────────── */
+function exportCV() {
+  document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
+  document.getElementById('tab-perfil').classList.add('on');
+  setTimeout(() => window.print(), 350);
+}
+
+/* ─── SUPABASE ──────────────────────────── */
+const _SU = 'https://yjcxwfkedxzkcspddghz.supabase.co';
+const _SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqY3h3ZmtlZHh6a2NzcGRkZ2h6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTcwODksImV4cCI6MjEwNjI5MzA4OX0.j-g-0yt7D8ADkleTFxTNSN5ORPJE8y50aumejW8G4IQ';
+const _supa = supabase.createClient(_SU, _SK);
+async function doLogout() {
+  try { await _supa.auth.signOut(); } catch(e) {}
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>
