@@ -328,13 +328,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="hero-num">14</div>
       <div class="hero-info">
         <div class="hero-name">Mía G. <span>Sánchez</span></div>
-        <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026 · 🔥 Máxima Anotadora</div>
+        <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026</div>
         <div class="hero-tags">
           <span class="htag ht-or">⛹️ Escolta / Alero</span>
-          <span class="htag ht-gr" id="hero-tag-rank">🔥 #1 PPP del equipo</span>
           <span class="htag ht-pu" id="hero-tag-pj">⏳ cargando…</span>
-          <span class="htag ht-cy" id="hero-tag-fed">📊 — PPP Federal</span>
-          <span class="htag ht-ye">🎯 Tiro de alta eficiencia</span>
+          <span class="htag ht-gr" id="hero-tag-torneo" style="display:none"></span>
+          <span class="htag ht-cy" id="hero-tag-fed" style="display:none"></span>
         </div>
       </div>
       <div class="nl-badge">
@@ -343,41 +342,44 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
     <div class="hero-kpis">
       <div class="kpi">
-        <div class="kpi-val" id="hero-ppp-fed">⏳</div>
-        <div class="kpi-lbl">PPP Federal <span id="src-fed" title="Dato oficial CABB/GesDeportiva" style="cursor:help;font-size:0.65rem"></span></div>
+        <div class="kpi-val" style="color:var(--ac)" id="hero-ppp-afmb">⏳</div>
+        <div class="kpi-lbl">PPP AFMB 🏀</div>
       </div>
-      <div class="kpi">
-        <div class="kpi-val" style="color:var(--green)" id="hero-ppp-comb">⏳</div>
-        <div class="kpi-lbl">PPP Combi. <span id="src-comb" title="Cálculo NextLevel desde datos reales" style="cursor:help;font-size:0.65rem"></span></div>
+      <div class="kpi" id="hero-kpi-fed" style="display:none">
+        <div class="kpi-val" style="color:var(--green)" id="hero-ppp-fed">—</div>
+        <div class="kpi-lbl">PPP Federal 🏀</div>
+      </div>
+      <div class="kpi" id="hero-kpi-pj">
+        <div class="kpi-val" style="color:var(--cyan)" id="hero-pj">⏳</div>
+        <div class="kpi-lbl">PJ 🏀</div>
       </div>
       <div class="kpi">
         <div class="kpi-val" style="color:var(--purple)" id="hero-mpg">⏳</div>
-        <div class="kpi-lbl">MPG <span id="src-mpg" title="Dato oficial CABB/GesDeportiva" style="cursor:help;font-size:0.65rem"></span></div>
+        <div class="kpi-lbl">MPG 🏀</div>
       </div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">3P+</div><div class="kpi-lbl">Tiradora</div></div>
     </div>
   </div>
 </div>
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Mi Evolución</button>
+  <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Inicio</button>
   <button class="tab-btn"    onclick="showTab('rend',this)">📊 Rendimiento</button>
-  <button class="tab-btn"    onclick="showTab('coach',this)">🤖 Coach IA</button>
-  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Progresión</button>
-  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Plan</button>
+  <button class="tab-btn"    onclick="showTab('coach',this)">🧠 Análisis Coach</button>
+  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Evolución</button>
+  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Mi Plan</button>
   <button class="tab-btn"    onclick="showTab('fis',this)">💪 Físico</button>
   <button class="tab-btn"    onclick="showTab('perfil',this)">👤 Perfil</button>
 </div>
 
 <!-- ══════════════════════════════════════════
-     TAB 0 — MI EVOLUCIÓN (DASHBOARD)
+     TAB 0 — INICIO (DASHBOARD)
 ══════════════════════════════════════════ -->
 <div id="tab-dash" class="tab-pane on">
 
   <!-- Mensaje de bienvenida dinámico -->
   <div style="background:linear-gradient(135deg,rgba(249,115,22,0.07),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.18);border-radius:14px;padding:16px 18px;margin-bottom:14px">
-    <div style="font-size:0.58rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">🏠 Panel de Evolución Personal</div>
+    <div style="font-size:0.58rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">🏠 Inicio — Resumen de Temporada</div>
     <div id="dash-bienvenida" style="font-size:0.82rem;font-weight:800;color:var(--text);margin-bottom:4px">Cargando tu evolución…</div>
     <div id="dash-subtitulo" style="font-size:0.68rem;color:#94a3b8;line-height:1.5">Temporada 2026 · Next Level Basketball</div>
   </div>
@@ -420,9 +422,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="dash-obj-activo">
       <div style="text-align:center;padding:12px;color:var(--muted);font-size:0.73rem">⏳ Cargando objetivos…</div>
     </div>
-    <button onclick="showTab('plan',null,4)" style="width:100%;margin-top:8px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:9px;padding:9px;font-size:0.72rem;font-weight:700;color:#fb923c;cursor:pointer;font-family:inherit">
-      🎯 Ver todos los objetivos
-    </button>
   </div>
 
   <!-- Evolución física (último test de cada categoría) -->
@@ -431,9 +430,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="dash-fisico">
       <div style="text-align:center;padding:12px;color:var(--muted);font-size:0.73rem">⏳ Cargando tests…</div>
     </div>
-    <button onclick="showTab('fis',null,5)" style="width:100%;margin-top:8px;background:rgba(168,85,247,0.07);border:1px solid rgba(168,85,247,0.2);border-radius:9px;padding:9px;font-size:0.72rem;font-weight:700;color:#d8b4fe;cursor:pointer;font-family:inherit">
-      💪 Ver historial físico completo
-    </button>
   </div>
 
   <!-- Logros de la temporada -->
@@ -465,38 +461,57 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <!-- Estado de carga -->
     <div id="stats-loading" style="text-align:center;padding:18px 0;color:var(--muted);font-size:0.78rem">⏳ Cargando estadísticas oficiales…</div>
     <div id="stats-content" style="display:none">
-      <div class="g4" style="margin-bottom:10px">
+      <!-- Fila 1: datos confirmados desde stats_seasons -->
+      <div class="g3" style="margin-bottom:10px">
         <div class="stat-cell">
-          <div class="sc-val" style="color:var(--ac)" id="st-ppp-fed">—</div>
-          <div class="sc-lbl">PPP Federal 🏀</div>
-          <div class="sc-sub up">#1 equipo</div>
-        </div>
-        <div class="stat-cell">
-          <div class="sc-val" style="color:var(--green)" id="st-ppp-afmb">—</div>
+          <div class="sc-val" style="color:var(--ac)" id="st-ppp-afmb">—</div>
           <div class="sc-lbl">PPP AFMB 🏀</div>
-          <div class="sc-sub up">#1 equipo</div>
+          <div class="sc-sub flat" id="st-afmb-pj-sub">—</div>
         </div>
         <div class="stat-cell">
           <div class="sc-val" style="color:var(--purple)" id="st-mpg">—</div>
           <div class="sc-lbl">MPG 🏀</div>
-          <div class="sc-sub up" id="st-mpg-sub">—</div>
+          <div class="sc-sub flat" id="st-mpg-sub">—</div>
         </div>
         <div class="stat-cell">
           <div class="sc-val" style="color:var(--cyan)" id="st-pj">—</div>
-          <div class="sc-lbl">PJ Totales 🏀</div>
+          <div class="sc-lbl">PJ 🏀</div>
           <div class="sc-sub flat" id="st-pj-sub">—</div>
         </div>
       </div>
-      <div class="g4">
-        <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">T3 ✓</div><div class="sc-lbl">Tiro 3P</div></div>
-        <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">~42%</div><div class="sc-lbl">FG% est. 🧑‍🏫</div></div>
+      <!-- Fila Federal: aparece solo si hay datos -->
+      <div id="st-fed-row" style="display:none;margin-bottom:10px">
+        <div class="stat-cell" style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.15)">
+          <div style="font-size:0.55rem;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">🌐 Federal CABB</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <div style="text-align:center">
+              <div class="sc-val" style="color:var(--purple);font-size:1.1rem" id="st-ppp-fed">—</div>
+              <div class="sc-lbl">PPP 🏀</div>
+            </div>
+            <div style="text-align:center">
+              <div class="sc-val" style="color:var(--purple);font-size:1.1rem" id="st-fed-pj">—</div>
+              <div class="sc-lbl">PJ 🏀</div>
+            </div>
+            <div style="text-align:center">
+              <div class="sc-val" style="color:var(--purple);font-size:1.1rem" id="st-fed-mpg">—</div>
+              <div class="sc-lbl">MPG 🏀</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fila 2: stats calculadas desde game_log (o Sin datos) -->
+      <div class="g3">
         <div class="stat-cell">
           <div class="sc-val" style="color:var(--green)" id="st-rpg">—</div>
           <div class="sc-lbl">RPG <span id="st-rpg-src" style="font-size:0.55rem"></span></div>
         </div>
         <div class="stat-cell">
-          <div class="sc-val" style="color:var(--cyan)" id="st-apg">—</div>
+          <div class="sc-val" style="color:var(--yellow)" id="st-apg">—</div>
           <div class="sc-lbl">APG <span id="st-apg-src" style="font-size:0.55rem"></span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--blue)" id="st-pts-last">—</div>
+          <div class="sc-lbl" id="st-pts-lbl">Último PJ</div>
         </div>
       </div>
     </div>
@@ -697,15 +712,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div><!-- /tab-rend -->
 
 <!-- ══════════════════════════════════════════
-     TAB 2 — ANÁLISIS DEL COACH
+     TAB 2 — ANÁLISIS COACH
 ══════════════════════════════════════════ -->
 <div id="tab-coach" class="tab-pane">
 
+  <!-- SEPARADOR: Análisis NextLevel -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <div style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.25);border-radius:10px;padding:6px 14px;font-size:0.6rem;font-weight:800;color:#fb923c;text-transform:uppercase;letter-spacing:1px">📊 Análisis NextLevel</div>
+    <div style="flex:1;height:1px;background:rgba(249,115,22,0.12)"></div>
+    <div style="font-size:0.55rem;color:var(--muted)">Generado desde datos reales</div>
+  </div>
+
   <div class="ia-box">
     <div class="ia-hdr">
-      <div class="ia-ic">🤖</div>
-      <div><div class="ia-ttl">Análisis del Coach Digital — Mía G. Sánchez #14</div>
-      <div class="ia-sub">IA generativa · 25 PJ reales · API oficial CABB · Temporada 2026</div></div>
+      <div class="ia-ic">🧠</div>
+      <div><div class="ia-ttl">Análisis NextLevel — Mía G. Sánchez #14</div>
+      <div class="ia-sub">📊 Basado en datos reales · API oficial CABB · Temporada 2026</div></div>
     </div>
 
     <div class="ia-sec">
@@ -757,10 +779,68 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
+  <!-- SEPARADOR: Mirada del Coach -->
+  <div style="display:flex;align-items:center;gap:10px;margin:18px 0 12px">
+    <div style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05));border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:6px 14px;font-size:0.6rem;font-weight:800;color:#38bdf8;text-transform:uppercase;letter-spacing:1px">🧑‍🏫 Mirada del Coach</div>
+    <div style="flex:1;height:1px;background:rgba(56,189,248,0.12)"></div>
+    <div style="font-size:0.55rem;color:var(--muted)">Evaluación personalizada</div>
+  </div>
+
+  <!-- Placeholder para evaluación del coach humano -->
+  <div style="background:linear-gradient(135deg,rgba(56,189,248,0.05),rgba(56,189,248,0.02));border:1px solid rgba(56,189,248,0.15);border-radius:14px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:10px;right:14px;font-size:1.8rem;opacity:0.06">🧑‍🏫</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0369a1,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">🧑‍🏫</div>
+      <div>
+        <div style="font-size:0.8rem;font-weight:800;color:#38bdf8">Evaluación del Coach</div>
+        <div style="font-size:0.6rem;color:#0369a1;margin-top:1px" id="coach-eval-fecha">—</div>
+      </div>
+      <div id="coach-eval-badge" style="display:none;margin-left:auto">
+        <span class="coach-badge">🧑‍🏫 Evaluación del coach</span>
+      </div>
+    </div>
+    <div id="coach-eval-content">
+      <div style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.12);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:8px;opacity:0.4">🧑‍🏫</div>
+        <div style="font-size:0.78rem;color:#94a3b8;line-height:1.6;margin-bottom:6px">
+          <strong style="color:#38bdf8">El coach todavía no cargó su evaluación personalizada.</strong>
+        </div>
+        <div style="font-size:0.68rem;color:#475569;line-height:1.55">
+          Cuando el entrenador complete la evaluación, vas a ver acá:<br>
+          <strong style="color:#64748b">observaciones · fortalezas detectadas · aspectos a trabajar · prioridad recomendada</strong>
+        </div>
+      </div>
+    </div>
+    <!-- Campos que se muestran cuando hay evaluación del coach -->
+    <div id="coach-obs-panel" style="display:none">
+      <div style="margin-bottom:10px">
+        <div style="font-size:0.58rem;font-weight:700;color:#38bdf8;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">💬 Observaciones</div>
+        <div id="coach-obs-txt" style="font-size:0.75rem;color:#94a3b8;line-height:1.65;font-style:italic"></div>
+      </div>
+      <div class="g2" style="margin-bottom:10px">
+        <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:9px;padding:10px 12px">
+          <div style="font-size:0.57rem;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">✅ Fortalezas observadas</div>
+          <div id="coach-fort-txt" style="font-size:0.7rem;color:#94a3b8;line-height:1.6"></div>
+        </div>
+        <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:9px;padding:10px 12px">
+          <div style="font-size:0.57rem;font-weight:700;color:#fb923c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">⚠️ A trabajar</div>
+          <div id="coach-area-txt" style="font-size:0.7rem;color:#94a3b8;line-height:1.6"></div>
+        </div>
+      </div>
+      <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.15);border-radius:9px;padding:10px 12px">
+        <div style="font-size:0.57rem;font-weight:700;color:#d8b4fe;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px">🎯 Prioridad recomendada por el coach</div>
+        <div id="coach-prio-txt" style="font-size:0.73rem;color:#94a3b8;line-height:1.6"></div>
+      </div>
+    </div>
+    <div style="font-size:0.52rem;color:#1e293b;margin-top:12px;text-align:right;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px">
+      🧑‍🏫 Evaluación del coach · Next Level Basketball — diferenciada del análisis automático
+    </div>
+  </div>
+
 </div><!-- /tab-coach -->
 
 <!-- ══════════════════════════════════════════
-     TAB 3 — MI PROGRESIÓN
+     TAB 3 — EVOLUCIÓN
 ══════════════════════════════════════════ -->
 <div id="tab-prog" class="tab-pane">
 
@@ -794,17 +874,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- Curva proyectada -->
+  <!-- Curva de evolución -->
   <div class="card">
-    <div class="card-ttl">📈 Proyección de Desarrollo 2026–2030</div>
+    <div class="card-ttl">📈 Evolución de Producción — Temporada 2026</div>
+    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:8px;padding:7px 11px;margin-bottom:10px;font-size:0.63rem;color:#fde047;line-height:1.45">
+      🔮 <strong>Aclaración:</strong> La línea sólida es el dato real 2026 🏀. La línea punteada es una <strong>proyección orientativa</strong> (no un compromiso). A medida que se registren más temporadas, el gráfico mostrará evolución real histórica.
+    </div>
     <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;font-size:0.6rem;color:var(--muted)">
       <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:22px;height:2px;background:#f97316;border-radius:2px"></span>Real (2026) 🏀</span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:22px;height:2px;background:#f97316;opacity:0.5;border-radius:2px;border-top:2px dashed #f97316"></span>Proyección 2027–2030 🔮</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:22px;height:2px;background:#f97316;opacity:0.5;border-radius:2px;border-top:2px dashed #f97316"></span>Proyección orientativa 🔮</span>
     </div>
     <div class="prog-wrap"><canvas id="chartProg"></canvas></div>
-    <div style="font-size:0.62rem;color:var(--muted);background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.12);border-radius:8px;padding:8px 12px;margin-top:8px;line-height:1.55">
-      🔮 <strong style="color:#c084fc">Proyección 2027–2030:</strong> Estimación basada en curvas históricas de Escoltas/Aleros con perfil anotador en Argentina. <strong>No representa un compromiso ni garantía de rendimiento futuro.</strong> La línea punteada indica escenario de desarrollo normal con trabajo sostenido.
-    </div>
   </div>
 
   <!-- Hitos -->
@@ -1572,8 +1652,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <nav class="bnav" id="bnav">
   <button class="bnav-btn on" onclick="showTab('dash',null,0)"><span class="ni">🏠</span>Inicio</button>
   <button class="bnav-btn"   onclick="showTab('rend',null,1)"><span class="ni">📊</span>Stats</button>
-  <button class="bnav-btn"   onclick="showTab('coach',null,2)"><span class="ni">🤖</span>Coach</button>
-  <button class="bnav-btn"   onclick="showTab('plan',null,4)"><span class="ni">🎯</span>Plan</button>
+  <button class="bnav-btn"   onclick="showTab('coach',null,2)"><span class="ni">🧠</span>Análisis</button>
+  <button class="bnav-btn"   onclick="showTab('plan',null,4)"><span class="ni">🎯</span>Mi Plan</button>
   <button class="bnav-btn"   onclick="showTab('fis',null,5)"><span class="ni">💪</span>Físico</button>
   <button class="bnav-btn"   onclick="showTab('perfil',null,6)"><span class="ni">👤</span>Perfil</button>
   <button class="bnav-btn"   onclick="doLogout()" style="color:#ef4444"><span class="ni">🚪</span>Salir</button>
@@ -1740,6 +1820,7 @@ async function loadPlayerStats() {
     // Lanzar carga adicional en paralelo (no bloqueante)
     loadGameLogAndRender();
     loadObjEstados();
+    loadCoachEval();
     // Dashboard: Tab 0 está visible desde el inicio
     if (!_dashInited) { _dashInited = true; buildDashboard(); }
 
@@ -1748,6 +1829,7 @@ async function loadPlayerStats() {
     console.warn('loadPlayerStats:', err);
     renderStatsError();
     loadObjEstados(); // objetivos no dependen de stats_seasons
+    loadCoachEval();
   }
 }
 
@@ -1758,31 +1840,59 @@ function renderPlayerStats() {
 
   // ── HERO ──
   const fedPPG  = fmt(s.fed.ppg);
-  const combPPG = fmt(s.combined.ppg);
+  // PPP principal: combinado si hay ambos torneos, AFMB solo si no hay Federal
+  const mainPPG = s.combined.ppg != null ? s.combined.ppg :
+                  (s.afmb.ppg != null ? s.afmb.ppg : null);
   const mpg     = fmt(s.combined.min_pg || s.afmb.min_pg);
-  const pjTot   = fmt(s.combined.pj);
+  const pjTot   = fmt(s.combined.pj || s.afmb.pj);
 
   const elSet = (id, txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
 
-  elSet('hero-ppp-fed',  fedPPG);
-  elSet('hero-ppp-comb', combPPG);
-  elSet('hero-mpg',      mpg !== '—' ? mpg : '—');
-  elSet('src-fed',  '🏀'); elSet('src-comb', '📊'); elSet('src-mpg', '🏀');
+  // HERO — KPI PPP AFMB (siempre visible)
+  elSet('hero-ppp-afmb', fmt(s.afmb.ppg));
+  elSet('hero-mpg',  mpg);
+  elSet('hero-pj',   pjTot);
+
+  // HERO — KPI Federal (solo si hay datos)
+  if (s.fed.ppg != null) {
+    elSet('hero-ppp-fed', fedPPG);
+    const kpiFed = document.getElementById('hero-kpi-fed');
+    if (kpiFed) kpiFed.style.display = '';
+  }
 
   // Tags del hero
-  const tagPJ  = document.getElementById('hero-tag-pj');
-  const tagFed = document.getElementById('hero-tag-fed');
-  if (tagPJ)  tagPJ.textContent  = pjTot !== '—' ? `${pjTot} PJ · AFMB + Federal` : '— PJ';
-  if (tagFed) tagFed.textContent = fedPPG !== '—' ? `📊 ${fedPPG} PPP Federal` : '— PPP Federal';
+  const tagPJ      = document.getElementById('hero-tag-pj');
+  const tagTorneo  = document.getElementById('hero-tag-torneo');
+  const tagFed     = document.getElementById('hero-tag-fed');
+  if (tagPJ) tagPJ.textContent = pjTot !== '—'
+    ? `${s.afmb.pj && s.fed.pj ? `${pjTot} PJ · AFMB + Federal` : `${pjTot} PJ · AFMB`}`
+    : '— PJ';
+  if (tagTorneo && s.afmb.ppg) {
+    tagTorneo.textContent = `🏀 ${s.afmb.ppg} PPP AFMB`;
+    tagTorneo.style.display = '';
+  }
+  if (tagFed && s.fed.ppg) {
+    tagFed.textContent = `🌐 ${s.fed.ppg} PPP Federal`;
+    tagFed.style.display = '';
+  }
 
   // ── TAB RENDIMIENTO — grid principal ──
-  elSet('st-ppp-fed',  fedPPG);
   elSet('st-ppp-afmb', fmt(s.afmb.ppg));
-  elSet('st-mpg',      mpg !== '—' ? mpg : '—');
+  elSet('st-mpg',      mpg);
   elSet('st-pj',       pjTot);
+  elSet('st-afmb-pj-sub', s.afmb.pj ? `${s.afmb.pj} PJ` : '—');
   elSet('st-mpg-sub',  mpg !== '—' ? 'Alta rotación' : '—');
   elSet('st-pj-sub',   (s.afmb.pj && s.fed.pj) ? `${s.afmb.pj} AFMB · ${s.fed.pj} Fed` :
                         s.afmb.pj ? `${s.afmb.pj} AFMB` : '—');
+
+  // Fila Federal (mostrar solo si hay datos)
+  if (s.fed.ppg != null) {
+    const fedRow = document.getElementById('st-fed-row');
+    if (fedRow) fedRow.style.display = '';
+    elSet('st-ppp-fed', fedPPG);
+    elSet('st-fed-pj',  fmt(s.fed.pj));
+    elSet('st-fed-mpg', fmt(s.fed.min_pg));
+  }
 
   // RPG / APG desde game_log o mostrar Sin datos
   if (s.game_log.rpg != null) {
@@ -1841,10 +1951,13 @@ function renderPlayerStats() {
   elSet('cv-mpg',      mpg);
   elSet('cv-pj',       pjTot);
 
-  // Quote del CV dinámico
+  // Quote del CV dinámico — funciona con solo AFMB o con ambos torneos
   const cvQ = document.getElementById('cv-quote');
-  if (cvQ && s.afmb.ppg && s.fed.ppg) {
-    cvQ.innerHTML = `<strong>"Elite scorer at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB) and competitive at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
+  if (cvQ && s.afmb.ppg) {
+    const fedPart = s.fed.ppg
+      ? ` Competitive at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB).`
+      : '';
+    cvQ.innerHTML = `<strong>"Top scorer at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB).${fedPart}"</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
   }
 
   // Hitos con valores dinámicos
@@ -2127,24 +2240,63 @@ function buildObjetivos() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   MIRADA DEL COACH — carga evaluación desde Supabase player_data
+   La clave 'coach_eval_v1' contiene: { obs, fortalezas, areas, prioridad, fecha }
+   Si no existe la clave → muestra el placeholder ("todavía no cargó evaluación").
+   ══════════════════════════════════════════════════════════ */
+async function loadCoachEval() {
+  const { data } = await _supa
+    .from('player_data')
+    .select('value')
+    .eq('player_id', PLAYER_ID)
+    .eq('key', 'coach_eval_v1')
+    .maybeSingle();
+
+  if (!data?.value) return; // sin evaluación → placeholder visible por defecto
+
+  const ev = data.value;
+  // Ocultar placeholder, mostrar panel
+  const placeholder = document.querySelector('#coach-eval-content > div');
+  if (placeholder) placeholder.style.display = 'none';
+  const panel = document.getElementById('coach-obs-panel');
+  if (panel) panel.style.display = 'block';
+  // Badge y fecha
+  const badge = document.getElementById('coach-eval-badge');
+  if (badge) badge.style.display = '';
+  const fechaEl = document.getElementById('coach-eval-fecha');
+  if (fechaEl) fechaEl.textContent = ev.fecha ? `Evaluación: ${ev.fecha}` : '—';
+  // Contenido
+  const set = (id, txt) => { const el=document.getElementById(id); if(el) el.innerHTML=txt||'—'; };
+  set('coach-obs-txt',  ev.obs);
+  set('coach-fort-txt', ev.fortalezas);
+  set('coach-area-txt', ev.areas);
+  set('coach-prio-txt', ev.prioridad);
+}
+
+/* ══════════════════════════════════════════════════════════
    DASHBOARD — vista concentrada de evolución
    ══════════════════════════════════════════════════════════ */
 function buildDashboard() {
   const s = playerStats;
   const fmt = v => v != null ? v : '—';
 
-  // KPIs
-  const mpg = s.combined.min_pg || s.afmb.min_pg;
-  document.getElementById('dash-ppp').textContent     = fmt(s.combined.ppg);
-  document.getElementById('dash-ppp-sub').textContent = s.afmb.ppg && s.fed.ppg ? `${s.afmb.ppg} AFMB · ${s.fed.ppg} Fed` : '—';
-  document.getElementById('dash-pj').textContent      = fmt(s.combined.pj);
+  // KPIs — usar AFMB como fallback cuando no hay Federal
+  const mpg    = s.combined.min_pg || s.afmb.min_pg;
+  const mainPP = s.combined.ppg != null ? s.combined.ppg : s.afmb.ppg;
+  const mainPJ = s.combined.pj   != null ? s.combined.pj  : s.afmb.pj;
+
+  document.getElementById('dash-ppp').textContent     = fmt(mainPP);
+  document.getElementById('dash-ppp-sub').textContent = s.afmb.ppg && s.fed.ppg
+    ? `${s.afmb.ppg} AFMB · ${s.fed.ppg} Fed`
+    : s.afmb.ppg ? `${s.afmb.ppg} PPP · AFMB 🏀` : '—';
+  document.getElementById('dash-pj').textContent      = fmt(mainPJ);
   document.getElementById('dash-mpg').textContent     = fmt(mpg);
 
   // Bienvenida dinámica
   const hora = new Date().getHours();
   const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
   document.getElementById('dash-bienvenida').textContent = `${saludo}, Mía — acá está tu evolución`;
-  document.getElementById('dash-subtitulo').textContent  = `Temporada 2026 · ${s.combined.pj || '?'} partidos · Next Level Basketball`;
+  document.getElementById('dash-subtitulo').textContent  = `Temporada 2026 · ${mainPJ || '?'} partidos · Next Level Basketball`;
 
   // Evolución mini en Dashboard
   const mini = document.getElementById('dash-evol-mini');
@@ -2190,8 +2342,8 @@ function buildDashObjActivo(container) {
       <div class="obj-txt">${obj.txt}</div>
       <div class="obj-txt" style="margin-top:4px;font-size:0.6rem;color:#64748b">📌 ${obj.drill}</div>
       <div class="obj-actions">
-        <button class="obj-btn" onclick="setObjEstado('${obj.id}','cumplido')">✅ Lo logré</button>
-        <button class="obj-btn" onclick="showTab('plan',null,4)" style="color:var(--muted)">Ver plan completo →</button>
+        <button class="obj-btn prim" onclick="setObjEstado('${obj.id}','cumplido')">✅ Lo logré</button>
+        <button class="obj-btn" onclick="setObjEstado('${obj.id}','pendiente')">⏸ Pausar</button>
       </div>
     </div>`).join('');
 }
