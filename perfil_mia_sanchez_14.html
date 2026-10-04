@@ -112,16 +112,77 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .def-bar-bg{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
 .def-bar-fill{height:100%;border-radius:4px}
 
-/* ON/OFF */
-.onoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.onoff-card{border-radius:12px;padding:14px;text-align:center;border:1px solid}
-.onoff-on{background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
-.onoff-off{background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.15)}
-.onoff-label{font-size:0.55rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.onoff-big{font-size:1.6rem;font-weight:900;line-height:1}
-.onoff-sub{font-size:0.58rem;color:var(--muted);margin-top:4px}
-.net-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:800}
-.net-pos{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:var(--green)}
+/* INSIGHT CARDS */
+.insight-card{border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.insight-up{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.18)}
+.insight-down{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15)}
+.insight-flat{background:rgba(100,116,139,0.06);border:1px solid rgba(100,116,139,0.15)}
+.insight-tip{background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.18)}
+.insight-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
+.insight-txt{font-size:0.74rem;color:#94a3b8;line-height:1.65}
+.insight-txt strong{color:var(--text);font-weight:600}
+
+/* EVOLUCIÓN 5v5 */
+.evol-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.evol-row:last-child{border-bottom:none}
+.evol-lbl{font-size:0.65rem;color:var(--text);font-weight:600;width:88px;flex-shrink:0}
+.evol-vals{display:flex;gap:6px;align-items:center;flex:1}
+.evol-num{font-size:0.82rem;font-weight:900;min-width:36px;text-align:center}
+.evol-arrow{font-size:0.9rem;flex-shrink:0}
+.evol-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.evol-bar{height:100%;border-radius:3px;transition:width .5s ease}
+
+/* OBJETIVOS CON ESTADO */
+.obj-item{background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.04);transition:border-color .15s}
+.obj-item.activo{border-color:rgba(249,115,22,0.3)}
+.obj-item.cumplido{border-color:rgba(34,197,94,0.25);opacity:0.7}
+.obj-item.pausado{border-color:rgba(100,116,139,0.2);opacity:0.55}
+.obj-hdr{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.obj-badge{padding:2px 9px;border-radius:20px;font-size:0.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.obj-activo{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
+.obj-cumplido{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
+.obj-pausado{background:rgba(100,116,139,0.1);color:#94a3b8;border:1px solid rgba(100,116,139,0.2)}
+.obj-ttl{font-size:0.73rem;font-weight:700;color:var(--text)}
+.obj-txt{font-size:0.66rem;color:#94a3b8;line-height:1.55}
+.obj-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.obj-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:7px;padding:4px 10px;font-size:0.6rem;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .12s}
+.obj-btn:hover{border-color:rgba(249,115,22,0.35);color:#fb923c}
+.obj-btn.prim{background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.3);color:#fb923c}
+
+/* DASHBOARD */
+.dash-section{margin-bottom:14px}
+.dash-kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.dash-kpi{background:var(--card);border-radius:12px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.dash-kpi-val{font-size:1.3rem;font-weight:900;line-height:1}
+.dash-kpi-lbl{font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.dash-kpi-sub{font-size:0.58rem;font-weight:700;margin-top:2px}
+.logro-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.logro-item:last-child{border-bottom:none}
+.logro-icon{font-size:1.1rem;flex-shrink:0}
+.logro-txt{font-size:0.7rem;color:#94a3b8;line-height:1.5}
+.logro-txt strong{color:var(--text)}
+
+/* PLAYER REPORT — solo activo en @media print */
+.report-section{display:none}
+@media print{
+  .tab-bar,.bnav,.btn-cv,.obj-btn,.btn-reg,.btn-how,#how-modal-bg{display:none!important}
+  body{background:#fff!important;color:#111!important;padding:0!important;font-size:10pt}
+  .tab-pane{display:none!important}
+  .report-section{display:block!important;page-break-inside:avoid}
+  .report-page{padding:1.2cm 1.5cm;max-width:100%}
+  .rpt-h1{font-size:18pt;font-weight:900;color:#1a1a1a;margin-bottom:4pt}
+  .rpt-h2{font-size:11pt;font-weight:800;color:#c2410c;text-transform:uppercase;letter-spacing:.5pt;margin:14pt 0 6pt;border-bottom:1pt solid #f0e0d0;padding-bottom:3pt}
+  .rpt-h3{font-size:9.5pt;font-weight:700;color:#333;margin:8pt 0 3pt}
+  .rpt-txt{font-size:9pt;color:#444;line-height:1.55;margin-bottom:5pt}
+  .rpt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8pt;margin:6pt 0 10pt}
+  .rpt-kpi{background:#fafafa;border:1pt solid #e8e0d8;border-radius:5pt;padding:7pt 5pt;text-align:center}
+  .rpt-kpi-v{font-size:14pt;font-weight:900;color:#c2410c}
+  .rpt-kpi-l{font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:.4pt;margin-top:2pt}
+  .rpt-row{display:flex;gap:6pt;margin-bottom:4pt;align-items:flex-start}
+  .rpt-dot{font-size:8pt;flex-shrink:0;margin-top:2pt}
+  .rpt-coach-box{background:#fff8f3;border:1pt solid #f0cdb0;border-radius:5pt;padding:10pt;margin:6pt 0}
+  .rpt-footer{font-size:7pt;color:#aaa;text-align:center;margin-top:20pt;border-top:0.5pt solid #ddd;padding-top:6pt}
+}
 
 /* PROGRESIÓN */
 .prog-wrap{position:relative;height:200px;margin-bottom:14px}
@@ -300,18 +361,102 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <button class="tab-btn on" onclick="showTab('rend',this)">📊 Mi Rendimiento</button>
-  <button class="tab-btn"    onclick="showTab('coach',this)">🤖 Análisis del Coach</button>
-  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Mi Progresión</button>
-  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Plan Personalizado</button>
-  <button class="tab-btn"    onclick="showTab('fis',this)">💪 Estado Físico</button>
-  <button class="tab-btn"    onclick="showTab('perfil',this)">👤 Mi Perfil</button>
+  <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Mi Evolución</button>
+  <button class="tab-btn"    onclick="showTab('rend',this)">📊 Rendimiento</button>
+  <button class="tab-btn"    onclick="showTab('coach',this)">🤖 Coach IA</button>
+  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Progresión</button>
+  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Plan</button>
+  <button class="tab-btn"    onclick="showTab('fis',this)">💪 Físico</button>
+  <button class="tab-btn"    onclick="showTab('perfil',this)">👤 Perfil</button>
 </div>
+
+<!-- ══════════════════════════════════════════
+     TAB 0 — MI EVOLUCIÓN (DASHBOARD)
+══════════════════════════════════════════ -->
+<div id="tab-dash" class="tab-pane on">
+
+  <!-- Mensaje de bienvenida dinámico -->
+  <div style="background:linear-gradient(135deg,rgba(249,115,22,0.07),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.18);border-radius:14px;padding:16px 18px;margin-bottom:14px">
+    <div style="font-size:0.58rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">🏠 Panel de Evolución Personal</div>
+    <div id="dash-bienvenida" style="font-size:0.82rem;font-weight:800;color:var(--text);margin-bottom:4px">Cargando tu evolución…</div>
+    <div id="dash-subtitulo" style="font-size:0.68rem;color:#94a3b8;line-height:1.5">Temporada 2026 · Next Level Basketball</div>
+  </div>
+
+  <!-- KPIs de rendimiento -->
+  <div class="card">
+    <div class="card-ttl">📊 Tu Rendimiento — Temporada 2026</div>
+    <div class="dash-kpi-strip">
+      <div class="dash-kpi">
+        <div class="dash-kpi-val" id="dash-ppp" style="color:var(--ac)">—</div>
+        <div class="dash-kpi-lbl">PPP Promedio</div>
+        <div class="dash-kpi-sub" id="dash-ppp-sub" style="color:var(--muted)">—</div>
+      </div>
+      <div class="dash-kpi">
+        <div class="dash-kpi-val" id="dash-pj" style="color:var(--cyan)">—</div>
+        <div class="dash-kpi-lbl">Partidos</div>
+        <div class="dash-kpi-sub" style="color:var(--muted)">AFMB + Fed</div>
+      </div>
+      <div class="dash-kpi">
+        <div class="dash-kpi-val" id="dash-mpg" style="color:var(--purple)">—</div>
+        <div class="dash-kpi-lbl">Min / Partido</div>
+        <div class="dash-kpi-sub" style="color:var(--muted)">en cancha</div>
+      </div>
+    </div>
+    <!-- Evolución 5 últimos partidos vs anteriores -->
+    <div id="dash-evol-mini" style="font-size:0.65rem;color:var(--muted);text-align:center;padding:8px 0">⏳ Calculando evolución…</div>
+  </div>
+
+  <!-- Insights principales -->
+  <div class="card">
+    <div class="card-ttl">💡 Qué está pasando con tu juego</div>
+    <div id="dash-insights">
+      <div style="text-align:center;padding:14px;color:var(--muted);font-size:0.75rem">⏳ Generando análisis…</div>
+    </div>
+  </div>
+
+  <!-- Objetivo activo -->
+  <div class="card">
+    <div class="card-ttl">🎯 Objetivo Activo</div>
+    <div id="dash-obj-activo">
+      <div style="text-align:center;padding:12px;color:var(--muted);font-size:0.73rem">⏳ Cargando objetivos…</div>
+    </div>
+    <button onclick="showTab('plan',null,4)" style="width:100%;margin-top:8px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:9px;padding:9px;font-size:0.72rem;font-weight:700;color:#fb923c;cursor:pointer;font-family:inherit">
+      🎯 Ver todos los objetivos
+    </button>
+  </div>
+
+  <!-- Evolución física (último test de cada categoría) -->
+  <div class="card">
+    <div class="card-ttl">💪 Última evaluación física</div>
+    <div id="dash-fisico">
+      <div style="text-align:center;padding:12px;color:var(--muted);font-size:0.73rem">⏳ Cargando tests…</div>
+    </div>
+    <button onclick="showTab('fis',null,5)" style="width:100%;margin-top:8px;background:rgba(168,85,247,0.07);border:1px solid rgba(168,85,247,0.2);border-radius:9px;padding:9px;font-size:0.72rem;font-weight:700;color:#d8b4fe;cursor:pointer;font-family:inherit">
+      💪 Ver historial físico completo
+    </button>
+  </div>
+
+  <!-- Logros de la temporada -->
+  <div class="card">
+    <div class="card-ttl">🏆 Logros destacados — Temporada 2026</div>
+    <div id="dash-logros"></div>
+  </div>
+
+  <!-- Botón Generar Player Report -->
+  <div style="margin-top:6px;margin-bottom:14px">
+    <button onclick="generarReport()" style="width:100%;background:linear-gradient(135deg,#1a0800,#2a0f00);border:1px solid rgba(249,115,22,0.35);border-radius:12px;padding:14px 18px;font-size:0.8rem;font-weight:800;color:#fb923c;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px">
+      <span style="font-size:1.1rem">📄</span>
+      Generar Player Report
+      <span style="font-size:0.62rem;color:var(--muted);font-weight:400">· Exportable a PDF</span>
+    </button>
+  </div>
+
+</div><!-- /tab-dash -->
 
 <!-- ══════════════════════════════════════════
      TAB 1 — MI RENDIMIENTO
 ══════════════════════════════════════════ -->
-<div id="tab-rend" class="tab-pane on">
+<div id="tab-rend" class="tab-pane">
 
   <div class="card">
     <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026
@@ -524,28 +669,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- ON/OFF -->
+  <!-- EVOLUCIÓN 5 vs 5 PARTIDOS -->
   <div class="card">
-    <div class="card-ttl">⚡ Impacto On/Off Court</div>
-    <div class="onoff-grid">
-      <div class="onoff-card onoff-on">
-        <div class="onoff-label" style="color:var(--green)">Mía en cancha</div>
-        <div class="onoff-big" style="color:var(--green)">+11.2</div>
-        <div class="onoff-sub">Net Rating</div>
-        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo anota 11.2 pts más<br>por 100 posesiones</div>
-      </div>
-      <div class="onoff-card onoff-off">
-        <div class="onoff-label" style="color:var(--red)">Mía afuera</div>
-        <div class="onoff-big" style="color:var(--red)">−3.4</div>
-        <div class="onoff-sub">Net Rating</div>
-        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo rinde 3.4 pts menos<br>por 100 posesiones</div>
-      </div>
+    <div class="card-ttl">📈 Tu Evolución — Últimos 5 vs Anteriores 5</div>
+    <div id="evol-loading" style="text-align:center;padding:14px 0;color:var(--muted);font-size:0.75rem">⏳ Calculando evolución desde tus partidos…</div>
+    <div id="evol-content" style="display:none">
+      <div id="evol-rows"></div>
+      <div id="evol-insight" style="margin-top:10px;font-size:0.7rem;color:#94a3b8;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:9px 12px;line-height:1.6"></div>
     </div>
-    <div style="text-align:center;margin-bottom:12px">
-      <span class="net-badge net-pos">📊 Diferencial On/Off: +14.6 — MVP de Impacto</span>
-    </div>
-    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:10px 12px">
-      🔥 <strong style="color:var(--ac2)">La jugadora más determinante del equipo:</strong> Cuando Mía está en cancha, el equipo tiene un net rating de +11.2, que desciende a −3.4 cuando sale. Este diferencial de +14.6 la posiciona como la jugadora con mayor impacto individual de todo el plantel. Su rol como organizadora + anotadora es insustituible en el sistema actual.
+    <div id="evol-nodata" style="display:none;font-size:0.72rem;color:var(--muted);text-align:center;padding:12px 0">
+      Sin suficientes partidos en el historial para calcular evolución (se necesitan al menos 6).
     </div>
   </div>
 
@@ -788,6 +921,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <span class="plan-tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green)">Selecciones</span>
       </div>
     </div>
+  </div>
+
+  <!-- OBJETIVOS DE DESARROLLO — con estados -->
+  <div class="card">
+    <div class="card-ttl" style="justify-content:space-between">
+      🎯 Mis Objetivos de Desarrollo
+      <span style="font-size:0.52rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">Estado guardado en la nube</span>
+    </div>
+    <div id="obj-list"></div>
+    <div style="margin-top:10px;font-size:0.62rem;color:var(--muted);line-height:1.5;background:rgba(249,115,22,0.03);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:8px 11px">
+      💡 Marcá un objetivo como <strong style="color:#fb923c">Activo</strong> para que aparezca en tu Dashboard. Cuando lo lograste, marcalo como <strong style="color:#4ade80">Cumplido</strong> y se sumará a tus logros.
+    </div>
+  </div>
+
+  <!-- Próximo objetivo — conectado al diagnóstico -->
+  <div class="card" id="prox-obj-card" style="display:none">
+    <div class="card-ttl">🔮 Próximo paso sugerido por el Coach</div>
+    <div id="prox-obj-txt" style="font-size:0.74rem;color:#94a3b8;line-height:1.65"></div>
   </div>
 
 </div><!-- /tab-plan -->
@@ -1353,14 +1504,78 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 </div><!-- /tab-perfil -->
 
+<!-- PLAYER REPORT — solo visible en print, generado por JS -->
+<div class="report-section" id="player-report">
+  <div class="report-page">
+    <!-- Encabezado -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12pt">
+      <div>
+        <div style="font-size:8pt;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:.5pt;margin-bottom:3pt">Next Level Basketball · Player Report</div>
+        <div class="rpt-h1">Mía G. <span style="color:#c2410c">Sánchez</span> <span style="font-size:12pt;color:#888">#14</span></div>
+        <div style="font-size:9pt;color:#666;margin-top:2pt">Escolta / Alero · Club Dep. Berazategui · U13 Femenino</div>
+      </div>
+      <div style="text-align:right;font-size:8pt;color:#888">
+        <div style="font-size:16pt;font-weight:900;color:#c2410c">2026</div>
+        <div>Temporada</div>
+        <div id="rpt-fecha" style="margin-top:2pt;font-size:7pt;color:#aaa"></div>
+      </div>
+    </div>
+
+    <!-- Estadísticas clave -->
+    <div class="rpt-h2">Estadísticas — Temporada 2026</div>
+    <div class="rpt-grid">
+      <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-ppp-afmb">—</div><div class="rpt-kpi-l">PPP AFMB</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-ppp-fed">—</div><div class="rpt-kpi-l">PPP Federal</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-mpg">—</div><div class="rpt-kpi-l">Min / Partido</div></div>
+      <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-pj">—</div><div class="rpt-kpi-l">Partidos</div></div>
+    </div>
+
+    <!-- Evolución reciente -->
+    <div class="rpt-h2">Evolución Reciente</div>
+    <div id="rpt-evol" class="rpt-txt">—</div>
+
+    <!-- Fortalezas -->
+    <div class="rpt-h2">Fortalezas</div>
+    <div id="rpt-fortalezas"></div>
+
+    <!-- Aspectos a mejorar -->
+    <div class="rpt-h2">Aspectos a Mejorar</div>
+    <div id="rpt-areas"></div>
+
+    <!-- Tests físicos -->
+    <div class="rpt-h2">Evaluación Física</div>
+    <div id="rpt-fisico" class="rpt-txt">—</div>
+
+    <!-- Objetivos activos -->
+    <div class="rpt-h2">Objetivos de Desarrollo</div>
+    <div id="rpt-objetivos"></div>
+
+    <!-- Plan de trabajo -->
+    <div class="rpt-h2">Plan de Trabajo</div>
+    <div id="rpt-plan" class="rpt-txt">Ver sección Plan Personalizado en la app para el detalle de ejercicios por fase.</div>
+
+    <!-- Comentario del coach -->
+    <div class="rpt-h2">Comentario del Coach</div>
+    <div class="rpt-coach-box">
+      <div id="rpt-coach-comment" style="font-size:9pt;color:#555;line-height:1.6;font-style:italic">—</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="rpt-footer">
+      Next Level Basketball · Player Report · Temporada 2026 · <span id="rpt-footer-fecha"></span>
+      · Este reporte es confidencial y de uso exclusivo del jugador y su familia.
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bnav" id="bnav">
-  <button class="bnav-btn on" onclick="showTab('rend',null,0)"><span class="ni">📊</span>Rendimiento</button>
-  <button class="bnav-btn"   onclick="showTab('coach',null,1)"><span class="ni">🤖</span>Coach</button>
-  <button class="bnav-btn"   onclick="showTab('prog',null,2)"><span class="ni">📈</span>Progresión</button>
-  <button class="bnav-btn"   onclick="showTab('plan',null,3)"><span class="ni">🎯</span>Plan</button>
-  <button class="bnav-btn"   onclick="showTab('fis',null,4)"><span class="ni">💪</span>Físico</button>
-  <button class="bnav-btn"   onclick="showTab('perfil',null,5)"><span class="ni">👤</span>Perfil</button>
+  <button class="bnav-btn on" onclick="showTab('dash',null,0)"><span class="ni">🏠</span>Inicio</button>
+  <button class="bnav-btn"   onclick="showTab('rend',null,1)"><span class="ni">📊</span>Stats</button>
+  <button class="bnav-btn"   onclick="showTab('coach',null,2)"><span class="ni">🤖</span>Coach</button>
+  <button class="bnav-btn"   onclick="showTab('plan',null,4)"><span class="ni">🎯</span>Plan</button>
+  <button class="bnav-btn"   onclick="showTab('fis',null,5)"><span class="ni">💪</span>Físico</button>
+  <button class="bnav-btn"   onclick="showTab('perfil',null,6)"><span class="ni">👤</span>Perfil</button>
   <button class="bnav-btn"   onclick="doLogout()" style="color:#ef4444"><span class="ni">🚪</span>Salir</button>
 </nav>
 
@@ -1522,11 +1737,17 @@ async function loadPlayerStats() {
 
     playerStats.loaded = true;
     renderPlayerStats();
+    // Lanzar carga adicional en paralelo (no bloqueante)
+    loadGameLogAndRender();
+    loadObjEstados();
+    // Dashboard: Tab 0 está visible desde el inicio
+    if (!_dashInited) { _dashInited = true; buildDashboard(); }
 
   } catch(err) {
     playerStats.error = err.message;
     console.warn('loadPlayerStats:', err);
     renderStatsError();
+    loadObjEstados(); // objetivos no dependen de stats_seasons
   }
 }
 
@@ -1647,6 +1868,7 @@ function renderStatsError() {
 /* ─── TABS ─────────────────────────────── */
 let _fisInited = false;
 let _pfInited  = false;
+let _dashInited = false;
 function showTab(id, btn, navIdx) {
   document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
@@ -1654,29 +1876,432 @@ function showTab(id, btn, navIdx) {
   document.getElementById('tab-' + id).classList.add('on');
   if (btn) btn.classList.add('on');
   if (navIdx !== undefined) {
-    document.querySelectorAll('.bnav-btn')[navIdx].classList.add('on');
-    document.querySelectorAll('.tab-btn')[navIdx].classList.add('on');
+    const bnavBtns = document.querySelectorAll('.bnav-btn');
+    const tabBtns  = document.querySelectorAll('.tab-btn');
+    if (bnavBtns[navIdx]) bnavBtns[navIdx].classList.add('on');
+    if (tabBtns[navIdx])  tabBtns[navIdx].classList.add('on');
   }
-  // Tab físico: inicializar la primera vez, re-leer antro siempre
   if (id === 'fis' && !_fisInited) { _fisInited = true; fisInit(); }
   if (id === 'fis') { fisLoadAntro(); }
-  // Tab perfil: cargar estado guardado la primera vez
   if (id === 'perfil' && !_pfInited) { _pfInited = true; pfLoadState(); }
+  if (id === 'dash' && !_dashInited && playerStats.loaded) { _dashInited = true; buildDashboard(); }
 }
 
 /* ─── INIT ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildShotMap();
   buildZoneSummary();
-  buildCompChart();   // placeholder con guiones; se reconstruye en renderPlayerStats
+  buildCompChart();
   buildZoneChart();
   buildRadar();
   buildFortalezasAreas();
   buildProgChart();
   buildHitos();
   buildNcaaBars();
-  loadPlayerStats();  // ← carga Supabase y actualiza todos los KPIs
+  buildObjetivos();
+  loadPlayerStats();   // ← carga Supabase → llama a renderPlayerStats + buildDashboard
 });
+
+/* ══════════════════════════════════════════════════════════
+   EVOLUCIÓN 5 vs 5 — desde game_log
+   Compara últimos 5 partidos vs. los 5 anteriores.
+   ══════════════════════════════════════════════════════════ */
+// Cache del game_log completo (se llena en loadPlayerStats extendido)
+let _gameLog = [];
+
+async function loadGameLogAndRender() {
+  const { data: gl, error } = await _supa
+    .from('game_log')
+    .select('fecha, pts, reb_tot, ast, minutos, stl, blk, rival, torneo')
+    .eq('player_id', PLAYER_ID)
+    .order('fecha', { ascending: true });
+  if (error || !gl) return;
+  _gameLog = gl;
+  calcEvolucion5v5(gl);
+}
+
+function calcEvolucion5v5(gl) {
+  if (!gl || gl.length < 6) {
+    document.getElementById('evol-loading').style.display = 'none';
+    document.getElementById('evol-nodata').style.display  = 'block';
+    return;
+  }
+
+  const total = gl.length;
+  const rec5  = gl.slice(total - 5);         // últimos 5
+  const ant5  = gl.slice(Math.max(0, total - 10), total - 5); // 5 anteriores
+
+  const avg = (arr, key) => {
+    const vals = arr.map(r => r[key] ?? 0);
+    return +(vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1);
+  };
+
+  const metricas = [
+    { key:'pts',     lbl:'Puntos',      color:'#f97316', higherBetter:true },
+    { key:'reb_tot', lbl:'Rebotes',     color:'#22c55e', higherBetter:true },
+    { key:'ast',     lbl:'Asistencias', color:'#3b82f6', higherBetter:true },
+    { key:'minutos', lbl:'Minutos',     color:'#a855f7', higherBetter:true },
+    { key:'stl',     lbl:'Robos',       color:'#06b6d4', higherBetter:true },
+  ];
+
+  const rows = document.getElementById('evol-rows');
+  rows.innerHTML = '';
+  const results = [];
+
+  metricas.forEach(m => {
+    if (rec5.every(r => r[m.key] == null)) return; // métrica sin datos
+    const vRec = avg(rec5, m.key);
+    const vAnt = ant5.length ? avg(ant5, m.key) : null;
+    const diff  = vAnt != null ? vRec - vAnt : null;
+    const pct   = vAnt ? Math.min(100, Math.round((vRec / (Math.max(vRec,vAnt) * 1.3)) * 100)) : 60;
+
+    let arrow = '→', arrowColor = '#64748b', trend = 'flat';
+    if (diff != null && Math.abs(diff) >= 0.3) {
+      if (diff > 0 === m.higherBetter) { arrow = '↑'; arrowColor = '#22c55e'; trend = 'up'; }
+      else                              { arrow = '↓'; arrowColor = '#ef4444'; trend = 'down'; }
+    }
+    results.push({ ...m, vRec, vAnt, diff, trend });
+
+    rows.innerHTML += `<div class="evol-row">
+      <div class="evol-lbl">${m.lbl}</div>
+      <div class="evol-vals">
+        <div class="evol-num" style="color:${m.color}">${vRec}</div>
+        <div class="evol-bar-wrap">
+          <div class="evol-bar" style="width:${pct}%;background:${m.color}44;border-right:2px solid ${m.color}"></div>
+        </div>
+        <div class="evol-arrow" style="color:${arrowColor}">${arrow}</div>
+        <div class="evol-num" style="color:${arrowColor};font-size:0.7rem">${vAnt != null ? (diff >= 0 ? '+' : '') + diff.toFixed(1) : 'primer bloque'}</div>
+      </div>
+    </div>`;
+  });
+
+  // Insight automático sobre la evolución
+  const mejoras  = results.filter(r => r.trend === 'up');
+  const caidas   = results.filter(r => r.trend === 'down');
+  let insightTxt = '';
+  if (mejoras.length > 0)
+    insightTxt += `📈 <strong>Mejorando:</strong> ${mejoras.map(r => r.lbl.toLowerCase()).join(', ')} en los últimos 5 partidos. `;
+  if (caidas.length > 0)
+    insightTxt += `⚠️ <strong>A sostener:</strong> ${caidas.map(r => r.lbl.toLowerCase()).join(', ')} bajaron respecto al bloque anterior. `;
+  if (!insightTxt)
+    insightTxt = '→ Rendimiento estable entre los dos bloques.';
+
+  document.getElementById('evol-insight').innerHTML = insightTxt;
+  document.getElementById('evol-loading').style.display  = 'none';
+  document.getElementById('evol-content').style.display  = 'block';
+
+  // Guardar resultados para el Dashboard y Report
+  window._evolResults = results;
+  window._evolRec5 = rec5;
+  window._evolAnt5 = ant5;
+}
+
+/* ══════════════════════════════════════════════════════════
+   INSIGHTS AUTOMÁTICOS — lenguaje simple para jugador/familia
+   ══════════════════════════════════════════════════════════ */
+function buildInsights(container) {
+  const s = playerStats;
+  const ev = window._evolResults || [];
+  const insights = [];
+
+  // Anotación
+  if (s.afmb.ppg) {
+    if (s.afmb.ppg >= 8)
+      insights.push({ cls:'insight-up',   icon:'🔥', msg:`<strong>Tu anotación en AFMB es de las más altas del equipo</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos. Sos la primera opción ofensiva.` });
+    if (s.fed.ppg && s.fed.ppg >= 6)
+      insights.push({ cls:'insight-up',   icon:'🌐', msg:`<strong>Producción sólida en el Federal CABB</strong> — ${s.fed.ppg} PPP en torneo nacional. Podés competir más allá de la liga local.` });
+  }
+  // Evolución reciente
+  const ptsMejora = ev.find(r => r.key === 'pts' && r.trend === 'up');
+  const ptsCalda  = ev.find(r => r.key === 'pts' && r.trend === 'down');
+  if (ptsMejora)
+    insights.push({ cls:'insight-up',   icon:'📈', msg:`<strong>Tu anotación mejoró en los últimos 5 partidos</strong> — estás tomando mayor protagonismo ofensivo.` });
+  if (ptsCalda)
+    insights.push({ cls:'insight-flat',  icon:'📉', msg:`<strong>Los puntos bajaron en los últimos 5 partidos</strong> — puede ser variación normal o una señal para revisar el volumen de tiro.` });
+
+  const astMejora = ev.find(r => r.key === 'ast' && r.trend === 'up');
+  if (astMejora)
+    insights.push({ cls:'insight-up',   icon:'🎯', msg:`<strong>Más asistencias en los últimos partidos</strong> — estás encontrando mejor a tus compañeras.` });
+
+  const minMejora = ev.find(r => r.key === 'minutos' && r.trend === 'up');
+  if (minMejora)
+    insights.push({ cls:'insight-up',   icon:'⏱️', msg:`<strong>El cuerpo técnico te está dando más minutos</strong> — señal de confianza en tu rendimiento.` });
+
+  // Áreas a trabajar (basadas en AREAS estáticas del coach)
+  insights.push({ cls:'insight-tip', icon:'🎯', msg:`<strong>Aspecto clave para seguir creciendo:</strong> Tiro libre — trabajar la rutina diaria de 50 TL te acerca a ser una amenaza total en los momentos decisivos.` });
+
+  if (ev.find(r => r.key === 'stl' && r.trend === 'down'))
+    insights.push({ cls:'insight-flat', icon:'🛡️', msg:`<strong>Las pérdidas o robos bajaron</strong> — área defensiva para seguir trabajando en la semana.` });
+
+  if (!container) return insights;
+
+  container.innerHTML = insights.map(i =>
+    `<div class="insight-card ${i.cls}"><div class="insight-icon">${i.icon}</div><div class="insight-txt">${i.msg}</div></div>`
+  ).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   OBJETIVOS DE DESARROLLO — con estados persistidos
+   ══════════════════════════════════════════════════════════ */
+// Definición base de objetivos (conectados al diagnóstico)
+const OBJETIVOS_BASE = [
+  { id:'tl70',   ttl:'Tiro Libre — Meta 70%',            estado:'activo',
+    txt:'50 TL/día con rutina invariable. El TL es la estadística más controlable y te da puntos seguros bajo presión.',
+    origen:'Coach · Área a mejorar', color:'#ef4444',
+    drill:'Protocolo: 3 dribbles → alinear pie → respirar → tirar. 50 rep/día.' },
+  { id:'pullup', ttl:'Pull-up Jumper off el dribble',    estado:'activo',
+    txt:'20 pull-up jumpers por sesión desde cada ala y desde el pico. El siguiente nivel después del catch-and-shoot.',
+    origen:'Plan Personalizado Fase 1', color:'#f97316',
+    drill:'Drill P&R: dribble de ataque → parar → tiro en suspensión. 4 series × 8.' },
+  { id:'def',    ttl:'Defensa Individual en Perímetro',  estado:'pendiente',
+    txt:'Deny position, lateral shuffle y help-side defense. La evaluación defensiva pesa igual que la ofensiva para el perfil NCAA.',
+    origen:'Plan Personalizado Fase 2', color:'#3b82f6',
+    drill:'3 sesiones de 15 min/semana · lateral shuffle sin cruzar los pies.' },
+  { id:'mdbil',  ttl:'Mano Débil bajo Presión',          estado:'pendiente',
+    txt:'Dribble con mano no dominante contra presión 1v1. Crítico para playoffs donde las defensas presionan cancha entera.',
+    origen:'Plan Personalizado Fase 2', color:'#06b6d4',
+    drill:'Crossover + between legs a velocidad · de línea de fondo a media cancha < 5 s.' },
+  { id:'camp',   ttl:'Camp / Selección FeBAMBA',         estado:'pendiente',
+    txt:'Con los números de esta temporada, la convocatoria a selección provincial es el objetivo natural para Cadetes 2027.',
+    origen:'Plan Personalizado Fase 3', color:'#a855f7',
+    drill:'Mantener rendimiento en ambas competencias y participar de tryouts provinciales.' },
+];
+
+let _objEstados = {}; // id → estado, persistido en Supabase player_data
+
+async function loadObjEstados() {
+  const { data } = await _supa
+    .from('player_data')
+    .select('value')
+    .eq('player_id', PLAYER_ID)
+    .eq('key', 'obj_estados_v1')
+    .maybeSingle();
+  if (data?.value) _objEstados = data.value;
+  buildObjetivos();
+}
+
+async function setObjEstado(id, nuevoEstado) {
+  _objEstados[id] = nuevoEstado;
+  buildObjetivos();
+  // Dashboard: refrescar objetivo activo
+  const doa = document.getElementById('dash-obj-activo');
+  if (doa) buildDashObjActivo(doa);
+  // Persistir
+  await _supa.from('player_data').upsert(
+    { player_id: PLAYER_ID, key: 'obj_estados_v1', value: _objEstados },
+    { onConflict: 'player_id,key' }
+  );
+}
+
+function buildObjetivos() {
+  const el = document.getElementById('obj-list');
+  if (!el) return;
+  el.innerHTML = '';
+  OBJETIVOS_BASE.forEach(obj => {
+    const estado = _objEstados[obj.id] || obj.estado;
+    const badgeCls = estado === 'activo' ? 'obj-activo' : estado === 'cumplido' ? 'obj-cumplido' : 'obj-pausado';
+    const badgeTxt = estado === 'activo' ? '🎯 Activo' : estado === 'cumplido' ? '✅ Cumplido' : '⏸ Pendiente';
+    el.innerHTML += `<div class="obj-item ${estado}" id="obj-${obj.id}">
+      <div class="obj-hdr">
+        <span class="obj-badge ${badgeCls}">${badgeTxt}</span>
+        <div class="obj-ttl">${obj.ttl}</div>
+      </div>
+      <div class="obj-txt">${obj.txt}</div>
+      <div class="obj-txt" style="margin-top:4px;color:#64748b;font-size:0.6rem">📌 ${obj.drill}</div>
+      <div class="obj-actions">
+        ${estado !== 'activo'   ? `<button class="obj-btn prim" onclick="setObjEstado('${obj.id}','activo')">🎯 Activar</button>` : ''}
+        ${estado !== 'cumplido' ? `<button class="obj-btn" onclick="setObjEstado('${obj.id}','cumplido')">✅ Cumplido</button>` : ''}
+        ${estado !== 'pendiente'? `<button class="obj-btn" onclick="setObjEstado('${obj.id}','pendiente')">⏸ Pausar</button>` : ''}
+      </div>
+    </div>`;
+  });
+
+  // Próximo paso sugerido — el primero pendiente
+  const prox = OBJETIVOS_BASE.find(o => (_objEstados[o.id] || o.estado) === 'pendiente');
+  const proxCard = document.getElementById('prox-obj-card');
+  const proxTxt  = document.getElementById('prox-obj-txt');
+  if (prox && proxCard && proxTxt) {
+    proxCard.style.display = 'block';
+    proxTxt.innerHTML = `<strong style="color:var(--ac)">${prox.ttl}</strong><br>${prox.txt}<br><div style="margin-top:6px;font-size:0.63rem;color:#64748b">📌 ${prox.drill}</div>`;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD — vista concentrada de evolución
+   ══════════════════════════════════════════════════════════ */
+function buildDashboard() {
+  const s = playerStats;
+  const fmt = v => v != null ? v : '—';
+
+  // KPIs
+  const mpg = s.combined.min_pg || s.afmb.min_pg;
+  document.getElementById('dash-ppp').textContent     = fmt(s.combined.ppg);
+  document.getElementById('dash-ppp-sub').textContent = s.afmb.ppg && s.fed.ppg ? `${s.afmb.ppg} AFMB · ${s.fed.ppg} Fed` : '—';
+  document.getElementById('dash-pj').textContent      = fmt(s.combined.pj);
+  document.getElementById('dash-mpg').textContent     = fmt(mpg);
+
+  // Bienvenida dinámica
+  const hora = new Date().getHours();
+  const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+  document.getElementById('dash-bienvenida').textContent = `${saludo}, Mía — acá está tu evolución`;
+  document.getElementById('dash-subtitulo').textContent  = `Temporada 2026 · ${s.combined.pj || '?'} partidos · Next Level Basketball`;
+
+  // Evolución mini en Dashboard
+  const mini = document.getElementById('dash-evol-mini');
+  if (mini) {
+    if (window._evolResults && window._evolResults.length) {
+      const mej = window._evolResults.filter(r => r.trend === 'up').map(r => r.lbl).join(', ');
+      const cai = window._evolResults.filter(r => r.trend === 'down').map(r => r.lbl).join(', ');
+      let txt = '';
+      if (mej) txt += `📈 <span style="color:#22c55e;font-weight:700">${mej}</span> mejorando`;
+      if (mej && cai) txt += ' · ';
+      if (cai) txt += `⚠️ <span style="color:#ef4444;font-weight:700">${cai}</span> a trabajar`;
+      if (!txt) txt = '→ Rendimiento estable en los últimos partidos';
+      mini.innerHTML = txt;
+    } else {
+      mini.textContent = 'Cargá partidos al game_log para ver tu evolución reciente.';
+    }
+  }
+
+  // Insights
+  const insightEl = document.getElementById('dash-insights');
+  if (insightEl) buildInsights(insightEl);
+
+  // Objetivo activo
+  const doaEl = document.getElementById('dash-obj-activo');
+  if (doaEl) buildDashObjActivo(doaEl);
+
+  // Evaluación física (últimos tests)
+  buildDashFisico();
+
+  // Logros
+  buildDashLogros();
+}
+
+function buildDashObjActivo(container) {
+  const activos = OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'activo');
+  if (!activos.length) {
+    container.innerHTML = `<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin objetivos activos — activá uno desde el Plan.</div>`;
+    return;
+  }
+  container.innerHTML = activos.map(obj => `
+    <div class="obj-item activo" style="margin-bottom:8px">
+      <div class="obj-hdr"><span class="obj-badge obj-activo">🎯 Activo</span><div class="obj-ttl">${obj.ttl}</div></div>
+      <div class="obj-txt">${obj.txt}</div>
+      <div class="obj-txt" style="margin-top:4px;font-size:0.6rem;color:#64748b">📌 ${obj.drill}</div>
+      <div class="obj-actions">
+        <button class="obj-btn" onclick="setObjEstado('${obj.id}','cumplido')">✅ Lo logré</button>
+        <button class="obj-btn" onclick="showTab('plan',null,4)" style="color:var(--muted)">Ver plan completo →</button>
+      </div>
+    </div>`).join('');
+}
+
+async function buildDashFisico() {
+  const tipos = ['beep_test','sprint_rep_15','lane_agility','broad_jump','squat_30s'];
+  const nom   = ['Beep Test','Sprint','Lane Agility','Salto','Sentadillas'];
+  const icons = ['❤️','⚡','🔄','🚀','💪'];
+  const { data } = await _supa
+    .from('physical_test_results')
+    .select('test_type, value, date, attempt_1')
+    .eq('player_id', PLAYER_ID)
+    .order('date', { ascending: false });
+
+  const el = document.getElementById('dash-fisico');
+  if (!data || !data.length) {
+    el.innerHTML = '<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin tests físicos registrados todavía.</div>';
+    return;
+  }
+
+  let html = '';
+  tipos.forEach((tipo, i) => {
+    const last = data.find(r => r.test_type === tipo);
+    if (!last) return;
+    const val = tipo === 'beep_test'
+      ? (last.attempt_1 != null ? `Niv. ${last.attempt_1}` : `${last.value}m`)
+      : (last.value != null ? last.value : '—');
+    const unidad = tipo === 'lane_agility' ? 's' : tipo === 'broad_jump' ? 'cm' : tipo === 'squat_30s' ? 'reps' : '';
+    html += `<div class="logro-item">
+      <div class="logro-icon">${icons[i]}</div>
+      <div class="logro-txt"><strong>${nom[i]}</strong> — ${val}${unidad} · <span style="color:var(--muted);font-size:0.62rem">${new Date(last.date+'T00:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}</span></div>
+    </div>`;
+  });
+  el.innerHTML = html || '<div style="font-size:0.72rem;color:var(--muted)">Sin datos de tests.</div>';
+
+  // Poblar también el reporte físico
+  document.getElementById('rpt-fisico').innerHTML = html ? html.replace(/<div class="logro-item">/g,'<div class="rpt-row"><div class="rpt-dot">▸</div>').replace(/<div class="logro-icon">.*?<\/div>/g,'').replace(/<div class="logro-txt">/g,'<div class="rpt-txt" style="margin:0">') : '— Sin registros.';
+}
+
+function buildDashLogros() {
+  const s = playerStats;
+  const logros = [];
+  if (s.afmb.ppg && s.afmb.ppg >= 8)  logros.push({ icon:'🔥', txt:`<strong>#1 Anotadora AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos` });
+  if (s.fed.ppg)                        logros.push({ icon:'🌐', txt:`<strong>Federal CABB</strong> — ${s.fed.ppg} PPP a nivel nacional` });
+  if (s.combined.pj && s.combined.pj >= 20) logros.push({ icon:'⏱️', txt:`<strong>${s.combined.pj} partidos</strong> — temporada completa en cancha` });
+  OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'cumplido').forEach(o =>
+    logros.push({ icon:'✅', txt:`<strong>Objetivo cumplido:</strong> ${o.ttl}` })
+  );
+  if (!logros.length) logros.push({ icon:'🏀', txt:'Los logros de la temporada se mostrarán acá a medida que los vayas registrando.' });
+
+  document.getElementById('dash-logros').innerHTML =
+    logros.map(l => `<div class="logro-item"><div class="logro-icon">${l.icon}</div><div class="logro-txt">${l.txt}</div></div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   PLAYER REPORT — genera el contenido y llama a print()
+   ══════════════════════════════════════════════════════════ */
+function generarReport() {
+  const s  = playerStats;
+  const fmt = v => v != null ? v : '—';
+  const hoy = new Date().toLocaleDateString('es-AR', {day:'2-digit', month:'long', year:'numeric'});
+
+  // Fecha
+  ['rpt-fecha','rpt-footer-fecha'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = hoy;
+  });
+
+  // KPIs
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('rpt-ppp-afmb', fmt(s.afmb.ppg));
+  set('rpt-ppp-fed',  fmt(s.fed.ppg));
+  set('rpt-mpg',      fmt(s.combined.min_pg || s.afmb.min_pg));
+  set('rpt-pj',       fmt(s.combined.pj));
+
+  // Evolución reciente
+  const evolEl = document.getElementById('rpt-evol');
+  if (window._evolResults && window._evolResults.length) {
+    const mej = window._evolResults.filter(r => r.trend === 'up').map(r => `${r.lbl} (${r.vRec})`).join(', ');
+    const cai = window._evolResults.filter(r => r.trend === 'down').map(r => `${r.lbl} (${r.vRec})`).join(', ');
+    evolEl.textContent = `Últimos 5 partidos vs. anteriores: ${mej ? 'Mejora en ' + mej + '. ' : ''}${cai ? 'Bajó en ' + cai + '.' : mej ? '' : 'Rendimiento estable.'}`;
+  } else {
+    evolEl.textContent = 'Sin suficientes partidos para calcular evolución por bloques.';
+  }
+
+  // Fortalezas
+  const rptF = document.getElementById('rpt-fortalezas');
+  rptF.innerHTML = FORTALEZAS.map(f => `<div class="rpt-row"><div class="rpt-dot">▸</div><div class="rpt-txt" style="margin:0"><strong>${f.t.replace(/ 🏀| 🧑‍🏫| 📊/g,'')}</strong>: ${f.tx}</div></div>`).join('');
+
+  // Áreas a mejorar
+  const rptA = document.getElementById('rpt-areas');
+  rptA.innerHTML = AREAS.map(a => `<div class="rpt-row"><div class="rpt-dot">▸</div><div class="rpt-txt" style="margin:0"><strong>${a.t.replace(/ 🏀| 🧑‍🏫| 📊/g,'')}</strong>: ${a.tx}</div></div>`).join('');
+
+  // Objetivos
+  const rptO = document.getElementById('rpt-objetivos');
+  rptO.innerHTML = OBJETIVOS_BASE
+    .filter(o => (_objEstados[o.id] || o.estado) !== 'pendiente')
+    .map(o => {
+      const est = _objEstados[o.id] || o.estado;
+      return `<div class="rpt-row"><div class="rpt-dot">${est === 'cumplido' ? '✅' : '🎯'}</div><div class="rpt-txt" style="margin:0"><strong>${o.ttl}</strong> (${est}): ${o.txt}</div></div>`;
+    }).join('') || '<div class="rpt-txt">Sin objetivos activos o cumplidos registrados.</div>';
+
+  // Comentario del coach (dinámico según insights)
+  const insights = buildInsights(null);
+  const comentario = insights.slice(0,3).map(i => i.msg.replace(/<[^>]+>/g,'')).join(' ');
+  const ccEl = document.getElementById('rpt-coach-comment');
+  if (ccEl) ccEl.textContent = comentario || 'Ver análisis completo en la sección Coach IA de la aplicación.';
+
+  // Trigger print
+  setTimeout(() => window.print(), 300);
+}
 
 /* ─── SHOT MAP ─────────────────────────── */
 function buildShotMap() {
