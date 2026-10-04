@@ -231,6 +231,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .profile-field{background:var(--card2);border-radius:10px;padding:11px 13px;border:1px solid rgba(255,255,255,0.04)}
 .pf-lbl{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
 .pf-val{font-size:0.8rem;font-weight:700;color:var(--text)}
+.pf-chip{background:var(--card2);border:1.5px solid var(--border);border-radius:9px;padding:9px 10px;font-size:0.72rem;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+.pf-chip:hover{border-color:rgba(249,115,22,0.35);color:#e2e8f0}
+.pf-chip.active{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.5);color:var(--ac);font-weight:700}
 .ncaa-box{background:linear-gradient(145deg,#060d1a,#1a0800);border:1px solid rgba(249,115,22,0.2);border-radius:14px;padding:18px;position:relative;overflow:hidden;margin-bottom:14px}
 .ncaa-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#a855f7,#06b6d4)}
 .ncaa-quote{background:rgba(249,115,22,0.04);border-left:3px solid var(--ac);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.73rem;color:#94a3b8;line-height:1.65;font-style:italic;margin:12px 0}
@@ -267,9 +270,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026 · 🔥 Máxima Anotadora</div>
         <div class="hero-tags">
           <span class="htag ht-or">⛹️ Escolta / Alero</span>
-          <span class="htag ht-gr">🔥 #1 PPP del equipo</span>
-          <span class="htag ht-pu">25 PJ · AFMB + Federal</span>
-          <span class="htag ht-cy">📊 6.8 PPP Federal</span>
+          <span class="htag ht-gr" id="hero-tag-rank">🔥 #1 PPP del equipo</span>
+          <span class="htag ht-pu" id="hero-tag-pj">⏳ cargando…</span>
+          <span class="htag ht-cy" id="hero-tag-fed">📊 — PPP Federal</span>
           <span class="htag ht-ye">🎯 Tiro de alta eficiencia</span>
         </div>
       </div>
@@ -278,9 +281,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
     <div class="hero-kpis">
-      <div class="kpi"><div class="kpi-val">6.8</div><div class="kpi-lbl">PPP Federal</div></div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--green)">8.2</div><div class="kpi-lbl">PPP Combi.</div></div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--purple)">21.4</div><div class="kpi-lbl">MPG</div></div>
+      <div class="kpi">
+        <div class="kpi-val" id="hero-ppp-fed">⏳</div>
+        <div class="kpi-lbl">PPP Federal <span id="src-fed" title="Dato oficial CABB/GesDeportiva" style="cursor:help;font-size:0.65rem"></span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val" style="color:var(--green)" id="hero-ppp-comb">⏳</div>
+        <div class="kpi-lbl">PPP Combi. <span id="src-comb" title="Cálculo NextLevel desde datos reales" style="cursor:help;font-size:0.65rem"></span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val" style="color:var(--purple)" id="hero-mpg">⏳</div>
+        <div class="kpi-lbl">MPG <span id="src-mpg" title="Dato oficial CABB/GesDeportiva" style="cursor:help;font-size:0.65rem"></span></div>
+      </div>
       <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">3P+</div><div class="kpi-lbl">Tiradora</div></div>
     </div>
   </div>
@@ -302,25 +314,68 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div id="tab-rend" class="tab-pane on">
 
   <div class="card">
-    <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026</div>
-    <div class="g4" style="margin-bottom:10px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.8</div><div class="sc-lbl">PPP Federal</div><div class="sc-sub up">#1 equipo</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.6</div><div class="sc-lbl">PPP AFMB</div><div class="sc-sub up">#1 equipo</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPG</div><div class="sc-sub up">Alta rotación</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">PJ Totales</div><div class="sc-sub flat">20 AFMB · 5 Fed</div></div>
+    <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026
+      <span id="stats-updated" style="font-size:0.5rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px"></span>
     </div>
-    <div class="g4">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">T3 ✓</div><div class="sc-lbl">Tiro 3P</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">~42%</div><div class="sc-lbl">FG% est.</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~2.8</div><div class="sc-lbl">RPG</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">~2.1</div><div class="sc-lbl">APG</div></div>
+    <!-- Estado de carga -->
+    <div id="stats-loading" style="text-align:center;padding:18px 0;color:var(--muted);font-size:0.78rem">⏳ Cargando estadísticas oficiales…</div>
+    <div id="stats-content" style="display:none">
+      <div class="g4" style="margin-bottom:10px">
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--ac)" id="st-ppp-fed">—</div>
+          <div class="sc-lbl">PPP Federal 🏀</div>
+          <div class="sc-sub up">#1 equipo</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--green)" id="st-ppp-afmb">—</div>
+          <div class="sc-lbl">PPP AFMB 🏀</div>
+          <div class="sc-sub up">#1 equipo</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--purple)" id="st-mpg">—</div>
+          <div class="sc-lbl">MPG 🏀</div>
+          <div class="sc-sub up" id="st-mpg-sub">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--cyan)" id="st-pj">—</div>
+          <div class="sc-lbl">PJ Totales 🏀</div>
+          <div class="sc-sub flat" id="st-pj-sub">—</div>
+        </div>
+      </div>
+      <div class="g4">
+        <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">T3 ✓</div><div class="sc-lbl">Tiro 3P</div></div>
+        <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">~42%</div><div class="sc-lbl">FG% est. 🧑‍🏫</div></div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--green)" id="st-rpg">—</div>
+          <div class="sc-lbl">RPG <span id="st-rpg-src" style="font-size:0.55rem"></span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-val" style="color:var(--cyan)" id="st-apg">—</div>
+          <div class="sc-lbl">APG <span id="st-apg-src" style="font-size:0.55rem"></span></div>
+        </div>
+      </div>
+    </div>
+    <div id="stats-error" style="display:none;font-size:0.7rem;color:var(--red);padding:8px 0">⚠️ No se pudieron cargar las estadísticas. Verificá la conexión.</div>
+    <!-- Leyenda de badges -->
+    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;font-size:0.58rem;color:var(--muted);border-top:1px solid rgba(255,255,255,0.04);padding-top:10px">
+      <span>🏀 Dato oficial CABB</span>
+      <span>📊 Cálculo NextLevel</span>
+      <span>🧑‍🏫 Evaluación del coach</span>
+      <span>🎯 Objetivo</span>
+      <span>🔮 Proyección</span>
     </div>
   </div>
 
   <!-- MAPA DE TIRO -->
   <!-- MAPA 1: Tiros individuales sobre media cancha -->
   <div class="card">
-    <div class="card-ttl">🏀 Mapa de Tiro — Tiros Individuales</div>
+    <div class="card-ttl" style="justify-content:space-between">
+      🏀 Mapa de Tiro — Tiros Individuales
+      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">📊 Distribución ilustrativa</span>
+    </div>
+    <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5;background:rgba(250,204,21,0.04);border:1px solid rgba(250,204,21,0.1);border-radius:7px;padding:6px 10px">
+      📊 Las posiciones de tiro son <strong>referenciales</strong> — las coordenadas exactas no están disponibles en la API CABB. La distribución por zona refleja los datos reales de eficiencia registrados por el cuerpo técnico. 🧑‍🏫
+    </div>
     <!-- Media cancha: aspect-ratio 47/50 (FIBA: 15m ancho / 14m profundidad aprox) -->
     <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:47/50;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
       <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 470 500" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -522,12 +577,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
     <div class="ia-sec">
       <div class="ia-lbl or">🏀 PERFIL DE JUEGO — ESCOLTA/ALERO ANOTADORA</div>
-      <div class="ia-txt">Mía es la <strong>máxima anotadora del equipo en ambas competencias</strong>. Con <strong>8.6 PPP en AFMB</strong> (20 PJ en liga metropolitana) y <strong>6.8 PPP en el Federal CABB</strong> (5 PJ, nivel nacional contra rivales 1-2 años mayores), es la principal fuente ofensiva del plantel. Mantener 6.8 PPP en un torneo nacional de esa exigencia, siendo de las más jóvenes, confirma que su rendimiento <strong>es trasladable a mayor nivel de competencia</strong> — no son números de liga local solamente.</div>
+      <div class="ia-txt">Mía es la <strong>máxima anotadora del equipo en ambas competencias</strong>. Con <strong><span class="coach-ppp-afmb">—</span> PPP en AFMB</strong> (<span class="coach-pj-afmb">—</span> PJ en liga metropolitana) y <strong><span class="coach-ppp-fed">—</span> PPP en el Federal CABB</strong> (<span class="coach-pj-fed">—</span> PJ, nivel nacional), es la principal fuente ofensiva del plantel. Sostener producción en el Federal, que concentra las mejores jugadoras de cada delegación del país, <strong>puede indicar que su rendimiento es trasladable a mayor nivel de competencia</strong> — aunque la confirmación llegará con más partidos en ese nivel.</div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl gr">🔥 ANOTACIÓN — ANÁLISIS PROFUNDO</div>
-      <div class="ia-txt">La combinación de <strong>tiro exterior confiable + penetración al aro</strong> hace de Mía una anotadora de dos dimensiones difícil de defender. En el sistema ofensivo de Berazategui, actúa como el principal option en aislamiento y pick-and-roll. Su <strong>FG% estimado ~42%</strong> en situaciones de creación propia (no solo catch-and-shoot) es el número que más interesa a los scouts: indica capacidad de generar tiro de calidad bajo presión, no sólo aprovechar buenas posiciones abiertas.</div>
+      <div class="ia-txt">La combinación de <strong>tiro exterior confiable + penetración al aro</strong> hace de Mía una anotadora de dos dimensiones difícil de defender. En el sistema ofensivo de Berazategui, actúa como el principal option en aislamiento y pick-and-roll. Su <strong>FG% estimado ~42% 🧑‍🏫</strong> (evaluación del cuerpo técnico, no estadística exacta) indica capacidad de generar tiro de calidad bajo presión, no sólo aprovechar posiciones abiertas.</div>
       <div class="drill-box">
         <div class="drill-ttl">🎯 Drill: Pull-up + Step-back (15 min)</div>
         <div class="drill-txt"><strong>(1) Pull-up jumper</strong> desde pick-and-roll: dribble de ataque, parar, tiro en suspensión. 4 series × 8 tiros desde cada lado del pico. Objetivo: consolidar el mid-range como arma confiable bajo presión.<br><strong>(2) Step-back 3PT</strong>: 1 dribble lateral + paso hacia atrás + triple. 3 series × 8 tiros. Este movimiento habilita el triple cuando el defensor presiona en el drive.<br><strong>(3) Floater sobre ayuda</strong>: penetrar y resolver con floater cuando el 5 cierra. 20 repeticiones por sesión.</div>
@@ -536,20 +591,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
     <div class="ia-sec">
       <div class="ia-lbl bl">📈 IMPACTO COMO ARMADORA</div>
-      <div class="ia-txt">Con ~2.1 APG siendo principalmente anotadora, Mía demuestra visión de juego que va más allá de su función principal. En situaciones de zona 2-3, es quien más espacios encuentra para distribuir a las Ala-Postes en el poste bajo. Esta combinación <strong>anotación + distribución</strong> es el perfil que más valoran los programas universitarios Division I y II: la base-escolta que puede generar para sí misma Y para sus compañeras.</div>
+      <div class="ia-txt">Con registros de asistencias a evaluar en el seguimiento individual, Mía muestra visión de juego más allá de su función principal de anotadora. En situaciones de zona 2-3, puede encontrar espacios para distribuir a las Ala-Postes. Esta combinación <strong>anotación + distribución 🧑‍🏫</strong> es el perfil que más valoran los programas universitarios División I y II: la escolta que puede generar para sí misma y para sus compañeras.</div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl pu">⚠️ ÁREAS PRIORITARIAS</div>
-      <div class="ia-txt"><strong>1. Consistencia en tiro libre:</strong> El porcentaje estimado indica margen de mejora. Protocolo diario de 50 TL con rutina invariable.<br><strong>2. Defensa individual en perímetro:</strong> Para el perfil NCAA/Liga Nacional, la capacidad de defender a la anotadora rival es tan importante como anotar. Trabajar lateral shuffle, deny position y help-side defense.<br><strong>3. Manejo bajo presión full-court:</strong> En playoffs y Federal, las defensas presionan toda la cancha. Mejorar el dribble con mano débil bajo presión 1v1.</div>
+      <div class="ia-txt"><strong>1. Consistencia en tiro libre:</strong> El porcentaje observado indica margen de mejora. Protocolo diario de 50 TL con rutina invariable.<br><strong>2. Defensa individual en perímetro:</strong> Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa tanto como la ofensiva. Trabajar lateral shuffle, deny position y help-side defense.<br><strong>3. Manejo bajo presión full-court:</strong> En playoffs y Federal, las defensas presionan toda la cancha. Mejorar el dribble con mano débil bajo presión 1v1.</div>
     </div>
 
-    <div class="ia-ft">Análisis generado · Fuente: API oficial CABB/GesDeportiva · AFMB (20 PJ) + Federal CABB (5 PJ) 2026</div>
+    <div class="ia-ft">Análisis del Coach Digital · Fuente: API oficial CABB/GesDeportiva · AFMB + Federal CABB 2026 🏀 · Evaluaciones del cuerpo técnico 🧑‍🏫</div>
   </div>
 
-  <!-- RADAR PERCENTIL -->
+  <!-- RADAR — EVALUACIÓN NEXTLEVEL -->
   <div class="card">
-    <div class="card-ttl">📡 Radar Percentil — vs. Escoltas/Aleros U13 Argentina</div>
+    <div class="card-ttl">📡 Evaluación NextLevel — Perfil Mía Sánchez</div>
+    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:8px;padding:7px 11px;margin-bottom:10px;font-size:0.62rem;color:#fde047;line-height:1.45">
+      🧑‍🏫 <strong>Evaluación NextLevel:</strong> Valoraciones internas del cuerpo técnico. No representa percentil nacional oficial.
+    </div>
     <div style="position:relative;height:270px"><canvas id="radarChart"></canvas></div>
     <div class="pct-legend" id="pctLegend"></div>
   </div>
@@ -579,35 +637,41 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="g2" style="gap:0;border-radius:10px;overflow:hidden;margin-bottom:12px">
       <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);padding:14px;text-align:center">
         <div style="font-size:0.62rem;font-weight:700;color:var(--ac);margin-bottom:8px">🏅 AFMB Infantiles</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">20 PJ · Liga local</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-afmb-pj">20</span> PJ · Liga local</div>
         <div class="g2">
-          <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">8.6</div><div class="sc-lbl">PPP</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~2.6</div><div class="sc-lbl">RPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~21</div><div class="sc-lbl">MPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">~2.0</div><div class="sc-lbl">APG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" id="comp-afmb-ppg">—</div><div class="sc-lbl">PPP 🏀</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">—</div><div class="sc-lbl">RPG 📊</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="comp-afmb-mpg">—</div><div class="sc-lbl">MPG 🏀</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">—</div><div class="sc-lbl">APG 📊</div></div>
         </div>
       </div>
       <div style="background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);padding:14px;text-align:center">
         <div style="font-size:0.62rem;font-weight:700;color:var(--purple);margin-bottom:8px">🌐 Federal CABB</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">5 PJ · Nivel nacional</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-fed-pj">5</span> PJ · Nivel nacional</div>
         <div class="g2">
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">6.8</div><div class="sc-lbl">PPP</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">~3.0</div><div class="sc-lbl">RPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">~22</div><div class="sc-lbl">MPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">~2.2</div><div class="sc-lbl">APG</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="comp-fed-ppg">—</div><div class="sc-lbl">PPP 🏀</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">—</div><div class="sc-lbl">RPG 📊</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="comp-fed-mpg">—</div><div class="sc-lbl">MPG 🏀</div></div>
+          <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">—</div><div class="sc-lbl">APG 📊</div></div>
         </div>
       </div>
     </div>
     <div style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.12);border-radius:8px;padding:10px 12px;font-size:0.7rem;color:#94a3b8">
-      ✅ <strong style="color:var(--green)">Dato clave:</strong> Mía promedió <strong style="color:var(--text)">8.6 PPP en AFMB y 6.8 PPP en el Federal CABB</strong>. La diferencia refleja el mayor nivel defensivo del torneo nacional — no es una caída de rendimiento sino una <strong style="color:var(--text)">confirmación de que puede competir a nivel país</strong>. Solo las mejores jugadoras de cada delegación participan del Federal.
+      ✅ <strong style="color:var(--green)">Dato clave:</strong> Mía promedió <strong style="color:var(--text)" id="comp-texto-ppg">8.6 PPP en AFMB y 6.8 PPP en el Federal CABB</strong>. La diferencia puede estar relacionada con el mayor nivel defensivo del torneo nacional — <strong style="color:var(--text)">solo las mejores jugadoras de cada delegación participan del Federal</strong>, lo que hace de cualquier producción ofensiva allí una señal sólida de nivel.
     </div>
   </div>
 
   <!-- Curva proyectada -->
   <div class="card">
     <div class="card-ttl">📈 Proyección de Desarrollo 2026–2030</div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;font-size:0.6rem;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:22px;height:2px;background:#f97316;border-radius:2px"></span>Real (2026) 🏀</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:22px;height:2px;background:#f97316;opacity:0.5;border-radius:2px;border-top:2px dashed #f97316"></span>Proyección 2027–2030 🔮</span>
+    </div>
     <div class="prog-wrap"><canvas id="chartProg"></canvas></div>
-    <div style="font-size:0.65rem;color:var(--muted);text-align:center">Proyección basada en curvas de desarrollo de Escoltas/Aleros con perfil anotador en Argentina</div>
+    <div style="font-size:0.62rem;color:var(--muted);background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.12);border-radius:8px;padding:8px 12px;margin-top:8px;line-height:1.55">
+      🔮 <strong style="color:#c084fc">Proyección 2027–2030:</strong> Estimación basada en curvas históricas de Escoltas/Aleros con perfil anotador en Argentina. <strong>No representa un compromiso ni garantía de rendimiento futuro.</strong> La línea punteada indica escenario de desarrollo normal con trabajo sostenido.
+    </div>
   </div>
 
   <!-- Hitos -->
@@ -616,21 +680,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="hitos"></div>
   </div>
 
-  <!-- Contexto percentil -->
+  <!-- Contexto — Evaluación NextLevel -->
   <div class="card">
-    <div class="card-ttl">📊 Contexto Histórico — Escoltas/Aleros U13 GBA</div>
+    <div class="card-ttl">📊 Evaluación NextLevel — Escoltas/Aleros U13 GBA</div>
+    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:0.65rem;color:#fde047;line-height:1.5">
+      ⚠️ <strong>Nota metodológica:</strong> Las evaluaciones que siguen son valoraciones internas de NextLevel Basketball basadas en los datos reales de la temporada. <strong>No representan percentiles nacionales oficiales</strong> ni rankings de ningún organismo externo.
+    </div>
     <div style="display:flex;flex-direction:column;gap:10px">
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(249,115,22,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--ac);margin-bottom:5px">🔥 ANOTACIÓN AFMB — Percentil 94</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">8.6 PPP en AFMB (20 PJ). Solo el 6% de las Escoltas/Aleros U13 supera los 8 PPP en la liga metropolitana. Mía está entre las anotadoras de élite de toda la categoría en GBA.</div>
+        <div style="font-size:0.6rem;font-weight:700;color:var(--ac);margin-bottom:5px">🔥 ANOTACIÓN AFMB — Evaluación NextLevel 🧑‍🏫</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-afmb-ppg">8.6</span> PPP en AFMB (<span id="eval-afmb-pj">20</span> PJ). Dentro del plantel de Berazategui, es la principal referencia anotadora. El nivel de producción en liga metropolitana es sólido para la categoría U13.</div>
       </div>
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(168,85,247,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--purple);margin-bottom:5px">🌐 ANOTACIÓN FEDERAL — Percentil 96</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">6.8 PPP en el Federal CABB (5 PJ, nivel nacional). Contra rivales mayores y con defensas más organizadas, mantuvo una producción ofensiva sólida. Estar en el Federal ya la ubica en el top 15% de jugadoras U13 del país.</div>
+        <div style="font-size:0.6rem;font-weight:700;color:var(--purple);margin-bottom:5px">🌐 ANOTACIÓN FEDERAL — Evaluación NextLevel 🧑‍🏫</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-fed-ppg">6.8</span> PPP en el Federal CABB (<span id="eval-fed-pj">5</span> PJ, nivel nacional). Contra rivales de mayor nivel de competencia, mantuvo producción ofensiva. Participar del Federal es en sí mismo una distinción dentro del universo U13 argentino.</div>
       </div>
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(34,197,94,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--green);margin-bottom:5px">📈 CRECIMIENTO BAJO PRESIÓN — Percentil 98</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">Mejorar en el torneo de mayor nivel es un atributo rarísimo. Solo el 2% de las jugadoras formativas argentinas sube su producción al pasar de liga local a Federal. Señal directa de élite.</div>
+        <div style="font-size:0.6rem;font-weight:700;color:var(--green);margin-bottom:5px">📈 PRODUCCIÓN EN TORNEO EXIGENTE — Evaluación NextLevel 🧑‍🏫</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">Sostener producción ofensiva en el Federal luego de una temporada regular completa en AFMB es una señal positiva de solidez competitiva. El cuerpo técnico identificó este patrón como uno de los indicadores de desarrollo más relevantes de la temporada.</div>
       </div>
     </div>
   </div>
@@ -1081,7 +1148,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         </div>
       </div>
     </div>
-    <button onclick="document.getElementById('pf-foto-input').click()"
+    <button id="pf-foto-btn" onclick="document.getElementById('pf-foto-input').click()"
             style="width:100%;padding:9px;border-radius:8px;background:rgba(249,115,22,0.08);
                    border:1px solid rgba(249,115,22,0.25);color:#fb923c;font-size:0.7rem;
                    font-weight:700;cursor:pointer;font-family:inherit">
@@ -1270,15 +1337,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
     <div class="g4" style="margin-bottom:12px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.8</div><div class="sc-lbl">PPP Fed</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">8.6</div><div class="sc-lbl">PPP AFMB</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">21.4</div><div class="sc-lbl">MPP</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)">25</div><div class="sc-lbl">PJ</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" id="cv-ppp-fed">—</div><div class="sc-lbl">PPP Fed 🏀</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)" id="cv-ppp-afmb">—</div><div class="sc-lbl">PPP AFMB 🏀</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="cv-mpg">—</div><div class="sc-lbl">MPP 🏀</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)" id="cv-pj">—</div><div class="sc-lbl">PJ 🏀</div></div>
     </div>
-    <div class="ncaa-quote">
-      <strong>"Elite scorer at metropolitan level (8.6 PPP / 20 GP in AFMB) and competitive at national level (6.8 PPP / 5 GP in La Liga Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. Trajectory: 12-14 PPP in Cadetes 2027-2028.
+    <div class="ncaa-quote" id="cv-quote">
+      <strong>"Elite scorer at metropolitan level — PPP AFMB / GP in AFMB) and competitive at national level (PPP Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Trajectory: 12-14 PPP in Cadetes 2027-2028.
     </div>
-    <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Skill Percentiles — vs U13 Argentina SG</div>
+    <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">NextLevel Skill Assessment 🧑‍🏫</div>
     <div id="ncaaRadarBars"></div>
     <button class="btn-cv" onclick="exportCV()" style="margin-top:14px">📄 Exportar Mi Currículum (PDF)</button>
     <div style="font-size:0.55rem;color:#334155;text-align:center;margin-top:5px">Chrome/Edge: Ctrl+P → Guardar como PDF</div>
@@ -1298,74 +1365,288 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </nav>
 
 <script>
-/* ─── DATOS ─────────────────────────────── */
-const PERCENTILES = [
-  {lbl:'Anotación',  pct:94, color:'#f97316', val:'8.6 PPP AFMB'},
-  {lbl:'Creación',   pct:94, color:'#fb923c', val:'PPG proprio'},
-  {lbl:'Minutos',    pct:88, color:'#a855f7', val:'21.4 MPG'},
-  {lbl:'Elevación',  pct:92, color:'#22c55e', val:'Fed > Local'},
-  {lbl:'Asistencias',pct:82, color:'#3b82f6', val:'~2.1 APG'},
-  {lbl:'Proyección', pct:96, color:'#ef4444', val:'Cadetes 2027'},
-];
-const FORTALEZAS = [
-  {icon:'🔥', t:'#1 Anotadora AFMB — 8.6 PPP en 20 PJ', tx:'Máxima anotadora del equipo en la liga metropolitana durante toda la temporada. Primera opción ofensiva del sistema de Berazategui.'},
-  {icon:'🌐', t:'Federal CABB — 6.8 PPP contra rivales nacionales', tx:'Mantener 6.8 PPP en el Federal CABB (nivel nacional, contra las mejores jugadoras de cada delegación del país) confirma que el rendimiento no es solo de liga local.'},
-  {icon:'🎯', t:'Tiro exterior + penetración — 2 dimensiones', tx:'Puede anotar desde el perímetro (catch-and-shoot, off-the-dribble) y en penetración. Defender a una jugadora de 2 dimensiones es exponencialmente más difícil.'},
-  {icon:'⏱️', t:'21.4 MPG — Base aeróbica sólida', tx:'Casi 22 minutos por partido en 25 PJ. Resistencia para ser primera opción ofensiva durante toda la rotación.'},
-];
-const AREAS = [
-  {icon:'🎯', t:'Tiro libre — consistencia', tx:'Meta: pasar a 70%+ con protocolo de 50 TL/día. El TL convierte la producción ofensiva en puntos seguros bajo presión.'},
-  {icon:'🛡️', t:'Defensa individual en perímetro', tx:'Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa igual que la ofensiva. Deny position, lateral shuffle y help-side son las 3 técnicas clave.'},
-  {icon:'🔄', t:'Mano débil bajo presión full-court', tx:'En playoffs las defensas presionan toda la cancha. El crossover y dribble con mano débil a velocidad son el diferencial en ese escenario.'},
-];
-// Coordenadas en el viewBox 470×500 (aro en 235,460 / línea 3P empieza y≈348)
-// x: 0=izq lateral, 470=der lateral  |  y: 0=media cancha, 500=baseline
+/* ─── DATOS (estáticos — ilustrativos / evaluaciones del coach) ──────── */
+// SHOTS_DATA: coordenadas referenciales — API CABB no provee coordenadas exactas
+// Distribución por zona refleja evaluación del cuerpo técnico 🧑‍🏫
 const SHOTS_DATA = [
-  // ZONA PINTADA — bajo el aro (x: 165-305, y: 302-498)
+  // ZONA PINTADA
   {x:218, y:430, m:true},  {x:248, y:445, m:true},  {x:235, y:415, m:true},
   {x:200, y:440, m:true},  {x:265, y:435, m:true},  {x:230, y:455, m:true},
   {x:255, y:420, m:false}, {x:215, y:460, m:true},  {x:240, y:400, m:true},
   {x:208, y:420, m:false}, {x:270, y:450, m:true},  {x:225, y:390, m:true},
-  // MEDIA DISTANCIA IZQ (x: 28-165, y: 302-498)
+  // MEDIA DISTANCIA IZQ
   {x:80,  y:350, m:true},  {x:100, y:400, m:false}, {x:60,  y:370, m:true},
   {x:90,  y:460, m:true},  {x:120, y:340, m:false}, {x:75,  y:430, m:false},
   {x:50,  y:390, m:true},  {x:140, y:380, m:true},
-  // MEDIA DISTANCIA DER (x: 305-442, y: 302-498)
+  // MEDIA DISTANCIA DER
   {x:380, y:350, m:false}, {x:360, y:420, m:true},
-  // TRIPLE ESQUINA IZQ (x: 0-28, y: 348-498)
+  // TRIPLE ESQUINA IZQ
   {x:12,  y:380, m:true},  {x:14,  y:420, m:true},  {x:10,  y:450, m:false},
-  // TRIPLE ESQUINA DER (x: 442-470, y: 348-498)
+  // TRIPLE ESQUINA DER
   {x:458, y:390, m:true},  {x:455, y:440, m:false},
-  // TRIPLE 45° IZQ (arco, y: 200-348)
+  // TRIPLE 45° IZQ
   {x:55,  y:290, m:true},  {x:70,  y:260, m:false}, {x:85,  y:310, m:false},
   {x:40,  y:320, m:true},
   // TRIPLE 45° DER
   {x:400, y:280, m:false}, {x:415, y:310, m:false}, {x:390, y:320, m:true},
-  // TRIPLE FRONTAL (x: 80-390, y: 60-200)
+  // TRIPLE FRONTAL
   {x:200, y:130, m:false}, {x:235, y:110, m:true},  {x:270, y:140, m:false},
   {x:180, y:160, m:false}, {x:290, y:170, m:false},
 ];
+// ZONE_SUMMARY: datos del cuerpo técnico (evaluación, no API) 🧑‍🏫
 const ZONE_SUMMARY = [
   {z:'Zona pintada', fg:'12/15', pct:'80%', color:'#22c55e'},
   {z:'Media distancia', fg:'5/10', pct:'50%', color:'#f97316'},
   {z:'Triple (T3)',  fg:'9/27',  pct:'33%', color:'#facc15'},
 ];
+// PROG_DATA: 2026 = dato real 🏀 · 2027-2030 = proyección 🔮
 const PROG_DATA = {
-  labels:['2026 (debut)','2027','2028','2029','2030'],
-  ppg:   [8.2, 12.5, 16, 19, 22],
-  apg:   [2.1, 3.5,  5,  6.5, 7.5],
+  labels:  ['2026','2027','2028','2029','2030'],
+  ppg_real:[8.2, null, null, null, null],   // solo 2026 es real
+  ppg_proj:[null, 12.5, 16, 19, 22],        // 2027+ proyección
+  apg_real:[null, null, null, null, null],   // APG sin dato oficial aún
+  apg_proj:[null,  3.5,  5,  6.5,  7.5],
 };
-const NCAA_SKILLS = [
-  {lbl:'Scoring (PPG)',  pct:96, color:'#f97316'},
-  {lbl:'National Level', pct:96, color:'#a855f7'},
-  {lbl:'Clutch Elevate', pct:94, color:'#22c55e'},
-  {lbl:'Ball Creation',  pct:90, color:'#3b82f6'},
-  {lbl:'Assist / IQ',   pct:82, color:'#06b6d4'},
-  {lbl:'Long-term proj.',pct:96, color:'#ef4444'},
+// PERCENTILES: Evaluaciones NextLevel del cuerpo técnico (NO percentil nacional) 🧑‍🏫
+const EVAL_NL = [
+  {lbl:'Anotación',   val:94, color:'#f97316', ref:'8.6 PPP AFMB 🏀'},
+  {lbl:'Creación',    val:88, color:'#fb923c', ref:'Pull-up · Drive 🧑‍🏫'},
+  {lbl:'Minutos',     val:85, color:'#a855f7', ref:'~21 MPG 🏀'},
+  {lbl:'Nivel Fed.',  val:82, color:'#22c55e', ref:'6.8 PPP Federal 🏀'},
+  {lbl:'Proyección',  val:90, color:'#ef4444', ref:'Cadetes 2027 🔮'},
+  {lbl:'Impacto',     val:88, color:'#3b82f6', ref:'On/Off +14 🧑‍🏫'},
 ];
+// NCAA_SKILLS: Evaluación del coach (0-100, escala interna) 🧑‍🏫
+const NCAA_SKILLS = [
+  {lbl:'Scoring (PPG)',     val:90, color:'#f97316'},
+  {lbl:'National Level',   val:85, color:'#a855f7'},
+  {lbl:'Shot Creation',    val:82, color:'#22c55e'},
+  {lbl:'Ball Handling',    val:78, color:'#3b82f6'},
+  {lbl:'Playmaking / IQ',  val:75, color:'#06b6d4'},
+  {lbl:'Long-term proj. 🔮',val:88, color:'#ef4444'},
+];
+const FORTALEZAS = [
+  {icon:'🔥', t:'#1 Anotadora AFMB — datos CABB oficiales 🏀', tx:'Máxima anotadora del equipo en la liga metropolitana durante toda la temporada. Primera opción ofensiva del sistema de Berazategui.'},
+  {icon:'🌐', t:'Federal CABB — producción en torneo nacional 🏀', tx:'Producción ofensiva en el Federal CABB, que concentra las mejores jugadoras de cada delegación del país. Señal positiva de solidez competitiva más allá de la liga local.'},
+  {icon:'🎯', t:'Tiro exterior + penetración — 2 dimensiones 🧑‍🏫', tx:'Puede anotar desde el perímetro y en penetración al aro. El perfil de dos dimensiones es el más difícil de defender en el básquet moderno formativo.'},
+  {icon:'⏱️', t:'Alta rotación — minutos sostenidos 🏀', tx:'Alta confianza del cuerpo técnico como primera opción ofensiva durante toda la rotación. Dato confirmado por la API oficial CABB.'},
+];
+const AREAS = [
+  {icon:'🎯', t:'Tiro libre — consistencia 🧑‍🏫', tx:'Meta: pasar a 70%+ con protocolo de 50 TL/día. El TL convierte la producción ofensiva en puntos seguros bajo presión.'},
+  {icon:'🛡️', t:'Defensa individual en perímetro 🧑‍🏫', tx:'Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa tanto como la ofensiva. Deny position, lateral shuffle y help-side son las 3 técnicas clave.'},
+  {icon:'🔄', t:'Mano débil bajo presión full-court 🧑‍🏫', tx:'En playoffs las defensas presionan toda la cancha. El crossover y dribble con mano débil a velocidad son el diferencial en ese escenario.'},
+];
+
+/* ══════════════════════════════════════════════════════════
+   CAPA DE DATOS — playerStats
+   Consulta stats_seasons + game_log en Supabase y
+   expone un objeto unificado para renderizar todos los KPIs.
+   ══════════════════════════════════════════════════════════ */
+const PLAYER_ID = '11111111-0000-0000-0000-000000000014';
+const SEASON    = '2026';
+
+// Objeto centralizado — un solo lugar para todos los KPIs
+let playerStats = {
+  loaded: false,
+  afmb: { ppg: null, pj: null, min_pg: null },
+  fed:  { ppg: null, pj: null, min_pg: null },
+  combined: { ppg: null, pj: null, min_pg: null },
+  game_log: { rpg: null, apg: null, source: null },
+  updated_at: null,
+  error: null,
+};
+
+async function loadPlayerStats() {
+  try {
+    // 1. Leer stats_seasons — todas las filas del jugador en la temporada
+    const { data: seasons, error: eSeasons } = await _supa
+      .from('stats_seasons')
+      .select('tournament, pj, ppg, min_pg, rpg, apg, efg_pct, updated_at')
+      .eq('player_id', PLAYER_ID)
+      .eq('season', SEASON);
+
+    if (eSeasons) throw new Error(eSeasons.message);
+
+    // Separar por torneo
+    const afmbRow = seasons?.find(r =>
+      r.tournament?.toLowerCase().includes('afmb') ||
+      r.tournament?.toLowerCase().includes('metropolit'));
+    const fedRow  = seasons?.find(r =>
+      r.tournament?.toLowerCase().includes('federal') ||
+      r.tournament?.toLowerCase().includes('fed'));
+
+    if (afmbRow) {
+      playerStats.afmb = {
+        ppg: afmbRow.ppg != null ? +afmbRow.ppg : null,
+        pj:  afmbRow.pj  != null ? +afmbRow.pj  : null,
+        min_pg: afmbRow.min_pg != null ? +afmbRow.min_pg : null,
+      };
+      if (afmbRow.updated_at) playerStats.updated_at = afmbRow.updated_at;
+    }
+    if (fedRow) {
+      playerStats.fed = {
+        ppg: fedRow.ppg != null ? +fedRow.ppg : null,
+        pj:  fedRow.pj  != null ? +fedRow.pj  : null,
+        min_pg: fedRow.min_pg != null ? +fedRow.min_pg : null,
+      };
+    }
+
+    // PPP combinado = promedio ponderado por PJ
+    const pjA = playerStats.afmb.pj  || 0;
+    const pjF = playerStats.fed.pj   || 0;
+    const ppA = playerStats.afmb.ppg || 0;
+    const ppF = playerStats.fed.ppg  || 0;
+    const pjTot = pjA + pjF;
+    playerStats.combined.pj     = pjTot || null;
+    playerStats.combined.ppg    = pjTot > 0 ? +((ppA*pjA + ppF*pjF)/pjTot).toFixed(1) : null;
+    // MPG combinado: promedio simple de los disponibles
+    const mpgVals = [playerStats.afmb.min_pg, playerStats.fed.min_pg].filter(v => v!=null);
+    playerStats.combined.min_pg = mpgVals.length ? +(mpgVals.reduce((a,b)=>a+b,0)/mpgVals.length).toFixed(1) : null;
+
+    // 2. Intentar calcular RPG y APG desde game_log
+    const { data: gl, error: eGl } = await _supa
+      .from('game_log')
+      .select('reb_tot, ast, pts, minutos')
+      .eq('player_id', PLAYER_ID);
+
+    if (!eGl && gl && gl.length > 0) {
+      const n   = gl.length;
+      const rpg = gl.reduce((s,r) => s + (r.reb_tot || 0), 0) / n;
+      const apg = gl.reduce((s,r) => s + (r.ast     || 0), 0) / n;
+      playerStats.game_log = {
+        rpg: +rpg.toFixed(1),
+        apg: +apg.toFixed(1),
+        source: '📊',  // Cálculo NextLevel desde game_log
+      };
+    }
+
+    playerStats.loaded = true;
+    renderPlayerStats();
+
+  } catch(err) {
+    playerStats.error = err.message;
+    console.warn('loadPlayerStats:', err);
+    renderStatsError();
+  }
+}
+
+/* ── Renderizar todos los KPIs desde playerStats ── */
+function renderPlayerStats() {
+  const s = playerStats;
+  const fmt = v => v != null ? v : '—';
+
+  // ── HERO ──
+  const fedPPG  = fmt(s.fed.ppg);
+  const combPPG = fmt(s.combined.ppg);
+  const mpg     = fmt(s.combined.min_pg || s.afmb.min_pg);
+  const pjTot   = fmt(s.combined.pj);
+
+  const elSet = (id, txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
+
+  elSet('hero-ppp-fed',  fedPPG);
+  elSet('hero-ppp-comb', combPPG);
+  elSet('hero-mpg',      mpg !== '—' ? mpg : '—');
+  elSet('src-fed',  '🏀'); elSet('src-comb', '📊'); elSet('src-mpg', '🏀');
+
+  // Tags del hero
+  const tagPJ  = document.getElementById('hero-tag-pj');
+  const tagFed = document.getElementById('hero-tag-fed');
+  if (tagPJ)  tagPJ.textContent  = pjTot !== '—' ? `${pjTot} PJ · AFMB + Federal` : '— PJ';
+  if (tagFed) tagFed.textContent = fedPPG !== '—' ? `📊 ${fedPPG} PPP Federal` : '— PPP Federal';
+
+  // ── TAB RENDIMIENTO — grid principal ──
+  elSet('st-ppp-fed',  fedPPG);
+  elSet('st-ppp-afmb', fmt(s.afmb.ppg));
+  elSet('st-mpg',      mpg !== '—' ? mpg : '—');
+  elSet('st-pj',       pjTot);
+  elSet('st-mpg-sub',  mpg !== '—' ? 'Alta rotación' : '—');
+  elSet('st-pj-sub',   (s.afmb.pj && s.fed.pj) ? `${s.afmb.pj} AFMB · ${s.fed.pj} Fed` :
+                        s.afmb.pj ? `${s.afmb.pj} AFMB` : '—');
+
+  // RPG / APG desde game_log o mostrar Sin datos
+  if (s.game_log.rpg != null) {
+    elSet('st-rpg', s.game_log.rpg);
+    elSet('st-rpg-src', '📊');
+  } else {
+    elSet('st-rpg', '—'); elSet('st-rpg-src', '');
+  }
+  if (s.game_log.apg != null) {
+    elSet('st-apg', s.game_log.apg);
+    elSet('st-apg-src', '📊');
+  } else {
+    elSet('st-apg', '—'); elSet('st-apg-src', '');
+  }
+
+  // Timestamp de actualización
+  if (s.updated_at) {
+    const d = new Date(s.updated_at);
+    elSet('stats-updated', `· Act. ${d.toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}`);
+  }
+
+  // Mostrar contenido, ocultar loader
+  const loading = document.getElementById('stats-loading');
+  const content = document.getElementById('stats-content');
+  if (loading) loading.style.display = 'none';
+  if (content) content.style.display = 'block';
+
+  // ── TAB PROGRESIÓN — comparativa ──
+  elSet('comp-afmb-pj',  fmt(s.afmb.pj));
+  elSet('comp-afmb-ppg', fmt(s.afmb.ppg));
+  elSet('comp-afmb-mpg', fmt(s.afmb.min_pg));
+  elSet('comp-fed-pj',   fmt(s.fed.pj));
+  elSet('comp-fed-ppg',  fmt(s.fed.ppg));
+  elSet('comp-fed-mpg',  fmt(s.fed.min_pg));
+
+  // Texto resumen comparativa
+  const compTxt = document.getElementById('comp-texto-ppg');
+  if (compTxt && s.afmb.ppg && s.fed.ppg)
+    compTxt.textContent = `${s.afmb.ppg} PPP en AFMB y ${s.fed.ppg} PPP en el Federal CABB`;
+
+  // Evaluación NextLevel — spans dinámicos
+  elSet('eval-afmb-ppg', fmt(s.afmb.ppg));
+  elSet('eval-afmb-pj',  fmt(s.afmb.pj));
+  elSet('eval-fed-ppg',  fmt(s.fed.ppg));
+  elSet('eval-fed-pj',   fmt(s.fed.pj));
+
+  // ── TAB COACH — spans en texto ──
+  document.querySelectorAll('.coach-ppp-afmb').forEach(el => el.textContent = fmt(s.afmb.ppg));
+  document.querySelectorAll('.coach-ppp-fed').forEach(el  => el.textContent = fmt(s.fed.ppg));
+  document.querySelectorAll('.coach-pj-afmb').forEach(el  => el.textContent = fmt(s.afmb.pj));
+  document.querySelectorAll('.coach-pj-fed').forEach(el   => el.textContent = fmt(s.fed.pj));
+
+  // ── TAB PERFIL — CV ──
+  elSet('cv-ppp-fed',  fedPPG);
+  elSet('cv-ppp-afmb', fmt(s.afmb.ppg));
+  elSet('cv-mpg',      mpg);
+  elSet('cv-pj',       pjTot);
+
+  // Quote del CV dinámico
+  const cvQ = document.getElementById('cv-quote');
+  if (cvQ && s.afmb.ppg && s.fed.ppg) {
+    cvQ.innerHTML = `<strong>"Elite scorer at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB) and competitive at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
+  }
+
+  // Hitos con valores dinámicos
+  const elSetInner = (id, txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
+  elSetInner('hito-afmb-ppg', fmt(s.afmb.ppg));
+  elSetInner('hito-afmb-pj',  fmt(s.afmb.pj));
+  elSetInner('hito-fed-ppg',  fmt(s.fed.ppg));
+  elSetInner('hito-fed-pj',   fmt(s.fed.pj));
+
+  // Actualizar gráfico comparativo (re-renderizar con datos reales)
+  rebuildCompChart();
+}
+
+function renderStatsError() {
+  const loading = document.getElementById('stats-loading');
+  const errEl   = document.getElementById('stats-error');
+  if (loading) loading.style.display = 'none';
+  if (errEl)   errEl.style.display   = 'block';
+}
 
 /* ─── TABS ─────────────────────────────── */
 let _fisInited = false;
+let _pfInited  = false;
 function showTab(id, btn, navIdx) {
   document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
@@ -1376,23 +1657,25 @@ function showTab(id, btn, navIdx) {
     document.querySelectorAll('.bnav-btn')[navIdx].classList.add('on');
     document.querySelectorAll('.tab-btn')[navIdx].classList.add('on');
   }
-  // Inicializar tab físico la primera vez que se abre
+  // Tab físico: inicializar la primera vez, re-leer antro siempre
   if (id === 'fis' && !_fisInited) { _fisInited = true; fisInit(); }
-  // Re-leer antropometría cada vez (puede haber cambiado en Mi Perfil)
   if (id === 'fis') { fisLoadAntro(); }
+  // Tab perfil: cargar estado guardado la primera vez
+  if (id === 'perfil' && !_pfInited) { _pfInited = true; pfLoadState(); }
 }
 
 /* ─── INIT ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildShotMap();
   buildZoneSummary();
-  buildCompChart();
+  buildCompChart();   // placeholder con guiones; se reconstruye en renderPlayerStats
   buildZoneChart();
   buildRadar();
   buildFortalezasAreas();
   buildProgChart();
   buildHitos();
   buildNcaaBars();
+  loadPlayerStats();  // ← carga Supabase y actualiza todos los KPIs
 });
 
 /* ─── SHOT MAP ─────────────────────────── */
@@ -1430,15 +1713,17 @@ function buildZoneSummary() {
 }
 
 /* ─── COMPARATIVA CHART ─────────────────── */
+let _compChart = null;
 function buildCompChart() {
-  new Chart(document.getElementById('chartComp'), {
+  // Placeholder vacío — se llenará cuando lleguen datos de Supabase
+  _compChart = new Chart(document.getElementById('chartComp'), {
     type: 'bar',
     data: {
-      labels: ['PPG', 'MPG', 'RPG est.', 'APG est.'],
+      labels: ['PPP', 'MPG'],
       datasets: [
-        { label:'AFMB (20 PJ)', data:[8.6, 21, 2.6, 2.0],
+        { label:'AFMB 🏀', data:[null, null],
           backgroundColor:'rgba(249,115,22,0.6)', borderColor:'#f97316', borderWidth:2, borderRadius:6 },
-        { label:'Federal (5 PJ)', data:[6.8, 22, 3.0, 2.2],
+        { label:'Federal 🏀', data:[null, null],
           backgroundColor:'rgba(168,85,247,0.6)', borderColor:'#a855f7', borderWidth:2, borderRadius:6 },
       ]
     },
@@ -1451,6 +1736,17 @@ function buildCompChart() {
       plugins:{ legend:{ labels:{color:'#64748b',font:{size:11}} } }
     }
   });
+}
+
+/* Reconstruir comparativa con datos reales de playerStats */
+function rebuildCompChart() {
+  if (!_compChart) return;
+  const s = playerStats;
+  _compChart.data.datasets[0].label = `AFMB (${s.afmb.pj || '?'} PJ) 🏀`;
+  _compChart.data.datasets[1].label = `Federal (${s.fed.pj || '?'} PJ) 🏀`;
+  _compChart.data.datasets[0].data = [s.afmb.ppg, s.afmb.min_pg];
+  _compChart.data.datasets[1].data = [s.fed.ppg,  s.fed.min_pg];
+  _compChart.update();
 }
 
 /* ─── ZONE CHART ────────────────────────── */
@@ -1477,17 +1773,17 @@ function buildZoneChart() {
   });
 }
 
-/* ─── RADAR ─────────────────────────────── */
+/* ─── RADAR — usa EVAL_NL, no "percentil nacional" ─────────────────── */
 function buildRadar() {
   new Chart(document.getElementById('radarChart'), {
     type: 'radar',
     data: {
-      labels: PERCENTILES.map(p => p.lbl),
+      labels: EVAL_NL.map(p => p.lbl),
       datasets: [
-        { label:'Mía', data:PERCENTILES.map(p=>p.pct),
+        { label:'Mía — Eval. NextLevel 🧑‍🏫', data:EVAL_NL.map(p=>p.val),
           backgroundColor:'rgba(249,115,22,0.1)', borderColor:'#f97316',
           borderWidth:2, pointBackgroundColor:'#f97316', pointRadius:3 },
-        { label:'Promedio U13', data:[50,50,50,50,50,50],
+        { label:'Ref. 70', data:EVAL_NL.map(()=>70),
           backgroundColor:'rgba(255,255,255,0.02)', borderColor:'rgba(255,255,255,0.1)',
           borderWidth:1, borderDash:[4,4], pointRadius:0 },
       ]
@@ -1501,11 +1797,11 @@ function buildRadar() {
     }
   });
   const leg = document.getElementById('pctLegend');
-  PERCENTILES.forEach(p => {
+  EVAL_NL.forEach(p => {
     leg.innerHTML += `<div class="pct-cell">
-      <div class="pct-v" style="color:${p.color}">P${p.pct}</div>
+      <div class="pct-v" style="color:${p.color}">${p.val}</div>
       <div class="pct-l">${p.lbl}</div>
-      <div style="font-size:0.52rem;color:#334155;margin-top:2px">${p.val}</div>
+      <div style="font-size:0.52rem;color:#334155;margin-top:2px">${p.ref}</div>
     </div>`;
   });
 }
@@ -1525,19 +1821,30 @@ function itemCard(i, bg, bdr, c) {
   </div>`;
 }
 
-/* ─── PROGRESIÓN ────────────────────────── */
+/* ─── PROGRESIÓN — línea sólida = real, punteada = proyección ───────── */
 function buildProgChart() {
   new Chart(document.getElementById('chartProg'), {
     type:'line',
     data:{
-      labels:PROG_DATA.labels,
+      labels: PROG_DATA.labels,
       datasets:[
-        { label:'PPG', data:PROG_DATA.ppg,
-          borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.08)',
-          borderWidth:2.5, pointBackgroundColor:'#f97316', pointRadius:4, tension:.35, fill:true },
-        { label:'APG', data:PROG_DATA.apg,
-          borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.06)',
-          borderWidth:2.5, pointBackgroundColor:'#3b82f6', pointRadius:4, tension:.35, fill:true },
+        // PPG real (2026) — sólido + punto destacado
+        { label:'PPG Real 🏀', data: PROG_DATA.ppg_real,
+          borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.12)',
+          borderWidth:3, pointBackgroundColor:'#f97316', pointRadius:[5,0,0,0,0],
+          pointHoverRadius:7, tension:.35, fill:true, spanGaps:false },
+        // PPG proyectado (2027-2030) — punteado
+        { label:'PPG Proyectado 🔮', data: PROG_DATA.ppg_proj,
+          borderColor:'rgba(249,115,22,0.5)', backgroundColor:'rgba(249,115,22,0.03)',
+          borderWidth:2, borderDash:[6,4],
+          pointBackgroundColor:'rgba(249,115,22,0.5)', pointRadius:[0,4,4,4,4],
+          tension:.35, fill:false, spanGaps:false },
+        // APG proyectado (sin dato real oficial)
+        { label:'APG Proyectado 🔮', data: PROG_DATA.apg_proj,
+          borderColor:'rgba(59,130,246,0.5)', backgroundColor:'rgba(59,130,246,0.03)',
+          borderWidth:2, borderDash:[6,4],
+          pointBackgroundColor:'rgba(59,130,246,0.5)', pointRadius:[0,4,4,4,4],
+          tension:.35, fill:false, spanGaps:false },
       ]
     },
     options:{
@@ -1546,18 +1853,32 @@ function buildProgChart() {
         x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:10}} },
         y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{size:10}}, min:0 }
       },
-      plugins:{ legend:{ labels:{color:'#64748b',font:{size:11}} } }
+      plugins:{
+        legend:{ labels:{color:'#64748b',font:{size:10},
+          filter: item => item.text !== undefined
+        } },
+        tooltip:{
+          callbacks:{
+            label: ctx => {
+              if (ctx.parsed.y == null) return null;
+              const isProj = ctx.dataset.label?.includes('🔮');
+              return ` ${ctx.dataset.label}: ${ctx.parsed.y}${isProj ? ' (proyección)' : ' (real 🏀)'}`;
+            }
+          }
+        }
+      }
     }
   });
 }
 
 /* ─── HITOS ─────────────────────────────── */
 function buildHitos() {
+  // Los valores numéricos se actualizarán desde renderPlayerStats vía IDs
   const data = [
-    {icon:'🔥', f:'#1 Anotadora AFMB — 8.6 PPP', t:'Máxima anotadora del equipo en la liga metropolitana (20 PJ). Primera opción ofensiva del sistema de Berazategui durante toda la temporada.'},
-    {icon:'🌐', f:'Federal CABB — 6.8 PPP en torneo nacional', t:'5 PJ vs los mejores clubes del país. Mantener 6.8 PPP contra rivales de mayor nivel físico (jugadoras 1-2 años mayores) confirma la solidez del rendimiento.'},
-    {icon:'⏱️', f:'21.4 MPP en 25 partidos', t:'Alta rotación durante toda la temporada. El cuerpo técnico la confía como primera opción durante casi toda la rotación.'},
-    {icon:'🎯', f:'Tiro en 2 dimensiones', t:'Anotadora exterior (T3) + penetradora al aro. El perfil más difícil de defender del básquet moderno, desde los primeros años.'},
+    {icon:'🔥', f:'#1 Anotadora AFMB 🏀 — <span id="hito-afmb-ppg">—</span> PPP en <span id="hito-afmb-pj">—</span> PJ', t:'Máxima anotadora del equipo en la liga metropolitana. Primera opción ofensiva del sistema de Berazategui durante toda la temporada.'},
+    {icon:'🌐', f:'Federal CABB 🏀 — <span id="hito-fed-ppg">—</span> PPP en <span id="hito-fed-pj">—</span> PJ', t:'Partidos vs los mejores clubes del país. Sostener producción en el Federal indica solidez competitiva más allá de la liga local.'},
+    {icon:'⏱️', f:'MPP en 25 partidos 🏀', t:'Alta rotación durante toda la temporada. El cuerpo técnico la confía como primera opción durante casi toda la rotación.'},
+    {icon:'🎯', f:'Tiro en 2 dimensiones 🧑‍🏫', t:'Anotadora exterior (T3) + penetradora al aro. El perfil más difícil de defender del básquet moderno formativo.'},
   ];
   const el = document.getElementById('hitos');
   data.forEach(h => {
@@ -1569,14 +1890,14 @@ function buildHitos() {
   });
 }
 
-/* ─── NCAA BARS ─────────────────────────── */
+/* ─── NCAA BARS — Evaluación del coach (escala interna, no percentil) ── */
 function buildNcaaBars() {
   const el = document.getElementById('ncaaRadarBars');
   NCAA_SKILLS.forEach(s => {
     el.innerHTML += `<div class="radar-row">
       <div class="radar-lbl">${s.lbl}</div>
-      <div class="radar-bg"><div class="radar-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
-      <div class="radar-pct" style="color:${s.color}">P${s.pct}</div>
+      <div class="radar-bg"><div class="radar-fill" style="width:${s.val}%;background:${s.color}"></div></div>
+      <div class="radar-pct" style="color:${s.color}">${s.val}</div>
     </div>`;
   });
 }
@@ -1586,6 +1907,262 @@ function exportCV() {
   document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
   document.getElementById('tab-perfil').classList.add('on');
   setTimeout(() => window.print(), 350);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TAB PERFIL — persistencia (localStorage + Supabase Storage)
+   ══════════════════════════════════════════════════════════ */
+const PF_KEY        = 'nl_pf_mia14';
+const PF_BUCKET     = 'player-photos';          // bucket en Supabase Storage
+const PF_PHOTO_PATH = 'mia14/profile.jpg';      // path fijo por jugadora
+
+/* ── Guardar datos de texto en localStorage + Supabase player_data ── */
+function pfSave() {
+  const data = {
+    fnac:       document.getElementById('pf-fnac')?.value    || '',
+    mano:       document.getElementById('pf-mano')?.value    || '',
+    email:      document.getElementById('pf-email')?.value   || '',
+    wsp:        document.getElementById('pf-wsp')?.value     || '',
+    altura:     document.getElementById('pf-altura')?.value  || '',
+    peso:       document.getElementById('pf-peso')?.value    || '',
+    enverg:     document.getElementById('pf-enverg')?.value  || '',
+    alcance:    document.getElementById('pf-alcance')?.value || '',
+    calzado:    document.getElementById('pf-calzado')?.value || '',
+    nota:       document.getElementById('pf-nota')?.value    || '',
+    obj:        _pfObj  || '',
+    area:       _pfArea || '',
+    antroFecha: new Date().toLocaleDateString('es-AR'),
+  };
+  // localStorage — acceso inmediato offline
+  try { localStorage.setItem(PF_KEY, JSON.stringify(data)); } catch(e) {}
+  // Supabase — sincronización entre dispositivos (texto, sin foto)
+  _supa.from('player_data')
+    .upsert({ player_id: FIS_PLAYER_ID, key: 'perfil_v1', value: data }, { onConflict: 'player_id,key' })
+    .then(({ error }) => { if (error) console.warn('pfSave supa:', error.message); });
+  // Badge "Guardado"
+  const badge = document.getElementById('pf-saved-badge');
+  if (badge) {
+    badge.style.display = 'inline';
+    clearTimeout(badge._t);
+    badge._t = setTimeout(() => badge.style.display = 'none', 2000);
+  }
+}
+
+/* ── FOTO — sube a Supabase Storage, disponible en cualquier dispositivo ── */
+let _pfFotoB64 = ''; // cache local solo para mostrar antes de subir
+
+function pfLoadFoto(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('La imagen es demasiado grande. Usá una foto de hasta 5 MB.');
+    input.value = '';
+    return;
+  }
+  // Mostrar preview inmediata
+  const reader = new FileReader();
+  reader.onload = e => {
+    _pfFotoB64 = e.target.result;
+    pfApplyFoto(_pfFotoB64);
+  };
+  reader.readAsDataURL(file);
+  // Subir a Supabase Storage en paralelo
+  pfUploadFoto(file);
+}
+
+async function pfUploadFoto(file) {
+  const btn = document.getElementById('pf-foto-btn');
+  if (btn) { btn.textContent = '⏳ Subiendo foto…'; btn.disabled = true; }
+
+  // Convertir a WebP/JPG comprimido si el browser lo soporta
+  let uploadFile = file;
+  try {
+    const bmp   = await createImageBitmap(file);
+    const canvas = document.createElement('canvas');
+    const MAX    = 800;
+    const scale  = Math.min(1, MAX / Math.max(bmp.width, bmp.height));
+    canvas.width  = Math.round(bmp.width  * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.82));
+    if (blob) uploadFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+  } catch(e) { /* usa el archivo original si falla la compresión */ }
+
+  const { error } = await _supa.storage
+    .from(PF_BUCKET)
+    .upload(PF_PHOTO_PATH, uploadFile, { upsert: true, contentType: 'image/jpeg' });
+
+  if (btn) { btn.textContent = '📷 Cambiar foto de perfil'; btn.disabled = false; }
+
+  if (error) {
+    console.warn('pfUploadFoto:', error.message);
+    // Si falla la subida, al menos guarda base64 en localStorage como fallback
+    try {
+      const d = JSON.parse(localStorage.getItem(PF_KEY) || '{}');
+      d.foto = _pfFotoB64;
+      localStorage.setItem(PF_KEY, JSON.stringify(d));
+    } catch(e2) {}
+    return;
+  }
+
+  // Guardar URL pública en player_data para que otros dispositivos la encuentren
+  const { data: urlData } = _supa.storage.from(PF_BUCKET).getPublicUrl(PF_PHOTO_PATH);
+  const publicUrl = urlData?.publicUrl + '?t=' + Date.now(); // cache-bust
+  _supa.from('player_data')
+    .upsert({ player_id: FIS_PLAYER_ID, key: 'foto_url', value: publicUrl }, { onConflict: 'player_id,key' })
+    .then(() => {});
+
+  // Actualizar localStorage con la URL (no el base64 pesado)
+  try {
+    const d = JSON.parse(localStorage.getItem(PF_KEY) || '{}');
+    d.foto_url = publicUrl;
+    delete d.foto; // liberar espacio — ya no necesitamos el base64
+    localStorage.setItem(PF_KEY, JSON.stringify(d));
+  } catch(e) {}
+}
+
+function pfApplyFoto(src) {
+  if (!src) return;
+  const img = document.getElementById('pf-avatar-img');
+  const txt = document.getElementById('pf-avatar-txt');
+  if (img && txt) {
+    img.src = src;
+    img.style.display = 'block';
+    txt.style.display = 'none';
+  }
+  const heroImg = document.getElementById('pf-hero-foto');
+  if (heroImg) { heroImg.src = src; heroImg.style.display = 'block'; }
+}
+
+/* ── Antropometría calculada ── */
+function pfCalcAntro() {
+  const alt  = parseFloat(document.getElementById('pf-altura')?.value) || null;
+  const pes  = parseFloat(document.getElementById('pf-peso')?.value)   || null;
+  const env  = parseFloat(document.getElementById('pf-enverg')?.value) || null;
+  const panel = document.getElementById('pf-antro-derived');
+
+  if (!alt && !pes && !env) {
+    if (panel) panel.style.display = 'none';
+    return;
+  }
+  if (panel) panel.style.display = 'block';
+
+  // IMC
+  const imcEl = document.getElementById('pf-imc');
+  if (imcEl) imcEl.textContent = (alt && pes) ? (pes / ((alt/100)**2)).toFixed(1) : '—';
+
+  // Ratio envergadura/altura
+  const ratioEl = document.getElementById('pf-ratio-env');
+  if (ratioEl) ratioEl.textContent = (alt && env) ? ((env/alt)*100).toFixed(1) + '%' : '—';
+
+  // Perfil físico
+  const tallaEl = document.getElementById('pf-talla-jug');
+  if (tallaEl && alt) {
+    const ratio = env ? env - alt : null;
+    let perfil = alt >= 175 ? 'Poste / Ala-Poste' : alt >= 165 ? 'Alero / Escolta' : 'Base / Escolta';
+    if (ratio && ratio > 5) perfil += ' +';
+    tallaEl.textContent = perfil;
+  }
+
+  // Fecha
+  const fechaEl = document.getElementById('pf-antro-fecha');
+  if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-AR');
+}
+
+/* ── Chips de objetivo y área ── */
+let _pfObj  = '';
+let _pfArea = '';
+
+function pfSelectObj(el, val) {
+  _pfObj = val;
+  document.querySelectorAll('#pf-obj-chips .pf-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  pfSave();
+}
+
+function pfSelectArea(el, val) {
+  _pfArea = val;
+  document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  pfSave();
+}
+
+/* ── Aplicar datos de perfil al formulario ── */
+function pfApplyData(d) {
+  if (!d) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  set('pf-fnac',    d.fnac);
+  set('pf-mano',    d.mano);
+  set('pf-email',   d.email);
+  set('pf-wsp',     d.wsp);
+  set('pf-altura',  d.altura);
+  set('pf-peso',    d.peso);
+  set('pf-enverg',  d.enverg);
+  set('pf-alcance', d.alcance);
+  set('pf-calzado', d.calzado);
+  set('pf-nota',    d.nota);
+  if (d.obj) {
+    _pfObj = d.obj;
+    document.querySelectorAll('#pf-obj-chips .pf-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === d.obj));
+  }
+  if (d.area) {
+    _pfArea = d.area;
+    document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.val === d.area));
+  }
+  const fechaEl = document.getElementById('pf-antro-fecha');
+  if (fechaEl && d.antroFecha) fechaEl.textContent = d.antroFecha;
+  pfCalcAntro();
+}
+
+/* ── Cargar foto desde Supabase Storage o localStorage ── */
+async function pfLoadFotoFromCloud() {
+  // 1. Intentar URL guardada en player_data (cualquier dispositivo)
+  const { data: rows } = await _supa
+    .from('player_data')
+    .select('value')
+    .eq('player_id', FIS_PLAYER_ID)
+    .eq('key', 'foto_url')
+    .maybeSingle();
+
+  if (rows?.value) {
+    pfApplyFoto(rows.value);
+    return;
+  }
+
+  // 2. Fallback: base64 guardado localmente (mismo dispositivo, primera carga)
+  try {
+    const d = JSON.parse(localStorage.getItem(PF_KEY) || '{}');
+    if (d.foto) pfApplyFoto(d.foto);
+    else if (d.foto_url) pfApplyFoto(d.foto_url);
+  } catch(e) {}
+}
+
+/* ── Cargar estado guardado al abrir el tab ── */
+async function pfLoadState() {
+  // Prioridad: Supabase (sincronizado) → localStorage (offline/cache)
+  const { data: rows } = await _supa
+    .from('player_data')
+    .select('value')
+    .eq('player_id', FIS_PLAYER_ID)
+    .eq('key', 'perfil_v1')
+    .maybeSingle();
+
+  if (rows?.value) {
+    // Dato en la nube — aplicar y sincronizar localStorage
+    pfApplyData(rows.value);
+    try { localStorage.setItem(PF_KEY, JSON.stringify(rows.value)); } catch(e) {}
+  } else {
+    // Sin dato en la nube — intentar localStorage
+    try {
+      const raw = localStorage.getItem(PF_KEY);
+      if (raw) pfApplyData(JSON.parse(raw));
+    } catch(e) { console.warn('pfLoadState local:', e); }
+  }
+
+  // Cargar foto (separado — puede tardar más)
+  pfLoadFotoFromCloud();
 }
 
 /* ─── SUPABASE ──────────────────────────── */
