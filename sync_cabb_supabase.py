@@ -61,6 +61,7 @@ CATEGORIA_HINT = 'INFANTILES FEMENINO'   # para filtrar si hay varios resultados
 
 # Temporada actual
 SEASON = '2026'
+TOURNAMENT = 'AFMB'
 
 # ── Imports opcionales ─────────────────────────────────────────────────
 try:
@@ -146,12 +147,17 @@ def resolve_player_id(nombre_cabb: str) -> Optional[str]:
 def find_equipo(client: CABBApiClient) -> Optional[str]:
     """Devuelve el opaque_team_id del equipo Berazategui Infantiles Fem."""
     log(f'Buscando equipo: {EQUIPO_QUERY} ({CATEGORIA_HINT})')
-    equipos = client.buscar_equipos(EQUIPO_QUERY)
+    equipos = []
+    for skip in range(0, 1000, 20):
+        page = client.buscar_equipos(EQUIPO_QUERY, skip)
+        equipos.extend(page)
+        if len(page) < 20:
+            break
     
     candidatos = [e for e in equipos
                   if str(e.get('Categoria', '')).upper() == CATEGORIA_HINT
                   and str(e.get('Temporada', '')) == SEASON
-                  and 'FEMENINA METROPOLITANA' in str(e.get('Delegacion', '')).upper()]
+                  and ('ARGENTINA DE BASQUETBOL' if TOURNAMENT == 'Federal CABB' else 'FEMENINA METROPOLITANA') in str(e.get('Delegacion', '')).upper()]
     if len(candidatos) == 1:
         return candidatos[0].get('Id')
     if len(candidatos) > 1:
@@ -173,7 +179,7 @@ def sync_stats_seasons(client, team_id, supa, dry_run, games=None):
         if not player_id:
             continue
         pj = safe_int(first_value(j, 'PartidosJugados'), None)
-        row = {'player_id': player_id, 'season': SEASON, 'tournament': 'AFMB',
+        row = {'player_id': player_id, 'season': SEASON, 'tournament': TOURNAMENT,
                'updated_at': datetime.now(timezone.utc).isoformat()}
         for key, value in [('pj', pj), ('ppg', safe_float(j.get('PuntosPorPartido'), None)),
                            ('min_pg', safe_float(j.get('MinutosPorPartido'), None))]:
@@ -182,7 +188,7 @@ def sync_stats_seasons(client, team_id, supa, dry_run, games=None):
         logs = [r for r in (games or []) if r['player_id'] == player_id]
         if supa and not dry_run:
             logs = supa.table('game_log').select('*').eq('player_id', player_id).eq(
-                'torneo', 'AFMB').eq('source', 'cabb_api').gte('fecha', SEASON + '-01-01').lt(
+                'torneo', TOURNAMENT).eq('source', 'cabb_api').gte('fecha', SEASON + '-01-01').lt(
                 'fecha', str(int(SEASON) + 1) + '-01-01').execute().data
         # Cada partido debe ser único y el conteo debe coincidir con el PJ oficial.
         if pj and len(logs) == pj and len({r['cabb_partido_id'] for r in logs}) == pj:
@@ -202,7 +208,7 @@ def sync_game_log(client, team_id, supa, dry_run, match_ids=None, export_path=No
     team=client.get_equipo_detalle(team_id)
     if not team.get('Nombre'):
         raise ValueError('Equipo sin nombre verificado')
-    category,games=discover_games(client,team['Nombre'],SEASON,progress=log)
+    category,games=discover_games(client,team['Nombre'],SEASON,progress=log,tournament=TOURNAMENT)
     if match_ids:
         requested=set(map(str,match_ids))
         games=[g for g in games if str(g['IdPartidoNotificacion']) in requested]
@@ -268,14 +274,16 @@ def procesar_boxscore(id_partido, fase, stats_raw, fixture=None):
         raise ValueError('El boxscore requiere el fixture canónico y su ID estable')
     if parse_fecha(fixture.get('Fecha','')) is None or not parse_fecha(fixture['Fecha']).startswith(SEASON+'-'):
         raise ValueError('Fecha inválida o fuera de temporada')
-    return normalize_boxscore(stats_raw,fixture,PLAYER_MAP,datetime.now(timezone.utc).isoformat())
+    return normalize_boxscore(stats_raw,fixture,PLAYER_MAP,datetime.now(timezone.utc).isoformat(), tournament=TOURNAMENT)
 
 # ══════════════════════════════════════════════════════════════════════
 #  MAIN
 # ══════════════════════════════════════════════════════════════════════
 
 def main():
+    global TOURNAMENT, CATEGORIA_HINT
     parser = argparse.ArgumentParser(description='NextLevel ↔ CABB ↔ Supabase Sync')
+    parser.add_argument('--tournament', choices=['AFMB', 'Federal CABB'], default='AFMB')
     parser.add_argument('--export-json',help='Exportar filas validadas y auditoría del fixture')
     parser.add_argument('--match-id', action='append', default=[], help='IdPartidoNotificacion estable; se resuelve al opaque ID del fixture en esta sesión')
     parser.add_argument('--dry-run',     action='store_true', help='Solo muestra, no escribe en Supabase')
@@ -283,6 +291,9 @@ def main():
     parser.add_argument('--only-gamelog',action='store_true', help='Solo sincroniza game log')
     parser.add_argument('--team-id',     type=str,            help='Forzar opaque_team_id (saltar búsqueda)')
     args = parser.parse_args()
+    TOURNAMENT = args.tournament
+    if TOURNAMENT == 'Federal CABB':
+        CATEGORIA_HINT = 'LA LIGA FEDERAL INFANTILES FEMENINA'
     if args.only_stats and args.only_gamelog:
         parser.error('Los modos only-stats y only-gamelog son excluyentes')
     if not args.dry_run and not SUPA_KEY:

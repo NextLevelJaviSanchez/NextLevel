@@ -56,7 +56,9 @@ jobs:
         env:
           SUPA_URL: ${{ secrets.SUPA_URL }}
           SUPA_KEY: ${{ secrets.SUPA_KEY }}
-        run: python sync_cabb_supabase.py
+        run: |
+          python sync_cabb_supabase.py
+          python sync_cabb_supabase.py --tournament "Federal CABB"
 
       - name: Run sync (manual)
         if: github.event_name == 'workflow_dispatch'
@@ -67,8 +69,10 @@ jobs:
           MODE="${{ github.event.inputs.mode }}"
           if [ "$MODE" = "full" ]; then
             python sync_cabb_supabase.py
+            python sync_cabb_supabase.py --tournament "Federal CABB"
           else
             python sync_cabb_supabase.py --$MODE
+            python sync_cabb_supabase.py --tournament "Federal CABB" --$MODE
           fi
 
       - name: Notify on failure

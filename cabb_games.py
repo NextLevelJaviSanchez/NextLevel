@@ -12,13 +12,13 @@ def checked(payload, label):
         raise ValueError(f"CABB {label}: {payload.get('error', 'respuesta inválida') if isinstance(payload,dict) else 'respuesta inválida'}")
     return payload
 
-def find_category(client, category='INFANTILES FEMENINO', competition='FORMATIVAS 2026'):
+def find_category(client, category='INFANTILES FEMENINO', competition='FORMATIVAS 2026', federation='FEMENINA METROPOLITANA'):
     matches = []
     for skip in range(0, 1000, 20):
         page = client.buscar_categorias(category, skip)
         matches.extend(c for c in page if c.get('NombreCategoria') == category
             and c.get('NombreCompeticion') == competition
-            and 'FEMENINA METROPOLITANA' in c.get('NombreDelegacion',''))
+            and federation in c.get('NombreDelegacion',''))
         if len(page) < 20:
             break
     matches = list({c['Id']: c for c in matches}.values())
@@ -26,8 +26,8 @@ def find_category(client, category='INFANTILES FEMENINO', competition='FORMATIVA
         raise ValueError('Selección de categoría inexistente o ambigua')
     return matches[0]
 
-def discover_games(client, team_name, season='2026', progress=None):
-    category = find_category(client, competition='FORMATIVAS ' + season)
+def discover_games(client, team_name, season='2026', progress=None, tournament='AFMB'):
+    category = (find_category(client, category='LA LIGA FEDERAL INFANTILES FEMENINA', competition='FORMATIVAS', federation='ARGENTINA DE BASQUETBOL') if tournament == 'Federal CABB' else find_category(client, competition='FORMATIVAS ' + season))
     phases = checked(client.get_categoria_fases_grupos(category['Id']), 'fases de categoría')
     games = {}
     for phase in phases.get('listaFasesGrupo', []):
@@ -67,7 +67,7 @@ def number(value):
     except (ValueError, TypeError):
         return None
 
-def normalize_boxscore(raw, fixture, player_map, synced_at):
+def normalize_boxscore(raw, fixture, player_map, synced_at, tournament='AFMB'):
     checked(raw, 'boxscore')
     p, stats = raw.get('partido', {}), raw.get('estadisticas', {})
     if p.get('estado_partido') != 'FINALIZADO':
@@ -118,7 +118,7 @@ def normalize_boxscore(raw, fixture, player_map, synced_at):
         row={'player_id':player_map[name], 'cabb_partido_id':stable,
             'cabb_player_id':None, # componente_id de boxscore es opaque; no simula identidad estable.
             'fecha':date,'rival':p['visitante'] if home else p['local'],
-            'torneo':'AFMB','fase':fixture.get('fase',''),'es_local':home,
+            'torneo':tournament,'fase':fixture.get('fase',''),'es_local':home,
             'resultado_eq':f"{int(h) if home else int(a)}-{int(a) if home else int(h)}",
             'ganado':h>a if home else a>h,'titular':player.get('quintetotitular'),
             'pts':pts,'minutos':minutes,'tc_in':sum_if_known(made[1:]),'tc_att':sum_if_known(attempted[1:]),

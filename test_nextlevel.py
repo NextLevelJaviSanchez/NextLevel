@@ -66,6 +66,18 @@ class Regression(unittest.TestCase):
                 return {'resultado':'correcto','partidos':[dict(f['fixture'],IdPartido='session-opaque'),dict(f['fixture'],IdPartido='session-opaque')]}
         _,games=discover_games(API(),f['fixture']['NombreEquipoLocal'])
         self.assertEqual(len(games),1);self.assertEqual(games[0]['IdPartidoNotificacion'],'644845')
+    def test_federal_separate_from_afmb(self):
+        import json
+        from collections import Counter
+        data=json.loads((R/'federal_sync_verified.json').read_text(encoding='utf-8'))
+        rows=data['rows']
+        self.assertEqual(len(rows),25)
+        self.assertEqual(set(r['torneo'] for r in rows),{'Federal CABB'})
+        self.assertEqual(set(Counter(r['player_id'] for r in rows).values()),{5})
+        mia=[r for r in rows if r['player_id'].endswith('000014')]
+        self.assertEqual(sum(r['pts'] for r in mia),34)
+        self.assertEqual(summarize_games(mia)['ppg'],6.8)
+        self.assertFalse({'644845'} & {r['cabb_partido_id'] for r in rows})
     def test_endpoint_path(self):
         from cabb_app_api import CABBApiClient
         client=CABBApiClient.__new__(CABBApiClient)

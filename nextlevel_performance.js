@@ -107,7 +107,7 @@
         last.forEach(g => {
           const d=node('details',null,content); d.style.cssText='padding:10px 0;border-top:1px solid #334155;font-size:.75rem';
           const outcome=g.ganado===true?'G':g.ganado===false?'P':'Sin resultado';
-          node('summary',`${g.fecha} · ${g.rival || 'Rival sin datos'} · ${g.resultado_eq ?? 'Sin marcador'} (${outcome}) · ${g.pts ?? '—'} PTS · ${g.reb_tot ?? '—'} REB · ${g.ast ?? '—'} AST`,d);
+          node('summary',`${g.fecha} · ${g.torneo || "Torneo sin datos"} · ${g.rival || 'Rival sin datos'} · ${g.resultado_eq ?? 'Sin marcador'} (${outcome}) · ${g.pts ?? '—'} PTS · ${g.reb_tot ?? '—'} REB · ${g.ast ?? '—'} AST`,d);
           node('p','Dato CABB · '+[['MIN','minutos'],['PTS','pts'],['REB','reb_tot'],['AST','ast'],['ROB','stl'],['TAP','blk'],['PER','to_perdidas'],['FALTAS','faltas'],['VAL','val']].map(([label,key]) => `${label}: ${g[key] ?? 'Sin datos'}`).join(' · '),d);
           node('p',['2P','3P','TL'].map((label,i) => {const k=['t2','t3','tl'][i];return `${label}: ${g[k+'_in'] ?? '—'}/${g[k+'_att'] ?? '—'}`;}).join(' · '),d);
         });
