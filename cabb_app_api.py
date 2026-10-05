@@ -27,7 +27,8 @@ class CABBApiClient:
         self.device_uuid = str(uuid.uuid4())
         self.id_dispositivo: Optional[str] = None
         self.key: Optional[str] = None
-        self.register_device()
+        if not self.register_device():
+            raise RuntimeError("CABB: no se pudo registrar el dispositivo")
 
     def _post(self, url: str, params: Dict[str, Any], timeout: int = 20) -> Dict[str, Any]:
         data = urllib.parse.urlencode(params).encode('utf-8')
@@ -40,8 +41,9 @@ class CABBApiClient:
                         self.key = res['key']
                     return res
             except Exception as e:
+                e_last = e
                 time.sleep(1)
-        return {}
+        raise RuntimeError("CABB: la consulta falló después de 3 intentos") from e_last
 
     def register_device(self) -> bool:
         """Registra un dispositivo virtual y obtiene id_dispositivo y key de sesión."""
@@ -168,8 +170,7 @@ class CABBApiClient:
 if __name__ == "__main__":
     client = CABBApiClient()
     print("[OK] CABB API Client inicializado con exito.")
-    print(f"Device ID: {client.id_dispositivo[:25]}...")
-    print(f"Key: {client.key[:25]}...")
+    print("Sesión registrada (credenciales ocultas).")
     
     equipos = client.buscar_equipos("BERAZATEGUI")
     print(f"\nEquipos de Berazategui encontrados: {len(equipos)}")

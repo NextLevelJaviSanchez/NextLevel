@@ -196,8 +196,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           <span class="htag ht-cy">⛹️ Ala-Poste</span>
           <span class="htag ht-gr">🛡️ Especialista Defensiva</span>
           <span class="htag ht-or">11 años · Debut 2026</span>
-          <span class="htag ht-pu">26 PJ · AFMB + Federal</span>
-          <span class="htag ht-ye">🏀 Reboteadora #1</span>
+          <span class="htag ht-pu">PJ: según resumen oficial</span>
+          <span class="htag ht-ye">🏀 Perfil interior</span>
         </div>
       </div>
       <div class="nl-badge">
@@ -205,10 +205,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
     <div class="hero-kpis">
-      <div class="kpi"><div class="kpi-val">6.4</div><div class="kpi-lbl">PPG</div></div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--green)">4.2</div><div class="kpi-lbl">RPG</div></div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--orange)">19.7</div><div class="kpi-lbl">MPG</div></div>
-      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">33%</div><div class="kpi-lbl">T3%</div></div>
+      <div class="kpi"><div class="kpi-val" data-official-metric="ppg">—</div><div class="kpi-lbl">PPG</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--green)" data-official-metric="rpg">—</div><div class="kpi-lbl">RPG</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--orange)" data-official-metric="min_pg">—</div><div class="kpi-lbl">MPG</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)" data-official-metric="t3_pct">—</div><div class="kpi-lbl">T3%</div></div>
     </div>
   </div>
 </div>
@@ -226,20 +226,20 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- ════════════════════════════════════════════
      TAB 1 — MI RENDIMIENTO
 ═════════════════════════════════════════════ -->
-<div id="tab-rend" class="tab-pane on">
+<div id="tab-rend" class="tab-pane on"><p style="font-size:.65rem;color:var(--muted)">Dato CABB: valores recibidos · Cálculo NextLevel: derivados · Coach: evaluación · Objetivo: meta · Proyección: escenario futuro.</p>
 
   <!-- KPIs completos -->
   <div class="card">
     <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026</div>
     <div class="g4" style="margin-bottom:10px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.4</div><div class="sc-lbl">PPG</div><div class="sc-sub up">+1.2 vs promedio</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">4.2</div><div class="sc-lbl">RPG</div><div class="sc-sub up">+2.1 vs plantel</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">1.3</div><div class="sc-lbl">APG</div><div class="sc-sub flat">—</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">1.6</div><div class="sc-lbl">BPG</div><div class="sc-sub up">#1 plantel</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" data-official-metric="ppg">—</div><div class="sc-lbl">PPG</div><div class="sc-sub up">Según datos disponibles</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)" data-official-metric="rpg">—</div><div class="sc-lbl">RPG</div><div class="sc-sub up">Según datos disponibles</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)" data-official-metric="apg">—</div><div class="sc-lbl">APG</div><div class="sc-sub flat">Según datos disponibles</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" data-official-metric="bpg">—</div><div class="sc-lbl">BPG</div><div class="sc-sub up">Según datos disponibles</div></div>
     </div>
     <div class="g4">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">33.3%</div><div class="sc-lbl">T3%</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">38.2%</div><div class="sc-lbl">TL%</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)" data-official-metric="t3_pct">—</div><div class="sc-lbl">T3%</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--blue)" data-official-metric="tl_pct">—</div><div class="sc-lbl">TL%</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--green)">2.6</div><div class="sc-lbl">REB.DEF</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">1.6</div><div class="sc-lbl">REB.OF</div></div>
     </div>
@@ -280,29 +280,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 
   <!-- On/Off Rating -->
-  <div class="card">
-    <div class="card-ttl">⚡ Impacto On/Off Court</div>
-    <div class="onoff-grid">
-      <div class="onoff-card onoff-on">
-        <div class="onoff-label" style="color:var(--green)">Martina en cancha</div>
-        <div class="onoff-big" style="color:var(--green)">+8.4</div>
-        <div class="onoff-sub">Net Rating</div>
-        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo anota 8.4 pts más<br>por 100 posesiones</div>
-      </div>
-      <div class="onoff-card onoff-off">
-        <div class="onoff-label" style="color:var(--red)">Martina afuera</div>
-        <div class="onoff-big" style="color:var(--red)">−2.1</div>
-        <div class="onoff-sub">Net Rating</div>
-        <div style="margin-top:8px;font-size:0.6rem;color:#94a3b8">Equipo concede 2.1 pts más<br>por 100 posesiones</div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-bottom:12px">
-      <span class="net-badge net-pos">📊 Diferencial On/Off: +10.5 — ELITE</span>
-    </div>
-    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65;background:rgba(6,182,212,0.04);border:1px solid rgba(6,182,212,0.1);border-radius:8px;padding:10px 12px">
-      🛡️ <strong style="color:var(--ac2)">Impacto defensivo real:</strong> Cuando Martina abandona la cancha, el equipo concede más puntos por posesión. Su presencia en la zona y en rebote defensivo cambia la dinámica del partido. Este diferencial (+10.5) la posiciona como <strong style="color:var(--text)">el jugador de mayor impacto defensivo del plantel</strong>.
-    </div>
-  </div>
+  <div class="card"><div class="card-ttl">Impacto On/Off</div><p>Sin datos de sustituciones y posesiones verificados. No se calcula On/Off.</p></div>
 
   <!-- Distribución de tiros por zona -->
   <div class="card">
@@ -310,31 +288,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div style="position:relative;height:220px"><canvas id="chartZones"></canvas></div>
   </div>
 
-  <!-- Rebotes desglose -->
-  <div class="card">
-    <div class="card-ttl">🏀 Análisis de Rebotes — #1 del Plantel</div>
-    <div class="g3" style="margin-bottom:12px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">4.2</div><div class="sc-lbl">Total RPG</div><div class="sc-sub up">#1 plantel</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--blue)">2.6</div><div class="sc-lbl">Reb. Def</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--orange)">1.6</div><div class="sc-lbl">Reb. Of.</div></div>
-    </div>
-    <div class="def-bar-wrap">
-      <div class="def-bar-hdr"><span class="def-bar-lbl">Tasa Rebote Defensivo</span><span class="def-bar-val" style="color:var(--green)">62% — Élite U13</span></div>
-      <div class="def-bar-bg"><div class="def-bar-fill" style="width:62%;background:linear-gradient(90deg,#16a34a,#22c55e)"></div></div>
-    </div>
-    <div class="def-bar-wrap">
-      <div class="def-bar-hdr"><span class="def-bar-lbl">Tasa Rebote Ofensivo</span><span class="def-bar-val" style="color:var(--orange)">38% — Alta</span></div>
-      <div class="def-bar-bg"><div class="def-bar-fill" style="width:38%;background:linear-gradient(90deg,#c2410c,#f97316)"></div></div>
-    </div>
-    <div class="def-bar-wrap">
-      <div class="def-bar-hdr"><span class="def-bar-lbl">Bloqueos de Tiro</span><span class="def-bar-val" style="color:var(--purple)">1.6 BPG — Liderazgo</span></div>
-      <div class="def-bar-bg"><div class="def-bar-fill" style="width:80%;background:linear-gradient(90deg,#7c3aed,#a855f7)"></div></div>
-    </div>
-    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65;margin-top:8px">
-      📌 <strong style="color:var(--text)">Contexto:</strong> 4.2 RPG siendo la jugadora más joven del plantel (11 años) es un indicador de inteligencia espacial avanzada. Las Ala-Poste con 4+ RPG en U13 proyectan habitualmente como pívots dominantes en Cadetes.
-    </div>
-  </div>
-
+  <div class="card"><div class="card-ttl">Rebotes y defensa</div><p>Sin desglose oficial sincronizado. Los datos disponibles aparecen en el historial.</p></div>
 </div><!-- /tab-rend -->
 
 <!-- ════════════════════════════════════════════
@@ -344,24 +298,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
   <div style="background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(34,197,94,0.04));border:1px solid rgba(6,182,212,0.15);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px">
     <span style="font-size:1.2rem;flex-shrink:0">🌟</span>
-    <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><strong style="color:var(--ac2)">Temporada debut 2026 — 11 años.</strong> Análisis basado en <strong style="color:var(--text)">26 partidos reales</strong> (21 AFMB + 5 Federal CABB). El percentil de comparación es contra <strong style="color:var(--text)">jugadoras en su primera temporada U13 de Argentina</strong>.</div>
+    <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><strong style="color:var(--ac2)">Temporada debut 2026 — 11 años.</strong> Análisis basado en los resúmenes oficiales disponibles en Rendimiento. No existe una población comparable verificada para mostrar percentiles.</div>
   </div>
 
   <div class="ia-box">
     <div class="ia-hdr">
       <div class="ia-ic">🤖</div>
       <div><div class="ia-ttl">Análisis del Coach Digital — Martina Bailón #10</div>
-      <div class="ia-sub">IA generativa · 26 PJ reales · API oficial CABB · Temporada 2026</div></div>
+      <div class="ia-sub">Coach · evaluación pendiente</div></div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl cy">🏀 PERFIL DE JUEGO — ALA-POSTE</div>
-      <div class="ia-txt">Martina es la <strong>Ala-Poste más completa de la temporada de debut</strong>. En 26 partidos combinados (AFMB + Federal), demostró una combinación rarísima: capacidad anotadora exterior (<strong>33.3% en triples</strong>) desde una posición que habitualmente se asocia con juego cercano al aro, combinada con <strong>4.2 RPG — #1 del plantel</strong> y <strong>1.6 bloqueos por partido</strong>. Este perfil "stretch-4" (poste con tiro exterior) es el más valorado en el básquet moderno a nivel NCAA y europeo.</div>
+      <div class="ia-txt">Coach · Evaluación pendiente de carga. No hay rankings verificados.</div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl gr">🛡️ IMPACTO DEFENSIVO — ANÁLISIS PROFUNDO</div>
-      <div class="ia-txt">Los <strong>1.6 bloqueos por partido</strong> la ubican como la defensora individual más efectiva del equipo. Combina alcance vertical para bloquear (sugiere una envergadura por encima del promedio para su edad) con <strong>inteligencia posicional para el rebote defensivo</strong> (2.6 DRPG). Su tasa de rebote defensivo del 62% significa que en 6 de cada 10 posesiones donde el rival falla un tiro, Martina se queda con la pelota cuando está en cancha. <strong>En el Federal CABB</strong>, contra jugadoras 1-2 años mayores, mantuvo estos números, lo que confirma que no son estadísticas de nivel local sino de impacto real frente a competencia nacional.</div>
+      <div class="ia-txt">Coach · Evaluación pendiente de carga. No hay rankings verificados.</div>
       <div class="drill-box">
         <div class="drill-ttl">🏋️ Drill: Bloqueo + Transición Rápida (15 min)</div>
         <div class="drill-txt"><strong>(1) Posición de bloqueo vertical</strong> — Trabajo con entrenador o compañera: defender el lado débil, saltar y bloquear hacia afuera (no quedar con falta). 3 series × 8 intentos.<br><strong>(2) Rebote + primer pase de salida</strong> — Capturar rebote defensivo y ejecutar el outlet pass hacia el ala en menos de 1.5 segundos. Clave para el contragolpe.<br><strong>(3) Rotación defensiva en zona</strong> — Lectura de corte del rival, anticipar la recepción en zona baja.</div>
@@ -370,7 +324,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
     <div class="ia-sec">
       <div class="ia-lbl or">🏹 TIRO EXTERIOR — VENTAJA DIFERENCIAL</div>
-      <div class="ia-txt">El <strong>33.3% desde el perímetro</strong> siendo Ala-Poste es una ventaja táctica enorme. Obliga a las defensas rivales a salir a marcarla fuera del arco, abriendo espacio para las bases del equipo. En 2-3 temporadas, cuando tenga la base física de Cadetes, esta habilidad la convertirá en una <strong>jugadora incomparably difícil de defender</strong>: si la marcan por afuera, penetra; si se quedan adentro, lanza el triple.</div>
+      <div class="ia-txt">Coach · Evaluación pendiente de carga. No hay rankings verificados.</div>
       <div class="drill-box">
         <div class="drill-ttl">🎯 Drill: Triple off Screen (10 min)</div>
         <div class="drill-txt"><strong>(1)</strong> Pantalla + salir al perímetro: catch & shoot en 0.4 segundos. 4 series × 8 tiros desde esquina y 45°.<br><strong>(2)</strong> Pump fake + drive: si el defensor salta en el pump, entrar al aro. Aprovechar la reputación de tiradora para ganar penetraciones fáciles.</div>
@@ -379,15 +333,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
     <div class="ia-sec">
       <div class="ia-lbl bl">📈 PROYECCIÓN 2027-2028</div>
-      <div class="ia-txt">Con base física aún en desarrollo (11 años), la proyección a Cadetes 2027 es de <strong>9-11 PPG + 6+ RPG</strong> si continúa el trabajo específico de poste exterior. En el modelo NCAA, su perfil corresponde a un <strong>"Power Forward with perimeter skills"</strong> — el arquetipo más buscado por las universidades Division I. El haber jugado Federal CABB en año de debut agrega un ítem crítico al perfil de reclutamiento.</div>
+      <div class="ia-txt">Coach · Evaluación pendiente de carga. No hay rankings verificados.</div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl pu">⚠️ ÁREAS PRIORITARIAS</div>
-      <div class="ia-txt"><strong>1. Tiro libre (38.2%):</strong> Es el talón de Aquiles típico de Ala-Postes con buena mecánica exterior pero aún en desarrollo físico. Protocolo: 50 TL diarios con foco en rutina pre-tiro idéntica cada vez.<br><strong>2. Juego con la espalda al aro:</strong> Agregar movimientos de post-bajo (drop-step, gancho corto) para tener recurso cuando la defensora le cierra el tiro exterior.<br><strong>3. Penetración al primer paso:</strong> Desarrollar el drive desde la posición de alta para crear faltas — la cantidad de viajes a la línea multiplicará su producción ofensiva.</div>
+      <div class="ia-txt">Coach · Evaluación pendiente de carga. No hay rankings verificados.</div>
     </div>
 
-    <div class="ia-ft">Análisis generado · Fuente: API oficial CABB/GesDeportiva · AFMB + Federal CABB 2026 · 26 PJ verificados</div>
+    <div class="ia-ft">Las estadísticas disponibles se muestran en Rendimiento.</div>
   </div>
 
   <!-- Radar percentil -->
@@ -416,41 +370,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ═════════════════════════════════════════════ -->
 <div id="tab-prog" class="tab-pane">
 
-  <!-- Comparativa AFMB vs Federal -->
-  <div class="card">
-    <div class="card-ttl">🏆 AFMB vs Federal — Comparativa Real</div>
-    <div class="g2" style="gap:0;border-radius:10px;overflow:hidden;margin-bottom:12px">
-      <div style="background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.15);padding:14px;text-align:center">
-        <div style="font-size:0.62rem;font-weight:700;color:var(--ac);margin-bottom:8px">🏅 AFMB Infantiles</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">21 PJ · Liga local</div>
-        <div class="g2">
-          <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.4</div><div class="sc-lbl">PPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">4.4</div><div class="sc-lbl">RPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">33%</div><div class="sc-lbl">T3%</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">1.7</div><div class="sc-lbl">BPG</div></div>
-        </div>
-      </div>
-      <div style="background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);padding:14px;text-align:center">
-        <div style="font-size:0.62rem;font-weight:700;color:var(--purple);margin-bottom:8px">🌐 Federal CABB</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px">5 PJ · Nivel nacional</div>
-        <div class="g2">
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">6.0</div><div class="sc-lbl">PPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--green)">3.8</div><div class="sc-lbl">RPG</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">~30%</div><div class="sc-lbl">T3%</div></div>
-          <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">1.4</div><div class="sc-lbl">BPG</div></div>
-        </div>
-      </div>
-    </div>
-    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.12);border-radius:8px;padding:10px 12px;font-size:0.7rem;color:#94a3b8">
-      ✅ <strong style="color:var(--yellow)">Análisis clave:</strong> Mantuvo números similares en el Federal contra jugadoras 1-2 años mayores. La <strong style="color:var(--text)">baja de rebotes (4.4→3.8) y bloqueos (1.7→1.4) en Federal es esperable</strong> y no preocupante — refleja que las rivales nacionales tienen ventaja física. La anotación prácticamente no bajó (6.4→6.0), lo que confirma la madurez técnica.
-    </div>
-  </div>
-
+  <div class="card"><div class="card-ttl">AFMB vs Federal</div><p>Los resúmenes oficiales separados por torneo se muestran en Rendimiento. Sin datos no se calculan diferencias.</p></div>
   <!-- Curva de evolución proyectada -->
   <div class="card">
-    <div class="card-ttl">📈 Proyección de Desarrollo 2026–2030</div>
-    <div class="prog-wrap"><canvas id="chartProg"></canvas></div>
-    <div style="font-size:0.65rem;color:var(--muted);text-align:center">Proyección basada en curvas de desarrollo típicas de Ala-Postes formativas argentinas</div>
+    <div class="card-ttl">📈 Proyección orientativa 2027–2030</div>
+    <div class="prog-wrap"><canvas id="chartProg"></canvas></div><p>Proyección: escenario orientativo, separado del histórico oficial de Rendimiento.</p>
+    <div style="font-size:0.65rem;color:var(--muted);text-align:center">Escenario ilustrativo pendiente de revisión por el coach; no es un pronóstico estadístico validado.</div>
   </div>
 
   <!-- Hitos de la temporada -->
@@ -459,24 +384,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="hitos"></div>
   </div>
 
-  <!-- Contexto percentil histórico -->
-  <div class="card">
-    <div class="card-ttl">📊 Contexto Histórico — Debuts U13 Femenino GBA</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(34,197,94,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--green);margin-bottom:5px">🥇 REBOTES — Percentil 97</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">4.2 RPG en temporada debut. Solo el <strong style="color:var(--text)">3% de debutantes U13</strong> supera 4 rebotes por partido. Posiciona a Martina entre las mejores Ala-Postes formativas de GBA en los últimos 5 años.</div>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(168,85,247,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--purple);margin-bottom:5px">🛡️ BLOQUEOS — Percentil 95</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">1.6 BPG es extraordinario para cualquier categoría formativa. El promedio de debutantes U13 es 0.3 BPG. La envergadura y el timing vertical de Martina son atributos físicos que no se enseñan.</div>
-      </div>
-      <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(250,204,21,0.12)">
-        <div style="font-size:0.6rem;font-weight:700;color:var(--yellow);margin-bottom:5px">🏹 TRIPLE COMO ALA-POSTE — Percentil 90</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">33.3% desde el perímetro jugando como "4" es rarísimo en formativas. Solo el 10% de las Ala-Postes U13 tiene una tasa mayor al 30% en triples. Este es el atributo que más valoran los scouts universitarios.</div>
-      </div>
-    </div>
-  </div>
+  <div class="card"><div class="card-ttl">Comparaciones</div><p>Sin población comparable verificada. No se muestran percentiles nacionales.</p></div>
 
 </div><!-- /tab-prog -->
 
@@ -664,7 +572,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div style="font-size:0.63rem;color:var(--muted);margin-top:3px">Power Forward / Ala-Poste · DOB: 2014 · Argentina 🇦🇷</div>
         <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">
           <span style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);color:#67e8f9;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">🌟 Debut Season</span>
-          <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">4.2 RPG #1</span>
+          <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">Rebotes: según historial</span>
           <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">1.6 BPG</span>
           <span style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);color:#fde047;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700">33% 3PT</span>
         </div>
@@ -676,19 +584,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
 
-    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · 26 GP (AFMB + Federal CABB) · Age 11</div>
+    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Season Stats · Resumen sincronizado</div>
     <div class="g4" style="margin-bottom:14px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)">6.4</div><div class="sc-lbl">PPG</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--green)">4.2</div><div class="sc-lbl">RPG</div></div>
-      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)">1.6</div><div class="sc-lbl">BPG</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" data-official-metric="ppg">—</div><div class="sc-lbl">PPG</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--green)" data-official-metric="rpg">—</div><div class="sc-lbl">RPG</div></div>
+      <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" data-official-metric="bpg">—</div><div class="sc-lbl">BPG</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--yellow)">33%</div><div class="sc-lbl">3PT%</div></div>
     </div>
 
-    <div class="ncaa-quote">
-      <strong>"Exceptional debut season for an 11-year-old Power Forward — rare combination of interior defense (1.6 BPG, 4.2 RPG) with perimeter shooting (33.3% 3PT). Selected for La Liga Federal CABB at national level in debut year."</strong> Martina embodies the modern 'stretch-4' profile: dominant rebounder and shot-blocker who can also space the floor with her three-point shot. Her defensive instincts — positioning, timing, and board presence — are advanced far beyond her age group. Trajectory projection: 9-11 PPG + 6+ RPG in Cadetes 2027-2028.
-    </div>
+    <div class="ncaa-quote">Coach · Evaluación pendiente. Los valores oficiales se muestran en Rendimiento; cualquier escenario futuro es Proyección.</div>
 
-    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Skill Percentiles — vs U13 Argentina Debut Players</div>
+    <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Coach · Sin evaluación cuantitativa registrada</div>
     <div id="ncaaRadarBars"></div>
 
     <button class="btn-cv" onclick="exportCV()">📄 Exportar Mi Currículum (PDF)</button>
@@ -705,7 +611,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
       <div class="profile-field"><div class="pf-lbl">Temporadas</div><div class="pf-val">1ª (Debut 2026)</div></div>
       <div class="profile-field"><div class="pf-lbl">Competencias</div><div class="pf-val">AFMB + Federal CABB</div></div>
-      <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val">26 PJ totales</div></div>
+      <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val">Según resumen oficial</div></div>
     </div>
   </div>
 
@@ -725,58 +631,33 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <script>
 /* ─── DATOS ─────────────────────────────── */
 const PERCENTILES = [
-  {lbl:'Rebotes',    pct:97, color:'#22c55e',  val:'4.2 RPG'},
-  {lbl:'Bloqueos',   pct:95, color:'#a855f7',  val:'1.6 BPG'},
-  {lbl:'Anotación',  pct:88, color:'#06b6d4',  val:'6.4 PPG'},
-  {lbl:'Triple',     pct:90, color:'#facc15',  val:'33.3% T3'},
-  {lbl:'Minutos',    pct:85, color:'#f97316',  val:'19.7 MPG'},
-  {lbl:'Proyección', pct:97, color:'#ef4444',  val:'11 años'},
+  {lbl:'Rebotes',    pct:null, color:'#22c55e',  val:'Sin población comparable'},
+  {lbl:'Bloqueos',   pct:null, color:'#a855f7',  val:'Sin población comparable'},
+  {lbl:'Anotación',  pct:null, color:'#06b6d4',  val:'Sin población comparable'},
+  {lbl:'Triple',     pct:null, color:'#facc15',  val:'Sin población comparable'},
+  {lbl:'Minutos',    pct:null, color:'#f97316',  val:'Sin población comparable'},
+  {lbl:'Proyección', pct:null, color:'#ef4444',  val:'Sin población comparable'},
 ];
-const FORTALEZAS = [
-  {icon:'🏀', t:'Reboteadora #1 del plantel (4.2 RPG)', tx:'En su primera temporada, superó en rebotes a todas las compañeras, incluyendo las mayores. Inteligencia espacial avanzada para su edad.'},
-  {icon:'🛡️', t:'1.6 Bloqueos por partido — #1 U13', tx:'El bloqueo requiere timing, envergadura y lectura del tiro. Los 1.6 BPG son consecuencia de atributos físicos (envergadura) que no se enseñan — se nace con ellos.'},
-  {icon:'🏹', t:'Triple confiable como Ala-Poste (33.3%)', tx:'Combinar potencia interior con tiro exterior es el perfil más escaso y valioso del básquet moderno. Lo tiene desde los 11 años.'},
-  {icon:'🌐', t:'Federal CABB en año de debut', tx:'Competir a nivel nacional con 11 años, siendo la más joven, y mantener ~6 PPG confirma que su nivel es real y no circunstancial.'},
-];
+const FORTALEZAS = [];
 const AREAS = [
   {icon:'🎯', t:'Tiro libre (38.2% → meta 65%)', tx:'El TL es una habilidad mecánica entrenable. Con rutina diaria de 50 TL, el porcentaje puede llegar a 65% en 12 meses.'},
   {icon:'⚙️', t:'Juego de post bajo', tx:'Agregar drop-step y gancho corto para tener recurso cuando el defensor la bloquea en el exterior.'},
   {icon:'⚡', t:'Velocidad de primer paso', tx:'Para un Ala-Poste moderno, el primer paso para el drive es tan importante como el tiro exterior. En desarrollo.'},
 ];
-const SHOTS_DATA = [
-  // [left%, top%, made] — coordenadas sobre la cancha
-  // Zona pintada izquierda (bajo el aro)
-  {x:10, y:45, m:true},  {x:12, y:55, m:true},  {x:8,  y:50, m:true},
-  {x:14, y:42, m:true},  {x:10, y:58, m:false}, {x:15, y:48, m:true},
-  {x:12, y:62, m:false}, {x:9,  y:40, m:true},  {x:16, y:52, m:true},
-  {x:11, y:35, m:false}, {x:13, y:67, m:false}, {x:7,  y:50, m:true},
-  // Media distancia izquierda
-  {x:22, y:28, m:true},  {x:25, y:70, m:false}, {x:20, y:35, m:true},
-  {x:28, y:72, m:true},  {x:24, y:25, m:false}, {x:30, y:30, m:false},
-  // Triple izquierda (esquina)
-  {x:4,  y:18, m:true},  {x:5,  y:20, m:true},  {x:4,  y:82, m:true},
-  {x:5,  y:80, m:false}, {x:7,  y:15, m:false},
-  // Triple izquierda (45° y frontal)
-  {x:18, y:12, m:true},  {x:20, y:88, m:false}, {x:30, y:8, m:false},
-  {x:32, y:10, m:true},  {x:28, y:90, m:false},
-];
-const ZONE_SUMMARY = [
-  {z:'Zona pintada', fg:'9/12', pct:'75%', color:'#22c55e'},
-  {z:'Media distancia', fg:'3/6', pct:'50%', color:'#06b6d4'},
-  {z:'Triple (T3)', fg:'8/24', pct:'33%', color:'#facc15'},
-];
+const SHOTS_DATA = [];
+const ZONE_SUMMARY = [];
 const PROG_DATA = {
   labels:['2026 (debut)','2027','2028','2029','2030'],
-  ppg:   [6.4, 9.5, 12.5, 15, 17],
-  rpg:   [4.2, 6.5, 8.5,  10, 11.5],
+  ppg:   [null, 9.5, 12.5, 15, 17],
+  rpg:   [null, 6.5, 8.5,  10, 11.5],
 };
 const NCAA_SKILLS = [
-  {lbl:'Rebounding',   pct:97, color:'#22c55e'},
-  {lbl:'Shot Blocking',pct:95, color:'#a855f7'},
-  {lbl:'3PT Shooting', pct:90, color:'#facc15'},
-  {lbl:'Scoring',      pct:88, color:'#06b6d4'},
-  {lbl:'Defense',      pct:93, color:'#ef4444'},
-  {lbl:'Long-term proj',pct:97,color:'#f97316'},
+  {lbl:'Rebounding',   pct:null, color:'#22c55e'},
+  {lbl:'Shot Blocking',pct:null, color:'#a855f7'},
+  {lbl:'3PT Shooting', pct:null, color:'#facc15'},
+  {lbl:'Scoring',      pct:null, color:'#06b6d4'},
+  {lbl:'Defense',      pct:null, color:'#ef4444'},
+  {lbl:'Long-term proj',pct:null,color:'#f97316'},
 ];
 
 /* ─── TABS ─────────────────────────────── */
@@ -837,7 +718,7 @@ function buildZoneChart() {
     data: {
       labels: ['Zona pintada', 'Media distancia', 'Triple'],
       datasets: [{
-        data: [12, 6, 24],
+        data: [null, null, null],
         backgroundColor: ['rgba(34,197,94,0.7)','rgba(6,182,212,0.7)','rgba(250,204,21,0.7)'],
         borderColor: ['#22c55e','#06b6d4','#facc15'],
         borderWidth: 2,
@@ -867,7 +748,7 @@ function buildRadar() {
         { label:'Martina', data: PERCENTILES.map(p => p.pct),
           backgroundColor:'rgba(6,182,212,0.1)', borderColor:'#06b6d4',
           borderWidth:2, pointBackgroundColor:'#06b6d4', pointRadius:3 },
-        { label:'Promedio debut', data:[50,50,50,50,50,50],
+        { label:'Promedio debut', data:[null,null,null,null,null,null],
           backgroundColor:'rgba(255,255,255,0.02)', borderColor:'rgba(255,255,255,0.1)',
           borderWidth:1, borderDash:[4,4], pointRadius:0 },
       ]
@@ -883,7 +764,7 @@ function buildRadar() {
   const leg = document.getElementById('pctLegend');
   PERCENTILES.forEach(p => {
     leg.innerHTML += `<div class="pct-cell">
-      <div class="pct-v" style="color:${p.color}">P${p.pct}</div>
+      <div class="pct-v" style="color:${p.color}">${p.pct ?? 'Sin evaluación'}</div>
       <div class="pct-l">${p.lbl}</div>
       <div style="font-size:0.52rem;color:#334155;margin-top:2px">${p.val}</div>
     </div>`;
@@ -912,10 +793,10 @@ function buildProgChart() {
     data: {
       labels: PROG_DATA.labels,
       datasets: [
-        { label:'PPG', data: PROG_DATA.ppg,
+        { label:'Proyección PPG', borderDash:[6,4], data: PROG_DATA.ppg,
           borderColor:'#06b6d4', backgroundColor:'rgba(6,182,212,0.08)',
           borderWidth:2.5, pointBackgroundColor:'#06b6d4', pointRadius:4, tension:.35, fill:true },
-        { label:'RPG', data: PROG_DATA.rpg,
+        { label:'Proyección RPG', borderDash:[6,4], data: PROG_DATA.rpg,
           borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.06)',
           borderWidth:2.5, pointBackgroundColor:'#22c55e', pointRadius:4, tension:.35, fill:true },
       ]
@@ -933,13 +814,7 @@ function buildProgChart() {
 
 /* ─── HITOS ─────────────────────────────── */
 function buildHitos() {
-  const data = [
-    {icon:'🌟', f:'Debut temporada 2026', t:'Primera temporada competitiva a los 11 años. Integrada a rotación principal desde el primer partido.'},
-    {icon:'🏀', f:'4.2 RPG — #1 del plantel', t:'Mejor reboteadora del equipo en su primera temporada, superando a jugadoras 2 años mayores.'},
-    {icon:'🛡️', f:'1.6 BPG — Líder en bloqueos', t:'El atributo más difícil de enseñar: envergadura + timing vertical = defensora élite desde el debut.'},
-    {icon:'🌐', f:'Federal CABB con 11 años', t:'Seleccionada para el torneo nacional. 5 PJ vs. los mejores clubes del país. Mantuvo ~6 PPG.'},
-    {icon:'🏹', f:'33.3% en triples (Ala-Poste)', t:'El perfil "stretch-4" más buscado del básquet moderno. Tiro exterior + interior desde año 1.'},
-  ];
+  const data = [{icon:'🏀', f:'Historial oficial', t:'Los partidos verificados y sus resultados se muestran en Rendimiento.'}];
   const el = document.getElementById('hitos');
   data.forEach(h => {
     el.innerHTML += `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
@@ -956,8 +831,8 @@ function buildNcaaBars() {
   NCAA_SKILLS.forEach(s => {
     el.innerHTML += `<div class="radar-row">
       <div class="radar-lbl">${s.lbl}</div>
-      <div class="radar-bg"><div class="radar-fill" style="width:${s.pct}%;background:${s.color}"></div></div>
-      <div class="radar-pct" style="color:${s.color}">P${s.pct}</div>
+      <div class="radar-bg"><div class="radar-fill" style="width:${s.pct ?? 0}%;background:${s.color}"></div></div>
+      <div class="radar-pct" style="color:${s.color}">P${s.pct ?? '—'}</div>
     </div>`;
   });
 }
@@ -978,5 +853,6 @@ async function doLogout() {
   window.location.href = 'login.html';
 }
 </script>
+<script src="nextlevel_performance.js" data-player-id="11111111-0000-0000-0000-000000000010" data-season="2026"></script>
 </body>
 </html>

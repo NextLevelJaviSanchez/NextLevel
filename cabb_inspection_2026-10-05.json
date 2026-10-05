@@ -1,0 +1,548 @@
+{
+  "checked_at": "2026-10-05T03:39:04.526797+00:00",
+  "team": {
+    "Id": "350072004D00570041006F004D002F0062007200410031003600350042007100300044004C004A006D0067003D003D00",
+    "IdClub": "6900380073004E00720071003100370054005A005400470077007200740065003700300075007300350041003D003D00",
+    "IdCategoria": "740033003700780052002B00310053003100460037002F0059007100710075004C00780034004700350077003D003D00",
+    "IdCompeticion": "3200310036004D00470041004D00740063005000420071003900310056004E005800540033004300310077003D003D00",
+    "IdCategoriaCompeticion": "4D0054004D00510030004500510030006F004F004300340037006800640049007200340041007700620067003D003D00",
+    "IdEquipoNotificacion": "95077",
+    "Nombre": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+    "Club": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+    "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+    "Competicion": "FORMATIVAS 2026",
+    "Categoria": "INFANTILES FEMENINO",
+    "Temporada": "2026",
+    "PartidosJugados": 0,
+    "PartidosPerdidos": 0,
+    "PartidosGanados": 0,
+    "MediaPuntos": 0,
+    "MediaPuntosEncajados": 0
+  },
+  "roster": [
+    {
+      "Id": "78004900560038006F004A007400460032004A006F0050004B0049005600690074004A0069006900610051003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "PEDERNERA, AGUSTINA MILAGROS",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 22,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 15.7,
+      "PuntosPorPartido": 5.3,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "45003700780038005900740064006700680044004C006A0050007400690079005000420037005900490067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "GONZALEZ DIAZ, PAZ GUADALUPE",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 15.2,
+      "PuntosPorPartido": 3.8,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "6B0068006D0070005900700059006C00460036005A0043004A00740046002F004900460074004200640067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "GOMEZ, HELENA CRISTINA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 19.7,
+      "PuntosPorPartido": 7.8,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "7A00760064006E00360045005600760047004E00570052006B0067007200420036003700320074006C0067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "PAZ, VITTORIA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 14,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 10.3,
+      "PuntosPorPartido": 0,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "74007A007300750037006700720045007A0058006800750061003000620050003900480065005700530067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "SANCHEZ, MIA GERALDINE",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 18.9,
+      "PuntosPorPartido": 8.5,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "65005900480058004A0055004B004A002F0032002F006900720038004D0059003600690061005300490077003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "SMIGIEL, ALMA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 16.5,
+      "PuntosPorPartido": 3.1,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "470067002F00620031004800320068003100320071004C004E00660034004400420041006B003600590077003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "LIMENZA GUAYAN, ANTONELLA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 8,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 10.9,
+      "PuntosPorPartido": 0,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "520069002B005100410043004D00320058002F004E004A0056007A004400770071004B00770075006E0067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "MORELLO, ALLEGRA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 22,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 14.7,
+      "PuntosPorPartido": 2.4,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "650070006D006F007500430074004900710065007000630077004F00330032007600420055006D00490067003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "ZOTTA, JULIETA ",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 1,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 10,
+      "PuntosPorPartido": 0,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "48004A005600460059006B0053007600470049004400630066006A0076007A0042007600560071006F0041003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "FERREIROS, PAZ",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 14,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 10,
+      "PuntosPorPartido": 0.4,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "65002B00670050007100520062006E006A00450041006A006C00320075006D006900490033005600630077003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "BENITEZ, ALMA VALENTINA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 15.8,
+      "PuntosPorPartido": 5.5,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "72002F007000560070002B00630054004700750070007100650038006500670049005A0073002B00670041003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "DOMINGUEZ, BRUNELLA MARTINEZ",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 22,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 18.6,
+      "PuntosPorPartido": 8.1,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "6D006C004F006700350049007200620065004B006C0052003900530053004B007400300035003800690077003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "GRILLO, CATALINA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 20,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 17.2,
+      "PuntosPorPartido": 5.4,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "4E0079004C006D00360039003300770046004A0050003300620077005200420049004D006C0052002B0051003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "BAILON, MARTINA PILAR",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 22,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 19.7,
+      "PuntosPorPartido": 6.3,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    },
+    {
+      "Id": "4A00300066007500770075002B0030004E00710041004800320077004A0072003200440043004C004D0077003D003D00",
+      "IdCategoria": "",
+      "IdCategoriaCompeticion": null,
+      "IdClub": "",
+      "Club": "",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "PORTINARI, LUBA JULIETA",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": -1,
+      "MinutosPorPartido": 14.3,
+      "PuntosPorPartido": 1.6,
+      "MediaPuntos": 0,
+      "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Temporada": "2026"
+    }
+  ],
+  "fases": {
+    "resultado": "correcto",
+    "ruta": "https://appaficioncabb.indalweb.net/",
+    "faseActual": "65003100650062006100430072004D00680032003900670074007200580051006500380076004E006D0051003D003D00",
+    "grupoActual": "6E0069006C00480051006D004E0066004400760052004900430074002B0056004F004D0032004900370077003D003D00",
+    "listaFasesGrupo": [
+      {
+        "IdFase": "65003100650062006100430072004D00680032003900670074007200580051006500380076004E006D0051003D003D00",
+        "NombreFase": "SEGUNDA ETAPA",
+        "TipoFase": "LIGA",
+        "Grupos": [
+          {
+            "IdGrupo": "6E0069006C00480051006D004E0066004400760052004900430074002B0056004F004D0032004900370077003D003D00",
+            "NombreGrupo": "INTERCONFERENCIA A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "320036006F00430053004E00420041004100510043005300510041006E005A003500420067006900510041003D003D00",
+            "NombreGrupo": "INTERCONFERENCIA B",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "77003700660031006100490071004300440077004C0066007900740065002B004E0068006D006700700077003D003D00",
+            "NombreGrupo": "INTERCONFERENCIA C",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "4400760046004A006700380053002F004200510053005A0068007600490033004C00490071004500710051003D003D00",
+            "NombreGrupo": "NIVEL 1 NO/OE/CE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "790078004B0049006B0046005A00430035007A0053004E006A00720064006700320055006D007100680067003D003D00",
+            "NombreGrupo": "NIVEL 1 SUR",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "520069004D00790074004B0034005100750074006F00540043004C005800500062004C0049006800660067003D003D00",
+            "NombreGrupo": "NIVEL 2 NO/OE/CE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "4600570044002B0070004400620051006A006E00320046007400460062006D0069003600660042006E0067003D003D00",
+            "NombreGrupo": "NIVEL 2 SUR  ",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "49006E006300630038002B004D00560063005A006B00740071006A004A006E004F004300680041004E0067003D003D00",
+            "NombreGrupo": "ZONA 2 B NO/CE/OE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "2B0079004D004600650039004B0056006900640044007A004F006C007900360068004F00470076006D0067003D003D00",
+            "NombreGrupo": "ZONA 2 B SUR",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "7900790077003900680036003400370052006C0076007800590037005400560067006F00630045006F0077003D003D00",
+            "NombreGrupo": "ZONA B 2 NO/OE/CE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "2B00650067005800720072006E003400310036004900470039003500790061002F00780079007900660051003D003D00",
+            "NombreGrupo": "ZONA 3 B NO/OE/CE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "3600420075005600670057006E004A0045005700410045004A007A00520046007300650031002F004A0077003D003D00",
+            "NombreGrupo": "ZONA 3 C NO/OE/CE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "690054003000640055003900760031004E0032004200320055004900690039004F00300059006200700041003D003D00",
+            "NombreGrupo": "ZONA OESTE",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "680030004400310069003100360058007A004C006D004900710067004400700068006D0031005A00390077003D003D00",
+            "NombreGrupo": "ZONA SUR ",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          }
+        ],
+        "Rondas": []
+      },
+      {
+        "IdFase": "750067003700350033006F0066006F0066004F0041004D0038004D005A0078007700610031003500370041003D003D00",
+        "NombreFase": "PRIMERA ETAPA",
+        "TipoFase": "LIGA",
+        "Grupos": [
+          {
+            "IdGrupo": "6C004E004300450064004300710067005000410053002F0077004D004D0056007A006B00710063006C0041003D003D00",
+            "NombreGrupo": "CENTRO/OESTE/NORTE A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "3400730049006A006B0065005900770056006C006C003500310037007800790070006E006F0064004B0067003D003D00",
+            "NombreGrupo": "CENTRO/OESTE/NORTE B",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "520070004E0053006D0046004100460045006B0063006C00420043006A004E004300740056005000340051003D003D00",
+            "NombreGrupo": "SUR A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "30004F00510031005800320079004600420030004300450050007500350057004600490044002F00490067003D003D00",
+            "NombreGrupo": "SUR B",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "410047006500760044004F004C002F0033006C006A006200460071004E004200490030002B006600360051003D003D00",
+            "NombreGrupo": "CENTRO/OESTE/NORTE 2",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "37007300740072006A004D00660052004400360030005000750052007600620061004F0045004A00330077003D003D00",
+            "NombreGrupo": "SUR 2",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "57002B0036003500580070004E00580038004D00520078007300320035007500450059004F004E004E0067003D003D00",
+            "NombreGrupo": "CENTRO/OESTE/NORTE 3 A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "470036004A00370079003000340068004C003700380032004A00690044006B004D0066007A006D00550041003D003D00",
+            "NombreGrupo": "SUR 3 A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "44006B0033004B002F003900610061004C004900620034005400660070002F00420055006B003300680067003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 A",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "410065007400760068006A002B005600770068006A0050004700640073004700340030004F003100480051003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 B",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "30006E006200440031004900630057004C0073005400440041006F007A0065004F005A0065007100700067003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 C",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "4800540074006A006C0064003500360079007500720049004300500033004900630079004B005400580067003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 D",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "7200790068004F0064004D00690062006E00660076006A0069006E004F0058005800730056005400390067003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 E",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "78006800780076002F006C004F004E006500640031003100610062004C00370032005600730057005A0041003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 F",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          },
+          {
+            "IdGrupo": "3500510058004C004300410048006B002B00370056004F00320030007A0059007000510036006C004B0077003D003D00",
+            "NombreGrupo": "INICIACION NIVEL 3 G",
+            "IdTipoClasificacion": 1,
+            "NombreTipoClasificacion": "FIBA"
+          }
+        ],
+        "Rondas": []
+      }
+    ],
+    "error": ""
+  },
+  "matches": [],
+  "player_detail": {
+    "resultado": "correcto",
+    "ruta": "https://appaficioncabb.indalweb.net/",
+    "jugador": {
+      "Id": "74007A007300750037006700720045007A0058006800750061003000620050003900480065005700530067003D003D00",
+      "IdCategoria": "740033003700780052002B00310053003100460037002F0059007100710075004C00780034004700350077003D003D00",
+      "IdCategoriaCompeticion": "4D0054004D00510030004500510030006F004F004300340037006800640049007200340041007700620067003D003D00",
+      "IdClub": "6900380073004E00720071003100370054005A005400470077007200740065003700300075007300350041003D003D00",
+      "Club": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Categoria": "INFANTILES FEMENINO",
+      "Competicion": "FORMATIVAS 2026",
+      "Nombre": "SANCHEZ, MIA GERALDINE",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "PartidosJugados": 21,
+      "PuntosTotales": 178,
+      "MinutosPorPartido": 0,
+      "PuntosPorPartido": 8.5,
+      "MediaPuntos": 8.5,
+      "NombreEquipo": null,
+      "Temporada": null
+    },
+    "equipo": {
+      "Id": "350072004D00570041006F004D002F0062007200410031003600350042007100300044004C004A006D0067003D003D00",
+      "IdClub": "6900380073004E00720071003100370054005A005400470077007200740065003700300075007300350041003D003D00",
+      "IdCategoria": "740033003700780052002B00310053003100460037002F0059007100710075004C00780034004700350077003D003D00",
+      "IdCompeticion": "3200310036004D00470041004D00740063005000420071003900310056004E005800540033004300310077003D003D00",
+      "IdCategoriaCompeticion": "4D0054004D00510030004500510030006F004F004300340037006800640049007200340041007700620067003D003D00",
+      "IdEquipoNotificacion": "95077",
+      "Nombre": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Club": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+      "Delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+      "Competicion": "FORMATIVAS 2026",
+      "Categoria": "INFANTILES FEMENINO",
+      "Temporada": "2026",
+      "PartidosJugados": 22,
+      "PartidosPerdidos": 7,
+      "PartidosGanados": 15,
+      "MediaPuntos": 56.4,
+      "MediaPuntosEncajados": 42.4
+    },
+    "error": "",
+    "equiposJugador": [
+      {
+        "IdEquipo": "4F004600580070007700730045002F00630066005A0063006C007200650042005700660055007400650067003D003D00",
+        "NombreEquipo": "DEP. BERAZATEGUI"
+      },
+      {
+        "IdEquipo": "350072004D00570041006F004D002F0062007200410031003600350042007100300044004C004A006D0067003D003D00",
+        "NombreEquipo": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI"
+      }
+    ],
+    "idComponenteClub": "680078002F0031006F004D00780049004A00460077003600360077002B0061006B00740035004C006F0041003D003D00",
+    "idTemporadaActual": "53006E00740063003300320079006E004F0064004C0056004F006B00650069004F00560072004200680041003D003D00"
+  }
+}

@@ -453,6 +453,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
      TAB 1 — MI RENDIMIENTO
 ══════════════════════════════════════════ -->
 <div id="tab-rend" class="tab-pane">
+<p style="font-size:.65rem;color:var(--muted)">Dato CABB: valores recibidos · Cálculo NextLevel: derivados de boxscores · Coach: evaluación cargada · Objetivo: meta · Proyección: escenario futuro.</p>
 
   <div class="card">
     <div class="card-ttl">📊 Estadísticas Completas — Temporada 2026
@@ -531,10 +532,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl" style="justify-content:space-between">
       🏀 Mapa de Tiro — Tiros Individuales
-      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">📊 Distribución ilustrativa</span>
+      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Sin datos de coordenadas</span>
     </div>
     <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5;background:rgba(250,204,21,0.04);border:1px solid rgba(250,204,21,0.1);border-radius:7px;padding:6px 10px">
-      📊 Las posiciones de tiro son <strong>referenciales</strong> — las coordenadas exactas no están disponibles en la API CABB. La distribución por zona refleja los datos reales de eficiencia registrados por el cuerpo técnico. 🧑‍🏫
+      📊 Las posiciones de tiro son <strong>referenciales</strong> — todavía no se verificaron coordenadas exactas en una respuesta de CABB. Sin coordenadas verificadas. Los tiros por tipo se muestran abajo cuando hay boxscores disponibles.
     </div>
     <!-- Media cancha: aspect-ratio 47/50 (FIBA: 15m ancho / 14m profundidad aprox) -->
     <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:47/50;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
@@ -594,95 +595,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="zone-summary" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
   </div>
 
-  <!-- MAPA 2: Mapa de calor por zonas -->
-  <div class="card">
-    <div class="card-ttl">🔥 Mapa de Calor — Eficiencia por Zona</div>
-    <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:47/50;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="heatCourt">
-      <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 470 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="470" height="500" fill="#07111e"/>
-        <!-- Zonas de calor coloreadas por eficiencia -->
-        <!-- Zona pintada: 80% FG → verde intenso -->
-        <rect x="165" y="302" width="140" height="196" fill="rgba(34,197,94,0.28)" rx="4"/>
-        <!-- Media distancia izquierda: 50% → amarillo -->
-        <path d="M28,498 L28,348 A213,213 0 0,1 165,302 L165,498 Z" fill="rgba(250,204,21,0.18)"/>
-        <!-- Media distancia derecha: 50% → amarillo -->
-        <path d="M305,302 A213,213 0 0,1 442,348 L442,498 L305,498 Z" fill="rgba(250,204,21,0.18)"/>
-        <!-- Triple izquierda (esquina): 40% FG → naranja -->
-        <rect x="0" y="348" width="28" height="150" fill="rgba(249,115,22,0.32)" rx="2"/>
-        <!-- Triple derecha (esquina): 40% FG → naranja -->
-        <rect x="442" y="348" width="28" height="150" fill="rgba(249,115,22,0.32)" rx="2"/>
-        <!-- Triple top/45°: 30% FG → rojo -->
-        <path d="M28,348 A213,213 0 0,1 442,348 L442,302 A213,213 0 0,0 28,302 Z" fill="rgba(239,68,68,0.18)"/>
-        <!-- Triple frontal top: 28% → rojo -->
-        <path d="M80,0 L390,0 L390,130 A213,213 0 0,0 80,130 Z" fill="rgba(239,68,68,0.14)"/>
-
-        <!-- Líneas de cancha encima del calor -->
-        <rect x="165" y="302" width="140" height="196" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none"/>
-        <line x1="165" y1="302" x2="305" y2="302" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-        <path d="M165,302 A70,70 0 0,1 305,302" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" stroke-dasharray="4,3"/>
-        <line x1="28" y1="498" x2="28" y2="348" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <line x1="442" y1="498" x2="442" y2="348" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <path d="M28,348 A213,213 0 0,1 442,348" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none"/>
-        <line x1="0" y1="498" x2="470" y2="498" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-        <line x1="0" y1="498" x2="0" y2="0" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-        <line x1="470" y1="498" x2="470" y2="0" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-        <line x1="0" y1="0" x2="470" y2="0" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="5,4"/>
-
-        <!-- Aro -->
-        <circle cx="235" cy="460" r="14" stroke="rgba(255,255,255,0.35)" stroke-width="2" fill="none"/>
-        <rect x="190" y="482" width="90" height="6" rx="2" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
-
-        <!-- Etiquetas de eficiencia sobre cada zona -->
-        <text x="235" y="400" text-anchor="middle" fill="rgba(34,197,94,0.9)" font-size="20" font-weight="900" font-family="system-ui">80%</text>
-        <text x="235" y="416" text-anchor="middle" fill="rgba(34,197,94,0.6)" font-size="10" font-family="system-ui">ZONA PINTADA</text>
-
-        <text x="96" y="390" text-anchor="middle" fill="rgba(250,204,21,0.85)" font-size="16" font-weight="900" font-family="system-ui">50%</text>
-        <text x="96" y="405" text-anchor="middle" fill="rgba(250,204,21,0.55)" font-size="9" font-family="system-ui">MED. IZQ.</text>
-
-        <text x="374" y="390" text-anchor="middle" fill="rgba(250,204,21,0.85)" font-size="16" font-weight="900" font-family="system-ui">50%</text>
-        <text x="374" y="405" text-anchor="middle" fill="rgba(250,204,21,0.55)" font-size="9" font-family="system-ui">MED. DER.</text>
-
-        <text x="14" y="430" text-anchor="middle" fill="rgba(249,115,22,0.9)" font-size="13" font-weight="900" font-family="system-ui">40%</text>
-        <text x="14" y="444" text-anchor="middle" fill="rgba(249,115,22,0.6)" font-size="8" font-family="system-ui">ESQ.</text>
-
-        <text x="456" y="430" text-anchor="middle" fill="rgba(249,115,22,0.9)" font-size="13" font-weight="900" font-family="system-ui">40%</text>
-        <text x="456" y="444" text-anchor="middle" fill="rgba(249,115,22,0.6)" font-size="8" font-family="system-ui">ESQ.</text>
-
-        <text x="235" y="200" text-anchor="middle" fill="rgba(239,68,68,0.8)" font-size="16" font-weight="900" font-family="system-ui">28%</text>
-        <text x="235" y="216" text-anchor="middle" fill="rgba(239,68,68,0.5)" font-size="9" font-family="system-ui">TRIPLE FRONTAL</text>
-
-        <text x="235" y="310" text-anchor="middle" fill="rgba(239,68,68,0.75)" font-size="14" font-weight="900" font-family="system-ui">31%</text>
-        <text x="235" y="325" text-anchor="middle" fill="rgba(239,68,68,0.5)" font-size="9" font-family="system-ui">TRIPLE 45°</text>
-      </svg>
-    </div>
-    <!-- Escala de calor -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px">
-      <span style="font-size:0.58rem;color:var(--muted)">Frío</span>
-      <div style="width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(239,68,68,0.7),rgba(250,204,21,0.7),rgba(34,197,94,0.8))"></div>
-      <span style="font-size:0.58rem;color:var(--muted)">Caliente</span>
-    </div>
-    <!-- Cards resumen zona -->
-    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-      <div style="background:#0f1e35;border-radius:8px;padding:10px 6px;text-align:center;border:1px solid rgba(34,197,94,0.2)">
-        <div style="font-size:1.1rem;font-weight:900;color:#22c55e">80%</div>
-        <div style="font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Zona pintada</div>
-        <div style="font-size:0.58rem;color:#334155;margin-top:1px">12/15 att</div>
-      </div>
-      <div style="background:#0f1e35;border-radius:8px;padding:10px 6px;text-align:center;border:1px solid rgba(250,204,21,0.2)">
-        <div style="font-size:1.1rem;font-weight:900;color:#facc15">50%</div>
-        <div style="font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Media distancia</div>
-        <div style="font-size:0.58rem;color:#334155;margin-top:1px">5/10 att</div>
-      </div>
-      <div style="background:#0f1e35;border-radius:8px;padding:10px 6px;text-align:center;border:1px solid rgba(239,68,68,0.2)">
-        <div style="font-size:1.1rem;font-weight:900;color:#ef4444">33%</div>
-        <div style="font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Triple (T3)</div>
-        <div style="font-size:0.58rem;color:#334155;margin-top:1px">9/27 att</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;font-size:0.68rem;color:#94a3b8;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:9px 12px;line-height:1.6">
-      🔥 <strong style="color:var(--ac2)">Zona fuerte:</strong> Zona pintada (80%) — ataca el aro con alta eficiencia. <strong style="color:var(--text)">Zona a desarrollar:</strong> Triple frontal (28%) — el área de mayor volumen con menor retorno.
-    </div>
-  </div>
+  <div class="card"><div class="card-ttl">Mapa de calor por zonas</div>
+    <p style="font-size:.72rem;color:var(--muted)">Sin datos de coordenadas verificadas. No se calcula eficiencia por zona.</p></div>
 
   <!-- EVOLUCIÓN 5 vs 5 PARTIDOS -->
   <div class="card">
@@ -693,7 +607,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div id="evol-insight" style="margin-top:10px;font-size:0.7rem;color:#94a3b8;background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:9px 12px;line-height:1.6"></div>
     </div>
     <div id="evol-nodata" style="display:none;font-size:0.72rem;color:var(--muted);text-align:center;padding:12px 0">
-      Sin suficientes partidos en el historial para calcular evolución (se necesitan al menos 6).
+      Sin suficientes partidos en el historial para calcular evolución (se necesitan 10 partidos para dos bloques completos de 5).
     </div>
   </div>
 
@@ -720,19 +634,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
     <div style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.25);border-radius:10px;padding:6px 14px;font-size:0.6rem;font-weight:800;color:#fb923c;text-transform:uppercase;letter-spacing:1px">📊 Análisis NextLevel</div>
     <div style="flex:1;height:1px;background:rgba(249,115,22,0.12)"></div>
-    <div style="font-size:0.55rem;color:var(--muted)">Generado desde datos reales</div>
+    <div style="font-size:0.55rem;color:var(--muted)">Interpretación orientativa · pendiente de revisión Coach</div>
   </div>
 
   <div class="ia-box">
     <div class="ia-hdr">
       <div class="ia-ic">🧠</div>
       <div><div class="ia-ttl">Análisis NextLevel — Mía G. Sánchez #14</div>
-      <div class="ia-sub">📊 Basado en datos reales · API oficial CABB · Temporada 2026</div></div>
+      <div class="ia-sub">Interpretación orientativa · sin ranking comparativo verificado</div></div>
     </div>
 
     <div class="ia-sec">
       <div class="ia-lbl or">🏀 PERFIL DE JUEGO — ESCOLTA/ALERO ANOTADORA</div>
-      <div class="ia-txt">Mía es la <strong>máxima anotadora del equipo en ambas competencias</strong>. Con <strong><span class="coach-ppp-afmb">—</span> PPP en AFMB</strong> (<span class="coach-pj-afmb">—</span> PJ en liga metropolitana) y <strong><span class="coach-ppp-fed">—</span> PPP en el Federal CABB</strong> (<span class="coach-pj-fed">—</span> PJ, nivel nacional), es la principal fuente ofensiva del plantel. Sostener producción en el Federal, que concentra las mejores jugadoras de cada delegación del país, <strong>puede indicar que su rendimiento es trasladable a mayor nivel de competencia</strong> — aunque la confirmación llegará con más partidos en ese nivel.</div>
+      <div class="ia-txt">Mía es la <strong>jugadora con producción anotadora registrada</strong>. Con <strong><span class="coach-ppp-afmb">—</span> PPP en AFMB</strong> (<span class="coach-pj-afmb">—</span> PJ en liga metropolitana) y <strong><span class="coach-ppp-fed">—</span> PPP en el Federal CABB</strong> (<span class="coach-pj-fed">—</span> PJ, nivel nacional), es la principal fuente ofensiva del plantel. Sostener producción en el Federal, que concentra las mejores jugadoras de cada delegación del país, <strong>puede indicar que su rendimiento es trasladable a mayor nivel de competencia</strong> — aunque la confirmación llegará con más partidos en ese nivel.</div>
     </div>
 
     <div class="ia-sec">
@@ -761,7 +675,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl">📡 Evaluación NextLevel — Perfil Mía Sánchez</div>
     <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:8px;padding:7px 11px;margin-bottom:10px;font-size:0.62rem;color:#fde047;line-height:1.45">
-      🧑‍🏫 <strong>Evaluación NextLevel:</strong> Valoraciones internas del cuerpo técnico. No representa percentil nacional oficial.
+      🧑‍🏫 <strong>Evaluación NextLevel:</strong> Sin evaluación cuantitativa cargada. No representa percentil nacional oficial.
     </div>
     <div style="position:relative;height:270px"><canvas id="radarChart"></canvas></div>
     <div class="pct-legend" id="pctLegend"></div>
@@ -850,7 +764,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="g2" style="gap:0;border-radius:10px;overflow:hidden;margin-bottom:12px">
       <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);padding:14px;text-align:center">
         <div style="font-size:0.62rem;font-weight:700;color:var(--ac);margin-bottom:8px">🏅 AFMB Infantiles</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-afmb-pj">20</span> PJ · Liga local</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-afmb-pj">—</span> PJ · Liga local</div>
         <div class="g2">
           <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" id="comp-afmb-ppg">—</div><div class="sc-lbl">PPP 🏀</div></div>
           <div class="stat-cell"><div class="sc-val" style="color:var(--green)">—</div><div class="sc-lbl">RPG 📊</div></div>
@@ -860,7 +774,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
       <div style="background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);padding:14px;text-align:center">
         <div style="font-size:0.62rem;font-weight:700;color:var(--purple);margin-bottom:8px">🌐 Federal CABB</div>
-        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-fed-pj">5</span> PJ · Nivel nacional</div>
+        <div style="font-size:0.58rem;color:var(--muted);margin-bottom:10px"><span id="comp-fed-pj">—</span> PJ · Nivel nacional</div>
         <div class="g2">
           <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="comp-fed-ppg">—</div><div class="sc-lbl">PPP 🏀</div></div>
           <div class="stat-cell"><div class="sc-val" style="color:var(--green)">—</div><div class="sc-lbl">RPG 📊</div></div>
@@ -902,15 +816,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div style="display:flex;flex-direction:column;gap:10px">
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(249,115,22,0.12)">
         <div style="font-size:0.6rem;font-weight:700;color:var(--ac);margin-bottom:5px">🔥 ANOTACIÓN AFMB — Evaluación NextLevel 🧑‍🏫</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-afmb-ppg">8.6</span> PPP en AFMB (<span id="eval-afmb-pj">20</span> PJ). Dentro del plantel de Berazategui, es la principal referencia anotadora. El nivel de producción en liga metropolitana es sólido para la categoría U13.</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-afmb-ppg">—</span> PPP en AFMB (<span id="eval-afmb-pj">—</span> PJ). No hay ranking del plantel calculado. El nivel de producción en liga metropolitana es sólido para la categoría U13.</div>
       </div>
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(168,85,247,0.12)">
         <div style="font-size:0.6rem;font-weight:700;color:var(--purple);margin-bottom:5px">🌐 ANOTACIÓN FEDERAL — Evaluación NextLevel 🧑‍🏫</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-fed-ppg">6.8</span> PPP en el Federal CABB (<span id="eval-fed-pj">5</span> PJ, nivel nacional). Contra rivales de mayor nivel de competencia, mantuvo producción ofensiva. Participar del Federal es en sí mismo una distinción dentro del universo U13 argentino.</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6"><span id="eval-fed-ppg">—</span> PPP en el Federal CABB (<span id="eval-fed-pj">—</span> PJ, nivel nacional). Contra rivales de mayor nivel de competencia, mantuvo producción ofensiva. Participar del Federal es en sí mismo una distinción dentro del universo U13 argentino.</div>
       </div>
       <div style="background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid rgba(34,197,94,0.12)">
         <div style="font-size:0.6rem;font-weight:700;color:var(--green);margin-bottom:5px">📈 PRODUCCIÓN EN TORNEO EXIGENTE — Evaluación NextLevel 🧑‍🏫</div>
-        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">Sostener producción ofensiva en el Federal luego de una temporada regular completa en AFMB es una señal positiva de solidez competitiva. El cuerpo técnico identificó este patrón como uno de los indicadores de desarrollo más relevantes de la temporada.</div>
+        <div style="font-size:0.72rem;color:#94a3b8;line-height:1.6">Sostener producción ofensiva en el Federal luego de una temporada regular completa en AFMB es una señal positiva de solidez competitiva. Interpretación orientativa pendiente de revisión por el coach.</div>
       </div>
     </div>
   </div>
@@ -1374,7 +1288,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div style="font-size:1.2rem;font-weight:900;color:var(--text)">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
         <div style="font-size:0.68rem;color:var(--muted);margin-top:2px">Dep. Berazategui · Escolta/Alero · #14</div>
         <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">
-          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🔥 #1 Anotadora</span>
+          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🔥 Perfil anotador</span>
           <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🌐 Federal CABB</span>
         </div>
       </div>
@@ -1663,68 +1577,40 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 /* ─── DATOS (estáticos — ilustrativos / evaluaciones del coach) ──────── */
 // SHOTS_DATA: coordenadas referenciales — API CABB no provee coordenadas exactas
 // Distribución por zona refleja evaluación del cuerpo técnico 🧑‍🏫
-const SHOTS_DATA = [
-  // ZONA PINTADA
-  {x:218, y:430, m:true},  {x:248, y:445, m:true},  {x:235, y:415, m:true},
-  {x:200, y:440, m:true},  {x:265, y:435, m:true},  {x:230, y:455, m:true},
-  {x:255, y:420, m:false}, {x:215, y:460, m:true},  {x:240, y:400, m:true},
-  {x:208, y:420, m:false}, {x:270, y:450, m:true},  {x:225, y:390, m:true},
-  // MEDIA DISTANCIA IZQ
-  {x:80,  y:350, m:true},  {x:100, y:400, m:false}, {x:60,  y:370, m:true},
-  {x:90,  y:460, m:true},  {x:120, y:340, m:false}, {x:75,  y:430, m:false},
-  {x:50,  y:390, m:true},  {x:140, y:380, m:true},
-  // MEDIA DISTANCIA DER
-  {x:380, y:350, m:false}, {x:360, y:420, m:true},
-  // TRIPLE ESQUINA IZQ
-  {x:12,  y:380, m:true},  {x:14,  y:420, m:true},  {x:10,  y:450, m:false},
-  // TRIPLE ESQUINA DER
-  {x:458, y:390, m:true},  {x:455, y:440, m:false},
-  // TRIPLE 45° IZQ
-  {x:55,  y:290, m:true},  {x:70,  y:260, m:false}, {x:85,  y:310, m:false},
-  {x:40,  y:320, m:true},
-  // TRIPLE 45° DER
-  {x:400, y:280, m:false}, {x:415, y:310, m:false}, {x:390, y:320, m:true},
-  // TRIPLE FRONTAL
-  {x:200, y:130, m:false}, {x:235, y:110, m:true},  {x:270, y:140, m:false},
-  {x:180, y:160, m:false}, {x:290, y:170, m:false},
-];
+const SHOTS_DATA = []; // Sin coordenadas verificadas
 // ZONE_SUMMARY: datos del cuerpo técnico (evaluación, no API) 🧑‍🏫
-const ZONE_SUMMARY = [
-  {z:'Zona pintada', fg:'12/15', pct:'80%', color:'#22c55e'},
-  {z:'Media distancia', fg:'5/10', pct:'50%', color:'#f97316'},
-  {z:'Triple (T3)',  fg:'9/27',  pct:'33%', color:'#facc15'},
-];
+const ZONE_SUMMARY = []; // Sin distribución por zona verificada
 // PROG_DATA: 2026 = dato real 🏀 · 2027-2030 = proyección 🔮
 const PROG_DATA = {
   labels:  ['2026','2027','2028','2029','2030'],
-  ppg_real:[8.2, null, null, null, null],   // solo 2026 es real
+  ppg_real:[null, null, null, null, null],   // solo 2026 es real
   ppg_proj:[null, 12.5, 16, 19, 22],        // 2027+ proyección
   apg_real:[null, null, null, null, null],   // APG sin dato oficial aún
   apg_proj:[null,  3.5,  5,  6.5,  7.5],
 };
 // PERCENTILES: Evaluaciones NextLevel del cuerpo técnico (NO percentil nacional) 🧑‍🏫
 const EVAL_NL = [
-  {lbl:'Anotación',   val:94, color:'#f97316', ref:'8.6 PPP AFMB 🏀'},
-  {lbl:'Creación',    val:88, color:'#fb923c', ref:'Pull-up · Drive 🧑‍🏫'},
-  {lbl:'Minutos',     val:85, color:'#a855f7', ref:'~21 MPG 🏀'},
-  {lbl:'Nivel Fed.',  val:82, color:'#22c55e', ref:'6.8 PPP Federal 🏀'},
-  {lbl:'Proyección',  val:90, color:'#ef4444', ref:'Cadetes 2027 🔮'},
-  {lbl:'Impacto',     val:88, color:'#3b82f6', ref:'On/Off +14 🧑‍🏫'},
+  {lbl:'Anotación',   val:null, color:'#f97316', ref:'Coach · sin ranking verificado'},
+  {lbl:'Creación',    val:null, color:'#fb923c', ref:'Pull-up · Drive 🧑‍🏫'},
+  {lbl:'Minutos',     val:null, color:'#a855f7', ref:'Coach · minutos según datos'},
+  {lbl:'Nivel Fed.',  val:null, color:'#22c55e', ref:'Coach · Federal según datos'},
+  {lbl:'Proyección',  val:null, color:'#ef4444', ref:'Cadetes 2027 🔮'},
+  {lbl:'Impacto',     val:null, color:'#3b82f6', ref:'Coach · sin on/off verificado'},
 ];
 // NCAA_SKILLS: Evaluación del coach (0-100, escala interna) 🧑‍🏫
 const NCAA_SKILLS = [
-  {lbl:'Scoring (PPG)',     val:90, color:'#f97316'},
-  {lbl:'National Level',   val:85, color:'#a855f7'},
-  {lbl:'Shot Creation',    val:82, color:'#22c55e'},
-  {lbl:'Ball Handling',    val:78, color:'#3b82f6'},
-  {lbl:'Playmaking / IQ',  val:75, color:'#06b6d4'},
-  {lbl:'Long-term proj. 🔮',val:88, color:'#ef4444'},
+  {lbl:'Scoring (PPG)',     val:null, color:'#f97316'},
+  {lbl:'National Level',   val:null, color:'#a855f7'},
+  {lbl:'Shot Creation',    val:null, color:'#22c55e'},
+  {lbl:'Ball Handling',    val:null, color:'#3b82f6'},
+  {lbl:'Playmaking / IQ',  val:null, color:'#06b6d4'},
+  {lbl:'Long-term proj. 🔮',val:null, color:'#ef4444'},
 ];
 const FORTALEZAS = [
-  {icon:'🔥', t:'#1 Anotadora AFMB — datos CABB oficiales 🏀', tx:'Máxima anotadora del equipo en la liga metropolitana durante toda la temporada. Primera opción ofensiva del sistema de Berazategui.'},
+  {icon:'🔥', t:'Coach · Perfil anotador', tx:'Máxima anotadora del equipo en la liga metropolitana durante toda la temporada. Primera opción ofensiva del sistema de Berazategui.'},
   {icon:'🌐', t:'Federal CABB — producción en torneo nacional 🏀', tx:'Producción ofensiva en el Federal CABB, que concentra las mejores jugadoras de cada delegación del país. Señal positiva de solidez competitiva más allá de la liga local.'},
   {icon:'🎯', t:'Tiro exterior + penetración — 2 dimensiones 🧑‍🏫', tx:'Puede anotar desde el perímetro y en penetración al aro. El perfil de dos dimensiones es el más difícil de defender en el básquet moderno formativo.'},
-  {icon:'⏱️', t:'Alta rotación — minutos sostenidos 🏀', tx:'Alta confianza del cuerpo técnico como primera opción ofensiva durante toda la rotación. Dato confirmado por la API oficial CABB.'},
+  {icon:'⏱️', t:'Coach · Participación en la rotación', tx:'Alta confianza del cuerpo técnico como primera opción ofensiva durante toda la rotación. Evaluación orientativa pendiente de validación por el coach.'},
 ];
 const AREAS = [
   {icon:'🎯', t:'Tiro libre — consistencia 🧑‍🏫', tx:'Meta: pasar a 70%+ con protocolo de 50 TL/día. El TL convierte la producción ofensiva en puntos seguros bajo presión.'},
@@ -1793,24 +1679,27 @@ async function loadPlayerStats() {
     const ppF = playerStats.fed.ppg  || 0;
     const pjTot = pjA + pjF;
     playerStats.combined.pj     = pjTot || null;
-    playerStats.combined.ppg    = pjTot > 0 ? +((ppA*pjA + ppF*pjF)/pjTot).toFixed(1) : null;
-    // MPG combinado: promedio simple de los disponibles
-    const mpgVals = [playerStats.afmb.min_pg, playerStats.fed.min_pg].filter(v => v!=null);
-    playerStats.combined.min_pg = mpgVals.length ? +(mpgVals.reduce((a,b)=>a+b,0)/mpgVals.length).toFixed(1) : null;
+    playerStats.combined.ppg    = pjTot > 0 && (!pjA || playerStats.afmb.ppg != null) && (!pjF || playerStats.fed.ppg != null) ? +((ppA*pjA + ppF*pjF)/pjTot).toFixed(1) : null;
+    const mpgComplete = (!pjA || playerStats.afmb.min_pg != null) && (!pjF || playerStats.fed.min_pg != null);
+    playerStats.combined.min_pg = pjTot && mpgComplete
+      ? +(((playerStats.afmb.min_pg ?? 0) * pjA + (playerStats.fed.min_pg ?? 0) * pjF) / pjTot).toFixed(1) : null;
 
     // 2. Intentar calcular RPG y APG desde game_log
     const { data: gl, error: eGl } = await _supa
       .from('game_log')
       .select('reb_tot, ast, pts, minutos')
-      .eq('player_id', PLAYER_ID);
+      .eq('player_id', PLAYER_ID)
+      .eq('source', 'cabb_api')
+      .gte('fecha', SEASON + '-01-01')
+      .lt('fecha', String(+SEASON + 1) + '-01-01');
 
     if (!eGl && gl && gl.length > 0) {
       const n   = gl.length;
-      const rpg = gl.reduce((s,r) => s + (r.reb_tot || 0), 0) / n;
-      const apg = gl.reduce((s,r) => s + (r.ast     || 0), 0) / n;
+      const rpg = gl.every(r => r.reb_tot != null) ? gl.reduce((s,r) => s + Number(r.reb_tot), 0) / n : null;
+      const apg = gl.every(r => r.ast != null) ? gl.reduce((s,r) => s + Number(r.ast), 0) / n : null;
       playerStats.game_log = {
-        rpg: +rpg.toFixed(1),
-        apg: +apg.toFixed(1),
+        rpg: rpg == null ? null : +rpg.toFixed(1),
+        apg: apg == null ? null : +apg.toFixed(1),
         source: '📊',  // Cálculo NextLevel desde game_log
       };
     }
@@ -1818,7 +1707,7 @@ async function loadPlayerStats() {
     playerStats.loaded = true;
     renderPlayerStats();
     // Lanzar carga adicional en paralelo (no bloqueante)
-    loadGameLogAndRender();
+    await loadGameLogAndRender();
     loadObjEstados();
     loadCoachEval();
     // Dashboard: Tab 0 está visible desde el inicio
@@ -1828,6 +1717,7 @@ async function loadPlayerStats() {
     playerStats.error = err.message;
     console.warn('loadPlayerStats:', err);
     renderStatsError();
+    loadGameLogAndRender();
     loadObjEstados(); // objetivos no dependen de stats_seasons
     loadCoachEval();
   }
@@ -1843,7 +1733,7 @@ function renderPlayerStats() {
   // PPP principal: combinado si hay ambos torneos, AFMB solo si no hay Federal
   const mainPPG = s.combined.ppg != null ? s.combined.ppg :
                   (s.afmb.ppg != null ? s.afmb.ppg : null);
-  const mpg     = fmt(s.combined.min_pg || s.afmb.min_pg);
+  const mpg     = fmt(s.combined.min_pg);
   const pjTot   = fmt(s.combined.pj || s.afmb.pj);
 
   const elSet = (id, txt) => { const el=document.getElementById(id); if(el) el.textContent=txt; };
@@ -1867,11 +1757,11 @@ function renderPlayerStats() {
   if (tagPJ) tagPJ.textContent = pjTot !== '—'
     ? `${s.afmb.pj && s.fed.pj ? `${pjTot} PJ · AFMB + Federal` : `${pjTot} PJ · AFMB`}`
     : '— PJ';
-  if (tagTorneo && s.afmb.ppg) {
+  if (tagTorneo && s.afmb.ppg != null) {
     tagTorneo.textContent = `🏀 ${s.afmb.ppg} PPP AFMB`;
     tagTorneo.style.display = '';
   }
-  if (tagFed && s.fed.ppg) {
+  if (tagFed && s.fed.ppg != null) {
     tagFed.textContent = `🌐 ${s.fed.ppg} PPP Federal`;
     tagFed.style.display = '';
   }
@@ -1957,7 +1847,7 @@ function renderPlayerStats() {
     const fedPart = s.fed.ppg
       ? ` Competitive at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB).`
       : '';
-    cvQ.innerHTML = `<strong>"Top scorer at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB).${fedPart}"</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
+    cvQ.innerHTML = `<strong>"Scoring average at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB).${fedPart}"</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
   }
 
   // Hitos con valores dinámicos
@@ -1969,6 +1859,8 @@ function renderPlayerStats() {
 
   // Actualizar gráfico comparativo (re-renderizar con datos reales)
   rebuildCompChart();
+  PROG_DATA.ppg_real[0] = mainPPG;
+  buildProgChart();
 }
 
 function renderStatsError() {
@@ -2025,16 +1917,22 @@ let _gameLog = [];
 async function loadGameLogAndRender() {
   const { data: gl, error } = await _supa
     .from('game_log')
-    .select('fecha, pts, reb_tot, ast, minutos, stl, blk, rival, torneo')
+    .select('*')
     .eq('player_id', PLAYER_ID)
+    .eq('source', 'cabb_api')
+    .gte('fecha', SEASON + '-01-01')
+    .lt('fecha', String(+SEASON + 1) + '-01-01')
     .order('fecha', { ascending: true });
-  if (error || !gl) return;
+  if (error || !gl) {
+    document.getElementById('evol-loading').textContent = 'No se pudo cargar el historial. Reintentá más tarde.';
+    return;
+  }
   _gameLog = gl;
   calcEvolucion5v5(gl);
 }
 
 function calcEvolucion5v5(gl) {
-  if (!gl || gl.length < 6) {
+  if (!gl || gl.length < 10) {
     document.getElementById('evol-loading').style.display = 'none';
     document.getElementById('evol-nodata').style.display  = 'block';
     return;
@@ -2045,8 +1943,9 @@ function calcEvolucion5v5(gl) {
   const ant5  = gl.slice(Math.max(0, total - 10), total - 5); // 5 anteriores
 
   const avg = (arr, key) => {
-    const vals = arr.map(r => r[key] ?? 0);
-    return +(vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1);
+    const vals = arr.map(r => r[key]);
+    if (!vals.length || vals.some(v => v == null)) return null;
+    return +(vals.reduce((a,b) => a+Number(b), 0) / vals.length).toFixed(1);
   };
 
   const metricas = [
@@ -2062,7 +1961,7 @@ function calcEvolucion5v5(gl) {
   const results = [];
 
   metricas.forEach(m => {
-    if (rec5.every(r => r[m.key] == null)) return; // métrica sin datos
+    if (rec5.some(r => r[m.key] == null) || ant5.some(r => r[m.key] == null)) return; // métrica sin datos
     const vRec = avg(rec5, m.key);
     const vAnt = ant5.length ? avg(ant5, m.key) : null;
     const diff  = vAnt != null ? vRec - vAnt : null;
@@ -2120,7 +2019,7 @@ function buildInsights(container) {
   // Anotación
   if (s.afmb.ppg) {
     if (s.afmb.ppg >= 8)
-      insights.push({ cls:'insight-up',   icon:'🔥', msg:`<strong>Tu anotación en AFMB es de las más altas del equipo</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos. Sos la primera opción ofensiva.` });
+      insights.push({ cls:'insight-up',   icon:'🔥', msg:`<strong>Tu promedio de anotación en AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos. Cálculo mostrado según los datos disponibles.` });
     if (s.fed.ppg && s.fed.ppg >= 6)
       insights.push({ cls:'insight-up',   icon:'🌐', msg:`<strong>Producción sólida en el Federal CABB</strong> — ${s.fed.ppg} PPP en torneo nacional. Podés competir más allá de la liga local.` });
   }
@@ -2386,7 +2285,7 @@ async function buildDashFisico() {
 function buildDashLogros() {
   const s = playerStats;
   const logros = [];
-  if (s.afmb.ppg && s.afmb.ppg >= 8)  logros.push({ icon:'🔥', txt:`<strong>#1 Anotadora AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos` });
+  if (s.afmb.ppg && s.afmb.ppg >= 8)  logros.push({ icon:'🔥', txt:`<strong>Anotación AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos` });
   if (s.fed.ppg)                        logros.push({ icon:'🌐', txt:`<strong>Federal CABB</strong> — ${s.fed.ppg} PPP a nivel nacional` });
   if (s.combined.pj && s.combined.pj >= 20) logros.push({ icon:'⏱️', txt:`<strong>${s.combined.pj} partidos</strong> — temporada completa en cancha` });
   OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'cumplido').forEach(o =>
@@ -2531,9 +2430,9 @@ function buildZoneChart() {
   new Chart(document.getElementById('chartZones'), {
     type: 'doughnut',
     data: {
-      labels: ['Zona pintada (15)', 'Media distancia (10)', 'Triple (27)'],
+      labels: ['Zona pintada — Sin datos', 'Media distancia — Sin datos', 'Triple — Sin datos'],
       datasets: [{
-        data: [15, 10, 27],
+        data: [null, null, null],
         backgroundColor: ['rgba(34,197,94,0.7)','rgba(249,115,22,0.7)','rgba(250,204,21,0.7)'],
         borderColor: ['#22c55e','#f97316','#facc15'],
         borderWidth: 2,
@@ -2560,7 +2459,7 @@ function buildRadar() {
         { label:'Mía — Eval. NextLevel 🧑‍🏫', data:EVAL_NL.map(p=>p.val),
           backgroundColor:'rgba(249,115,22,0.1)', borderColor:'#f97316',
           borderWidth:2, pointBackgroundColor:'#f97316', pointRadius:3 },
-        { label:'Ref. 70', data:EVAL_NL.map(()=>70),
+        { label:'Ref. 70', data:EVAL_NL.map(()=>null),
           backgroundColor:'rgba(255,255,255,0.02)', borderColor:'rgba(255,255,255,0.1)',
           borderWidth:1, borderDash:[4,4], pointRadius:0 },
       ]
@@ -2576,7 +2475,7 @@ function buildRadar() {
   const leg = document.getElementById('pctLegend');
   EVAL_NL.forEach(p => {
     leg.innerHTML += `<div class="pct-cell">
-      <div class="pct-v" style="color:${p.color}">${p.val}</div>
+      <div class="pct-v" style="color:${p.color}">${p.val ?? 'Sin evaluación'}</div>
       <div class="pct-l">${p.lbl}</div>
       <div style="font-size:0.52rem;color:#334155;margin-top:2px">${p.ref}</div>
     </div>`;
@@ -2600,6 +2499,8 @@ function itemCard(i, bg, bdr, c) {
 
 /* ─── PROGRESIÓN — línea sólida = real, punteada = proyección ───────── */
 function buildProgChart() {
+  const previous = Chart.getChart('chartProg');
+  if (previous) previous.destroy();
   new Chart(document.getElementById('chartProg'), {
     type:'line',
     data:{
@@ -2652,7 +2553,7 @@ function buildProgChart() {
 function buildHitos() {
   // Los valores numéricos se actualizarán desde renderPlayerStats vía IDs
   const data = [
-    {icon:'🔥', f:'#1 Anotadora AFMB 🏀 — <span id="hito-afmb-ppg">—</span> PPP en <span id="hito-afmb-pj">—</span> PJ', t:'Máxima anotadora del equipo en la liga metropolitana. Primera opción ofensiva del sistema de Berazategui durante toda la temporada.'},
+    {icon:'🔥', f:'Anotación AFMB 🏀 — <span id="hito-afmb-ppg">—</span> PPP en <span id="hito-afmb-pj">—</span> PJ', t:'Producción anotadora según los resúmenes oficiales disponibles.'},
     {icon:'🌐', f:'Federal CABB 🏀 — <span id="hito-fed-ppg">—</span> PPP en <span id="hito-fed-pj">—</span> PJ', t:'Partidos vs los mejores clubes del país. Sostener producción en el Federal indica solidez competitiva más allá de la liga local.'},
     {icon:'⏱️', f:'MPP en 25 partidos 🏀', t:'Alta rotación durante toda la temporada. El cuerpo técnico la confía como primera opción durante casi toda la rotación.'},
     {icon:'🎯', f:'Tiro en 2 dimensiones 🧑‍🏫', t:'Anotadora exterior (T3) + penetradora al aro. El perfil más difícil de defender del básquet moderno formativo.'},
@@ -2673,8 +2574,8 @@ function buildNcaaBars() {
   NCAA_SKILLS.forEach(s => {
     el.innerHTML += `<div class="radar-row">
       <div class="radar-lbl">${s.lbl}</div>
-      <div class="radar-bg"><div class="radar-fill" style="width:${s.val}%;background:${s.color}"></div></div>
-      <div class="radar-pct" style="color:${s.color}">${s.val}</div>
+      <div class="radar-bg"><div class="radar-fill" style="width:${s.val ?? 0}%;background:${s.color}"></div></div>
+      <div class="radar-pct" style="color:${s.color}">${s.val ?? '—'}</div>
     </div>`;
   });
 }
@@ -3521,5 +3422,6 @@ function fisInit() {
 }
 
 </script>
+<script src="nextlevel_performance.js" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
 </body>
 </html>
