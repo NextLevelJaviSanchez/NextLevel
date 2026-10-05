@@ -1,0 +1,50 @@
+{
+  "source": "user_supplied_CAB_app_screenshots",
+  "api_verified": true,
+  "delegacion": "ASOCIACIÓN FEMENINA METROPOLITANA DE BÁSQUETBOL",
+  "categoria": "INFANTILES FEMENINO",
+  "competicion": "FORMATIVAS 2026",
+  "fase": "SEGUNDA ETAPA",
+  "grupo_label_visible": "INTERCONFERE...",
+  "jornada": 11,
+  "fecha": "2026-10-04",
+  "hora_local": "12:30",
+  "local": "CLUB SOCIAL Y DEPORTIVO BERAZATEGUI",
+  "visitante": "OBRAS BASKET CLUB ATL. OBRAS SANITARIAS DE LA NACION",
+  "puntos_local": 46,
+  "puntos_visitante": 65,
+  "estado": "Terminado",
+  "parciales_local": [
+    15,
+    13,
+    9,
+    9
+  ],
+  "parciales_visitante": [
+    14,
+    25,
+    12,
+    14
+  ],
+  "cabb_partido_id": "644845",
+  "player_boxscore": {
+    "nombre": "SANCHEZ, MIA GERALDINE",
+    "pts": 5,
+    "reb": 5,
+    "ast": 0,
+    "stl": 2,
+    "minutos": 20,
+    "t2_in": 2,
+    "t2_att": 6,
+    "t3_in": 0,
+    "t3_att": 0,
+    "tl_in": 1,
+    "tl_att": 3,
+    "perdidas": 3,
+    "faltas": 3,
+    "valoracion": 5,
+    "masMenos": -17
+  },
+  "grupo_api": "INTERCONFERENCIA A",
+  "api_verified_at": "2026-10-05T12:37:17.757084+00:00"
+}

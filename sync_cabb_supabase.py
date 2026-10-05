@@ -46,6 +46,8 @@ PLAYER_MAP: Dict[str, str] = {
     'SANCHEZ, MIA GERALDINE':      '11111111-0000-0000-0000-000000000014',
     'GRILLO, CATALINA':            '11111111-0000-0000-0000-000000000008',
     'PORTINARI, LUBA JULIETA':     '11111111-0000-0000-0000-000000000006',
+    # Actas históricas AFMB: nombre invertido, mismo equipo y dorsal 12.
+    'ALMA, SMIGIEL':               '11111111-0000-0000-0000-000000000012',
     'SMIGIEL, ALMA':               '11111111-0000-0000-0000-000000000012',
     'BAILON, MARTINA PILAR':       '11111111-0000-0000-0000-000000000010',
     # Aliases sin segundo nombre (fallback por búsqueda de apellido)
@@ -73,6 +75,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from cabb_app_api import CABBApiClient
 from nextlevel_metrics import summarize_games
+from cabb_games import discover_games, normalize_boxscore
 
 # ══════════════════════════════════════════════════════════════════════
 #  HELPERS
@@ -194,57 +197,42 @@ def sync_stats_seasons(client, team_id, supa, dry_run, games=None):
 #  3. SYNC DE GAME LOG → game_log
 # ══════════════════════════════════════════════════════════════════════
 
-def sync_game_log(client: CABBApiClient, team_id: str, supa: Any, dry_run: bool, match_ids=None):
-    """Trae los partidos del equipo y hace upsert de boxscores individuales."""
-    log('=== SYNC GAME LOG ===')
-    
-    # Obtener fases/grupos del equipo para encontrar los id_partido
-    fases_data = client.get_equipo_fases_grupos(team_id)
-    partidos_ids = extraer_partido_ids(fases_data)
-    partidos_ids += [{'id': pid, 'fase': ''} for pid in (match_ids or [])]
-    partidos_ids = list({p['id']: p for p in partidos_ids}.values())
-    if not partidos_ids:
-        raise RuntimeError('CABB fasesGrupos no contiene partidos. Proporcioná --match-id validado; no se inventan game logs.')
-    collected = []
-    
-    log(f'Partidos encontrados en árbol de fases: {len(partidos_ids)}')
-    
-    upserted = 0
-    errores  = 0
-    
-    for pid_info in partidos_ids:
-        pid      = pid_info['id']
-        fase_lbl = pid_info.get('fase', '')
-        
-        try:
-            stats = client.get_partido_stats(pid)
-            rows  = procesar_boxscore(pid, fase_lbl, stats)
-            
-            collected.extend(rows)
-            for row in rows:
-                if not dry_run and supa:
-                    try:
-                        supa.table('game_log').upsert(
-                            row,
-                            on_conflict='player_id,cabb_partido_id'
-                        ).execute()
-                        upserted += 1
-                    except Exception as e:
-                        log(f'  game_log upsert error partido {pid}: {e}', 'ERROR')
-                        errores += 1
-                else:
-                    log(f'  [DRY] {row.get("rival","?")} {row.get("fecha","?")} — {row.get("pts","?")} pts {row.get("reb_tot","?")} reb')
-                    upserted += 1
-            
-            time.sleep(0.4)  # rate limiting: ~2.5 partidos/seg
-            
-        except Exception as e:
-            log(f'  Error partido {pid}: {e}', 'ERROR')
-            errores += 1
-    
-    log(f'Game log: {upserted} filas upserted, {errores} errores')
-    if errores:
-        raise RuntimeError(f'Game log incompleto: {errores} errores')
+def sync_game_log(client, team_id, supa, dry_run, match_ids=None, export_path=None):
+    """Descubre fixture por categoría; valida todas las filas antes de escribir."""
+    team=client.get_equipo_detalle(team_id)
+    if not team.get('Nombre'):
+        raise ValueError('Equipo sin nombre verificado')
+    category,games=discover_games(client,team['Nombre'],SEASON,progress=log)
+    if match_ids:
+        requested=set(map(str,match_ids))
+        games=[g for g in games if str(g['IdPartidoNotificacion']) in requested]
+        if {str(g['IdPartidoNotificacion']) for g in games} != requested:
+            raise ValueError('No se encontraron todos los IDs estables pedidos en el fixture')
+    if not games:
+        raise ValueError('Fixture sin partidos terminados del equipo')
+    collected=[]
+    audit=[]
+    for fixture in games:
+        raw=client.get_partido_stats(fixture['IdPartido'])
+        rows=procesar_boxscore(fixture['IdPartidoNotificacion'],fixture['fase'],raw,fixture)
+        collected.extend(rows)
+        game=raw.get('partido',{})
+        fr=fixture['Resultados']
+        if str(game.get('tanteo_local')) != str(fr['ResultadoLocal']) or str(game.get('tanteo_visitante')) != str(fr['ResultadoVisitante']):
+            log(f"Resultado distinto entre fixture y acta en {fixture['IdPartidoNotificacion']}; se conserva el resultado oficial del fixture",'WARN')
+        audit.append({'id':str(fixture['IdPartidoNotificacion']), 'fecha':fixture['Fecha'],
+                      'fixture_result':fr,'boxscore_result':{'local':game.get('tanteo_local'),'visitante':game.get('tanteo_visitante')}})
+        log(f"Validado {fixture['IdPartidoNotificacion']} {fixture['Fecha']} → {len(rows)} jugadoras mapeadas")
+        time.sleep(.2)
+    if export_path:
+        from pathlib import Path
+        Path(export_path).write_text(json.dumps({'category_id':category.get('IdCompeticionCategoria'),
+            'games':audit,'rows':collected},ensure_ascii=False,indent=2),encoding='utf-8')
+    if not dry_run:
+        if not supa:
+            raise ValueError('Falta conexión Supabase')
+        supa.table('game_log').upsert(collected,on_conflict='player_id,cabb_partido_id').execute()
+    log(f"Game log: {len(games)} partidos, {len(collected)} filas {'validadas (dry-run)' if dry_run else 'sincronizadas'}")
     return collected
 
 def extraer_partido_ids(fases_data: Dict) -> List[Dict]:
@@ -275,109 +263,12 @@ def extraer_partido_ids(fases_data: Dict) -> List[Dict]:
     _walk(fases_data)
     return list({r['id']: r for r in resultado}.values())
 
-def procesar_boxscore(id_partido: str, fase: str, stats_raw: Dict) -> List[Dict]:
-    """Convierte la respuesta de estadisticasPartido en filas para game_log."""
-    rows = []
-    # Este adaptador requiere estructura verificada; rechaza respuestas desconocidas.
-    if stats_raw.get('resultado') == 'error' or not all(
-            isinstance(stats_raw.get(k), dict) for k in ('local', 'visitante')):
-        raise ValueError('Boxscore no validado: inspeccionar respuesta real antes de sincronizar')
-    if not any(EQUIPO_QUERY in stats_raw[k].get('nombre', '').upper() for k in ('local', 'visitante')):
-        raise ValueError('El boxscore no corresponde al equipo seleccionado')
-
-    # Estructura típica de la API CABB:
-    # { local: { nombre, jugadoras: [...] }, visitante: { nombre, jugadoras: [...] },
-    #   fecha, resultado_local, resultado_visitante }
-    
-    local_nombre  = stats_raw.get('local', {}).get('nombre', '')
-    visit_nombre  = stats_raw.get('visitante', {}).get('nombre', '')
-    fecha_raw     = stats_raw.get('fecha') or stats_raw.get('Fecha') or ''
-    fecha         = parse_fecha(fecha_raw) if fecha_raw else None
-    if not fecha or not fecha.startswith(SEASON + '-'):
+def procesar_boxscore(id_partido, fase, stats_raw, fixture=None):
+    if not fixture or str(fixture.get('IdPartidoNotificacion')) != str(id_partido):
+        raise ValueError('El boxscore requiere el fixture canónico y su ID estable')
+    if parse_fecha(fixture.get('Fecha','')) is None or not parse_fecha(fixture['Fecha']).startswith(SEASON+'-'):
         raise ValueError('Fecha inválida o fuera de temporada')
-    res_loc       = safe_int(stats_raw.get('resultado_local', stats_raw.get('ResultadoLocal')), None)
-    res_vis       = safe_int(stats_raw.get('resultado_visitante', stats_raw.get('ResultadoVisitante')), None)
-    if res_loc is None or res_vis is None or res_loc == res_vis:
-        raise ValueError('Partido sin resultado final verificable')
-    
-    es_bera_local = 'BERAZATEGUI' in local_nombre.upper()
-    
-    if es_bera_local:
-        rival    = visit_nombre
-        ganado   = res_loc > res_vis
-        marcador = f'{res_loc}-{res_vis}'
-        jugadoras_raw = stats_raw.get('local', {}).get('jugadoras', []) or \
-                        stats_raw.get('local', {}).get('Jugadoras', [])
-    else:
-        rival    = local_nombre
-        ganado   = res_vis > res_loc
-        marcador = f'{res_vis}-{res_loc}'
-        jugadoras_raw = stats_raw.get('visitante', {}).get('jugadoras', []) or \
-                        stats_raw.get('visitante', {}).get('Jugadoras', [])
-    
-    for j in jugadoras_raw:
-        nombre = j.get('Nombre') or j.get('nombre') or ''
-        player_id = resolve_player_id(nombre)
-        if not player_id:
-            continue
-        
-        tc_in = safe_int(first_value(j, 'TirosCampoAnotados', 'tc_in'), None)
-        tc_att = safe_int(first_value(j, 'TirosCampoIntentados', 'tc_att'), None)
-        t2_in = safe_int(first_value(j, 'TirosDosPuntosAnotados', 't2_in'), None)
-        t2_att = safe_int(first_value(j, 'TirosDosPuntosIntentados', 't2_att'), None)
-        t3_in = safe_int(first_value(j, 'TiresTresPuntosAnotados', 'TirosTresPuntosAnotados', 't3_in'), None)
-        t3_att = safe_int(first_value(j, 'TiresTresPuntosIntentados', 'TirosTresPuntosIntentados', 't3_att'), None)
-        tl_in = safe_int(first_value(j, 'TirosLibresAnotados', 'tl_in'), None)
-        tl_att = safe_int(first_value(j, 'TirosLibresIntentados', 'tl_att'), None)
-        pts = safe_int(first_value(j, 'Puntos', 'puntos'), None)
-        reb = safe_int(first_value(j, 'Rebotes', 'RebotesTotales', 'rebotes'), None)
-        reb_d = safe_int(first_value(j, 'RebotesDefensivos', 'reb_def'), None)
-        reb_o = safe_int(first_value(j, 'RebotesOfensivos', 'reb_of'), None)
-        ast = safe_int(first_value(j, 'Asistencias', 'asistencias'), None)
-        stl = safe_int(first_value(j, 'Recuperos', 'recuperos'), None)
-        blk = safe_int(first_value(j, 'Tapas', 'tapas'), None)
-        to_p = safe_int(first_value(j, 'Perdidas', 'perdidas'), None)
-        faltas = safe_int(first_value(j, 'Faltas', 'faltas'), None)
-        val = safe_int(first_value(j, 'Valoracion', 'valoracion'), None)
-        mins   = parse_minutes(first_value(j, 'Minutos', 'minutos'))
-        titular= parse_bool(first_value(j, 'Titular', 'titular'))
-        
-        rows.append({
-            'player_id':       player_id,
-            'cabb_partido_id': str(id_partido),
-            'cabb_player_id':  str(j.get('Id') or j.get('id_jugador') or ''),
-            'fecha':           fecha,
-            'rival':           rival or '?',
-            'torneo':          'AFMB',
-            'fase':            fase,
-            'es_local':        es_bera_local,
-            'resultado_eq':    marcador,
-            'ganado':          ganado,
-            'titular':         titular,
-            'pts':             pts,
-            'reb_tot':         reb,
-            'reb_def':         reb_d,
-            'reb_of':          reb_o,
-            'ast':             ast,
-            'stl':             stl,
-            'blk':             blk,
-            'to_perdidas':     to_p,
-            'faltas':          faltas,
-            'minutos':         mins,
-            'tc_in':           tc_in,
-            'tc_att':          tc_att,
-            't2_in':           t2_in,
-            't2_att':          t2_att,
-            't3_in':           t3_in,
-            't3_att':          t3_att,
-            'tl_in':           tl_in,
-            'tl_att':          tl_att,
-            'val':             val,
-            'source':          'cabb_api',
-            'synced_at':       datetime.now(timezone.utc).isoformat(),
-        })
-    
-    return rows
+    return normalize_boxscore(stats_raw,fixture,PLAYER_MAP,datetime.now(timezone.utc).isoformat())
 
 # ══════════════════════════════════════════════════════════════════════
 #  MAIN
@@ -385,7 +276,8 @@ def procesar_boxscore(id_partido: str, fase: str, stats_raw: Dict) -> List[Dict]
 
 def main():
     parser = argparse.ArgumentParser(description='NextLevel ↔ CABB ↔ Supabase Sync')
-    parser.add_argument('--match-id', action='append', default=[], help='ID de partido obtenido en la misma sesión CABB (no persistir opaque IDs)')
+    parser.add_argument('--export-json',help='Exportar filas validadas y auditoría del fixture')
+    parser.add_argument('--match-id', action='append', default=[], help='IdPartidoNotificacion estable; se resuelve al opaque ID del fixture en esta sesión')
     parser.add_argument('--dry-run',     action='store_true', help='Solo muestra, no escribe en Supabase')
     parser.add_argument('--only-stats',  action='store_true', help='Solo sincroniza promedios anuales')
     parser.add_argument('--only-gamelog',action='store_true', help='Solo sincroniza game log')
@@ -439,7 +331,7 @@ def main():
     # Primero partidos; luego resumen para no leer un cache anterior.
     games = []
     if not args.only_stats:
-        games = sync_game_log(cabb, team_id, supa, args.dry_run, args.match_id)
+        games = sync_game_log(cabb, team_id, supa, args.dry_run, args.match_id, args.export_json)
     if not args.only_gamelog:
         sync_stats_seasons(cabb, team_id, supa, args.dry_run, games)
 

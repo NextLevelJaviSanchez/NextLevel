@@ -8,7 +8,7 @@
 #  3. En GitHub → Settings → Secrets → Actions, agregá:
 #       SUPA_URL  = https://yjcxwfkedxzkcspddghz.supabase.co
 #       SUPA_KEY  = eyJhbGci...  (la anon key)
-#  4. El workflow corre automáticamente los sábados a las 23hs (AR)
+#  4. El workflow corre automáticamente los domingos a las 23hs (AR)
 #     y también se puede disparar manualmente desde la UI de GitHub
 # ══════════════════════════════════════════════════════════════════════
 
@@ -49,7 +49,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install supabase
+        run: pip install -r requirements.txt
 
       - name: Run sync (scheduled — full)
         if: github.event_name == 'schedule'

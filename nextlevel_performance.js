@@ -54,18 +54,22 @@
         .order('fecha',{ascending:false}).order('cabb_partido_id',{ascending:false}));
       const seasons = await readAll('stats_seasons', q => q.eq('player_id',config.playerId)
         .eq('season',config.season).order('tournament'));
+      const totalExpected=seasons.reduce((sum,s)=>sum+Number(s.pj || 0),0);
+      const coverageComplete=totalExpected>0 && games.length===totalExpected;
+      const shooting=summarize(games);
+      const pctKeys={t3_pct:'3P%',tl_pct:'TL%',efg_pct:'eFG%',ts_pct:'TS%'};
       document.querySelectorAll('[data-official-metric]').forEach(el => {
         const key=el.dataset.officialMetric;
         const populated=seasons.filter(s => s[key] != null && Number(s.pj) > 0);
         const complete=populated.length === seasons.filter(s => Number(s.pj) > 0).length;
         const n=populated.reduce((sum,s)=>sum+Number(s.pj),0);
         const value=key==='pj' ? seasons.reduce((sum,s)=>sum+Number(s.pj || 0),0)
-          : ['t3_pct','tl_pct','efg_pct','ts_pct'].includes(key) ? null
+          : pctKeys[key] ? (coverageComplete ? shooting[pctKeys[key]] : null)
           : complete && n ? populated.reduce((sum,s)=>sum+Number(s[key])*Number(s.pj),0)/n : null;
         el.textContent = value == null ? '—' : Number(value).toFixed(key==='pj'?0:1);
-        el.title = 'Resumen sincronizado · porcentajes combinados requieren intentos de tiro';
+        el.title = pctKeys[key] ? 'Cálculo NextLevel · conversiones / intentos oficiales' : 'Resumen sincronizado de temporada';
       });
-      status.textContent = games.length ? `${games.length} partidos con boxscore · ${config.season}. Cálculos sobre la muestra disponible; no equivalen a una temporada completa sin cobertura verificada.`
+      status.textContent = games.length ? `${games.length}/${totalExpected || '—'} partidos con boxscore · ${config.season}. ${coverageComplete ? 'Cobertura coincide con los PJ de la temporada.' : 'Muestra parcial; no equivale a una temporada completa.'} Cálculo NextLevel desde datos CABB.`
         : 'Sin partidos oficiales sincronizados. No se muestran resultados de ejemplo.';
       const tournaments = [...new Set([...seasons.map(r => r.tournament), ...games.map(r => r.torneo)].filter(Boolean))];
       const select = node('select', null, card);
@@ -95,7 +99,7 @@
         }
         Object.keys(summary).forEach(k => {
           const tr=node('tr',null,body), a=base[k], b=recent[k];
-          [k,fmt(a),fmt(b),a==null||b==null?'—':((b-a)>0?'↑ ':((b-a)<0?'↓ ':'→ '))+Math.abs(b-a).toFixed(1)].forEach(t => node('td',t,tr));
+          [k,k==='AST/PER' && a!=null ? a.toFixed(2) : fmt(a),k==='AST/PER' && b!=null ? b.toFixed(2) : fmt(b),a==null||b==null?'—':((b-a)>0?'↑ ':((b-a)<0?'↓ ':'→ '))+Math.abs(b-a).toFixed(k==='AST/PER'?2:1)].forEach(t => node('td',t,tr));
         });
         seasons.filter(s => !select.value || s.tournament === select.value).forEach(s => {
           node('p',`${s.tournament} · resumen de temporada: ${s.pj ?? 'Sin datos'} PJ · ${fmt(s.ppg)} PTS · ${fmt(s.min_pg)} MIN. Fuente: resumen sincronizado; comparar cobertura antes de equipararlo al historial.`,content);

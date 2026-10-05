@@ -1,3 +1,5 @@
+> Actualización: el bloqueo del calendario se resolvió y el sync real terminó. Ver [CABB_FIXTURE_VALIDATION.md](CABB_FIXTURE_VALIDATION.md). El texto siguiente conserva el diagnóstico histórico previo.
+
 # Validación NextLevel Player — 5 de octubre de 2026
 
 Se trabajó sobre un repositorio inicialmente limpio, sin tocar login.html, navegación ni las funciones y paneles de Estado Físico/physical_test_results.
@@ -44,3 +46,9 @@ Incluye valores faltantes/cero, porcentajes ponderados, eFG/TS, AST/PER, nombres
 4. Verificar clave estable, columnas/constraints y políticas de escritura de game_log; completar sync de producción y comprobar recarga/idempotencia. No hay game logs reales nuevos en esta entrega.
 5. Validar visualmente en navegador con sesión real: login, navegación, ambos perfiles, carga/error/vacío, mobile, exportación y Estado Físico. Se comprobó en navegador local la carga de ambos perfiles contra Supabase, el estado sin partidos, la navegación a Rendimiento/Progresión y el acceso a Estado Físico de Mía, sin errores de consola. Pendientes: sesión autenticada, escrituras físicas, mobile y exportación.
 6. Las páginas de dossier/plan heredadas fuera de los dos perfiles siguen teniendo referencias estáticas; no fueron modificadas en esta integración.
+
+## Partido de referencia aportado por el usuario
+
+Las capturas de la app CAB confirman AFMB / Infantiles Femenino / Formativas 2026, segunda etapa, jornada 11: Berazategui local 46–65 Obras el 4 de octubre de 2026 a las 12:30. Parciales: Berazategui 15/13/9/9; Obras 14/25/12/14. El nombre de grupo aparece truncado como INTERCONFERE...; no se confirma su sufijo. Referencia guardada en cabb_match_target_2026-10-04.json, marcada como captura aportada por el usuario y no como respuesta API. No contiene ID de partido ni estadísticas individuales.
+
+La consulta del calendario con el contexto de equipo/categoría/competición/temporada/fase/grupo sigue devolviendo Faltan parámetros. Todavía falta identificar la llamada exacta o conseguir el enlace/ID del encuentro para validar boxscore y play-by-play. No se cargó este resultado manualmente en game_log ni se escribieron datos en Supabase.

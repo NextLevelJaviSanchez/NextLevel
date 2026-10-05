@@ -532,10 +532,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl" style="justify-content:space-between">
       🏀 Mapa de Tiro — Tiros Individuales
-      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Sin datos de coordenadas</span>
+      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Escala del mapa pendiente</span>
     </div>
     <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5;background:rgba(250,204,21,0.04);border:1px solid rgba(250,204,21,0.1);border-radius:7px;padding:6px 10px">
-      📊 Las posiciones de tiro son <strong>referenciales</strong> — todavía no se verificaron coordenadas exactas en una respuesta de CABB. Sin coordenadas verificadas. Los tiros por tipo se muestran abajo cuando hay boxscores disponibles.
+      📊 El play-by-play CABB incluye posiciones de tiros reales. Su escala y orientación todavía requieren validación para representarlas correctamente en esta cancha. Los tiros por tipo se muestran en el historial.
     </div>
     <!-- Media cancha: aspect-ratio 47/50 (FIBA: 15m ancho / 14m profundidad aprox) -->
     <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:47/50;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
@@ -596,7 +596,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 
   <div class="card"><div class="card-ttl">Mapa de calor por zonas</div>
-    <p style="font-size:.72rem;color:var(--muted)">Sin datos de coordenadas verificadas. No se calcula eficiencia por zona.</p></div>
+    <p style="font-size:.72rem;color:var(--muted)">El play-by-play incluye coordenadas y zonas. Falta validar la escala y orientación para representar eficiencia por zona.</p></div>
 
   <!-- EVOLUCIÓN 5 vs 5 PARTIDOS -->
   <div class="card">
@@ -1928,6 +1928,11 @@ async function loadGameLogAndRender() {
     return;
   }
   _gameLog = gl;
+  const last=gl[gl.length-1];
+  const points=document.getElementById('st-pts-last');
+  const label=document.getElementById('st-pts-lbl');
+  if (points) points.textContent=last?.pts ?? '—';
+  if (label) label.textContent=last ? `PTS vs ${last.rival}` : 'Último PJ';
   calcEvolucion5v5(gl);
 }
 

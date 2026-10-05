@@ -23,18 +23,60 @@ class Regression(unittest.TestCase):
     def test_safe_matching(self):
         self.assertIsNone(resolve_player_id('SANCHEZ, OTRA PERSONA'))
         self.assertIsNotNone(resolve_player_id('SANCHEZ, MIA GERALDINE'))
+        self.assertEqual(resolve_player_id('ALMA, SMIGIEL'),resolve_player_id('SMIGIEL, ALMA'))
     def test_discovery(self):
         self.assertEqual(extraer_partido_ids({'listaFasesGrupo':[{'Opaque':'team','Rondas':[]}]}),[])
         self.assertEqual(len(extraer_partido_ids({'a':[{'IdPartido':'1'},{'IdPartido':'1'}]})),1)
     def test_failed_api_is_not_a_game(self):
         for payload in ({},{'resultado':'error'}, {'local':{},'visitante':{}}):
             with self.assertRaises(ValueError):procesar_boxscore('1','',payload)
-    def test_synthetic_boxscore_preserves_missing(self):
-        payload={'local':{'nombre':'BERAZATEGUI','jugadoras':[{'Nombre':'SANCHEZ, MIA GERALDINE','Puntos':0,'Minutos':'12:30','Titular':'false'}]},
-                 'visitante':{'nombre':'Rival'},'fecha':'05/10/2026','resultado_local':50,'resultado_visitante':40}
-        row=procesar_boxscore('synthetic-only','Test',payload)[0]
-        self.assertEqual(row['pts'],0);self.assertIsNone(row['ast']);self.assertFalse(row['titular'])
-        self.assertEqual(row['minutos'],12.5)
+    def fixture(self):
+        import json
+        return json.loads((R/'cabb_boxscore_obras_644845.json').read_text(encoding='utf-8'))
+    def test_real_boxscore(self):
+        f=self.fixture()
+        rows=procesar_boxscore('644845','SEGUNDA ETAPA',f['boxscore'],f['fixture'])
+        self.assertEqual(len(rows),5)
+        mia=next(r for r in rows if r['player_id'].endswith('000014'))
+        self.assertEqual((mia['pts'],mia['reb_tot'],mia['ast'],mia['stl'],mia['minutos']),(5,5,0,2,20))
+        self.assertEqual((mia['t2_in'],mia['t2_att'],mia['tl_in'],mia['tl_att']),(2,6,1,3))
+        self.assertEqual(mia['resultado_eq'],'46-65');self.assertFalse(mia['ganado'])
+        self.assertEqual(mia['cabb_partido_id'],'644845')
+    def test_real_missing_and_zero(self):
+        f=self.fixture()
+        mia=next(j for j in f['boxscore']['estadisticas']['estadisticasequipolocal'] if 'SANCHEZ' in j['nombre'])
+        mia.pop('asistencias')
+        rows=procesar_boxscore('644845','SEGUNDA ETAPA',f['boxscore'],f['fixture'])
+        mia=next(r for r in rows if r['player_id'].endswith('000014'))
+        self.assertIsNone(mia['ast']);self.assertEqual(mia['t3_att'],0)
+    def test_invalid_attempts_rejected(self):
+        f=self.fixture()
+        f['boxscore']['estadisticas']['estadisticasequipolocal'][2]['tiro2p']=1
+        with self.assertRaises(ValueError):procesar_boxscore('644845','',f['boxscore'],f['fixture'])
+    def test_canonical_category_ids(self):
+        from cabb_games import discover_games
+        f=self.fixture()
+        class API:
+            def buscar_categorias(self,*args):return [{'Id':'canonical','NombreCategoria':'INFANTILES FEMENINO','NombreCompeticion':'FORMATIVAS 2026','NombreDelegacion':'ASOCIACIÓN FEMENINA METROPOLITANA'}]
+            def get_categoria_fases_grupos(self,cat):
+                assert cat=='canonical'
+                return {'resultado':'correcto','listaFasesGrupo':[{'IdFase':'phase','NombreFase':'SEGUNDA ETAPA','Grupos':[{'IdGrupo':'group','NombreGrupo':'INTERCONFERENCIA A'}]}]}
+            def get_categoria_horarios_jornadas(self,*args):
+                assert args==('canonical','phase','group')
+                return {'resultado':'correcto','partidos':[dict(f['fixture'],IdPartido='session-opaque'),dict(f['fixture'],IdPartido='session-opaque')]}
+        _,games=discover_games(API(),f['fixture']['NombreEquipoLocal'])
+        self.assertEqual(len(games),1);self.assertEqual(games[0]['IdPartidoNotificacion'],'644845')
+    def test_endpoint_path(self):
+        from cabb_app_api import CABBApiClient
+        client=CABBApiClient.__new__(CABBApiClient)
+        client.id_dispositivo='test';client.key='test'
+        calls=[]
+        client._post=lambda url,params:calls.append((url,params)) or {}
+        client.get_partido_stats('opaque')
+        self.assertTrue(calls[0][0].endswith('/v2/envivo/estadisticas.ashx'))
+        client.get_categoria_horarios_jornadas('canonical','phase','group')
+        self.assertEqual(calls[1][1]['accion'],'horariosJornadas')
+        self.assertEqual(calls[1][1]['id_categoria_competicion'],'canonical')
     def test_stats_never_null_existing(self):
         class Client:
             def get_equipo_jugadores(self,t):return [{'Nombre':'SANCHEZ, MIA GERALDINE','PartidosJugados':1,'PuntosPorPartido':0,'MinutosPorPartido':0}]
@@ -62,7 +104,7 @@ class Regression(unittest.TestCase):
                 if start in old and end in old:
                     self.assertEqual(old[old.index(start):old.index(end,old.index(start))],h[h.index(start):h.index(end,h.index(start))])
             if name.startswith('perfil_mia'):
-                self.assertEqual(old[old.index('const FIS_PLAYER_ID'):],h[h.index('const FIS_PLAYER_ID'):].replace('<script src="nextlevel_performance.js" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>\n',''))
+                self.assertEqual(old[old.index('const FIS_PLAYER_ID'):old.index('</script>',old.index('const FIS_PLAYER_ID'))],h[h.index('const FIS_PLAYER_ID'):h.index('</script>',h.index('const FIS_PLAYER_ID'))])
             original_ids=set(re.findall(r'id="([^"]+)"',old));new_ids=set(re.findall(r'id="([^"]+)"',h))
             self.assertTrue({'tab-rend','tab-coach','tab-prog','tab-plan','tab-fis','tab-perfil'}<=new_ids)
         r=subprocess.run([NODE,'--check',str(R/'nextlevel_performance.js')],capture_output=True)

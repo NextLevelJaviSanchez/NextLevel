@@ -3,6 +3,7 @@ import argparse, json
 from pathlib import Path
 from datetime import datetime, timezone
 from cabb_app_api import CABBApiClient
+from cabb_games import discover_games
 
 def redact(obj):
     if isinstance(obj, dict):
@@ -27,12 +28,21 @@ def main():
     mia = next((j for j in roster if j.get('Nombre') == 'SANCHEZ, MIA GERALDINE'), None)
     if mia:
         data['player_detail'] = c.get_jugadora_detalle(mia['Id'])
-    for pid in a.match_id:
-        data['matches'].append({'id': pid, 'boxscore': c.get_partido_stats(pid), 'pbp': c.get_partido_pbp(pid)})
+    category,games=discover_games(c,t['Nombre'])
+    data['category']=category
+    data['fixture']=games
+    requested=set(a.match_id)
+    for game in games:
+        if str(game['IdPartidoNotificacion']) in requested:
+            pid=game['IdPartido']
+            data['matches'].append({'id':str(game['IdPartidoNotificacion']), 'fixture':game,
+                'boxscore':c.get_partido_stats(pid),'pbp':c.get_partido_pbp(pid)})
+    if {g['id'] for g in data['matches']} != requested:
+        raise ValueError('Partido solicitado no encontrado en fixture')
     Path(a.output).write_text(json.dumps(redact(data), ensure_ascii=False, indent=2), encoding='utf-8')
     print('Inspección guardada sin credenciales. Partidos consultados:', len(data['matches']))
     if not a.match_id:
-        print('Boxscore y PBP pendientes: falta ID de partido válido de esta sesión.')
+        print('Para inspeccionar un partido, usá --match-id con su IdPartidoNotificacion estable.')
 
 if __name__ == '__main__':
     main()

@@ -146,7 +146,7 @@ class CABBApiClient:
             'id_dispositivo': self.id_dispositivo,
             'key': self.key,
         }
-        return self._post(BASE_V2 + 'partido.ashx', params)
+        return self._post(BASE_V2 + 'envivo/estadisticas.ashx', params)
 
     def get_partido_pbp(self, id_partido: str) -> Dict[str, Any]:
         """Obtiene el Play-by-Play completo de un partido (historialacciones)."""
@@ -166,6 +166,15 @@ class CABBApiClient:
             'key': self.key,
         }
         return self._post(BASE_V2 + 'categoria.ashx', params)
+
+    def get_categoria_horarios_jornadas(self, category_id, phase_id, group_id):
+        """Fixture canónico: IDs del árbol de buscarCategoria, no del equipo."""
+        return self._post(BASE_V2 + 'categoria.ashx', {
+            'accion': 'horariosJornadas',
+            'id_categoria_competicion': category_id,
+            'id_fase': phase_id, 'id_grupo': group_id,
+            'id_dispositivo': self.id_dispositivo, 'key': self.key,
+        })
 
 if __name__ == "__main__":
     client = CABBApiClient()
