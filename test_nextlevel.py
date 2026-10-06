@@ -8,6 +8,21 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_evolution_actual_blocks(self):
+        script="""
+const assert=require('node:assert/strict');const {average,shooting,blocks}=require('./nextlevel_evolution.js');
+const rows=Array.from({length:12},(_,i)=>({pts:i}));const b=blocks(rows);
+assert.deepEqual(b.previous.map(r=>r.pts),[2,3,4,5,6]);assert.deepEqual(b.recent.map(r=>r.pts),[7,8,9,10,11]);
+assert.equal(average([{pts:0},{pts:10}],'pts'),5);assert.equal(average([{pts:null},{pts:10}],'pts'),null);
+assert.equal(shooting([{tc_in:1,tc_att:1},{tc_in:1,tc_att:9}],'tc').pct,20);
+assert.equal(shooting([{tc_in:0,tc_att:0}],'tc').pct,null);
+assert.equal(shooting([{tc_in:null,tc_att:3}],'tc'),null);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        h=(R/'perfil_mia_sanchez_14.html').read_text(encoding='utf-8')
+        self.assertNotIn('PROG_DATA',h)
+        self.assertIn('nextlevel_evolution.js',h)
+
     def test_team_ranking_half_season(self):
         script="""
 const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');
