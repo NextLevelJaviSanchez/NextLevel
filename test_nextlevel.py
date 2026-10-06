@@ -8,6 +8,25 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_team_ranking_coverage_and_ties(self):
+        script="""
+const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');
+const result=teamRanking([{available:true,players:[{name:'SANCHEZ, MIA',pts:10},{name:'OTRA',pts:5},{name:'SIN DATO',pts:null}]},{available:true,players:[{name:'MIA SANCHEZ',pts:0},{name:'OTRA',pts:5},{name:'SIN DATO',pts:10}]}],'pts');
+assert.equal(result.rows.length,2);assert.equal(result.rows[0].avg,5);assert.equal(result.rows[0].rank,1);assert.equal(result.rows[1].rank,1);assert.equal(result.rows[0].pj,2);assert.equal(result.excluded,1);
+assert.equal(teamRanking([{available:false,players:[{name:'X',pts:99}]}],'pts').rows.length,0);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_profile_navigation_order(self):
+        h=(R/'perfil_mia_sanchez_14.html').read_text(encoding='utf-8')
+        for start,end in [('<div class="tab-bar">','</div>'),('<nav class="bnav"','</nav>')]:
+            block=h[h.index(start):h.index(end,h.index(start))]
+            self.assertEqual(re.findall(r'data-tab="([^"]+)"',block)[:2],['dash','perfil'])
+        self.assertIn("b.dataset.tab === id",h)
+        self.assertNotIn('tabBtns[navIdx]',h)
+        self.assertIn('id="plan-mental-content"',h)
+        self.assertIn("'plan-mental-content'",(R/'nextlevel_profile_extras.js').read_text(encoding='utf-8'))
+
     def test_season_milestones(self):
         script = """
 const assert=require('node:assert/strict');
@@ -129,8 +148,8 @@ assert.equal(seasonMilestones([{pts:10,reb_tot:10,ast:10}]).doubles.length,1);
             for script in re.findall(r'<script[^>]*>(.*?)</script>',h,re.S):
                 result=subprocess.run([NODE,'--check'],input=script.encode('utf-8'),capture_output=True)
                 self.assertEqual(result.returncode,0,result.stderr.decode('utf-8'))
-            # Login/logout/tab navigation and physical pane are retained verbatim.
-            for start,end in [("function showTab(","/* ─── INIT"),('<div id="tab-fis"','</div><!-- /tab-fis -->')]:
+            # Physical pane retained verbatim; navigation uses semantic destinations.
+            for start,end in [('<div id="tab-fis"','</div><!-- /tab-fis -->')]:
                 if start in old and end in old:
                     self.assertEqual(old[old.index(start):old.index(end,old.index(start))],h[h.index(start):h.index(end,h.index(start))])
             if name.startswith('perfil_mia'):

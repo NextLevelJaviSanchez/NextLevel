@@ -363,14 +363,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <button class="tab-btn" onclick="showTab('mental',this)">🧘 Mental</button>
-  <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Inicio</button>
-  <button class="tab-btn"    onclick="showTab('rend',this)">📊 Rendimiento</button>
-  <button class="tab-btn"    onclick="showTab('coach',this)">🧠 Análisis Coach</button>
-  <button class="tab-btn"    onclick="showTab('prog',this)">📈 Evolución</button>
-  <button class="tab-btn"    onclick="showTab('plan',this)">🎯 Mi Plan</button>
-  <button class="tab-btn"    onclick="showTab('fis',this)">💪 Físico</button>
-  <button class="tab-btn"    onclick="showTab('perfil',this)">👤 Perfil</button>
+  <button class="tab-btn on" data-tab="dash" onclick="showTab('dash',this)">🏠 Inicio</button>
+  <button class="tab-btn" data-tab="perfil"    onclick="showTab('perfil',this)">👤 Perfil</button>
+  <button class="tab-btn" data-tab="rend"    onclick="showTab('rend',this)">📊 Rendimiento</button>
+  <button class="tab-btn" data-tab="coach"    onclick="showTab('coach',this)">🧠 Análisis Coach</button>
+  <button class="tab-btn" data-tab="prog"    onclick="showTab('prog',this)">📈 Evolución</button>
+  <button class="tab-btn" data-tab="plan"    onclick="showTab('plan',this)">🎯 Mi Plan</button>
+  <button class="tab-btn" data-tab="mental" onclick="showTab('mental',this)">🧘 Mental</button>
+  <button class="tab-btn" data-tab="fis"    onclick="showTab('fis',this)">💪 Físico</button>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -806,6 +806,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
      TAB 4 — PLAN PERSONALIZADO
 ══════════════════════════════════════════ -->
 <div id="tab-plan" class="tab-pane">
+  <div class="card"><div class="card-ttl">🧘 Plan de trabajo mental</div>
+    <p style="font-size:.72rem;color:var(--muted)">Áreas elegidas en Perfil · prácticas propuestas para dos semanas y revisión semanal con el coach.</p>
+    <div id="plan-mental-content">Cargando tus áreas mentales…</div>
+    <button type="button" class="obj-btn" onclick="showTab('perfil')">Editar áreas en Perfil</button>
+  </div>
 
   <div style="background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.15);border-radius:12px;padding:14px 16px;margin-bottom:14px">
     <div style="font-size:0.7rem;font-weight:800;color:var(--ac2);margin-bottom:6px">🎯 Plan de Desarrollo — Escolta/Alero Anotadora 2026–2027</div>
@@ -1444,7 +1449,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <div class="card"><div class="card-ttl">🧘 Mis áreas mentales a trabajar</div><p style="font-size:.72rem;color:var(--muted)">Podés seleccionar varias. Tu plan se actualiza en la pestaña Mental.</p><div id="pf-mental-chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div id="pf-mental-plan"></div></div>
+  <div class="card"><div class="card-ttl">🧘 Mis áreas mentales a trabajar</div><p style="font-size:.72rem;color:var(--muted)">Podés seleccionar varias. Tu plan se actualiza en Mi Plan y en Mental.</p><div id="pf-mental-chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div id="pf-mental-plan"></div></div>
 
   <!-- ── MI CURRÍCULUM (PDF export) ──────────────────────────── -->
   <div class="ncaa-box">
@@ -1540,12 +1545,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- BOTTOM NAV -->
 <nav class="bnav" id="bnav">
-  <button class="bnav-btn on" onclick="showTab('dash',null,0)"><span class="ni">🏠</span>Inicio</button>
-  <button class="bnav-btn"   onclick="showTab('rend',null,1)"><span class="ni">📊</span>Stats</button>
-  <button class="bnav-btn"   onclick="showTab('coach',null,2)"><span class="ni">🧠</span>Análisis</button>
-  <button class="bnav-btn"   onclick="showTab('plan',null,4)"><span class="ni">🎯</span>Mi Plan</button>
-  <button class="bnav-btn"   onclick="showTab('fis',null,5)"><span class="ni">💪</span>Físico</button>
-  <button class="bnav-btn"   onclick="showTab('perfil',null,6)"><span class="ni">👤</span>Perfil</button>
+  <button class="bnav-btn on" data-tab="dash" onclick="showTab('dash',null,0)"><span class="ni">🏠</span>Inicio</button>
+  <button class="bnav-btn" data-tab="perfil"   onclick="showTab('perfil',null,6)"><span class="ni">👤</span>Perfil</button>
+  <button class="bnav-btn" data-tab="rend"   onclick="showTab('rend',null,1)"><span class="ni">📊</span>Stats</button>
+  <button class="bnav-btn" data-tab="coach"   onclick="showTab('coach',null,2)"><span class="ni">🧠</span>Análisis</button>
+  <button class="bnav-btn" data-tab="plan"   onclick="showTab('plan',null,4)"><span class="ni">🎯</span>Mi Plan</button>
+  <button class="bnav-btn" data-tab="fis"   onclick="showTab('fis',null,5)"><span class="ni">💪</span>Físico</button>
   <button class="bnav-btn"   onclick="doLogout()" style="color:#ef4444"><span class="ni">🚪</span>Salir</button>
 </nav>
 
@@ -1851,13 +1856,7 @@ function showTab(id, btn, navIdx) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
   document.getElementById('tab-' + id).classList.add('on');
-  if (btn) btn.classList.add('on');
-  if (navIdx !== undefined) {
-    const bnavBtns = document.querySelectorAll('.bnav-btn');
-    const tabBtns  = document.querySelectorAll('.tab-btn');
-    if (bnavBtns[navIdx]) bnavBtns[navIdx].classList.add('on');
-    if (tabBtns[navIdx])  tabBtns[navIdx].classList.add('on');
-  }
+  document.querySelectorAll('.tab-btn[data-tab], .bnav-btn[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === id));
   if (id === 'fis' && !_fisInited) { _fisInited = true; fisInit(); }
   if (id === 'fis') { fisLoadAntro(); }
   if (id === 'perfil' && !_pfInited) { _pfInited = true; pfLoadState(); }
