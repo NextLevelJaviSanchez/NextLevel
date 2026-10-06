@@ -570,63 +570,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ══════════════════════════════════════════ -->
 <div id="tab-coach" class="tab-pane">
 
-  <!-- SEPARADOR: Análisis NextLevel -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-    <div style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(249,115,22,0.05));border:1px solid rgba(249,115,22,0.25);border-radius:10px;padding:6px 14px;font-size:0.6rem;font-weight:800;color:#fb923c;text-transform:uppercase;letter-spacing:1px">📊 Análisis NextLevel</div>
-    <div style="flex:1;height:1px;background:rgba(249,115,22,0.12)"></div>
-    <div style="font-size:0.55rem;color:var(--muted)">Interpretación orientativa · pendiente de revisión Coach</div>
-  </div>
-
-  <div class="ia-box">
-    <div class="ia-hdr">
-      <div class="ia-ic">🧠</div>
-      <div><div class="ia-ttl">Análisis NextLevel — Mía G. Sánchez #14</div>
-      <div class="ia-sub">Interpretación orientativa · sin ranking comparativo verificado</div></div>
-    </div>
-
-    <div class="ia-sec">
-      <div class="ia-lbl or">🏀 PRODUCCIÓN POR TORNEO</div>
-      <div class="ia-txt" data-coach-analysis="production">Cargando lectura de los datos oficiales…</div>
-    </div>
-
-    <div class="ia-sec">
-      <div class="ia-lbl gr">🎯 EFICIENCIA DE TIRO</div>
-      <div class="ia-txt" data-coach-analysis="shooting">Cargando lectura de los datos oficiales…</div>
-      <div class="drill-box">
-        <div class="drill-ttl">Objetivo propuesto · ejercicios de tiro para revisar con el coach</div>
-        <div class="drill-txt"><strong>(1) Pull-up jumper</strong> desde pick-and-roll: dribble de ataque, parar, tiro en suspensión. 4 series × 8 tiros desde cada lado del pico. Objetivo: consolidar el mid-range como arma confiable bajo presión.<br><strong>(2) Step-back 3PT</strong>: 1 dribble lateral + paso hacia atrás + triple. 3 series × 8 tiros. Este movimiento habilita el triple cuando el defensor presiona en el drive.<br><strong>(3) Floater sobre ayuda</strong>: penetrar y resolver con floater cuando el 5 cierra. 20 repeticiones por sesión.</div>
-      </div>
-    </div>
-
-    <div class="ia-sec">
-      <div class="ia-lbl bl">📈 ASISTENCIAS Y PÉRDIDAS</div>
-      <div class="ia-txt" data-coach-analysis="creation">Cargando lectura de los datos oficiales…</div>
-    </div>
-
-    <div class="ia-sec">
-      <div class="ia-lbl pu">🎯 PROPUESTA DE SEGUIMIENTO</div>
-      <div class="ia-txt" data-coach-analysis="priorities">Cargando lectura de los datos oficiales…</div>
-    </div>
-
-    <div class="ia-ft">Dato CABB: boxscores · Cálculo NextLevel: promedios y porcentajes · Coach: evaluación personalizada · Objetivo: propuesta pendiente de acuerdo.</div>
-  </div>
-
-
-  <div class="card"><div class="card-ttl">🧑‍🏫 Evaluación del coach pendiente</div>
-    <p style="font-size:.75rem;color:var(--muted)">La evaluación se mostrará cuando el coach registre criterios y valoraciones.</p>
-    <div hidden><canvas id="radarChart"></canvas><div id="pctLegend"></div></div>
-  </div>
-
-  <!-- FORTALEZAS / ÁREAS -->
-  <div class="g2">
-    <div class="card">
-      <div class="card-ttl" style="color:var(--green)">✅ Fortalezas</div>
-      <div id="fortalezas"></div>
-    </div>
-    <div class="card">
-      <div class="card-ttl" style="color:var(--orange)">⚠️ A mejorar</div>
-      <div id="areas"></div>
-    </div>
+  <div class="card">
+    <div class="card-ttl" style="color:#38bdf8">📊 Mi perfil según los datos</div>
+    <p class="mental-tip-copy" style="margin-bottom:12px">Una lectura de tus partidos para conversar con el coach. Describe tu producción y propone prácticas; no califica tu técnica, tu actitud ni tu potencial.</p>
+    <div id="coach-stat-profile" data-player-name="SANCHEZ, MIA GERALDINE">Cargando estadísticas oficiales…</div>
   </div>
 
   <!-- SEPARADOR: Mirada del Coach -->
@@ -687,6 +634,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
+  <div class="card"><div class="card-ttl" style="color:#38bdf8">💬 Conversación con mi coach</div>
+    <p class="mental-tip-copy">Este espacio es para la jugadora y su familia. Podés consultar sobre una práctica o contar cómo te fue.</p>
+    <div id="player-coach-workspace"></div>
+  </div>
 </div><!-- /tab-coach -->
 
 <!-- ══════════════════════════════════════════
@@ -726,78 +677,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 
   <div class="card">
-    <div class="card-ttl" style="color:var(--green)">✅ Fase 1 — Consolidar Fortalezas (Ahora → Jun 2026)</div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(249,115,22,0.15);color:var(--ac)">1</div>
-      <div>
-        <div class="plan-ttl">Pull-up Jumper — Tiro en movimiento</div>
-        <div class="plan-txt">El catch-and-shoot ya es confiable. El siguiente nivel es crear el tiro desde el dribble. 20 pull-up jumpers por sesión, desde cada ala y desde el pico del pick-and-roll.</div>
-        <span class="plan-tag" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);color:var(--ac)">Tiro en Movimiento</span>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(250,204,21,0.15);color:var(--yellow)">2</div>
-      <div>
-        <div class="plan-ttl">Triple off the Dribble — Step-back</div>
-        <div class="plan-txt">Agregar el step-back 3PT al arsenal. 1 dribble lateral + paso hacia atrás + triple. Con defensor siguiendo. 15 tiros por lado por sesión. Consolida el rango exterior sin necesitar ayuda de pantalla.</div>
-        <span class="plan-tag" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);color:var(--yellow)">Tiro 3P</span>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(34,197,94,0.15);color:var(--green)">3</div>
-      <div>
-        <div class="plan-ttl">Floater y Layup con Mano Débil</div>
-        <div class="plan-txt">Cuando el escolta penetra, el pivot cierra. El floater y el layup con mano no dominante son la solución. 30 repeticiones de cada uno por sesión. Objetivo: terminar drives con ambas manos con ≥55% de eficiencia.</div>
-        <span class="plan-tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green)">Penetración</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-ttl" style="color:var(--orange)">🔧 Fase 2 — Desarrollar Áreas Débiles (Jun → Dic 2026)</div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(239,68,68,0.15);color:var(--red)">4</div>
-      <div>
-        <div class="plan-ttl">Tiro Libre — Meta 70%</div>
-        <div class="plan-txt">50 TL/día con rutina invariable. Agarrar pelota, 3 dribbles, alinear pie, respirar, tirar. El TL es la estadística más controlable — con trabajo diario pasa de zona de riesgo a fortaleza en 3-4 meses.</div>
-        <span class="plan-tag" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:var(--red)">Tiro Libre</span>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(59,130,246,0.15);color:var(--blue)">5</div>
-      <div>
-        <div class="plan-ttl">Defensa Individual en Perímetro</div>
-        <div class="plan-txt">Deny position en el perímetro (impedir recepción), lateral shuffle sin cruzar los pies, help-side defense (ver pelota y rival). 3 sesiones de 15 min/semana con enfoque exclusivo en defensa. Para NCAA/Liga Nacional, la defensa equivale a la mitad del scouting report.</div>
-        <span class="plan-tag" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue)">Defensa</span>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(6,182,212,0.15);color:var(--cyan)">6</div>
-      <div>
-        <div class="plan-ttl">Manejo bajo Presión Full-Court</div>
-        <div class="plan-txt">Dribble con mano débil contra presión 1v1 desde la línea de fondo hasta la media cancha en menos de 5 segundos. Cambios de dirección (crossover, between legs) sin perder velocidad. Crítico para playoffs donde las defensas presionan toda la cancha.</div>
-        <span class="plan-tag" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);color:var(--cyan)">Manejo de Pelota</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-ttl" style="color:var(--purple)">🚀 Fase 3 — Perfil Recruiting (2027+)</div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(168,85,247,0.15);color:var(--purple)">7</div>
-      <div>
-        <div class="plan-ttl">Video Highlight — 3 partidos clave Cadetes 2027</div>
-        <div class="plan-txt">Compilar: (1) plays de creación propia (pull-up, step-back, drive), (2) asistencias en pick-and-roll, (3) tiros de clutch en cuartos finales. El video es la primera impresión para scouts NCAA/NAIA.</div>
-        <span class="plan-tag" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:var(--purple)">Recruiting</span>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num" style="background:rgba(34,197,94,0.15);color:var(--green)">8</div>
-      <div>
-        <div class="plan-ttl">Camps Selecciones FeBAMBA / CABB U15</div>
-        <div class="plan-txt">Con 8.6 PPP en AFMB y presencia en el Federal CABB (6.8 PPP a nivel nacional), la convocatoria a selecciones provinciales (FeBAMBA) y nacionales (CABB U15-U17) en Cadetes es el objetivo natural. Ese salto multiplica la visibilidad ante scouts nacionales e internacionales.</div>
-        <span class="plan-tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green)">Selecciones</span>
-      </div>
+    <div class="card-ttl" style="color:#38bdf8">🌱 Un ciclo de dos semanas</div>
+    <p class="mental-tip-copy" style="margin-bottom:14px">No hace falta mejorar todo a la vez. Elegí una práctica con tu coach, probala y contá cómo te fue. Esta es una propuesta para conversar, no una evaluación ni una obligación.</p>
+    <div class="mental-tip-grid">
+      <section class="mental-tip-card" style="--tip-color:#38bdf8">
+        <h3 class="mental-tip-title">🎯 1. Elegimos qué practicar</h3>
+        <p class="mental-tip-copy">Tomá una de las áreas que elegiste en Perfil. Con tu coach, definí una acción sencilla que puedas repetir en el entrenamiento.</p>
+        <div class="mental-tip-practice"><strong>Ideas para empezar</strong><p>Una rutina de tiro libre, controlar la pelota con ambas manos, comunicarte en defensa o buscar a una compañera para pasar.</p></div>
+      </section>
+      <section class="mental-tip-card" style="--tip-color:#4ade80">
+        <h3 class="mental-tip-title">🏀 2. La probamos de a poco</h3>
+        <p class="mental-tip-copy">Practicá la acción dentro del entrenamiento. El coach adapta las repeticiones y la dificultad a lo que necesitás ese día.</p>
+        <div class="mental-tip-practice"><strong>Tu registro</strong><p>En Mi progreso, anotá qué hiciste y algo que te salió bien. Si registrás tiros, guardá convertidos e intentados.</p></div>
+      </section>
+      <section class="mental-tip-card" style="--tip-color:#c4b5fd">
+        <h3 class="mental-tip-title">💬 3. Revisamos y elegimos el próximo paso</h3>
+        <p class="mental-tip-copy">Conversá con tu coach una vez por semana. Al terminar las dos semanas, pueden seguir con la misma práctica, ajustarla o elegir otra.</p>
+        <div class="mental-tip-practice"><strong>Para conversar</strong><p>¿Qué me ayudó? ¿Qué me costó? ¿Qué quiero probar ahora? El progreso también está en aprender y disfrutar.</p></div>
+      </section>
     </div>
   </div>
 
@@ -815,7 +712,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
   <!-- Próximo objetivo — conectado al diagnóstico -->
   <div class="card" id="prox-obj-card" style="display:none">
-    <div class="card-ttl">🔮 Próximo paso sugerido por el Coach</div>
+    <div class="card-ttl">💡 Próximo paso para conversar con el coach</div>
     <div id="prox-obj-txt" style="font-size:0.74rem;color:#94a3b8;line-height:1.65"></div>
   </div>
 
@@ -1742,8 +1639,6 @@ function showTab(id, btn, navIdx) {
 /* ─── INIT ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildCompChart();
-  buildRadar();
-  buildFortalezasAreas();
   buildNcaaBars();
   buildObjetivos();
   loadPlayerStats();   // ← carga Supabase → llama a renderPlayerStats + buildDashboard
@@ -1908,26 +1803,26 @@ const OBJETIVOS_BASE = [
     txt:'Objetivo de temporada: alcanzar al menos 10 en dos categorías entre puntos, rebotes, asistencias, recuperos y tapones en un mismo partido oficial. Los hitos muestran los resultados verificados.',
     origen:'Objetivo · Temporada 2026', color:'#facc15',
     drill:'Acordá con el coach acciones de juego que contribuyan al equipo. El logro se verifica desde las estadísticas oficiales; no garantiza un resultado.' },
-  { id:'tl70',   ttl:'Tiro Libre — Meta 70%',            estado:'activo',
-    txt:'50 TL/día con rutina invariable. El TL es la estadística más controlable y te da puntos seguros bajo presión.',
-    origen:'Coach · Área a mejorar', color:'#ef4444',
-    drill:'Protocolo: 3 dribbles → alinear pie → respirar → tirar. 50 rep/día.' },
-  { id:'pullup', ttl:'Pull-up Jumper off el dribble',    estado:'activo',
-    txt:'20 pull-up jumpers por sesión desde cada ala y desde el pico. El siguiente nivel después del catch-and-shoot.',
-    origen:'Plan Personalizado Fase 1', color:'#f97316',
-    drill:'Drill P&R: dribble de ataque → parar → tiro en suspensión. 4 series × 8.' },
+  { id:'tl70',   ttl:'Tiro libre — objetivo elegido: 70%',            estado:'activo',
+    txt:'Practicá una rutina sencilla de tiro libre y registrá convertidos e intentados. Revisá con el coach si el 70% sigue siendo una meta adecuada para vos.',
+    origen:'Objetivo propuesto · por acordar con el coach', color:'#ef4444',
+    drill:'Elegí con tu coach una secuencia cómoda antes de tirar. Las repeticiones se adaptan al entrenamiento.' },
+  { id:'pullup', ttl:'Tiro después del drible',    estado:'activo',
+    txt:'Practicá cómo detenerte con equilibrio antes de tirar, en situaciones que el coach elija para vos.',
+    origen:'Objetivo propuesto · práctica de tiro', color:'#f97316',
+    drill:'Probá primero sin oposición. Tu coach decide cuándo sumar dificultad y cuántas repeticiones hacer.' },
   { id:'def',    ttl:'Defensa Individual en Perímetro',  estado:'pendiente',
-    txt:'Deny position, lateral shuffle y help-side defense. La evaluación defensiva pesa igual que la ofensiva para el perfil NCAA.',
-    origen:'Plan Personalizado Fase 2', color:'#3b82f6',
-    drill:'3 sesiones de 15 min/semana · lateral shuffle sin cruzar los pies.' },
-  { id:'mdbil',  ttl:'Mano Débil bajo Presión',          estado:'pendiente',
-    txt:'Dribble con mano no dominante contra presión 1v1. Crítico para playoffs donde las defensas presionan cancha entera.',
-    origen:'Plan Personalizado Fase 2', color:'#06b6d4',
-    drill:'Crossover + between legs a velocidad · de línea de fondo a media cancha < 5 s.' },
-  { id:'camp',   ttl:'Camp / Selección FeBAMBA',         estado:'pendiente',
-    txt:'Con los números de esta temporada, la convocatoria a selección provincial es el objetivo natural para Cadetes 2027.',
-    origen:'Plan Personalizado Fase 3', color:'#a855f7',
-    drill:'Mantener rendimiento en ambas competencias y participar de tryouts provinciales.' },
+    txt:'Trabajá una consigna de defensa: moverte con equilibrio, mirar pelota y rival o comunicarte con tus compañeras.',
+    origen:'Objetivo propuesto · práctica por acordar', color:'#3b82f6',
+    drill:'Elegí una consigna con tu coach y probala en las situaciones del entrenamiento.' },
+  { id:'mdbil',  ttl:'Manejo con ambas manos',          estado:'pendiente',
+    txt:'Buscá controlar la pelota con ambas manos. Empezá con una dificultad cómoda y ajustala con tu coach.',
+    origen:'Objetivo propuesto · práctica por acordar', color:'#06b6d4',
+    drill:'Practicá cambios de mano con control; sumá movimiento u oposición cuando el coach lo considere.' },
+  { id:'camp',   ttl:'Camp / Selección FeBAMBA — si te interesa',         estado:'pendiente',
+    txt:'Si te interesa participar de un encuentro o camp, conversalo con tu familia y tu coach. Es una opción, no una exigencia ni una consecuencia garantizada de tus estadísticas.',
+    origen:'Interés personal · experiencia opcional', color:'#a855f7',
+    drill:'Elegir juntos una experiencia adecuada a tu edad y tus ganas, sin presión por ser seleccionada.' },
 ];
 
 let _objEstados = {}; // id → estado, persistido en Supabase player_data
@@ -1995,13 +1890,14 @@ function buildObjetivos() {
    Si no existe la clave → muestra el placeholder ("todavía no cargó evaluación").
    ══════════════════════════════════════════════════════════ */
 async function loadCoachEval() {
-  const { data } = await _supa
+  const { data, error } = await _supa
     .from('player_data')
     .select('data')
     .eq('player_id', PLAYER_ID)
     .eq('module', 'coach_eval_v1')
     .maybeSingle();
 
+  if(error){const content=document.getElementById('coach-eval-content');if(content)content.textContent='No se pudo consultar la devolución del coach. Reintentá más tarde.';return;}
   if (!data?.data) return; // sin evaluación → placeholder visible por defecto
 
   const ev = data.data;
@@ -2016,7 +1912,7 @@ async function loadCoachEval() {
   const fechaEl = document.getElementById('coach-eval-fecha');
   if (fechaEl) fechaEl.textContent = ev.fecha ? `Evaluación: ${ev.fecha}` : '—';
   // Contenido
-  const set = (id, txt) => { const el=document.getElementById(id); if(el) el.innerHTML=txt||'—'; };
+  const set = (id, txt) => { const el=document.getElementById(id); if(el){el.textContent=txt||'—';el.style.whiteSpace='pre-line';} };
   set('coach-obs-txt',  ev.obs);
   set('coach-fort-txt', ev.fortalezas);
   set('coach-area-txt', ev.areas);
@@ -3141,9 +3037,12 @@ function fisInit() {
 }
 
 </script>
-<script src="nextlevel_performance.js" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
-<script src="nextlevel_profile_extras.js"></script>
+<script src="nextlevel_coach_analysis.js?v=20261006-coach1"></script>
+<script src="nextlevel_performance.js?v=20261006-coach1" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
+<script src="nextlevel_profile_extras.js?v=20261006-coach1"></script>
 <script src="nextlevel_evolution.js"></script>
 <script src="nextlevel_plan_progress.js"></script>
+<script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>
 </body>
 </html>

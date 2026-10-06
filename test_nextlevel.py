@@ -8,6 +8,49 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_coach_workspace_saves_and_retains_failed_draft(self):
+        script=r"""
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const nodes=[];class Node{constructor(tag){this.tag=tag;this.style={};this.children=[];this.events={};this.value='';nodes.push(this);}append(...items){this.children.push(...items);}replaceChildren(...items){this.children=items;}setAttribute(){}addEventListener(k,f){this.events[k]=f;}focus(){}}
+const cache=new Map(),writes=[];let fail=false;
+const client={auth:{async getUser(){return {data:{user:{id:'test'}},error:null};}},from(table){return {pattern:'',select(){return this;},eq(){return this;},like(k,v){this.pattern=v;return this;},order(){return this;},async range(){return {data:table==='player_data' && this.pattern.startsWith('plan_progress') ? [{module:'plan_progress_v1:practice1',data:{id:'practice1',date:'2026-10-06',areas:['Tiro'],success:'bien',createdAt:'2026-10-06'}}] : [],error:null};},async maybeSingle(){return {data:{data:{obs:'original',fecha:'2026-10-05'}},error:null};},async upsert(row){writes.push(row);return {error:fail?{message:'offline'}:null};}};}};
+const context={document:{createElement:t=>new Node(t)},localStorage:{getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v)},window:{},Intl,Date,crypto:require('node:crypto').webcrypto};vm.createContext(context);vm.runInContext(fs.readFileSync('nextlevel_coach_workspace.js','utf8'),context);
+(async()=>{
+const host=new Node('root');await context.window.NextLevelCoachWorkspace.mount({host,client,playerId:'test-only',mode:'player'});
+const form=nodes.find(n=>n.tag==='form'),body=nodes.find(n=>n.tag==='textarea'),role=nodes.find(n=>n.tag==='select');role.value='family';body.value='Mi consulta';await form.events.submit({preventDefault(){}});
+assert.equal(writes[0].data.authorRole,'family');assert.equal(body.value,'');assert.ok(writes[0].module.startsWith('coach_conversation_v1:'));
+fail=true;body.value='Conservar borrador';await form.events.submit({preventDefault(){}});assert.equal(body.value,'Conservar borrador');assert.equal(JSON.parse(cache.get('nl_coach_draft_test-only_player')).body,'Conservar borrador');
+fail=false;const coachHost=new Node('root');await context.window.NextLevelCoachWorkspace.mount({host:coachHost,client,playerId:'test-only',mode:'coach'});
+const obs=nodes.findLast(n=>n.tag==='label' && n.textContent==='Observaciones').children[0];assert.equal(obs.value,'original');obs.value='Nueva devolución';obs.events.input();
+const evaluationForm=nodes.findLast(n=>n.tag==='form');await evaluationForm.events.submit({preventDefault(){}});
+assert.equal(writes.at(-1).module,'coach_eval_v1');assert.equal(writes.at(-1).data.obs,'Nueva devolución');assert.ok(writes.at(-1).data.fecha);
+})().catch(e=>{console.error(e);process.exitCode=1;});
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_coach_conversation_roles_and_history(self):
+        script="""
+const assert=require('node:assert/strict');const {makeMessage,timeline}=require('./nextlevel_coach_workspace.js');
+for(const role of ['coach','player','family']){const m=makeMessage({body:' hola ',role,name:' Mamá ',practiceId:'session1'},'new1','2026-10-06T12:00:00Z');assert.equal(m.body,'hola');assert.equal(m.authorRole,role);assert.equal(m.practiceId,'session1');}
+assert.throws(()=>makeMessage({body:'',role:'family'},'x','now'));
+assert.throws(()=>makeMessage({body:'x'.repeat(1001),role:'family'},'x','now'));
+assert.throws(()=>makeMessage({body:'hello',role:'unknown'},'x','now'));
+const rows=timeline([{id:'new1',body:'nuevo',authorRole:'family',createdAt:'2026-10-06'}],[{id:'old1',body:'coach',created_at:'2026-10-04'}],[{id:'r1',message_id:'old1',body:'respuesta',created_at:'2026-10-05'},{id:'orphan',message_id:'missing',body:'no',created_at:'2026-10-05'}]);
+assert.equal(rows.length,3);assert.equal(rows[0].authorRole,'coach');assert.equal(rows[1].parentId,'legacy-message:old1');assert.equal(rows[2].id,'new1');
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_coach_analysis_evidence_and_missing_data(self):
+        script="""
+const assert=require('node:assert/strict');const {analyze,avg}=require('./nextlevel_coach_analysis.js');
+const rows=[{fecha:'2026-01-01',pts:0,tc_att:5,t2_att:5,t3_att:0,t2_in:1,t3_in:0,tl_in:0,tl_att:1,to_perdidas:2,ast:0,faltas:1},{fecha:'2026-01-02',pts:10,tc_att:15,t2_att:15,t3_att:0,t2_in:9,t3_in:0,tl_in:3,tl_att:9,to_perdidas:0,ast:1,faltas:0}];
+const m=analyze(rows);assert.equal(m.shooting.find(r=>r.key==='t2').pct,50);assert.equal(m.shooting.find(r=>r.key==='tl').pct,30);assert.equal(m.proposals.length,4);assert.equal(m.trend.length,0);assert.ok(m.distribution.includes('20/20'));
+assert.equal(avg([{pts:null},{pts:10}],'pts'),null);assert.equal(analyze([{fecha:'2026-01-01'}]).proposals.length,0);
+const few=analyze([{fecha:'2026-01-01',tl_in:0,tl_att:2}]);assert.equal(few.proposals.length,0);
+const many=analyze(Array.from({length:10},(_,i)=>({fecha:'2026-01-'+String(i+1).padStart(2,'0'),pts:i})).reverse());assert.equal(many.trend[0].before,2);assert.equal(many.trend[0].recent,7);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
     def test_plan_progress_cloud_save_and_retry(self):
         script=r"""
 const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');

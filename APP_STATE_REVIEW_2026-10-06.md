@@ -17,7 +17,7 @@ La aplicación tiene una base funcional consistente para el seguimiento de Mía:
 - Snapshot del mapa: 27 actas auditadas, 26 reconciliadas para Mía, 256 tiros de cancha. Una acta no contiene fila individual inequívoca de Mía.
 - Snapshot del TOP: 27 actas disponibles del equipo (22 AFMB y 5 Federal). Se calcula sobre el plantel de las actas, no solamente sobre las cinco jugadoras de NextLevel.
 - Lecturas de physical_test_results, evaluations, messages y photos responden. Algunas lecturas no autenticadas devuelven cero filas: eso no permite afirmar que las tablas estén vacías para usuarios autenticados.
-- Página publicada de Mía accesible, diferente del archivo local; incluye Evolución real y no incluye el nuevo script nextlevel_plan_progress.js. No se publicó nada durante esta revisión.
+- Segunda revisión: la página publicada de Mía y sus cuatro módulos/datos comprobados coinciden con los archivos locales (perfil, progreso, extras, evolución y ambos snapshots). El nuevo autoseguimiento ya está publicado. Esta revisión no realizó la publicación.
 
 ## Estado por área
 
@@ -36,7 +36,7 @@ La aplicación tiene una base funcional consistente para el seguimiento de Mía:
 | Mensajes | Fragmentado | Existen en admin e intake de Mía; no están integrados en el perfil/Mi Plan. |
 | Estado Físico | Funcional en el perfil, integración pendiente | Mía usa physical_test_results; evaluación física v2 y admin usan evaluations. |
 | Otras jugadoras | Versiones anteriores | Martina tiene historial actualizado, pero conserva gráficos/textos anteriores; Catalina, Luba y Alma entran a dossiers premium. |
-| Publicación | Desfasada respecto del local | El nuevo autoseguimiento no está en la versión publicada consultada. |
+| Publicación de Mía | Actualizada | Segunda revisión: perfil, módulos comprobados y snapshots coinciden con el local; el progreso está publicado. |
 
 ## Hallazgos prioritarios
 
@@ -100,10 +100,19 @@ En Martina, la comparación puede mostrar una flecha con cambio “0.0” por di
 2. Limpiar el plan técnico: lenguaje formativo, fechas actuales y prácticas acordadas.
 3. Completar análisis estadístico del perfil y el circuito coach/plan/progreso/mensajes.
 4. Unificar fuentes de foto y tests físicos, y comprobar persistencia real entre dispositivos.
-5. Actualizar snapshots junto al sync y completar una publicación verificable.
+5. Actualizar snapshots junto al sync. La publicación actual de Mía fue comprobada en la segunda revisión.
 6. Extender la experiencia nueva a todas las jugadoras mediante una plantilla común.
 7. Validar exportación, recuperación de errores y recorridos completos.
 
 ## Límites de esta revisión
 
 No valida seguridad ni afirma que los accesos sean correctos. No valida sesiones reales de jugadora/coach, ni envíos de mensajes, ni nuevas escrituras reales. La disponibilidad y cobertura mencionadas corresponden a las lecturas efectuadas y archivos locales de esta fecha; no se hizo una nueva extracción completa de CABB. No se modificó código de la aplicación durante la revisión; únicamente se generó este informe.
+
+
+## Segunda revisión del 06/10/2026
+
+El repositorio estaba limpio al comenzar y el último commit era 54ae8ea. La publicación ahora coincide con el perfil local de Mía y los archivos nextlevel_plan_progress.js, nextlevel_profile_extras.js, nextlevel_evolution.js, cabb_team_2026.json y cabb_season_shots_2026.json. Se corrige el pendiente de publicación del primer informe.
+
+Se probaron seis pestañas de detalle en la página pública: navegación correcta y ningún error de ejecución observado. El nuevo progreso carga su historial desde Supabase; en esta consulta no hay prácticas visibles. TOP, mapa de 256 tiros y tarjetas de hitos cargan en producción. Las 22 pruebas vuelven a pasar. Los registros oficiales permanecen en 130 game_logs y 10 resúmenes, con fecha máxima 04/10/2026.
+
+Siguen pendientes: limpieza de fases/recruiting en Mi Plan; análisis estadístico personalizado y circuito del coach; integración de mensajes/progreso; fuentes distintas de foto y evaluaciones físicas; actualización automática de snapshots; acta de Lanús 20–0 frente a 84 puntos individuales; experiencia común para todas las jugadoras; escritura real/recarga entre dispositivos y PDF. No se ejecutaron escrituras reales, nuevos ingresos autenticados ni validaciones de seguridad.

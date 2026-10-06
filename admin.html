@@ -179,8 +179,9 @@ select option{background:#1a2537}
       <!-- Se genera dinámicamente -->
     </div>
 
+    <div id="coach-player-workspace" style="margin:16px 0"></div>
     <!-- Redactar mensaje -->
-    <div class="msg-compose">
+    <div class="msg-compose" id="legacy-msg-compose">
       <div class="card-title" style="margin-bottom:10px">✍️ Nuevo mensaje</div>
       <textarea id="msg-body-input" placeholder="Escribí tu comentario, feedback o instrucción para la jugadora…"></textarea>
       <div class="msg-compose-footer">
@@ -195,7 +196,7 @@ select option{background:#1a2537}
     </div>
 
     <!-- Lista de mensajes -->
-    <div id="msg-list"></div>
+    <details id="legacy-message-tools"><summary id="legacy-message-summary" style="cursor:pointer;color:#94a3b8;font-size:.72rem;margin-top:14px">Administrar mensajes del historial anterior</summary><div id="msg-list"></div></details>
 
   </div>
 
@@ -592,6 +593,13 @@ function selectMsgPlayer(playerId){
     b.classList.toggle('on', b.dataset.pid === playerId);
   });
   renderMsgList();
+  const workspace=document.getElementById('coach-player-workspace');
+  const useNew=playerId==='11111111-0000-0000-0000-000000000014';
+  document.getElementById('legacy-msg-compose').hidden=useNew;
+  document.getElementById('legacy-message-tools').open=!useNew;
+  document.getElementById('legacy-message-summary').hidden=!useNew;
+  workspace.hidden=!useNew;
+  if(useNew && window.NextLevelCoachWorkspace)NextLevelCoachWorkspace.mount({host:workspace,client:supa,playerId,mode:'coach'});
 }
 
 function renderMsgList(){
@@ -600,7 +608,7 @@ function renderMsgList(){
   if(!msgs.length){
     el.innerHTML = `<div class="empty"><div class="empty-icon">💬</div>
       Sin mensajes aún para esta jugadora.<br>
-      <span style="font-size:0.75rem;color:#334155">Los mensajes aparecen en su pantalla de intake.</span>
+      <span style="font-size:0.75rem;color:#334155">Los mensajes anteriores aparecen también en su pantalla de intake.</span>
     </div>`;
     return;
   }
@@ -611,7 +619,7 @@ function renderMsgList(){
 
     const repliesHtml = replies.length ? `
       <div style="background:rgba(59,130,246,0.04);border-top:1px solid rgba(59,130,246,0.1);padding:8px 12px;margin-top:8px;border-radius:0 0 8px 8px">
-        <div style="font-size:0.6rem;font-weight:700;color:#3b82f6;letter-spacing:1px;margin-bottom:6px">RESPUESTAS DE LA JUGADORA</div>
+        <div style="font-size:0.6rem;font-weight:700;color:#3b82f6;letter-spacing:1px;margin-bottom:6px">RESPUESTAS DE LA JUGADORA / FAMILIA</div>
         ${replies.map(r => `
           <div style="display:flex;gap:8px;margin-bottom:6px;align-items:flex-start">
             <div style="width:20px;height:20px;border-radius:50%;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:900;color:#93c5fd;flex-shrink:0">14</div>
@@ -823,5 +831,7 @@ function fmtDate(iso){
 
 init();
 </script>
+<script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{if(msgCurrentPlayer)selectMsgPlayer(msgCurrentPlayer);});</script>
 </body>
 </html>

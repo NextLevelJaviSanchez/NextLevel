@@ -215,5 +215,6 @@
 
   }
   if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt,teamRanking,heatColor,zoneName};
+  if(typeof window!=='undefined')window.NextLevelTeamRanking=teamRanking;
   if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',load);
 })();

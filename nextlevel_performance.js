@@ -23,6 +23,7 @@
     return el;
   }
   function renderCoach(games, seasons) {
+    if(typeof window!=='undefined' && window.NextLevelCoachAnalysis)window.NextLevelCoachAnalysis.render(games,seasons);
     const targets=document.querySelectorAll('[data-coach-analysis]');
     if (!targets.length) return;
     const groups=[...new Set(games.map(g=>g.torneo).filter(Boolean))];
@@ -136,6 +137,7 @@
       select.addEventListener('change',render); render();
     } catch (error) {
       document.querySelectorAll('[data-coach-analysis]').forEach(el=>el.textContent='No se pudo cargar el análisis oficial. Reintentá más tarde.');
+      const profile=document.getElementById('coach-stat-profile');if(profile)profile.textContent='No se pudo cargar el análisis oficial. Reintentá más tarde.';
       status.textContent = 'No se pudo cargar el historial oficial. Reintentá más tarde.';
       console.warn('Rendimiento oficial:',error.message);
     }
