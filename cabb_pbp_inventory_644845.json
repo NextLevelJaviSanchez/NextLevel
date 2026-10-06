@@ -159,5 +159,21 @@
       "informacion_adicional": ""
     }
   ],
-  "coordinates_status": "Coordenadas no ficticias presentes; escala y orientación visual pendientes de validar."
+  "coordinates_status": "Referencia visual calibrada exclusivamente para partido 644845 contra captura CABB aportada por usuario; no equivale a coordenadas métricas ni contrato global de API.",
+  "visual_reference": {
+    "viewbox": [
+      35,
+      34,
+      730,
+      405
+    ],
+    "screen_court_pixels": [
+      32,
+      589,
+      705,
+      963
+    ],
+    "reference": "Captura CABB aportada por usuario; seis puntos coinciden visualmente",
+    "scope": "644845 únicamente"
+  }
 }

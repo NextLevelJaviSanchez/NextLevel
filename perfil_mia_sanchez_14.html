@@ -325,7 +325,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <div class="hero-num">14</div>
+      <div class="hero-num" style="position:relative;overflow:hidden"><span>14</span><img id="pf-hero-foto" alt="Foto de Mía" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
       <div class="hero-info">
         <div class="hero-name">Mía G. <span>Sánchez</span></div>
         <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026</div>
@@ -363,6 +363,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- TAB BAR -->
 <div class="tab-bar">
+  <div style="position:sticky;left:0;z-index:3;background:var(--bg2);padding:5px;flex-shrink:0"><img id="pf-sticky-foto" alt="Foto de Mía" style="display:none;width:38px;height:38px;border-radius:10px;object-fit:cover"></div>
+  <button class="tab-btn" onclick="showTab('mental',this)">🧘 Mental</button>
   <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Inicio</button>
   <button class="tab-btn"    onclick="showTab('rend',this)">📊 Rendimiento</button>
   <button class="tab-btn"    onclick="showTab('coach',this)">🧠 Análisis Coach</button>
@@ -532,54 +534,20 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl" style="justify-content:space-between">
       🏀 Mapa de Tiro — Tiros Individuales
-      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Escala del mapa pendiente</span>
+      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Dato CABB · Obras 04/10/2026</span>
     </div>
     <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5;background:rgba(250,204,21,0.04);border:1px solid rgba(250,204,21,0.1);border-radius:7px;padding:6px 10px">
-      📊 El play-by-play CABB incluye posiciones de tiros reales. Su escala y orientación todavía requieren validación para representarlas correctamente en esta cancha. Los tiros por tipo se muestran en el historial.
+      Mía · Berazategui 46–65 Obras · seis tiros de cancha: 2 convertidos y 4 fallados. Posiciones contrastadas visualmente con la captura CABB. Esta muestra corresponde a un solo partido; no incluye tiros libres ni representa toda la temporada.
     </div>
     <!-- Media cancha: aspect-ratio 47/50 (FIBA: 15m ancho / 14m profundidad aprox) -->
-    <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:47/50;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
-      <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 470 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Fondo -->
-        <rect width="470" height="500" fill="#07111e"/>
-        <!-- Línea de fondo (baseline) -->
-        <line x1="0" y1="498" x2="470" y2="498" stroke="rgba(249,115,22,0.35)" stroke-width="2"/>
-        <!-- Líneas laterales -->
-        <line x1="1" y1="0" x2="1" y2="500" stroke="rgba(249,115,22,0.35)" stroke-width="2"/>
-        <line x1="469" y1="0" x2="469" y2="500" stroke="rgba(249,115,22,0.35)" stroke-width="2"/>
-        <!-- Línea de media cancha (arriba) -->
-        <line x1="0" y1="1" x2="470" y2="1" stroke="rgba(249,115,22,0.25)" stroke-width="1.5" stroke-dasharray="6,4"/>
-
-        <!-- ZONA RESTRINGIDA (pintura) — centrada, 4.9m × 5.8m prop -->
-        <rect x="165" y="302" width="140" height="196" fill="rgba(249,115,22,0.05)" stroke="rgba(249,115,22,0.3)" stroke-width="1.5"/>
-        <!-- Línea de tiro libre -->
-        <line x1="165" y1="302" x2="305" y2="302" stroke="rgba(249,115,22,0.4)" stroke-width="1.5"/>
-        <!-- Semicírculo tiro libre (arriba de la línea) -->
-        <path d="M165,302 A70,70 0 0,1 305,302" stroke="rgba(249,115,22,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="5,4"/>
-        <!-- Aro -->
-        <circle cx="235" cy="460" r="14" stroke="rgba(249,115,22,0.6)" stroke-width="2" fill="none"/>
-        <circle cx="235" cy="460" r="3" fill="rgba(249,115,22,0.5)"/>
-        <!-- Tablero -->
-        <rect x="190" y="482" width="90" height="8" rx="2" stroke="rgba(249,115,22,0.35)" stroke-width="1.5" fill="none"/>
-
-        <!-- ZONA RESTRINGIDA SEMICÍRCULO (no charge) -->
-        <path d="M212,460 A23,23 0 0,1 258,460" stroke="rgba(249,115,22,0.25)" stroke-width="1" fill="none"/>
-
-        <!-- LÍNEA DE 3 PUNTOS FIBA -->
-        <!-- Esquinas: líneas rectas paralelas hasta 0.9m de la línea lateral -->
-        <line x1="28" y1="498" x2="28" y2="348" stroke="rgba(249,115,22,0.55)" stroke-width="2"/>
-        <line x1="442" y1="498" x2="442" y2="348" stroke="rgba(249,115,22,0.55)" stroke-width="2"/>
-        <!-- Arco central (radio 6.75m prop, desde el aro) -->
-        <path d="M28,348 A213,213 0 0,1 442,348" stroke="rgba(249,115,22,0.55)" stroke-width="2" fill="none"/>
-
-        <!-- Zona restricción (no-charge arc) small -->
-        <!-- Etiquetas de zona -->
-        <text x="235" y="430" text-anchor="middle" fill="rgba(255,255,255,0.12)" font-size="11" font-weight="700" letter-spacing="1" font-family="system-ui">ZONA</text>
-        <text x="100" y="260" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="10" font-weight="700" letter-spacing="1" font-family="system-ui">MEDIA</text>
-        <text x="100" y="272" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="10" font-weight="700" letter-spacing="1" font-family="system-ui">DIST.</text>
-        <text x="370" y="260" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="10" font-weight="700" letter-spacing="1" font-family="system-ui">MEDIA</text>
-        <text x="370" y="272" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-size="10" font-weight="700" letter-spacing="1" font-family="system-ui">DIST.</text>
-        <text x="235" y="120" text-anchor="middle" fill="rgba(255,255,255,0.08)" font-size="10" font-weight="700" letter-spacing="1" font-family="system-ui">TRIPLE</text>
+    <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:730/405;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
+      <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="35 34 730 405" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="35" y="34" width="730" height="405" fill="#07111e" stroke="#64748b"/>
+        <path d="M400 34V439 M35 170H190V303H35 M765 170H610V303H765" stroke="#64748b"/>
+        <circle cx="400" cy="236" r="50" stroke="#64748b"/>
+        <circle cx="78" cy="236" r="8" stroke="#f97316"/><circle cx="722" cy="236" r="8" stroke="#f97316"/>
+        <path d="M63 207V265 M737 207V265" stroke="#64748b"/>
+        <text x="400" y="60" text-anchor="middle" fill="#94a3b8" font-size="13">Orientación de la captura CABB · referencia visual</text>
       </svg>
     </div>
     <!-- Leyenda -->
@@ -628,6 +596,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- ══════════════════════════════════════════
      TAB 2 — ANÁLISIS COACH
 ══════════════════════════════════════════ -->
+<div id="tab-mental" class="tab-pane">
+  <div class="card"><div class="card-ttl">🧘 Mental — tu seguimiento</div>
+    <p style="font-size:.75rem;color:var(--muted)">Tus respuestas del cuestionario inicial · propuestas de práctica para conversar con el coach.</p>
+    <div id="mental-profile-content">Cargando tus respuestas…</div>
+    <a href="plan_mejora_mia_sanchez_14_2026.html">Abrir el plan mental completo</a>
+  </div>
+</div>
+
 <div id="tab-coach" class="tab-pane">
 
   <!-- SEPARADOR: Análisis NextLevel -->
@@ -1303,14 +1279,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
   <!-- ── DATOS FIJOS (solo lectura) ──────────────────────────── -->
   <div class="card">
-    <div class="card-ttl">🔒 Datos Oficiales <span style="font-size:0.5rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(solo lectura — gestionados por el club)</span></div>
+    <div class="card-ttl">🔒 Datos del perfil y competencia <span style="font-size:0.5rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(datos del club · partidos desde CABB)</span></div>
     <div class="profile-grid">
       <div class="profile-field"><div class="pf-lbl">Nombre completo</div><div class="pf-val">Mía G. Sánchez</div></div>
       <div class="profile-field"><div class="pf-lbl">Dorsal</div><div class="pf-val">#14</div></div>
       <div class="profile-field"><div class="pf-lbl">Posición</div><div class="pf-val">Escolta / Alero</div></div>
       <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
       <div class="profile-field"><div class="pf-lbl">Competencias 2026</div><div class="pf-val">AFMB + Federal CABB</div></div>
-      <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val">25 PJ totales</div></div>
+      <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val"><span data-official-metric="pj">—</span> PJ totales</div></div>
     </div>
   </div>
 
@@ -1365,7 +1341,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl">📏 Antropometría</div>
     <div style="font-size:0.65rem;color:var(--muted);margin-bottom:12px;line-height:1.5">
-      Actualizá tus medidas después de cada evaluación física. El coach puede ver los cambios en tiempo real.
+      Actualizá tus medidas después de cada evaluación física. Las medidas se guardan en tu perfil; los resultados de tests se registran en Estado Físico.
     </div>
     <div class="g2" style="margin-bottom:10px">
       <div>
@@ -1436,9 +1412,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
   <!-- ── OBJETIVO Y ÁREA DE TRABAJO ──────────────────────────── -->
   <div class="card">
-    <div class="card-ttl">🎯 Mi Objetivo esta Temporada</div>
+    <div class="card-ttl">🌟 Mi sueño</div>
     <div style="margin-bottom:12px">
-      <div class="pf-lbl" style="margin-bottom:5px">¿Cuál es tu objetivo principal?</div>
+      <div class="pf-lbl" style="margin-bottom:5px">¿Qué soñás alcanzar con el básquet?</div>
+      <p style="font-size:.68rem;color:var(--muted)">Tu aspiración a largo plazo. Las metas de esta temporada se siguen en Mi Plan.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px" id="pf-obj-chips">
         <div class="pf-chip" onclick="pfSelectObj(this,'Liga Nacional')" data-val="Liga Nacional">🏀 Liga Nacional</div>
         <div class="pf-chip" onclick="pfSelectObj(this,'Beca NCAA/NAIA')" data-val="Beca NCAA/NAIA">🎓 Beca NCAA/NAIA</div>
@@ -1447,8 +1424,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="pf-chip" onclick="pfSelectObj(this,'Disfrutar el juego')" data-val="Disfrutar el juego" style="grid-column:span 2">❤️ Disfrutar el juego</div>
       </div>
     </div>
+  </div>
+  <div class="card">
+    <div class="card-ttl">📈 Mis áreas a mejorar</div>
     <div style="margin-bottom:12px">
-      <div class="pf-lbl" style="margin-bottom:5px">Área que más querés mejorar</div>
+      <div class="pf-lbl" style="margin-bottom:5px">Áreas que querés mejorar · podés elegir varias</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px" id="pf-area-chips">
         <div class="pf-chip" onclick="pfSelectArea(this,'Tiro exterior')" data-val="Tiro exterior">🏹 Tiro exterior</div>
         <div class="pf-chip" onclick="pfSelectArea(this,'Defensa')" data-val="Defensa">🛡️ Defensa</div>
@@ -1474,7 +1454,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div>
         <div style="font-size:0.56rem;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Player Profile — Recruiting Portfolio · Season 2026</div>
         <div style="font-size:1.15rem;font-weight:900;letter-spacing:-0.5px">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
-        <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">Shooting Guard / SF · DOB: 2013 · Argentina 🇦🇷</div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:2px">Shooting Guard / SF · <span id="cv-dob">Fecha de nacimiento pendiente</span> · Argentina 🇦🇷</div>
       </div>
       <div style="background:linear-gradient(135deg,#c2410c,#f97316);border-radius:10px;padding:7px 10px;text-align:center;flex-shrink:0">
         <div style="font-size:0.45rem;font-weight:800;text-transform:uppercase;color:#fed7aa">Season</div>
@@ -1487,9 +1467,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="cv-mpg">—</div><div class="sc-lbl">MPP 🏀</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)" id="cv-pj">—</div><div class="sc-lbl">PJ 🏀</div></div>
     </div>
-    <div class="ncaa-quote" id="cv-quote">
-      <strong>"Elite scorer at metropolitan level — PPP AFMB / GP in AFMB) and competitive at national level (PPP Federal CABB)."</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Trajectory: 12-14 PPP in Cadetes 2027-2028.
-    </div>
+    <div class="ncaa-quote" id="cv-quote">Resumen de participación y producción oficial por torneo. Evaluación técnica del coach pendiente.</div>
     <div style="font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">NextLevel Skill Assessment 🧑‍🏫</div>
     <div id="ncaaRadarBars"></div>
     <button class="btn-cv" onclick="exportCV()" style="margin-top:14px">📄 Exportar Mi Currículum (PDF)</button>
@@ -1841,9 +1819,9 @@ function renderPlayerStats() {
   const cvQ = document.getElementById('cv-quote');
   if (cvQ && s.afmb.ppg) {
     const fedPart = s.fed.ppg
-      ? ` Competitive at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB).`
+      ? ` Recorded participation at national level (${s.fed.ppg} PPP / ${s.fed.pj} GP in La Liga Federal CABB).`
       : '';
-    cvQ.innerHTML = `<strong>"Scoring average at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB).${fedPart}"</strong> Two-dimensional scoring profile: catch-and-shoot + drive-and-finish. 🔮 Projected trajectory: 12-14 PPP in Cadetes 2027-2028.`;
+    cvQ.innerHTML = `<strong>"Scoring average at metropolitan level (${s.afmb.ppg} PPP / ${s.afmb.pj} GP in AFMB).${fedPart}"</strong> Technical assessment pending coach review.`;
   }
 
   // Hitos con valores dinámicos
@@ -2596,7 +2574,14 @@ const PF_BUCKET     = 'player-photos';          // bucket en Supabase Storage
 const PF_PHOTO_PATH = 'mia14/profile.jpg';      // path fijo por jugadora
 
 /* ── Guardar datos de texto en localStorage + Supabase player_data ── */
+let _pfSaveTimer;
+let _pfSaveQueue = Promise.resolve();
+let _pfEditRevision = 0;
 function pfSave() {
+  _pfEditRevision++;
+  const revision = _pfEditRevision;
+  let previous = {};
+  try { previous = JSON.parse(localStorage.getItem(PF_KEY) || '{}'); } catch(e) {}
   const data = {
     fnac:       document.getElementById('pf-fnac')?.value    || '',
     mano:       document.getElementById('pf-mano')?.value    || '',
@@ -2608,23 +2593,30 @@ function pfSave() {
     alcance:    document.getElementById('pf-alcance')?.value || '',
     calzado:    document.getElementById('pf-calzado')?.value || '',
     nota:       document.getElementById('pf-nota')?.value    || '',
-    obj:        _pfObj  || '',
-    area:       _pfArea || '',
-    antroFecha: new Date().toLocaleDateString('es-AR'),
+    dream:      _pfObj || '',
+    obj:        _pfObj || '', // compatibilidad con el perfil guardado anteriormente
+    areas:      [..._pfAreas],
+    area:       _pfAreas.join('|'),
+    antroFecha: previous.antroFecha || '',
   };
-  // localStorage — acceso inmediato offline
-  try { localStorage.setItem(PF_KEY, JSON.stringify(data)); } catch(e) {}
-  // Supabase — sincronización entre dispositivos (texto, sin foto)
-  _supa.from('player_data')
-    .upsert({ player_id: FIS_PLAYER_ID, key: 'perfil_v1', value: data }, { onConflict: 'player_id,key' })
-    .then(({ error }) => { if (error) console.warn('pfSave supa:', error.message); });
-  // Badge "Guardado"
-  const badge = document.getElementById('pf-saved-badge');
-  if (badge) {
-    badge.style.display = 'inline';
-    clearTimeout(badge._t);
-    badge._t = setTimeout(() => badge.style.display = 'none', 2000);
-  }
+  const measures=['altura','peso','enverg','alcance'];
+  if(measures.some(k=>data[k] !== (previous[k] || '')))data.antroFecha=new Date().toLocaleDateString('es-AR');
+  const badge=document.getElementById('pf-saved-badge');
+  const show=message=>{if(badge){badge.textContent=message;badge.style.display='inline';}};
+  const valid=[...document.querySelectorAll('#tab-perfil input')].every(input=>input.type==='file' || input.checkValidity());
+  if(!valid){clearTimeout(_pfSaveTimer);show('Revisá los campos ingresados');return;}
+  try { localStorage.setItem(PF_KEY, JSON.stringify({...previous,...data})); } catch(e) {show('No se pudo guardar en este dispositivo');}
+  show('Guardado local · sincronizando…');
+  clearTimeout(_pfSaveTimer);
+  _pfSaveTimer=setTimeout(()=>{
+    _pfSaveQueue=_pfSaveQueue.catch(()=>{}).then(async()=>{
+      try{
+        const {error}=await _supa.from('player_data').upsert({player_id:FIS_PLAYER_ID,key:'perfil_v1',value:data},{onConflict:'player_id,key'});
+        if(error)throw error;
+        if(revision===_pfEditRevision)show('✅ Sincronizado');
+      }catch(e){if(revision===_pfEditRevision)show('Guardado local · pendiente de sincronizar');}
+    });
+  },500);
 }
 
 /* ── FOTO — sube a Supabase Storage, disponible en cualquier dispositivo ── */
@@ -2709,6 +2701,8 @@ function pfApplyFoto(src) {
     img.style.display = 'block';
     txt.style.display = 'none';
   }
+  const stickyImg = document.getElementById('pf-sticky-foto');
+  if (stickyImg) { stickyImg.src = src; stickyImg.style.display = 'block'; }
   const heroImg = document.getElementById('pf-hero-foto');
   if (heroImg) { heroImg.src = src; heroImg.style.display = 'block'; }
 }
@@ -2734,23 +2728,17 @@ function pfCalcAntro() {
   const ratioEl = document.getElementById('pf-ratio-env');
   if (ratioEl) ratioEl.textContent = (alt && env) ? ((env/alt)*100).toFixed(1) + '%' : '—';
 
-  // Perfil físico
+  // La posición requiere evaluación técnica; no se infiere de la altura.
   const tallaEl = document.getElementById('pf-talla-jug');
-  if (tallaEl && alt) {
-    const ratio = env ? env - alt : null;
-    let perfil = alt >= 175 ? 'Poste / Ala-Poste' : alt >= 165 ? 'Alero / Escolta' : 'Base / Escolta';
-    if (ratio && ratio > 5) perfil += ' +';
-    tallaEl.textContent = perfil;
-  }
+  if(tallaEl)tallaEl.textContent='Coach: pendiente';
+  const fechaEl=document.getElementById('pf-antro-fecha');
+  try {const saved=JSON.parse(localStorage.getItem(PF_KEY) || '{}');if(fechaEl)fechaEl.textContent=saved.antroFecha || '—';}catch(e){}
 
-  // Fecha
-  const fechaEl = document.getElementById('pf-antro-fecha');
-  if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-AR');
 }
 
 /* ── Chips de objetivo y área ── */
 let _pfObj  = '';
-let _pfArea = '';
+let _pfAreas = [];
 
 function pfSelectObj(el, val) {
   _pfObj = val;
@@ -2760,9 +2748,9 @@ function pfSelectObj(el, val) {
 }
 
 function pfSelectArea(el, val) {
-  _pfArea = val;
-  document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+  _pfAreas = _pfAreas.includes(val) ? _pfAreas.filter(area => area !== val) : [..._pfAreas, val];
+  document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c =>
+    c.classList.toggle('active', _pfAreas.includes(c.dataset.val)));
   pfSave();
 }
 
@@ -2771,6 +2759,8 @@ function pfApplyData(d) {
   if (!d) return;
   const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
   set('pf-fnac',    d.fnac);
+  const dob=document.getElementById('cv-dob');
+  if(dob)dob.textContent=d.fnac ? 'Nacimiento: '+d.fnac : 'Fecha de nacimiento pendiente';
   set('pf-mano',    d.mano);
   set('pf-email',   d.email);
   set('pf-wsp',     d.wsp);
@@ -2780,16 +2770,12 @@ function pfApplyData(d) {
   set('pf-alcance', d.alcance);
   set('pf-calzado', d.calzado);
   set('pf-nota',    d.nota);
-  if (d.obj) {
-    _pfObj = d.obj;
-    document.querySelectorAll('#pf-obj-chips .pf-chip').forEach(c =>
-      c.classList.toggle('active', c.dataset.val === d.obj));
-  }
-  if (d.area) {
-    _pfArea = d.area;
-    document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c =>
-      c.classList.toggle('active', c.dataset.val === d.area));
-  }
+  _pfObj = d.dream ?? d.obj ?? '';
+  document.querySelectorAll('#pf-obj-chips .pf-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.val === _pfObj));
+  _pfAreas = [...new Set(Array.isArray(d.areas) ? d.areas : String(d.area || '').split('|').filter(Boolean))];
+  document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c =>
+    c.classList.toggle('active', _pfAreas.includes(c.dataset.val)));
   const fechaEl = document.getElementById('pf-antro-fecha');
   if (fechaEl && d.antroFecha) fechaEl.textContent = d.antroFecha;
   pfCalcAntro();
@@ -2820,6 +2806,7 @@ async function pfLoadFotoFromCloud() {
 
 /* ── Cargar estado guardado al abrir el tab ── */
 async function pfLoadState() {
+  const revisionAtLoad=_pfEditRevision;
   // Prioridad: Supabase (sincronizado) → localStorage (offline/cache)
   const { data: rows } = await _supa
     .from('player_data')
@@ -2830,8 +2817,9 @@ async function pfLoadState() {
 
   if (rows?.value) {
     // Dato en la nube — aplicar y sincronizar localStorage
+    if(revisionAtLoad!==_pfEditRevision)return;
     pfApplyData(rows.value);
-    try { localStorage.setItem(PF_KEY, JSON.stringify(rows.value)); } catch(e) {}
+    try { localStorage.setItem(PF_KEY, JSON.stringify({...JSON.parse(localStorage.getItem(PF_KEY) || '{}'),...rows.value})); } catch(e) {}
   } else {
     // Sin dato en la nube — intentar localStorage
     try {
@@ -3424,5 +3412,6 @@ function fisInit() {
 
 </script>
 <script src="nextlevel_performance.js" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
+<script src="nextlevel_profile_extras.js"></script>
 </body>
 </html>
