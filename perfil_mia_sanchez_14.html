@@ -1275,6 +1275,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
                    font-weight:700;cursor:pointer;font-family:inherit">
       📷 Cambiar foto de perfil
     </button>
+    <p id="pf-photo-status" style="font-size:.68rem;color:var(--muted)">La foto se sincroniza entre dispositivos cuando Supabase confirma el guardado.</p>
   </div>
 
   <!-- ── DATOS FIJOS (solo lectura) ──────────────────────────── -->
@@ -1447,6 +1448,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
                 onfocus="this.style.borderColor='var(--ac)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
     </div>
   </div>
+
+  <div class="card"><div class="card-ttl">🧘 Mis áreas mentales a trabajar</div><p style="font-size:.72rem;color:var(--muted)">Podés seleccionar varias. Tu plan se actualiza en la pestaña Mental.</p><div id="pf-mental-chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div id="pf-mental-plan"></div></div>
 
   <!-- ── MI CURRÍCULUM (PDF export) ──────────────────────────── -->
   <div class="ncaa-box">
@@ -2063,11 +2066,11 @@ let _objEstados = {}; // id → estado, persistido en Supabase player_data
 async function loadObjEstados() {
   const { data } = await _supa
     .from('player_data')
-    .select('value')
+    .select('data')
     .eq('player_id', PLAYER_ID)
-    .eq('key', 'obj_estados_v1')
+    .eq('module', 'obj_estados_v1')
     .maybeSingle();
-  if (data?.value) _objEstados = data.value;
+  if (data?.data) _objEstados = data.data;
   buildObjetivos();
 }
 
@@ -2079,8 +2082,8 @@ async function setObjEstado(id, nuevoEstado) {
   if (doa) buildDashObjActivo(doa);
   // Persistir
   await _supa.from('player_data').upsert(
-    { player_id: PLAYER_ID, key: 'obj_estados_v1', value: _objEstados },
-    { onConflict: 'player_id,key' }
+    { player_id: PLAYER_ID, module: 'obj_estados_v1', data: _objEstados },
+    { onConflict: 'player_id,module' }
   );
 }
 
@@ -2125,14 +2128,14 @@ function buildObjetivos() {
 async function loadCoachEval() {
   const { data } = await _supa
     .from('player_data')
-    .select('value')
+    .select('data')
     .eq('player_id', PLAYER_ID)
-    .eq('key', 'coach_eval_v1')
+    .eq('module', 'coach_eval_v1')
     .maybeSingle();
 
-  if (!data?.value) return; // sin evaluación → placeholder visible por defecto
+  if (!data?.data) return; // sin evaluación → placeholder visible por defecto
 
-  const ev = data.value;
+  const ev = data.data;
   // Ocultar placeholder, mostrar panel
   const placeholder = document.querySelector('#coach-eval-content > div');
   if (placeholder) placeholder.style.display = 'none';
@@ -2595,6 +2598,7 @@ function pfSave() {
     nota:       document.getElementById('pf-nota')?.value    || '',
     dream:      _pfObj || '',
     obj:        _pfObj || '', // compatibilidad con el perfil guardado anteriormente
+    mentalAreas: [..._pfMentalAreas],
     areas:      [..._pfAreas],
     area:       _pfAreas.join('|'),
     antroFecha: previous.antroFecha || '',
@@ -2611,7 +2615,7 @@ function pfSave() {
   _pfSaveTimer=setTimeout(()=>{
     _pfSaveQueue=_pfSaveQueue.catch(()=>{}).then(async()=>{
       try{
-        const {error}=await _supa.from('player_data').upsert({player_id:FIS_PLAYER_ID,key:'perfil_v1',value:data},{onConflict:'player_id,key'});
+        const {error}=await _supa.from('player_data').upsert({player_id:FIS_PLAYER_ID,module:'perfil_v1',data:data},{onConflict:'player_id,module'});
         if(error)throw error;
         if(revision===_pfEditRevision)show('✅ Sincronizado');
       }catch(e){if(revision===_pfEditRevision)show('Guardado local · pendiente de sincronizar');}
@@ -2625,6 +2629,7 @@ let _pfFotoB64 = ''; // cache local solo para mostrar antes de subir
 function pfLoadFoto(input) {
   const file = input.files?.[0];
   if (!file) return;
+  if(!file.type.startsWith('image/')){alert('Elegí un archivo de imagen.');return;}
   if (file.size > 5 * 1024 * 1024) {
     alert('La imagen es demasiado grande. Usá una foto de hasta 5 MB.');
     input.value = '';
@@ -2642,54 +2647,34 @@ function pfLoadFoto(input) {
 }
 
 async function pfUploadFoto(file) {
-  const btn = document.getElementById('pf-foto-btn');
-  if (btn) { btn.textContent = '⏳ Subiendo foto…'; btn.disabled = true; }
-
-  // Convertir a WebP/JPG comprimido si el browser lo soporta
-  let uploadFile = file;
-  try {
-    const bmp   = await createImageBitmap(file);
-    const canvas = document.createElement('canvas');
-    const MAX    = 800;
-    const scale  = Math.min(1, MAX / Math.max(bmp.width, bmp.height));
-    canvas.width  = Math.round(bmp.width  * scale);
-    canvas.height = Math.round(bmp.height * scale);
-    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.82));
-    if (blob) uploadFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
-  } catch(e) { /* usa el archivo original si falla la compresión */ }
-
-  const { error } = await _supa.storage
-    .from(PF_BUCKET)
-    .upload(PF_PHOTO_PATH, uploadFile, { upsert: true, contentType: 'image/jpeg' });
-
-  if (btn) { btn.textContent = '📷 Cambiar foto de perfil'; btn.disabled = false; }
-
-  if (error) {
-    console.warn('pfUploadFoto:', error.message);
-    // Si falla la subida, al menos guarda base64 en localStorage como fallback
-    try {
-      const d = JSON.parse(localStorage.getItem(PF_KEY) || '{}');
-      d.foto = _pfFotoB64;
-      localStorage.setItem(PF_KEY, JSON.stringify(d));
-    } catch(e2) {}
+  const btn=document.getElementById('pf-foto-btn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Sincronizando foto…';}
+  try{
+    let image=file;
+    try{
+      const bmp=await createImageBitmap(file),canvas=document.createElement('canvas');
+      const scale=Math.min(1,640/Math.max(bmp.width,bmp.height));
+      canvas.width=Math.round(bmp.width*scale);canvas.height=Math.round(bmp.height*scale);
+      canvas.getContext('2d').drawImage(bmp,0,0,canvas.width,canvas.height);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.8));
+      if(blob)image=blob;
+      bmp.close();
+    }catch(e){}
+    const src=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(image);});
+    if(src.length>750000)throw Error('La foto no pudo comprimirse. Elegí una imagen más pequeña.');
+    _pfFotoB64=src;pfApplyFoto(src);
+    const cache=JSON.parse(localStorage.getItem(PF_KEY) || '{}');cache.foto=src;localStorage.setItem(PF_KEY,JSON.stringify(cache));
+    // La base existente usa module/data; no depende de un bucket inexistente.
+    const {error}=await _supa.from('player_data').upsert({player_id:FIS_PLAYER_ID,module:'foto_url',data:src},{onConflict:'player_id,module'});
+    if(error)throw error;
+    if(btn)btn.textContent='✅ Foto sincronizada · cambiar';
+  }catch(e){
+    if(btn)btn.textContent='⚠️ Foto local · reintentar subida';
+    const status=document.getElementById('pf-photo-status');
+    if(status)status.textContent='No se pudo sincronizar la foto: '+(e.message || 'Revisá la conexión.');
     return;
-  }
-
-  // Guardar URL pública en player_data para que otros dispositivos la encuentren
-  const { data: urlData } = _supa.storage.from(PF_BUCKET).getPublicUrl(PF_PHOTO_PATH);
-  const publicUrl = urlData?.publicUrl + '?t=' + Date.now(); // cache-bust
-  _supa.from('player_data')
-    .upsert({ player_id: FIS_PLAYER_ID, key: 'foto_url', value: publicUrl }, { onConflict: 'player_id,key' })
-    .then(() => {});
-
-  // Actualizar localStorage con la URL (no el base64 pesado)
-  try {
-    const d = JSON.parse(localStorage.getItem(PF_KEY) || '{}');
-    d.foto_url = publicUrl;
-    delete d.foto; // liberar espacio — ya no necesitamos el base64
-    localStorage.setItem(PF_KEY, JSON.stringify(d));
-  } catch(e) {}
+  }finally{if(btn)btn.disabled=false;}
+  const status=document.getElementById('pf-photo-status');if(status)status.textContent='Foto guardada en Supabase y disponible en otros dispositivos.';
 }
 
 function pfApplyFoto(src) {
@@ -2739,6 +2724,8 @@ function pfCalcAntro() {
 /* ── Chips de objetivo y área ── */
 let _pfObj  = '';
 let _pfAreas = [];
+let _pfMentalAreas = [];
+let _pfMentalLoaded = false;
 
 function pfSelectObj(el, val) {
   _pfObj = val;
@@ -2776,6 +2763,8 @@ function pfApplyData(d) {
   _pfAreas = [...new Set(Array.isArray(d.areas) ? d.areas : String(d.area || '').split('|').filter(Boolean))];
   document.querySelectorAll('#pf-area-chips .pf-chip').forEach(c =>
     c.classList.toggle('active', _pfAreas.includes(c.dataset.val)));
+  if(Array.isArray(d.mentalAreas)){_pfMentalAreas=[...new Set(d.mentalAreas)];_pfMentalLoaded=true;}
+  if(typeof window.renderProfileMental==='function')window.renderProfileMental(_pfMentalAreas);
   const fechaEl = document.getElementById('pf-antro-fecha');
   if (fechaEl && d.antroFecha) fechaEl.textContent = d.antroFecha;
   pfCalcAntro();
@@ -2786,13 +2775,14 @@ async function pfLoadFotoFromCloud() {
   // 1. Intentar URL guardada en player_data (cualquier dispositivo)
   const { data: rows } = await _supa
     .from('player_data')
-    .select('value')
+    .select('data')
     .eq('player_id', FIS_PLAYER_ID)
-    .eq('key', 'foto_url')
+    .eq('module', 'foto_url')
     .maybeSingle();
 
-  if (rows?.value) {
-    pfApplyFoto(rows.value);
+  if (rows?.data) {
+    pfApplyFoto(rows.data);
+    try{const saved=JSON.parse(localStorage.getItem(PF_KEY) || '{}');saved.foto_url=rows.data;localStorage.setItem(PF_KEY,JSON.stringify(saved));}catch(e){}
     return;
   }
 
@@ -2810,16 +2800,16 @@ async function pfLoadState() {
   // Prioridad: Supabase (sincronizado) → localStorage (offline/cache)
   const { data: rows } = await _supa
     .from('player_data')
-    .select('value')
+    .select('data')
     .eq('player_id', FIS_PLAYER_ID)
-    .eq('key', 'perfil_v1')
+    .eq('module', 'perfil_v1')
     .maybeSingle();
 
-  if (rows?.value) {
+  if (rows?.data) {
     // Dato en la nube — aplicar y sincronizar localStorage
     if(revisionAtLoad!==_pfEditRevision)return;
-    pfApplyData(rows.value);
-    try { localStorage.setItem(PF_KEY, JSON.stringify({...JSON.parse(localStorage.getItem(PF_KEY) || '{}'),...rows.value})); } catch(e) {}
+    pfApplyData(rows.data);
+    try { localStorage.setItem(PF_KEY, JSON.stringify({...JSON.parse(localStorage.getItem(PF_KEY) || '{}'),...rows.data})); } catch(e) {}
   } else {
     // Sin dato en la nube — intentar localStorage
     try {
