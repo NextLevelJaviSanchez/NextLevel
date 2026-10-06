@@ -363,7 +363,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <div style="position:sticky;left:0;z-index:3;background:var(--bg2);padding:5px;flex-shrink:0"><img id="pf-sticky-foto" alt="Foto de Mía" style="display:none;width:38px;height:38px;border-radius:10px;object-fit:cover"></div>
   <button class="tab-btn" onclick="showTab('mental',this)">🧘 Mental</button>
   <button class="tab-btn on" onclick="showTab('dash',this)">🏠 Inicio</button>
   <button class="tab-btn"    onclick="showTab('rend',this)">📊 Rendimiento</button>
@@ -562,9 +561,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <!-- Resumen por zona -->
     <div id="zone-summary" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
   </div>
-
-  <div class="card"><div class="card-ttl">Mapa de calor por zonas</div>
-    <p style="font-size:.72rem;color:var(--muted)">El play-by-play incluye coordenadas y zonas. Falta validar la escala y orientación para representar eficiencia por zona.</p></div>
 
   <!-- EVOLUCIÓN 5 vs 5 PARTIDOS -->
   <div class="card">
@@ -2689,8 +2685,6 @@ function pfApplyFoto(src) {
     img.style.display = 'block';
     txt.style.display = 'none';
   }
-  const stickyImg = document.getElementById('pf-sticky-foto');
-  if (stickyImg) { stickyImg.src = src; stickyImg.style.display = 'block'; }
   const heroImg = document.getElementById('pf-hero-foto');
   if (heroImg) { heroImg.src = src; heroImg.style.display = 'block'; }
 }
