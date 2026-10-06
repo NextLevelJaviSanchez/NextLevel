@@ -32,7 +32,7 @@ assert.equal(teamRanking(games.slice(0,4),'pts').minGames,2);
 """
         subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
         h=(R/'perfil_mia_sanchez_14.html').read_text(encoding='utf-8')
-        start=h.index('<div id="tab-rend"');end=h.index('<div id="tab-mental"')
+        start=h.index('<div id="tab-rend"');end=h.index('<div id="tab-coach"')
         self.assertIn('id="season-milestones"',h[start:end])
 
     def test_heat_palette_thresholds(self):

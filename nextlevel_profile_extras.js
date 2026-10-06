@@ -11,7 +11,7 @@
   };
   function renderMental(data){
     const values=Array.isArray(data) ? data : String(data?.mental || '').split('|').filter(Boolean);
-    for(const id of ['mental-profile-content','pf-mental-plan','plan-mental-content']){
+    for(const id of ['plan-mental-content']){
       const el=document.getElementById(id);if(!el)continue;el.replaceChildren();
       if(!values.length){el.textContent='Elegí en Perfil las áreas mentales que querés trabajar.';continue;}
       for(const value of values){const card=document.createElement('div');card.className='card';const title=document.createElement('strong');title.textContent=value;card.append(title);

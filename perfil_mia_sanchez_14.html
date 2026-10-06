@@ -369,7 +369,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <button class="tab-btn" data-tab="coach"    onclick="showTab('coach',this)">🧠 Análisis Coach</button>
   <button class="tab-btn" data-tab="prog"    onclick="showTab('prog',this)">📈 Evolución</button>
   <button class="tab-btn" data-tab="plan"    onclick="showTab('plan',this)">🎯 Mi Plan</button>
-  <button class="tab-btn" data-tab="mental" onclick="showTab('mental',this)">🧘 Mental</button>
   <button class="tab-btn" data-tab="fis"    onclick="showTab('fis',this)">💪 Físico</button>
 </div>
 
@@ -559,14 +558,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- ══════════════════════════════════════════
      TAB 2 — ANÁLISIS COACH
 ══════════════════════════════════════════ -->
-<div id="tab-mental" class="tab-pane">
-  <div class="card"><div class="card-ttl">🧘 Mental — tu seguimiento</div>
-    <p style="font-size:.75rem;color:var(--muted)">Tus respuestas del cuestionario inicial · propuestas de práctica para conversar con el coach.</p>
-    <div id="mental-profile-content">Cargando tus respuestas…</div>
-    <a href="plan_mejora_mia_sanchez_14_2026.html">Abrir el plan mental completo</a>
-  </div>
-</div>
-
 <div id="tab-coach" class="tab-pane">
 
   <!-- SEPARADOR: Análisis NextLevel -->
@@ -702,9 +693,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
      TAB 4 — PLAN PERSONALIZADO
 ══════════════════════════════════════════ -->
 <div id="tab-plan" class="tab-pane">
-  <div class="card"><div class="card-ttl">🧘 Plan de trabajo mental</div>
+  <div class="card"><div class="card-ttl">🧘 Tips y trabajo mental</div>
     <p style="font-size:.72rem;color:var(--muted)">Áreas elegidas en Perfil · prácticas propuestas para dos semanas y revisión semanal con el coach.</p>
     <div id="plan-mental-content">Cargando tus áreas mentales…</div>
+    <details style="margin:12px 0;font-size:.72rem;line-height:1.7">
+      <summary style="cursor:pointer;color:var(--ac);font-weight:700">💡 Tips para cada partido</summary>
+      <ul style="padding-left:20px">
+        <li>Antes de jugar, elegí una consigna concreta: comunicarte, volver a defender o buscar el rebote.</li>
+        <li>Después de un error, enfocá la atención en una acción útil para la próxima posesión.</li>
+        <li>Al terminar, anotá un acierto y algo para practicar. Revisalo con tu coach.</li>
+      </ul>
+    </details>
+    <p style="font-size:.68rem"><a href="plan_mejora_mia_sanchez_14_2026.html">Abrir el plan completo</a></p>
     <button type="button" class="obj-btn" onclick="showTab('perfil')">Editar áreas en Perfil</button>
   </div>
 
@@ -1323,7 +1323,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <div class="card"><div class="card-ttl">🧘 Mis áreas mentales a trabajar</div><p style="font-size:.72rem;color:var(--muted)">Podés seleccionar varias. Tu plan se actualiza en Mi Plan y en Mental.</p><div id="pf-mental-chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><div id="pf-mental-plan"></div></div>
+  <div class="card"><div class="card-ttl">🧘 Mis áreas mentales a trabajar</div><p style="font-size:.72rem;color:var(--muted)">Podés seleccionar varias. Tus tips y prácticas se actualizan en Mi Plan.</p><div id="pf-mental-chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div></div>
 
   <!-- ── MI CURRÍCULUM (PDF export) ──────────────────────────── -->
   <div class="ncaa-box">
