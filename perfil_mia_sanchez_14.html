@@ -645,30 +645,30 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
 
     <div class="ia-sec">
-      <div class="ia-lbl or">🏀 PERFIL DE JUEGO — ESCOLTA/ALERO ANOTADORA</div>
-      <div class="ia-txt">Mía es la <strong>jugadora con producción anotadora registrada</strong>. Con <strong><span class="coach-ppp-afmb">—</span> PPP en AFMB</strong> (<span class="coach-pj-afmb">—</span> PJ en liga metropolitana) y <strong><span class="coach-ppp-fed">—</span> PPP en el Federal CABB</strong> (<span class="coach-pj-fed">—</span> PJ, nivel nacional), es la principal fuente ofensiva del plantel. Sostener producción en el Federal, que concentra las mejores jugadoras de cada delegación del país, <strong>puede indicar que su rendimiento es trasladable a mayor nivel de competencia</strong> — aunque la confirmación llegará con más partidos en ese nivel.</div>
+      <div class="ia-lbl or">🏀 PRODUCCIÓN POR TORNEO</div>
+      <div class="ia-txt" data-coach-analysis="production">Cargando lectura de los datos oficiales…</div>
     </div>
 
     <div class="ia-sec">
-      <div class="ia-lbl gr">🔥 ANOTACIÓN — ANÁLISIS PROFUNDO</div>
-      <div class="ia-txt">La combinación de <strong>tiro exterior confiable + penetración al aro</strong> hace de Mía una anotadora de dos dimensiones difícil de defender. En el sistema ofensivo de Berazategui, actúa como el principal option en aislamiento y pick-and-roll. Su <strong>FG% estimado ~42% 🧑‍🏫</strong> (evaluación del cuerpo técnico, no estadística exacta) indica capacidad de generar tiro de calidad bajo presión, no sólo aprovechar posiciones abiertas.</div>
+      <div class="ia-lbl gr">🎯 EFICIENCIA DE TIRO</div>
+      <div class="ia-txt" data-coach-analysis="shooting">Cargando lectura de los datos oficiales…</div>
       <div class="drill-box">
-        <div class="drill-ttl">🎯 Drill: Pull-up + Step-back (15 min)</div>
+        <div class="drill-ttl">Objetivo propuesto · ejercicios de tiro para revisar con el coach</div>
         <div class="drill-txt"><strong>(1) Pull-up jumper</strong> desde pick-and-roll: dribble de ataque, parar, tiro en suspensión. 4 series × 8 tiros desde cada lado del pico. Objetivo: consolidar el mid-range como arma confiable bajo presión.<br><strong>(2) Step-back 3PT</strong>: 1 dribble lateral + paso hacia atrás + triple. 3 series × 8 tiros. Este movimiento habilita el triple cuando el defensor presiona en el drive.<br><strong>(3) Floater sobre ayuda</strong>: penetrar y resolver con floater cuando el 5 cierra. 20 repeticiones por sesión.</div>
       </div>
     </div>
 
     <div class="ia-sec">
-      <div class="ia-lbl bl">📈 IMPACTO COMO ARMADORA</div>
-      <div class="ia-txt">Con registros de asistencias a evaluar en el seguimiento individual, Mía muestra visión de juego más allá de su función principal de anotadora. En situaciones de zona 2-3, puede encontrar espacios para distribuir a las Ala-Postes. Esta combinación <strong>anotación + distribución 🧑‍🏫</strong> es el perfil que más valoran los programas universitarios División I y II: la escolta que puede generar para sí misma y para sus compañeras.</div>
+      <div class="ia-lbl bl">📈 ASISTENCIAS Y PÉRDIDAS</div>
+      <div class="ia-txt" data-coach-analysis="creation">Cargando lectura de los datos oficiales…</div>
     </div>
 
     <div class="ia-sec">
-      <div class="ia-lbl pu">⚠️ ÁREAS PRIORITARIAS</div>
-      <div class="ia-txt"><strong>1. Consistencia en tiro libre:</strong> El porcentaje observado indica margen de mejora. Protocolo diario de 50 TL con rutina invariable.<br><strong>2. Defensa individual en perímetro:</strong> Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa tanto como la ofensiva. Trabajar lateral shuffle, deny position y help-side defense.<br><strong>3. Manejo bajo presión full-court:</strong> En playoffs y Federal, las defensas presionan toda la cancha. Mejorar el dribble con mano débil bajo presión 1v1.</div>
+      <div class="ia-lbl pu">🎯 PROPUESTA DE SEGUIMIENTO</div>
+      <div class="ia-txt" data-coach-analysis="priorities">Cargando lectura de los datos oficiales…</div>
     </div>
 
-    <div class="ia-ft">Análisis del Coach Digital · Fuente: API oficial CABB/GesDeportiva · AFMB + Federal CABB 2026 🏀 · Evaluaciones del cuerpo técnico 🧑‍🏫</div>
+    <div class="ia-ft">Dato CABB: boxscores · Cálculo NextLevel: promedios y porcentajes · Coach: evaluación personalizada · Objetivo: propuesta pendiente de acuerdo.</div>
   </div>
 
   <!-- RADAR — EVALUACIÓN NEXTLEVEL -->
@@ -1607,15 +1607,11 @@ const NCAA_SKILLS = [
   {lbl:'Long-term proj. 🔮',val:null, color:'#ef4444'},
 ];
 const FORTALEZAS = [
-  {icon:'🔥', t:'Coach · Perfil anotador', tx:'Máxima anotadora del equipo en la liga metropolitana durante toda la temporada. Primera opción ofensiva del sistema de Berazategui.'},
-  {icon:'🌐', t:'Federal CABB — producción en torneo nacional 🏀', tx:'Producción ofensiva en el Federal CABB, que concentra las mejores jugadoras de cada delegación del país. Señal positiva de solidez competitiva más allá de la liga local.'},
-  {icon:'🎯', t:'Tiro exterior + penetración — 2 dimensiones 🧑‍🏫', tx:'Puede anotar desde el perímetro y en penetración al aro. El perfil de dos dimensiones es el más difícil de defender en el básquet moderno formativo.'},
-  {icon:'⏱️', t:'Coach · Participación en la rotación', tx:'Alta confianza del cuerpo técnico como primera opción ofensiva durante toda la rotación. Evaluación orientativa pendiente de validación por el coach.'},
+  {icon:'📊', t:'Dato CABB · participación registrada', tx:'Los partidos, puntos y minutos se pueden consultar por torneo en Rendimiento. Definir las fortalezas de juego requiere observación y evaluación del coach.'},
 ];
 const AREAS = [
-  {icon:'🎯', t:'Tiro libre — consistencia 🧑‍🏫', tx:'Meta: pasar a 70%+ con protocolo de 50 TL/día. El TL convierte la producción ofensiva en puntos seguros bajo presión.'},
-  {icon:'🛡️', t:'Defensa individual en perímetro 🧑‍🏫', tx:'Para el perfil NCAA/Liga Nacional, la evaluación defensiva pesa tanto como la ofensiva. Deny position, lateral shuffle y help-side son las 3 técnicas clave.'},
-  {icon:'🔄', t:'Mano débil bajo presión full-court 🧑‍🏫', tx:'En playoffs las defensas presionan toda la cancha. El crossover y dribble con mano débil a velocidad son el diferencial en ese escenario.'},
+  {icon:'🎯', t:'Objetivo propuesto · seguimiento del tiro', tx:'Registrar conversiones e intentos en entrenamiento y contrastarlos con los partidos. El coach debe acordar la meta y la rutina.'},
+  {icon:'🧑‍🏫', t:'Coach · evaluación técnica pendiente', tx:'Revisar defensa, toma de decisiones y manejo con observación de juego. Los conteos del acta no bastan para calificar estas habilidades.'},
 ];
 
 /* ══════════════════════════════════════════════════════════
@@ -2026,29 +2022,29 @@ function buildInsights(container) {
     if (s.afmb.ppg >= 8)
       insights.push({ cls:'insight-up',   icon:'🔥', msg:`<strong>Tu promedio de anotación en AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos. Cálculo mostrado según los datos disponibles.` });
     if (s.fed.ppg && s.fed.ppg >= 6)
-      insights.push({ cls:'insight-up',   icon:'🌐', msg:`<strong>Producción sólida en el Federal CABB</strong> — ${s.fed.ppg} PPP en torneo nacional. Podés competir más allá de la liga local.` });
+      insights.push({ cls:'insight-up',   icon:'🌐', msg:`<strong>Producción registrada en el Federal CABB</strong> — ${s.fed.ppg} PPP en torneo nacional. Cálculo NextLevel; no determina un nivel competitivo.` });
   }
   // Evolución reciente
   const ptsMejora = ev.find(r => r.key === 'pts' && r.trend === 'up');
   const ptsCalda  = ev.find(r => r.key === 'pts' && r.trend === 'down');
   if (ptsMejora)
-    insights.push({ cls:'insight-up',   icon:'📈', msg:`<strong>Tu anotación mejoró en los últimos 5 partidos</strong> — estás tomando mayor protagonismo ofensivo.` });
+    insights.push({ cls:'insight-up',   icon:'📈', msg:`<strong>Tu anotación mejoró en los últimos 5 partidos</strong> — Cálculo NextLevel; revisar también minutos e intentos.` });
   if (ptsCalda)
     insights.push({ cls:'insight-flat',  icon:'📉', msg:`<strong>Los puntos bajaron en los últimos 5 partidos</strong> — puede ser variación normal o una señal para revisar el volumen de tiro.` });
 
   const astMejora = ev.find(r => r.key === 'ast' && r.trend === 'up');
   if (astMejora)
-    insights.push({ cls:'insight-up',   icon:'🎯', msg:`<strong>Más asistencias en los últimos partidos</strong> — estás encontrando mejor a tus compañeras.` });
+    insights.push({ cls:'insight-up',   icon:'🎯', msg:`<strong>Más asistencias en los últimos partidos</strong> — Cálculo NextLevel; la calidad de las decisiones requiere observación.` });
 
   const minMejora = ev.find(r => r.key === 'minutos' && r.trend === 'up');
   if (minMejora)
-    insights.push({ cls:'insight-up',   icon:'⏱️', msg:`<strong>El cuerpo técnico te está dando más minutos</strong> — señal de confianza en tu rendimiento.` });
+    insights.push({ cls:'insight-up',   icon:'⏱️', msg:`<strong>Aumentó el promedio de minutos</strong> — Cálculo NextLevel; el motivo debe consultarse con el coach.` });
 
   // Áreas a trabajar (basadas en AREAS estáticas del coach)
-  insights.push({ cls:'insight-tip', icon:'🎯', msg:`<strong>Aspecto clave para seguir creciendo:</strong> Tiro libre — trabajar la rutina diaria de 50 TL te acerca a ser una amenaza total en los momentos decisivos.` });
+  insights.push({ cls:'insight-tip', icon:'🎯', msg:`<strong>Objetivo propuesto:</strong> Registrar el tiro libre en entrenamiento y acordar una rutina con el coach.` });
 
   if (ev.find(r => r.key === 'stl' && r.trend === 'down'))
-    insights.push({ cls:'insight-flat', icon:'🛡️', msg:`<strong>Las pérdidas o robos bajaron</strong> — área defensiva para seguir trabajando en la semana.` });
+    insights.push({ cls:'insight-flat', icon:'🛡️', msg:`<strong>Bajó el promedio de recuperaciones</strong> — Cálculo NextLevel; no permite concluir que empeoró la defensa.` });
 
   if (!container) return insights;
 

@@ -22,6 +22,26 @@
     if (parent) parent.appendChild(el);
     return el;
   }
+  function renderCoach(games, seasons) {
+    const targets=document.querySelectorAll('[data-coach-analysis]');
+    if (!targets.length) return;
+    const groups=[...new Set(games.map(g=>g.torneo).filter(Boolean))];
+    const sections={production:[],shooting:[],creation:[],priorities:[]};
+    for (const tournament of groups) {
+      const rows=games.filter(g=>g.torneo===tournament), m=summarize(rows);
+      const season=seasons.find(r=>r.tournament===tournament);
+      const coverage=`${rows.length}/${season?.pj ?? '—'} partidos con acta`;
+      sections.production.push(`${tournament}: ${coverage}; ${fmt(m.PTS)} puntos y ${fmt(m.MIN)} minutos por partido. Cálculo NextLevel.`);
+      const ratio=k=>rows.every(r=>numeric(r[k+'_in'])!=null && numeric(r[k+'_att'])!=null) ? `${rows.reduce((n,r)=>n+Number(r[k+'_in']),0)}/${rows.reduce((n,r)=>n+Number(r[k+'_att']),0)}` : 'Sin datos';
+      sections.shooting.push(`${tournament}: TC ${fmt(m['TC%'])}% (${ratio('tc')}), triples ${fmt(m['3P%'])}% (${ratio('t3')}), libres ${fmt(m['TL%'])}% (${ratio('tl')}). Cálculo NextLevel sobre intentos oficiales.`);
+      sections.creation.push(`${tournament}: ${fmt(m.AST)} asistencias por partido; relación asistencias/pérdidas ${m['AST/PER']==null?'Sin datos':m['AST/PER'].toFixed(2)}. Cálculo NextLevel.`);
+    }
+    sections.production.push('Estos registros no establecen un ranking del plantel ni explican el rol táctico.');
+    sections.shooting.push('El porcentaje no describe por sí solo la dificultad o calidad de los tiros.');
+    sections.creation.push('La visión de juego y las decisiones bajo presión requieren evaluación del coach.');
+    sections.priorities.push('Objetivo propuesto: registrar intentos y conversiones en entrenamiento y acordar una meta con el coach. Comparar últimos cinco dentro del mismo torneo en Rendimiento. Proyección: no se estima rendimiento futuro desde estos promedios.');
+    targets.forEach(el=>el.textContent=groups.length ? sections[el.dataset.coachAnalysis].join(' ') : 'Sin actas oficiales disponibles para el análisis. Coach: evaluación pendiente.');
+  }
   async function readAll(table, query) {
     const result = [];
     for (let offset = 0; ; offset += 500) {
@@ -54,6 +74,7 @@
         .order('fecha',{ascending:false}).order('cabb_partido_id',{ascending:false}));
       const seasons = await readAll('stats_seasons', q => q.eq('player_id',config.playerId)
         .eq('season',config.season).order('tournament'));
+      renderCoach(games, seasons);
       const totalExpected=seasons.reduce((sum,s)=>sum+Number(s.pj || 0),0);
       const coverageComplete=totalExpected>0 && games.length===totalExpected;
       const shooting=summarize(games);
@@ -114,6 +135,7 @@
       };
       select.addEventListener('change',render); render();
     } catch (error) {
+      document.querySelectorAll('[data-coach-analysis]').forEach(el=>el.textContent='No se pudo cargar el análisis oficial. Reintentá más tarde.');
       status.textContent = 'No se pudo cargar el historial oficial. Reintentá más tarde.';
       console.warn('Rendimiento oficial:',error.message);
     }
