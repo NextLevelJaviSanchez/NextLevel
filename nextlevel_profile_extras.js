@@ -44,6 +44,7 @@
     Z12:{x:250,y:393,path:'M170 340 H330 V450 H170 Z'},
     Z13:{x:92,y:350,path:'M15 190 H65 V280 H170 V450 H15 Z'}
   };
+  const zoneName=id=>id==='Z1' ? 'zona pintada' : 'zona CABB '+id;
   function heatColor(row,mode){
     if(!row || !row.attempts)return '#2C2F36';
     if(mode==='volume')return row.attempts>50 ? '#FF6D00' : row.attempts>=15 ? '#E65100' : '#546E7A';
@@ -59,8 +60,8 @@
       const row=zones[id],pct=row ? row.made/row.attempts : 0;
       const fill=heatColor(row,mode);
       const path=append('path',{d:layout.path,fill,stroke:'#8494ac','stroke-width':.8});
-      const title=document.createElementNS(ns,'title');title.textContent=row ? `${id}: ${row.made}/${row.attempts} · ${(pct*100).toFixed(1)}%` : `${id}: sin intentos registrados`;path.append(title);
-      append('text',{x:layout.x,y:layout.y-10,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':12,'font-weight':700},id);
+      const title=document.createElementNS(ns,'title');title.textContent=row ? `${zoneName(id)}: ${row.made}/${row.attempts} · ${(pct*100).toFixed(1)}%` : `${zoneName(id)}: sin intentos registrados`;path.append(title);
+      append('text',{x:layout.x,y:layout.y-10,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':12,'font-weight':700},id==='Z1' ? 'Zona pintada' : id);
       append('text',{x:layout.x,y:layout.y+6,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':11},row ? `${row.made}/${row.attempts}` : '—');
       if(row)append('text',{x:layout.x,y:layout.y+21,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':10},`${(pct*100).toFixed(1)}%`);
     }
@@ -70,8 +71,8 @@
     return svg;
   }
   async function loadSeasonHeat(){
-    const court=document.getElementById('shotCourt');if(!court)return;
-    const card=document.createElement('div');card.className='card';court.closest('.card').after(card);
+    const host=document.getElementById('season-heat-map');if(!host)return;
+    const card=document.createElement('div');card.className='card';host.replaceChildren(card);
     const title=document.createElement('div');title.className='card-ttl';title.textContent='🔥 Temporada 2026 — mapa de calor por zonas';card.append(title);
     const status=document.createElement('p');status.textContent='Cargando tiros oficiales de la temporada…';card.append(status);
     try{
@@ -96,7 +97,7 @@
         status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.`;
         const volume=[...entries].sort((a,b)=>b[1].attempts-a[1].attempts)[0];
         const substantial=entries.filter(e=>e[1].attempts>=10).sort((a,b)=>b[1].made/b[1].attempts-a[1].made/a[1].attempts);
-        analysis.textContent=attempts ? `Cálculo NextLevel: ${made}/${attempts} tiros convertidos (${(100*made/attempts).toFixed(1)}%). La mayor concentración está en ${volume[0]}: ${volume[1].attempts} intentos (${(100*volume[1].attempts/attempts).toFixed(1)}% del volumen). `+(substantial.length ? `Entre las zonas con al menos 10 intentos, ${substantial[0][0]} presenta el mayor porcentaje: ${substantial[0][1].made}/${substantial[0][1].attempts}. `:'')+'Los porcentajes describen esta muestra; no prueban calidad de tiro, dificultad o habilidad técnica. Revisar con el coach las zonas de alto volumen y menor conversión antes de definir una meta.':'Sin tiros para esta selección.';
+        analysis.textContent=attempts ? `Cálculo NextLevel: ${made}/${attempts} tiros convertidos (${(100*made/attempts).toFixed(1)}%). La mayor concentración está en ${zoneName(volume[0])}: ${volume[1].attempts} intentos (${(100*volume[1].attempts/attempts).toFixed(1)}% del volumen). `+(substantial.length ? `Entre las zonas con al menos 10 intentos, ${zoneName(substantial[0][0])} presenta el mayor porcentaje: ${substantial[0][1].made}/${substantial[0][1].attempts}. `:'')+'Los porcentajes describen esta muestra; no prueban calidad de tiro, dificultad o habilidad técnica. Revisar con el coach las zonas de alto volumen y menor conversión antes de definir una meta.':'Sin tiros para esta selección.';
       };select.setAttribute('aria-label','Torneo del mapa');select.addEventListener('change',render);mode.addEventListener('change',render);render();
     }catch(e){status.textContent='No se pudo cargar el mapa de temporada. Reintentá más tarde.';}
   }
@@ -162,18 +163,34 @@
     try{
       const {data,error}=await _supa.from('game_log').select('*').eq('player_id',PLAYER_ID).eq('source','cabb_api').gte('fecha',SEASON+'-01-01').lt('fecha',String(+SEASON+1)+'-01-01').order('fecha',{ascending:false});
       if(error)throw error;const games=data || [],summary=seasonMilestones(games);el.replaceChildren();
-      const add=text=>{const p=document.createElement('p');p.style.cssText='font-size:.75rem;line-height:1.6';p.textContent=text;el.append(p);};
-      const match=g=>`${g.fecha} · vs ${g.rival || 'rival sin informar'} · ${g.torneo || 'torneo sin informar'} · ${g.resultado_eq || 'resultado sin informar'}`;
-      add(`Cálculo NextLevel sobre datos CABB · temporada ${SEASON} · ${games.length} partidos cargados · AFMB y Federal.`);
-      if(!games.length){add('Todavía no hay partidos oficiales disponibles para calcular hitos.');return;}
-      for(const [label,row] of [['Máximo de puntos',summary.points],['Máxima valoración CABB',summary.valuation]]){
-        add(row ? `${label}: ${row.value} · datos disponibles en ${row.coverage}/${games.length} partidos.` : `${label}: sin datos oficiales disponibles.`);
-        if(row)row.games.forEach(g=>add(match(g)));
+      const paragraph=(parent,text,style='')=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6;margin:6px 0;'+style;p.textContent=text;parent.append(p);return p;};
+      paragraph(el,`Temporada ${SEASON} · ${games.length} partidos · AFMB y Federal`, 'color:var(--muted);margin:0 0 14px');
+      if(!games.length){paragraph(el,'Todavía no hay partidos oficiales disponibles para calcular hitos.');return;}
+      const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px';el.append(grid);
+      const card=(icon,title,value,color)=>{
+        const panel=document.createElement('section');panel.style.cssText='background:var(--card2);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:16px;min-width:0';grid.append(panel);
+        const heading=document.createElement('h3');heading.style.cssText='display:flex;align-items:center;gap:8px;font-size:.8rem;margin:0 0 10px';
+        const symbol=document.createElement('span');symbol.textContent=icon;symbol.setAttribute('aria-hidden','true');symbol.style.fontSize='1.3rem';heading.append(symbol,document.createTextNode(title));panel.append(heading);
+        paragraph(panel,value,`font-size:1.6rem;font-weight:900;color:${color};line-height:1.2;margin:0 0 12px`);return panel;
+      };
+      const match=(panel,g)=>{
+        const detail=document.createElement('div');detail.style.cssText='border-top:1px solid rgba(255,255,255,.08);padding-top:8px;margin-top:10px';panel.append(detail);
+        paragraph(detail,'vs '+(g.rival || 'rival sin informar'),'font-weight:700');
+        const date=String(g.fecha || '').slice(0,10).split('-');
+        paragraph(detail,`${date.length===3 ? date.reverse().join('/') : g.fecha || 'Fecha sin informar'} · ${g.torneo || 'Torneo sin informar'}`, 'color:var(--muted);font-size:.65rem');
+        paragraph(detail,'Resultado del equipo: '+(g.resultado_eq || 'sin informar'),'font-size:.65rem');
+      };
+      for(const [icon,label,row,color,unit] of [['🏀','Máximo de puntos',summary.points,'var(--ac)','puntos'],['⭐','Máxima valoración',summary.valuation,'#FFD740','de valoración CABB']]){
+        const panel=card(icon,label,row ? `${row.value} ${unit}` : 'Sin datos',color);
+        if(row){row.games.forEach(g=>match(panel,g));paragraph(panel,`Datos disponibles: ${row.coverage}/${games.length} partidos`, 'font-size:.62rem;color:var(--muted);margin-top:12px');}
       }
-      add(`Dobles-dobles verificados: ${summary.doubles.length}. Al menos 10 en dos categorías: puntos, rebotes, asistencias, recuperos o tapones. Un triple-doble también cumple este hito.`);
-      summary.doubles.forEach(g=>add(`${match(g)} · `+[['pts','PTS'],['reb_tot','REB'],['ast','AST'],['stl','ROB'],['blk','TAP']].filter(([key])=>g[key]!=null && Number(g[key])>=10).map(([key,label])=>`${g[key]} ${label}`).join(' · ')));
-      if(summary.complete<games.length)add(`Cobertura completa para verificar ausencia de dobles-dobles: ${summary.complete}/${games.length} partidos. Los campos faltantes no se consideran cero.`);
-      add(summary.doubles.length ? 'Objetivo de conseguir un doble-doble: ya existe un logro verificado esta temporada. Podés registrar el objetivo como cumplido en Mi Plan.' : 'Objetivo de conseguir un doble-doble: disponible en Mi Plan para activar. Aún no hay un logro verificado en los partidos cargados.');
+      const doubles=card('✌️','Dobles-dobles',`${summary.doubles.length} ${summary.doubles.length===1 ? 'logro' : 'logros'}`,'var(--green)');
+      summary.doubles.forEach(g=>{match(doubles,g);paragraph(doubles,[['pts','PTS'],['reb_tot','REB'],['ast','AST'],['stl','ROB'],['blk','TAP']].filter(([key])=>g[key]!=null && Number(g[key])>=10).map(([key,label])=>`${g[key]} ${label}`).join(' · '),'font-weight:800;color:var(--green)');});
+      const definition=document.createElement('details');definition.style.cssText='font-size:.65rem;color:var(--muted);margin-top:12px';const label=document.createElement('summary');label.textContent='¿Qué cuenta como doble-doble?';label.style.cursor='pointer';definition.append(label);paragraph(definition,'Al menos 10 en dos categorías: puntos, rebotes, asistencias, recuperos o tapones. Un triple-doble también cumple este hito.');doubles.append(definition);
+      if(summary.complete<games.length)paragraph(doubles,`Cobertura completa: ${summary.complete}/${games.length} partidos. Los campos faltantes no se consideran cero.`,'font-size:.62rem;color:var(--muted)');
+      const goal=document.createElement('div');goal.style.cssText='margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.18)';el.append(goal);
+      paragraph(goal,summary.doubles.length ? '🎯 Objetivo de doble-doble: ya hay un logro verificado. Podés marcarlo como cumplido en Mi Plan.' : '🎯 Objetivo de doble-doble: disponible para activar en Mi Plan. Aún no hay un logro verificado.');
+      paragraph(el,'Cálculo NextLevel sobre datos oficiales CABB.','font-size:.6rem;color:var(--muted);margin-top:12px');
     }catch(e){el.textContent='No se pudieron cargar los hitos oficiales. Reintentá más tarde.';}
   }
   function shotPosition(shot){const x=Number(shot.posicion_x),y=Number(shot.posicion_y);return {left:(x-35)/730*100,top:(y-34)/405*100};}
@@ -189,13 +206,8 @@
       try{const {data,error}=await _supa.from('intake_responses').select('mental,q2').eq('player_id','11111111-0000-0000-0000-000000000014').maybeSingle();if(error)throw error;if(!_pfMentalLoaded){_pfMentalAreas=String(data?.mental || '').split('|').filter(Boolean);renderMental(_pfMentalAreas);}}catch(e){renderMental(_pfMentalAreas);}
     }
     await loadSeasonHeat();
-    const court=document.getElementById('shotCourt');if(!court)return;
-    try{const response=await fetch('cabb_pbp_inventory_644845.json');if(!response.ok)throw Error('No disponible');const data=await response.json();const shots=data.mia_shots.filter(s=>String(s.eliminado).toLowerCase()!=='true' && /^(CANASTA-[23]P|TIRO[23]-FALLADO)$/.test(s.accion_tipo));if(shots.length!==6 || shots.filter(s=>s.accion_tipo.startsWith('CANASTA')).length!==2)throw Error('Conteos no reconciliados');
-      court.querySelectorAll('[data-official-shot]').forEach(el=>el.remove());
-      shots.forEach(s=>{const pos=shotPosition(s);if(!Number.isFinite(pos.left)||!Number.isFinite(pos.top)||pos.left<0||pos.left>100||pos.top<0||pos.top>100)throw Error('Coordenada fuera de referencia');const dot=document.createElement('div');dot.dataset.officialShot=s.autoincremental_id;dot.className='shot-dot';dot.style.left=pos.left+'%';dot.style.top=pos.top+'%';dot.style.background=s.accion_tipo.startsWith('CANASTA')?'#22c55e':'#ef4444';dot.style.zIndex='2';dot.title=`${s.accion_tipo} · cuarto ${s.numero_periodo} · ${s.tiempo_partido} · zona CABB ${s.zona}`;court.append(dot);});
-      document.getElementById('zone-summary').textContent='Dato CABB · 2/6 de cancha · 0/0 triples · 1/3 libres (fuera del mapa).';
-    }catch(e){court.querySelectorAll('[data-official-shot]').forEach(el=>el.remove());document.getElementById('zone-summary').textContent='No se pudo cargar el mapa oficial de este partido.';}
+
   }
-  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt,teamRanking,heatColor};
+  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt,teamRanking,heatColor,zoneName};
   if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',load);
 })();

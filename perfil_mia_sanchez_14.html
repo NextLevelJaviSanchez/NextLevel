@@ -528,39 +528,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- MAPA DE TIRO -->
-  <!-- MAPA 1: Tiros individuales sobre media cancha -->
-  <div class="card">
-    <div class="card-ttl" style="justify-content:space-between">
-      🏀 Mapa de Tiro — Tiros Individuales
-      <span style="font-size:0.52rem;background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.25);color:#fde047;border-radius:8px;padding:2px 8px;font-weight:700;text-transform:none;letter-spacing:0">Dato CABB · Obras 04/10/2026</span>
-    </div>
-    <div style="font-size:0.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5;background:rgba(250,204,21,0.04);border:1px solid rgba(250,204,21,0.1);border-radius:7px;padding:6px 10px">
-      Mía · Berazategui 46–65 Obras · seis tiros de cancha: 2 convertidos y 4 fallados. Posiciones contrastadas visualmente con la captura CABB. Esta muestra corresponde a un solo partido; no incluye tiros libres ni representa toda la temporada.
-    </div>
-    <!-- Media cancha: aspect-ratio 47/50 (FIBA: 15m ancho / 14m profundidad aprox) -->
-    <div style="position:relative;width:100%;max-width:420px;margin:0 auto;aspect-ratio:730/405;background:#07111e;border:1.5px solid rgba(249,115,22,0.15);border-radius:12px;overflow:hidden" id="shotCourt">
-      <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="35 34 730 405" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="35" y="34" width="730" height="405" fill="#07111e" stroke="#64748b"/>
-        <path d="M400 34V439 M35 170H190V303H35 M765 170H610V303H765" stroke="#64748b"/>
-        <circle cx="400" cy="236" r="50" stroke="#64748b"/>
-        <circle cx="78" cy="236" r="8" stroke="#f97316"/><circle cx="722" cy="236" r="8" stroke="#f97316"/>
-        <path d="M63 207V265 M737 207V265" stroke="#64748b"/>
-        <text x="400" y="60" text-anchor="middle" fill="#94a3b8" font-size="13">Orientación de la captura CABB · referencia visual</text>
-      </svg>
-    </div>
-    <!-- Leyenda -->
-    <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:6px;font-size:0.65rem;color:var(--muted)">
-        <span style="width:11px;height:11px;border-radius:50%;background:#22c55e;display:inline-block;box-shadow:0 0 6px rgba(34,197,94,0.6)"></span>Convertido
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:0.65rem;color:var(--muted)">
-        <span style="width:11px;height:11px;border-radius:50%;background:rgba(239,68,68,0.8);display:inline-block;border:1.5px solid #ef4444"></span>Fallado
-      </div>
-    </div>
-    <!-- Resumen por zona -->
-    <div id="zone-summary" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
-  </div>
+  <div id="season-heat-map"></div>
 
   <div class="card">
     <div class="card-ttl">🏆 Hitos de temporada</div>
@@ -584,12 +552,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl">🏆 Distribución de Producción por Torneo</div>
     <div style="position:relative;height:220px"><canvas id="chartComp"></canvas></div>
-  </div>
-
-  <!-- DISTRIBUCIÓN TIRO -->
-  <div class="card">
-    <div class="card-ttl">🎯 Distribución de Tiro por Zona</div>
-    <div style="position:relative;height:220px"><canvas id="chartZones"></canvas></div>
   </div>
 
 </div><!-- /tab-rend -->
@@ -1845,10 +1807,7 @@ function showTab(id, btn, navIdx) {
 
 /* ─── INIT ─────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  buildShotMap();
-  buildZoneSummary();
   buildCompChart();
-  buildZoneChart();
   buildRadar();
   buildFortalezasAreas();
   buildProgChart();
@@ -2314,40 +2273,6 @@ function generarReport() {
   setTimeout(() => window.print(), 300);
 }
 
-/* ─── SHOT MAP ─────────────────────────── */
-function buildShotMap() {
-  const court = document.getElementById('shotCourt');
-  // viewBox 470×500 → convertir a porcentaje del contenedor
-  SHOTS_DATA.forEach(s => {
-    const dot = document.createElement('div');
-    dot.style.cssText = `
-      position:absolute;
-      width:11px; height:11px;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      left:${(s.x/470*100).toFixed(2)}%;
-      top:${(s.y/500*100).toFixed(2)}%;
-      background:${s.m ? '#22c55e' : 'rgba(239,68,68,0.85)'};
-      border:${s.m ? '1.5px solid rgba(34,197,94,0.6)' : '1.5px solid #ef4444'};
-      box-shadow:${s.m ? '0 0 5px rgba(34,197,94,0.5)' : '0 0 4px rgba(239,68,68,0.4)'};
-      z-index:2;
-    `;
-    court.appendChild(dot);
-  });
-}
-
-/* ─── ZONE SUMMARY ─────────────────────── */
-function buildZoneSummary() {
-  const el = document.getElementById('zone-summary');
-  ZONE_SUMMARY.forEach(z => {
-    el.innerHTML += `<div style="background:#0f1e35;border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,0.04)">
-      <div style="font-size:0.95rem;font-weight:900;color:${z.color}">${z.pct}</div>
-      <div style="font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">${z.z}</div>
-      <div style="font-size:0.58rem;color:#334155;margin-top:2px">${z.fg}</div>
-    </div>`;
-  });
-}
-
 /* ─── COMPARATIVA CHART ─────────────────── */
 let _compChart = null;
 function buildCompChart() {
@@ -2383,30 +2308,6 @@ function rebuildCompChart() {
   _compChart.data.datasets[0].data = [s.afmb.ppg, s.afmb.min_pg];
   _compChart.data.datasets[1].data = [s.fed.ppg,  s.fed.min_pg];
   _compChart.update();
-}
-
-/* ─── ZONE CHART ────────────────────────── */
-function buildZoneChart() {
-  new Chart(document.getElementById('chartZones'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Zona pintada — Sin datos', 'Media distancia — Sin datos', 'Triple — Sin datos'],
-      datasets: [{
-        data: [null, null, null],
-        backgroundColor: ['rgba(34,197,94,0.7)','rgba(249,115,22,0.7)','rgba(250,204,21,0.7)'],
-        borderColor: ['#22c55e','#f97316','#facc15'],
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{ position:'bottom', labels:{color:'#64748b',font:{size:11},padding:14} },
-        tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.parsed} intentos` } }
-      },
-      cutout:'62%',
-    }
-  });
 }
 
 /* ─── RADAR — usa EVAL_NL, no "percentil nacional" ─────────────────── */
