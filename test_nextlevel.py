@@ -8,6 +8,36 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_plan_progress_cloud_save_and_retry(self):
+        script=r"""
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const nodes=[];class Node{constructor(tag){this.tag=tag;this.style={};this.children=[];this.events={};this.value='';nodes.push(this);}append(...values){this.children.push(...values);}replaceChildren(...values){this.children=values;}setAttribute(){}addEventListener(k,f){this.events[k]=f;}}
+const root=new Node('root'),cache=new Map(),writes=[];let ready,fail=false;
+const api={select(){return this;},eq(){return this;},like(){return this;},order(){return this;},async range(){return {data:[],error:null};},async maybeSingle(){return {data:null,error:null};},async upsert(row){writes.push(row);return {error:fail ? {message:'offline'} : null};}};
+const context={document:{getElementById(){return root;},createElement:t=>new Node(t),createTextNode:text=>({text}),addEventListener:(event,fn)=>ready=fn},localStorage:{getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v)},_supa:{from:()=>api},PLAYER_ID:'test-only',Intl,Date,Set,Map,Number,JSON,crypto:require('node:crypto').webcrypto};
+vm.createContext(context);vm.runInContext(fs.readFileSync('nextlevel_plan_progress.js','utf8'),context);
+(async()=>{await ready();const form=nodes.find(n=>n.tag==='form'),check=nodes.find(n=>n.type==='checkbox');check.checked=true;await form.events.submit({preventDefault(){}});
+assert.equal(writes.length,1);assert.equal(writes[0].player_id,'test-only');assert.ok(writes[0].module.startsWith('plan_progress_v1:'));assert.equal(writes[0].data.source,'player_training');assert.ok(nodes.some(n=>String(n.textContent).includes('pratiques') || String(n.textContent).includes('prácticas están guardadas')));
+fail=true;check.checked=true;await form.events.submit({preventDefault(){}});assert.notEqual(writes[0].module,writes[1].module);
+let saved=JSON.parse(cache.get('nl_plan_progress_v1_test-only'));assert.equal(saved.entries.length,2);assert.equal(saved.pending.length,1);
+fail=false;await nodes.find(n=>n.textContent==='Reintentar guardados pendientes').events.click();saved=JSON.parse(cache.get('nl_plan_progress_v1_test-only'));assert.equal(saved.pending.length,0);
+})().catch(e=>{console.error(e);process.exitCode=1;});
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_plan_progress_dates_and_weighted_shots(self):
+        script="""
+const assert=require('node:assert/strict');const {validate,weekly}=require('./nextlevel_plan_progress.js');
+const base={date:'2026-10-06',areas:['Tiro'],success:'',next:''};
+assert.equal(validate(base,'2026-10-06'),'');
+for(const date of ['2026-10-07','2026-02-30','2026-99-99','bad'])assert.ok(validate({...base,date},'2026-10-06'));
+assert.ok(validate({...base,areas:[]},'2026-10-06'));
+for(const shots of [{made:2,attempts:1},{made:0,attempts:0},{made:1.5,attempts:5}])assert.ok(validate({...base,shots},'2026-10-06'));
+const r=weekly([{date:'2026-10-06',shots:{type:'Libres',made:1,attempts:1}}, {date:'2026-10-06',shots:{type:'Libres',made:1,attempts:9}}, {date:'2026-09-29'}, {date:'2026-10-07'}],'2026-10-06');
+assert.equal(r.rows.length,2);assert.equal(r.days,1);assert.equal(r.shooting.Libres.made,2);assert.equal(r.shooting.Libres.attempts,10);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
     def test_evolution_actual_blocks(self):
         script="""
 const assert=require('node:assert/strict');const {average,shooting,blocks}=require('./nextlevel_evolution.js');
