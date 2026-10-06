@@ -330,7 +330,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="hero-name">Mía G. <span>Sánchez</span></div>
         <div class="hero-sub">Berazategui · U13 Femenino · Temporada 2026</div>
         <div class="hero-tags">
-          <span class="htag ht-or">⛹️ Escolta / Alero</span>
+          <span id="hero-position" class="htag ht-or">⛹️ Posición por elegir</span>
           <span class="htag ht-pu" id="hero-tag-pj">⏳ cargando…</span>
           <span class="htag ht-gr" id="hero-tag-torneo" style="display:none"></span>
           <span class="htag ht-cy" id="hero-tag-fed" style="display:none"></span>
@@ -562,6 +562,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div id="zone-summary" style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
   </div>
 
+  <div class="card">
+    <div class="card-ttl">🏆 Hitos de temporada</div>
+    <div id="season-milestones">Cargando partidos oficiales…</div>
+  </div>
+
   <!-- EVOLUCIÓN 5 vs 5 PARTIDOS -->
   <div class="card">
     <div class="card-ttl">📈 Tu Evolución — Últimos 5 vs Anteriores 5</div>
@@ -643,10 +648,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="ia-ft">Dato CABB: boxscores · Cálculo NextLevel: promedios y porcentajes · Coach: evaluación personalizada · Objetivo: propuesta pendiente de acuerdo.</div>
   </div>
 
-  <div class="card">
-    <div class="card-ttl">🏆 Hitos de temporada</div>
-    <div id="season-milestones">Cargando partidos oficiales…</div>
-  </div>
+
   <div class="card"><div class="card-ttl">🧑‍🏫 Evaluación del coach pendiente</div>
     <p style="font-size:.75rem;color:var(--muted)">La evaluación se mostrará cuando el coach registre criterios y valoraciones.</p>
     <div hidden><canvas id="radarChart"></canvas><div id="pctLegend"></div></div>
@@ -1240,35 +1242,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ══════════════════════════════════════════ -->
 <div id="tab-perfil" class="tab-pane">
 
-  <!-- ── FOTO + NOMBRE (header editable) ─────────────────────── -->
-  <div class="card" style="padding:20px">
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
-      <!-- Avatar con upload -->
-      <div style="position:relative;flex-shrink:0">
-        <div id="pf-avatar"
-             onclick="document.getElementById('pf-foto-input').click()"
-             style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#c2410c,#f97316);
-                    display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;
-                    color:#fff;cursor:pointer;overflow:hidden;border:2.5px solid rgba(249,115,22,0.5);
-                    box-shadow:0 0 20px rgba(249,115,22,0.2)">
-          <span id="pf-avatar-txt">14</span>
-          <img id="pf-avatar-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:18px">
-        </div>
-        <div onclick="document.getElementById('pf-foto-input').click()"
-             style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;
-                    background:var(--ac);border:2px solid var(--bg);display:flex;align-items:center;
-                    justify-content:center;font-size:0.7rem;cursor:pointer;z-index:2" title="Cambiar foto">📷</div>
-        <input type="file" id="pf-foto-input" accept="image/*" style="display:none" onchange="pfLoadFoto(this)">
-      </div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:1.2rem;font-weight:900;color:var(--text)">Mía G. <span style="color:var(--ac)">Sánchez</span></div>
-        <div style="font-size:0.68rem;color:var(--muted);margin-top:2px">Dep. Berazategui · Escolta/Alero · #14</div>
-        <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">
-          <span style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🔥 Perfil anotador</span>
-          <span style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#d8b4fe;padding:2px 8px;border-radius:8px;font-size:0.56rem;font-weight:700">🌐 Federal CABB</span>
-        </div>
-      </div>
-    </div>
+  <div class="card"><div class="card-ttl">📷 Foto del encabezado</div>
+    <input type="file" id="pf-foto-input" accept="image/*" style="display:none" onchange="pfLoadFoto(this)">
     <button id="pf-foto-btn" onclick="document.getElementById('pf-foto-input').click()"
             style="width:100%;padding:9px;border-radius:8px;background:rgba(249,115,22,0.08);
                    border:1px solid rgba(249,115,22,0.25);color:#fb923c;font-size:0.7rem;
@@ -1282,9 +1257,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="card">
     <div class="card-ttl">🔒 Datos del perfil y competencia <span style="font-size:0.5rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(datos del club · partidos desde CABB)</span></div>
     <div class="profile-grid">
-      <div class="profile-field"><div class="pf-lbl">Nombre completo</div><div class="pf-val">Mía G. Sánchez</div></div>
       <div class="profile-field"><div class="pf-lbl">Dorsal</div><div class="pf-val">#14</div></div>
-      <div class="profile-field"><div class="pf-lbl">Posición</div><div class="pf-val">Escolta / Alero</div></div>
       <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
       <div class="profile-field"><div class="pf-lbl">Competencias 2026</div><div class="pf-val">AFMB + Federal CABB</div></div>
       <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val"><span data-official-metric="pj">—</span> PJ totales</div></div>
@@ -1296,6 +1269,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="card-ttl" style="justify-content:space-between">
       ✏️ Mis Datos Personales
       <span id="pf-saved-badge" style="font-size:0.55rem;color:var(--green);display:none">✅ Guardado</span>
+    </div>
+    <div style="margin-bottom:12px">
+      <label class="pf-lbl" for="pf-position">Mi posición de juego</label>
+      <select id="pf-position" onchange="pfApplyPosition(this.value);pfSave()" style="width:100%;background:#0f1e35;border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text);font-size:.82rem;padding:9px 11px;font-family:inherit">
+        <option value="">Seleccionar…</option><option>Base</option><option>Escolta</option><option>Alero</option><option>Ala-pívot</option><option>Pívot</option><option>Escolta / Alero</option><option>Polivalente</option>
+      </select>
+      <p style="font-size:.65rem;color:var(--muted)">Elegida por el jugador. Podés actualizarla cuando cambie tu rol.</p>
     </div>
     <div class="g2" style="margin-bottom:12px">
       <div>
@@ -1487,7 +1467,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div>
         <div style="font-size:8pt;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:.5pt;margin-bottom:3pt">Next Level Basketball · Player Report</div>
         <div class="rpt-h1">Mía G. <span style="color:#c2410c">Sánchez</span> <span style="font-size:12pt;color:#888">#14</span></div>
-        <div style="font-size:9pt;color:#666;margin-top:2pt">Escolta / Alero · Club Dep. Berazategui · U13 Femenino</div>
+        <div style="font-size:9pt;color:#666;margin-top:2pt"><span id="cv-position">Posición por elegir</span> · Club Dep. Berazategui · U13 Femenino</div>
       </div>
       <div style="text-align:right;font-size:8pt;color:#888">
         <div style="font-size:16pt;font-weight:900;color:#c2410c">2026</div>
@@ -2584,6 +2564,7 @@ function pfSave() {
   let previous = {};
   try { previous = JSON.parse(localStorage.getItem(PF_KEY) || '{}'); } catch(e) {}
   const data = {
+    position:   document.getElementById('pf-position')?.value || '',
     fnac:       document.getElementById('pf-fnac')?.value    || '',
     mano:       document.getElementById('pf-mano')?.value    || '',
     email:      document.getElementById('pf-email')?.value   || '',
@@ -2677,13 +2658,6 @@ async function pfUploadFoto(file) {
 
 function pfApplyFoto(src) {
   if (!src) return;
-  const img = document.getElementById('pf-avatar-img');
-  const txt = document.getElementById('pf-avatar-txt');
-  if (img && txt) {
-    img.src = src;
-    img.style.display = 'block';
-    txt.style.display = 'none';
-  }
   const heroImg = document.getElementById('pf-hero-foto');
   if (heroImg) { heroImg.src = src; heroImg.style.display = 'block'; }
 }
@@ -2738,8 +2712,16 @@ function pfSelectArea(el, val) {
 }
 
 /* ── Aplicar datos de perfil al formulario ── */
+function pfApplyPosition(value) {
+  const options=['Base','Escolta','Alero','Ala-pívot','Pívot','Escolta / Alero','Polivalente'];
+  const position=options.includes(value) ? value : '';
+  const select=document.getElementById('pf-position');if(select)select.value=position;
+  const hero=document.getElementById('hero-position');if(hero)hero.textContent=position ? '⛹️ '+position+' · elegida por jugador' : '⛹️ Posición por elegir';
+  const cv=document.getElementById('cv-position');if(cv)cv.textContent=position || 'Posición por elegir';
+}
 function pfApplyData(d) {
   if (!d) return;
+  pfApplyPosition(d.position || '');
   const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
   set('pf-fnac',    d.fnac);
   const dob=document.getElementById('cv-dob');

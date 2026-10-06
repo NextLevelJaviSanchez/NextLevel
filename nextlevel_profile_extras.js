@@ -44,23 +44,25 @@
     Z12:{x:250,y:393,path:'M170 340 H330 V450 H170 Z'},
     Z13:{x:92,y:350,path:'M15 190 H65 V280 H170 V450 H15 Z'}
   };
+  function heatColor(row,mode){
+    if(!row || !row.attempts)return '#2C2F36';
+    if(mode==='volume')return row.attempts>50 ? '#FF6D00' : row.attempts>=15 ? '#E65100' : '#546E7A';
+    const pct=100*row.made/row.attempts;
+    return pct>40 ? '#00E676' : pct>=25 ? '#FFD740' : '#29B6F6';
+  }
   function drawSeasonCourt(zones,mode){
     const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
     svg.setAttribute('viewBox','0 0 500 470');svg.setAttribute('role','img');svg.setAttribute('aria-label','Media cancha esquemática: mapa de calor por zonas CABB');svg.style.cssText='display:block;width:100%;max-width:620px;margin:auto';
     const append=(tag,attrs,text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;svg.append(el);return el;};
     append('rect',{x:15,y:40,width:470,height:410,fill:'#0f1c30',rx:4});
-    const peak=Math.max(1,...Object.values(zones).map(v=>v.attempts));
     for(const [id,layout] of Object.entries(heatZones)){
       const row=zones[id],pct=row ? row.made/row.attempts : 0;
-      const intensity=mode==='volume' ? (row?.attempts || 0)/peak : pct;
-      const stops=[[37,99,235],[250,204,21],[220,38,38]],segment=intensity<=.5 ? 0 : 1,t=segment===0 ? intensity*2 : (intensity-.5)*2;
-      const rgb=stops[segment].map((v,i)=>Math.round(v+(stops[segment+1][i]-v)*t));
-      const fill=!row ? '#172338' : `rgb(${rgb.join(',')})`;
+      const fill=heatColor(row,mode);
       const path=append('path',{d:layout.path,fill,stroke:'#8494ac','stroke-width':.8});
       const title=document.createElementNS(ns,'title');title.textContent=row ? `${id}: ${row.made}/${row.attempts} · ${(pct*100).toFixed(1)}%` : `${id}: sin intentos registrados`;path.append(title);
-      append('text',{x:layout.x,y:layout.y-10,fill:'#fff','text-anchor':'middle','font-size':12,'font-weight':700},id);
-      append('text',{x:layout.x,y:layout.y+6,fill:'#fff','text-anchor':'middle','font-size':11},row ? `${row.made}/${row.attempts}` : '—');
-      if(row)append('text',{x:layout.x,y:layout.y+21,fill:'#fff','text-anchor':'middle','font-size':10},`${(pct*100).toFixed(1)}%`);
+      append('text',{x:layout.x,y:layout.y-10,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':12,'font-weight':700},id);
+      append('text',{x:layout.x,y:layout.y+6,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':11},row ? `${row.made}/${row.attempts}` : '—');
+      if(row)append('text',{x:layout.x,y:layout.y+21,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':10},`${(pct*100).toFixed(1)}%`);
     }
     // Líneas de cancha separadas de las divisiones estadísticas del esquema.
     append('path',{d:'M15 40 H485 V450 H15 Z M174 40 V215 H326 V40 M65 40 V112 C65 365 435 365 435 112 V40 M174 215 A76 76 0 0 0 326 215 M218 62 H282',fill:'none',stroke:'#e2e8f0','stroke-width':2,'pointer-events':'none'});
@@ -88,7 +90,7 @@
         grid.replaceChildren();let attempts=0,made=0;
         entries.forEach(([,row])=>{attempts+=row.attempts;made+=row.made;});
         grid.append(drawSeasonCourt(zones,mode.value));
-        colorLegend.textContent=mode.value==='volume' ? 'Azul → amarillo → rojo: menor → mayor volumen. Rojo = zona con más intentos dentro de la selección; el color representa frecuencia, no efectividad.' : 'Azul → amarillo → rojo: menor → mayor porcentaje convertido (0% → 50% → 100%). Compará también los intentos: pocas muestras pueden dar porcentajes extremos.';
+        colorLegend.textContent=mode.value==='volume' ? 'Volumen: naranja intenso >50 intentos · naranja intermedio 15–50 · gris azulado 1–14 · gris oscuro sin intentos. El color representa frecuencia.' : 'Efectividad: verde >40% · amarillo 25–40% · azul <25% con intentos · gris oscuro sin intentos. Compará también el volumen: pocas muestras pueden dar porcentajes extremos.';
         const unknown=entries.filter(([id])=>!heatZones[id]);
         if(unknown.length){const note=document.createElement('p');note.textContent='Fuera del esquema: '+unknown.map(([id,r])=>`${id}: ${r.made}/${r.attempts}`).join(' · ');grid.append(note);}
         status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.`;
@@ -98,7 +100,7 @@
       };select.setAttribute('aria-label','Torneo del mapa');select.addEventListener('change',render);mode.addEventListener('change',render);render();
     }catch(e){status.textContent='No se pudo cargar el mapa de temporada. Reintentá más tarde.';}
   }
-  function teamRanking(games,key,minGames=1){
+  function teamRanking(games,key,minGames=Math.ceil(games.length*.5)){
     const players=new Map();
     for(const game of games.filter(g=>g.available))for(const row of game.players){
       const id=row.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ');
@@ -107,7 +109,7 @@
     }
     const eligible=[...players.values()].filter(p=>p.pj>=minGames && p.known===p.pj).map(p=>({...p,avg:p.total/p.pj})).sort((a,b)=>b.avg-a.avg || a.name.localeCompare(b.name));
     let rank=0,previous=null;eligible.forEach((p,i)=>{if(p.avg!==previous)rank=i+1;p.rank=rank;previous=p.avg;});
-    return {rows:eligible.filter(p=>p.rank<=5),excluded:[...players.values()].filter(p=>p.known!==p.pj).length};
+    return {rows:eligible,minGames,excluded:[...players.values()].filter(p=>p.known!==p.pj).length};
   }
   async function loadTeamRanking(){
     const pane=document.getElementById('tab-rend');if(!pane)return;
@@ -117,16 +119,31 @@
     try{
       const response=await fetch('cabb_team_2026.json');if(!response.ok)throw Error('Snapshot no disponible');const data=await response.json();
       const select=document.createElement('select');select.setAttribute('aria-label','Torneo del TOP');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
-      ['AFMB','Federal CABB','Todos los torneos'].forEach(v=>{const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option);});card.insertBefore(select,content);
+      ['AFMB','Federal CABB'].forEach(v=>{const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option);});card.insertBefore(select,content);
       const render=()=>{
         content.replaceChildren();const games=data.games.filter(g=>select.value==='Todos los torneos' || g.tournament===select.value);
         const text=t=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6';p.textContent=t;content.append(p);};
-        text(`Cálculo NextLevel sobre actas CABB · ${data.season} · ${games.filter(g=>g.available).length}/${games.length} partidos del equipo. Promedio por partido jugado (tiempo > 0), mínimo 1 PJ. TOP 5 posiciones, con empates. Última acta: ${games.map(g=>g.date).sort().at(-1) || "—"}. La participación puede variar entre jugadoras.`);
+        const minimum=Math.ceil(games.length*.5);
+        text(`${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. Cálculo NextLevel desde actas CABB.`);
+        if(games.some(g=>!g.available)){text('Cobertura incompleta: ranking pendiente hasta disponer de todas las actas.');return;}
+        const panels=document.createElement('div');panels.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px';content.append(panels);
+        const isProfile=p=>p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')==='GERALDINE MIA SANCHEZ';
         for(const [key,label,negative] of [['pts','Puntos',false],['reb_tot','Rebotes',false],['stl','Recuperos',false],['blk','Tapones',false],['ast','Asistencias',false],['fouls_received','Faltas recibidas',false],['to_perdidas','Pérdidas',true],['faltas','Faltas cometidas',true]]){
-          const result=teamRanking(games,key);const title=document.createElement('strong');title.textContent=label+(negative ? ' · mayor promedio (a revisar)' : ' · mayor promedio');content.append(title);
-          if(!result.rows.length)text('Sin datos completos disponibles para este ranking.');
-          result.rows.forEach(p=>text(`${p.rank}. ${p.name} · ${p.avg.toFixed(2)} por partido · ${p.total} total · ${p.pj} PJ`));
-          if(result.excluded)text(`${result.excluded} jugadora(s) sin cobertura completa en esta métrica; no se reemplazan faltantes por cero.`);
+          const result=teamRanking(games,key),panel=document.createElement('div');panel.style.cssText='padding:12px;border-radius:10px;background:var(--card2);border:1px solid rgba(255,255,255,.08)';panels.append(panel);
+          const title=document.createElement('strong');title.style.fontSize='.78rem';title.textContent=label;panel.append(title);
+          const caption=document.createElement('p');caption.style.cssText='font-size:.62rem;color:var(--muted);margin:4px 0 8px';caption.textContent=negative ? 'Mayor promedio · a revisar' : 'TOP 3 · promedio por partido';panel.append(caption);
+          const top=result.rows.slice(0,3),profile=result.rows.find(isProfile);
+          const row=p=>{
+            const el=document.createElement('div');el.style.cssText='display:grid;grid-template-columns:25px minmax(0,1fr) auto;gap:7px;align-items:center;padding:8px 5px;font-size:.7rem;border-radius:7px';
+            if(isProfile(p)){el.style.background='rgba(249,115,22,.13)';el.style.border='1px solid rgba(249,115,22,.5)';el.style.fontWeight='700';el.setAttribute('aria-label','Jugadora del perfil, puesto '+p.rank);}
+            for(const value of [p.rank+'.',p.name,p.avg.toFixed(2)]){const span=document.createElement('span');span.textContent=value;el.append(span);}
+            el.title=`${p.total} total · ${p.pj}/${games.length} PJ`;const detail=document.createElement('small');detail.style.cssText='grid-column:2/4;color:var(--muted);font-weight:400';detail.textContent=`${p.pj} PJ · ${p.total} total`;el.append(detail);panel.append(el);
+          };
+          top.forEach(row);
+          if(profile && !top.includes(profile)){const separator=document.createElement('div');separator.textContent='···';separator.style.cssText='text-align:center;color:var(--muted)';panel.append(separator);row(profile);}
+          if(!profile){const note=document.createElement('p');note.style.cssText='font-size:.65rem;color:var(--muted)';note.textContent='Jugadora del perfil sin puesto: no alcanza el 50% de PJ o faltan datos de este rubro.';panel.append(note);}
+          if(!top.length){const note=document.createElement('p');note.textContent='Sin jugadoras elegibles con datos completos.';panel.append(note);}
+          if(result.excluded){const note=document.createElement('small');note.textContent=`${result.excluded} sin datos completos en este rubro.`;panel.append(note);}
         }
         text('Pérdidas y faltas cometidas describen frecuencia; no determinan por sí solas desempeño, rol ni decisiones. Revisarlas con minutos y contexto junto al coach.');
       };select.addEventListener('change',render);render();
@@ -179,6 +196,6 @@
       document.getElementById('zone-summary').textContent='Dato CABB · 2/6 de cancha · 0/0 triples · 1/3 libres (fuera del mapa).';
     }catch(e){court.querySelectorAll('[data-official-shot]').forEach(el=>el.remove());document.getElementById('zone-summary').textContent='No se pudo cargar el mapa oficial de este partido.';}
   }
-  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt,teamRanking};
+  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt,teamRanking,heatColor};
   if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',load);
 })();

@@ -8,6 +8,28 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_team_ranking_half_season(self):
+        script="""
+const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');
+const games=Array.from({length:5},(_,i)=>({available:true,players:[...(i<3?[{name:'QUALIFIED',pts:5}]:[]),...(i<2?[{name:'TOO FEW',pts:99}]:[])]}));
+const r=teamRanking(games,'pts');assert.equal(r.minGames,3);assert.equal(r.rows.length,1);assert.equal(r.rows[0].name,'QUALIFIED');
+assert.equal(teamRanking(games.slice(0,4),'pts').minGames,2);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        h=(R/'perfil_mia_sanchez_14.html').read_text(encoding='utf-8')
+        start=h.index('<div id="tab-rend"');end=h.index('<div id="tab-mental"')
+        self.assertIn('id="season-milestones"',h[start:end])
+
+    def test_heat_palette_thresholds(self):
+        script="""
+const assert=require('node:assert/strict');const {heatColor}=require('./nextlevel_profile_extras.js');
+assert.equal(heatColor(null,'volume'),'#2C2F36');
+assert.equal(heatColor({attempts:0,made:0},'conversion'),'#2C2F36');
+for(const [attempts,color] of [[1,'#546E7A'],[14,'#546E7A'],[15,'#E65100'],[50,'#E65100'],[51,'#FF6D00']])assert.equal(heatColor({attempts,made:0},'volume'),color);
+for(const [made,color] of [[0,'#29B6F6'],[24,'#29B6F6'],[25,'#FFD740'],[40,'#FFD740'],[41,'#00E676']])assert.equal(heatColor({attempts:100,made},'conversion'),color);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
     def test_team_ranking_coverage_and_ties(self):
         script="""
 const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');
