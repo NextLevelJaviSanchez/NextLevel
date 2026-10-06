@@ -316,6 +316,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   .btn-cv{display:none!important}
   @page{margin:1.5cm}
 }
+
+.mental-tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px}
+.mental-tip-card{background:var(--card2);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--tip-color,#38bdf8);border-radius:12px;padding:15px;min-width:0}
+.mental-tip-title{display:flex;align-items:center;gap:8px;color:var(--tip-color,#38bdf8);font-size:.84rem;line-height:1.4;margin:0 0 10px}
+.mental-tip-title span{font-size:1.3rem}
+.mental-tip-copy{font-size:.74rem;color:#cbd5e1;line-height:1.7;margin:0}
+.mental-tip-practice{margin-top:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,.035);font-size:.7rem;line-height:1.6}
+.mental-tip-practice strong{color:var(--tip-color,#38bdf8)}
+.mental-tip-practice p{margin:5px 0 0;color:#cbd5e1}
+
 </style>
 </head>
 <body>
@@ -694,23 +704,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 ══════════════════════════════════════════ -->
 <div id="tab-plan" class="tab-pane">
   <div class="card"><div class="card-ttl">🧘 Tips y trabajo mental</div>
-    <p style="font-size:.72rem;color:var(--muted)">Áreas elegidas en Perfil · prácticas propuestas para dos semanas y revisión semanal con el coach.</p>
+    <p style="font-size:.72rem;color:var(--muted)">Ideas para sentirte acompañada, disfrutar del juego y practicar de a poco. Elegí lo que te sirva y conversalo con tu coach.</p>
     <div id="plan-mental-content">Cargando tus áreas mentales…</div>
-    <details style="margin:12px 0;font-size:.72rem;line-height:1.7">
-      <summary style="cursor:pointer;color:var(--ac);font-weight:700">💡 Tips para cada partido</summary>
-      <ul style="padding-left:20px">
-        <li>Antes de jugar, elegí una consigna concreta: comunicarte, volver a defender o buscar el rebote.</li>
-        <li>Después de un error, enfocá la atención en una acción útil para la próxima posesión.</li>
-        <li>Al terminar, anotá un acierto y algo para practicar. Revisalo con tu coach.</li>
-      </ul>
-    </details>
-    <p style="font-size:.68rem"><a href="plan_mejora_mia_sanchez_14_2026.html">Abrir el plan completo</a></p>
+    <h3 style="font-size:.8rem;color:#FFD740;margin:18px 0 10px">💡 Pequeñas ideas para cada partido</h3>
+    <div class="mental-tip-grid">
+      <section class="mental-tip-card" style="--tip-color:#38bdf8"><h4 class="mental-tip-title">🌤️ Antes de jugar</h4><p class="mental-tip-copy">Elegí una cosa en la que quieras enfocarte: hablar con tus compañeras, volver a defender o buscar el rebote.</p></section>
+      <section class="mental-tip-card" style="--tip-color:#4ade80"><h4 class="mental-tip-title">🔄 La próxima jugada</h4><p class="mental-tip-copy">Si algo no salió, buscá una acción útil para volver al juego. Cada posesión es una nueva oportunidad.</p></section>
+      <section class="mental-tip-card" style="--tip-color:#c4b5fd"><h4 class="mental-tip-title">⭐ Al terminar</h4><p class="mental-tip-copy">Recordá algo que hiciste bien y algo que te gustaría practicar. Compartilo con tu coach.</p></section>
+    </div>
+    <p class="mental-tip-copy" style="margin:14px 0">🗓️ Probá estas ideas durante dos semanas. Una vez por semana, contale a tu coach qué te ayudó y qué querés cambiar.</p>
     <button type="button" class="obj-btn" onclick="showTab('perfil')">Editar áreas en Perfil</button>
   </div>
 
   <div style="background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.15);border-radius:12px;padding:14px 16px;margin-bottom:14px">
-    <div style="font-size:0.7rem;font-weight:800;color:var(--ac2);margin-bottom:6px">🎯 Plan de Desarrollo — Escolta/Alero Anotadora 2026–2027</div>
-    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65">Objetivo: consolidar el rol de <strong style="color:var(--text)">primera opción ofensiva</strong> en Cadetes 2027 y construir el <strong style="color:var(--text)">perfil de recruiting NCAA/Liga Nacional</strong> con base en los números reales de esta temporada.</div>
+    <div style="font-size:0.7rem;font-weight:800;color:var(--ac2);margin-bottom:6px">🎯 Mi plan de desarrollo</div>
+    <div style="font-size:0.71rem;color:#94a3b8;line-height:1.65">Objetivo: <strong style="color:var(--text)">seguir aprendiendo, disfrutar del juego y mejorar paso a paso</strong>, con metas acordadas con el coach y prácticas adaptadas a esta etapa de formación.</div>
   </div>
 
   <div class="card">

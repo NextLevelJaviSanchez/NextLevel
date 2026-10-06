@@ -2,20 +2,26 @@
 (function(){
   'use strict';
   const tips={
-    'Me trabo en los TL':'Elegí con el coach una rutina breve antes de cada tiro libre y practicá la misma secuencia.',
-    'Los errores me bajan':'Después de un error, elegí una acción concreta para la siguiente posesión. Revisá también los aciertos al terminar.',
-    'Nervios en momentos clave':'Prepará con el coach una palabra o rutina breve para volver al juego en momentos de presión.',
-    'Me desconcentro en defensa':'Elegí una consigna para cada posesión y revisá con el coach si te ayuda a sostener la atención.',
-    'Pienso demasiado antes de tirar':'Practicá decisiones de tiro en situaciones de juego con el coach, atendiendo al espacio y al equilibrio.',
-    'Me frustra no anotar':'Definí objetivos de participación además de puntos: comunicación, rebote y volver a defender.'
+    'Me trabo en los TL':{icon:'🎯',title:'Mi rutina de tiro libre',color:'#FFD740',text:'Buscá una rutina sencilla con tu coach y repetila antes de tirar. Tenés tu momento para prepararte.',practice:'Probá la misma secuencia en una serie corta de tiros libres.'},
+    'Los errores me bajan':{icon:'🌱',title:'Un error, una nueva oportunidad',color:'#4ade80',text:'Un error no borra lo que hiciste bien. Volvé al juego con una acción pequeña: defender, comunicarte o acompañar una jugada.',practice:'Elegí una palabra como “siguiente” para recordar que la próxima jugada empieza de nuevo.'},
+    'Nervios en momentos clave':{icon:'🫶',title:'Volver a lo que puedo hacer',color:'#c4b5fd',text:'Es normal sentir nervios. Buscá con tu coach una palabra o rutina que te ayude a enfocarte en la próxima acción.',practice:'Probala primero en el entrenamiento y contá cómo te resultó.'},
+    'Me desconcentro en defensa':{icon:'👀',title:'Una consigna para defender',color:'#38bdf8',text:'No hace falta pensar en todo a la vez. Elegí una consigna con tu coach y volvé a ella en cada posesión.',practice:'Por ejemplo: mirar pelota y jugadora, o hablar con una compañera.'},
+    'Pienso demasiado antes de tirar':{icon:'🏀',title:'Decidir con confianza',color:'#fb923c',text:'Practicá con tu coach cómo reconocer una oportunidad de tiro. Animate a probar y aprender de cada decisión.',practice:'Ensayá situaciones de juego y conversá sobre lo que viste antes de tirar.'},
+    'Me frustra no anotar':{icon:'🤝',title:'Aportar de muchas maneras',color:'#f9a8d4',text:'Tu aporte también está en un rebote, un pase o volver a defender. Los puntos son una parte del juego.',practice:'Elegí una acción que ayude al equipo y reconocela al terminar.'}
   };
   function renderMental(data){
     const values=Array.isArray(data) ? data : String(data?.mental || '').split('|').filter(Boolean);
-    for(const id of ['plan-mental-content']){
-      const el=document.getElementById(id);if(!el)continue;el.replaceChildren();
-      if(!values.length){el.textContent='Elegí en Perfil las áreas mentales que querés trabajar.';continue;}
-      for(const value of values){const card=document.createElement('div');card.className='card';const title=document.createElement('strong');title.textContent=value;card.append(title);
-        for(const text of [tips[value] || 'Definí una práctica con tu coach.','Práctica propuesta: elegí una situación en cada entrenamiento para aplicar esta consigna durante las próximas dos semanas.','Seguimiento: al terminar, anotá qué situación apareció, qué hiciste y qué querés probar la próxima vez. Revisalo semanalmente con el coach.']){const p=document.createElement('p');p.textContent=text;card.append(p);}el.append(card);}
+    const el=document.getElementById('plan-mental-content');
+    if(el){
+      el.replaceChildren();el.className='mental-tip-grid';
+      if(!values.length){const empty=document.createElement('p');empty.className='mental-tip-copy';empty.textContent='Podés elegir en Perfil lo que querés trabajar. Mientras tanto, acá abajo tenés ideas para acompañarte en cada partido.';el.append(empty);}
+      for(const value of values){
+        const tip=tips[value] || {icon:'💡',title:value,color:'#38bdf8',text:'Conversá con tu coach sobre lo que querés trabajar.',practice:'Elijan una práctica sencilla para empezar.'};
+        const card=document.createElement('section');card.className='mental-tip-card';card.style.setProperty('--tip-color',tip.color);
+        const title=document.createElement('h3');title.className='mental-tip-title';const icon=document.createElement('span');icon.textContent=tip.icon;icon.setAttribute('aria-hidden','true');title.append(icon,document.createTextNode(tip.title));card.append(title);
+        const text=document.createElement('p');text.className='mental-tip-copy';text.textContent=tip.text;card.append(text);
+        const practice=document.createElement('div');practice.className='mental-tip-practice';const label=document.createElement('strong');label.textContent='✨ Para probar';const copy=document.createElement('p');copy.textContent=tip.practice;practice.append(label,copy);card.append(practice);el.append(card);
+      }
     }
     document.querySelectorAll('#pf-mental-chips button').forEach(button=>{const on=values.includes(button.dataset.value);button.classList.toggle('active',on);button.setAttribute('aria-pressed',String(on));});
   }
