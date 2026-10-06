@@ -647,14 +647,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="ia-ft">Dato CABB: boxscores · Cálculo NextLevel: promedios y porcentajes · Coach: evaluación personalizada · Objetivo: propuesta pendiente de acuerdo.</div>
   </div>
 
-  <!-- RADAR — EVALUACIÓN NEXTLEVEL -->
   <div class="card">
-    <div class="card-ttl">📡 Evaluación NextLevel — Perfil Mía Sánchez</div>
-    <div style="background:rgba(250,204,21,0.05);border:1px solid rgba(250,204,21,0.15);border-radius:8px;padding:7px 11px;margin-bottom:10px;font-size:0.62rem;color:#fde047;line-height:1.45">
-      🧑‍🏫 <strong>Evaluación NextLevel:</strong> Sin evaluación cuantitativa cargada. No representa percentil nacional oficial.
-    </div>
-    <div style="position:relative;height:270px"><canvas id="radarChart"></canvas></div>
-    <div class="pct-legend" id="pctLegend"></div>
+    <div class="card-ttl">🏆 Hitos de temporada</div>
+    <div id="season-milestones">Cargando partidos oficiales…</div>
+  </div>
+  <div class="card"><div class="card-ttl">🧑‍🏫 Evaluación del coach pendiente</div>
+    <p style="font-size:.75rem;color:var(--muted)">La evaluación se mostrará cuando el coach registre criterios y valoraciones.</p>
+    <div hidden><canvas id="radarChart"></canvas><div id="pctLegend"></div></div>
   </div>
 
   <!-- FORTALEZAS / ÁREAS -->
@@ -2039,6 +2038,10 @@ function buildInsights(container) {
    ══════════════════════════════════════════════════════════ */
 // Definición base de objetivos (conectados al diagnóstico)
 const OBJETIVOS_BASE = [
+  { id:'dobledoble2026', ttl:'Conseguir un doble-doble en 2026', estado:'pendiente',
+    txt:'Objetivo de temporada: alcanzar al menos 10 en dos categorías entre puntos, rebotes, asistencias, recuperos y tapones en un mismo partido oficial. Los hitos muestran los resultados verificados.',
+    origen:'Objetivo · Temporada 2026', color:'#facc15',
+    drill:'Acordá con el coach acciones de juego que contribuyan al equipo. El logro se verifica desde las estadísticas oficiales; no garantiza un resultado.' },
   { id:'tl70',   ttl:'Tiro Libre — Meta 70%',            estado:'activo',
     txt:'50 TL/día con rutina invariable. El TL es la estadística más controlable y te da puntos seguros bajo presión.',
     origen:'Coach · Área a mejorar', color:'#ef4444',

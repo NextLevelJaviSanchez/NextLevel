@@ -29,6 +29,41 @@
     for(const game of games.filter(g=>g.matched))for(const shot of game.shots){const zone=String(shot.zona || 'Sin zona').replace(/-(IZ|DE)$/,'');const row=zones[zone] ||= {attempts:0,made:0};row.attempts++;if(shot.accion_tipo.startsWith('CANASTA'))row.made++;}
     return zones;
   }
+  // Esquema visual de zonas, no transformación de coordenadas del proveedor.
+  const heatZones={
+    Z1:{x:250,y:110,path:'M170 40 H330 V190 H170 Z'},
+    Z2:{x:383,y:110,path:'M330 40 H435 V190 H330 Z'},
+    Z3:{x:250,y:237,path:'M170 190 H330 V280 H170 Z'},
+    Z4:{x:117,y:110,path:'M65 40 H170 V190 H65 Z'},
+    Z6:{x:117,y:232,path:'M65 190 H170 V280 H65 Z'},
+    Z7:{x:383,y:232,path:'M330 190 H435 V280 H330 Z'},
+    Z8:{x:250,y:311,path:'M170 280 H330 V340 H170 Z'},
+    Z9:{x:38,y:110,path:'M15 40 H65 V190 H15 Z'},
+    Z10:{x:462,y:110,path:'M435 40 H485 V190 H435 Z'},
+    Z11:{x:408,y:350,path:'M330 280 H435 V190 H485 V450 H330 Z'},
+    Z12:{x:250,y:393,path:'M170 340 H330 V450 H170 Z'},
+    Z13:{x:92,y:350,path:'M15 190 H65 V280 H170 V450 H15 Z'}
+  };
+  function drawSeasonCourt(zones,mode){
+    const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('viewBox','0 0 500 470');svg.setAttribute('role','img');svg.setAttribute('aria-label','Media cancha esquemática: mapa de calor por zonas CABB');svg.style.cssText='display:block;width:100%;max-width:620px;margin:auto';
+    const append=(tag,attrs,text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;svg.append(el);return el;};
+    append('rect',{x:15,y:40,width:470,height:410,fill:'#0f1c30',rx:4});
+    const peak=Math.max(1,...Object.values(zones).map(v=>v.attempts));
+    for(const [id,layout] of Object.entries(heatZones)){
+      const row=zones[id],pct=row ? row.made/row.attempts : 0;
+      const fill=!row ? '#172338' : mode==='volume' ? `hsla(28,95%,55%,${.15+.7*row.attempts/peak})` : `hsla(${pct*120},75%,45%,.65)`;
+      const path=append('path',{d:layout.path,fill,stroke:'#8494ac','stroke-width':.8});
+      const title=document.createElementNS(ns,'title');title.textContent=row ? `${id}: ${row.made}/${row.attempts} · ${(pct*100).toFixed(1)}%` : `${id}: sin intentos registrados`;path.append(title);
+      append('text',{x:layout.x,y:layout.y-10,fill:'#fff','text-anchor':'middle','font-size':12,'font-weight':700},id);
+      append('text',{x:layout.x,y:layout.y+6,fill:'#fff','text-anchor':'middle','font-size':11},row ? `${row.made}/${row.attempts}` : '—');
+      if(row)append('text',{x:layout.x,y:layout.y+21,fill:'#fff','text-anchor':'middle','font-size':10},`${(pct*100).toFixed(1)}%`);
+    }
+    // Líneas de cancha separadas de las divisiones estadísticas del esquema.
+    append('path',{d:'M15 40 H485 V450 H15 Z M174 40 V215 H326 V40 M65 40 V112 C65 365 435 365 435 112 V40 M174 215 A76 76 0 0 0 326 215 M218 62 H282',fill:'none',stroke:'#e2e8f0','stroke-width':2,'pointer-events':'none'});
+    append('circle',{cx:250,cy:78,r:11,fill:'none',stroke:'#fff','stroke-width':2});
+    return svg;
+  }
   async function loadSeasonHeat(){
     const court=document.getElementById('shotCourt');if(!court)return;
     const card=document.createElement('div');card.className='card';court.closest('.card').after(card);
@@ -38,24 +73,59 @@
       const response=await fetch('cabb_season_shots_2026.json');if(!response.ok)throw Error('No disponible');const data=await response.json();
       const select=document.createElement('select');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
       for(const value of ['Todos los torneos','AFMB','Federal CABB']){const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);}card.append(select);
-      const legend=document.createElement('p');legend.style.fontSize='.7rem';legend.textContent='Color: porcentaje convertido (rojo → verde). Cada casilla muestra conversiones/intentos. Se agrupan las zonas de ambos lados del aro según su identificador CABB; la cuadrícula no representa distancias. Tiros libres fuera del mapa.';card.append(legend);
-      const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px';card.append(grid);
+      const legend=document.createElement('p');legend.style.fontSize='.7rem';legend.textContent='Media cancha esquemática: las posiciones y límites de las zonas son aproximados, no una calibración oficial CABB. Ambos lados se agrupan por código. Cada sector muestra conversiones/intentos y porcentaje; — significa sin intentos. Tiros libres fuera del mapa.';card.append(legend);
+      const mode=document.createElement('select');mode.style.cssText=select.style.cssText;mode.style.marginLeft='8px';mode.setAttribute('aria-label','Color del mapa');
+      for(const [value,label] of [['volume','Calor: volumen de tiros'],['conversion','Calor: porcentaje convertido']]){const option=document.createElement('option');option.value=value;option.textContent=label;mode.append(option);}card.append(mode);
+      const colorLegend=document.createElement('p');colorLegend.style.fontSize='.7rem';card.append(colorLegend);
+      const grid=document.createElement('div');card.append(grid);
       const analysis=document.createElement('p');analysis.style.cssText='font-size:.75rem;line-height:1.6';card.append(analysis);
       const render=()=>{
         const games=data.games.filter(g=>g.matched && (select.value==='Todos los torneos' || g.tournament===select.value));
         const zones=summarizeZones(games),entries=Object.entries(zones).sort((a,b)=>Number(a[0].slice(1))-Number(b[0].slice(1)));
         grid.replaceChildren();let attempts=0,made=0;
-        entries.forEach(([name,row])=>{attempts+=row.attempts;made+=row.made;const pct=100*row.made/row.attempts;const tile=document.createElement('div');tile.style.cssText=`padding:12px;border-radius:10px;border:1px solid hsla(${pct*1.2},70%,50%,.7);background:hsla(${pct*1.2},70%,35%,.3);font-size:.75rem`;tile.textContent=`Zona ${name.replace(/^Z/,'')}: ${row.made}/${row.attempts} · ${pct.toFixed(1)}%`;tile.title=`${row.attempts} intentos · ${row.made} conversiones`;grid.append(tile);});
+        entries.forEach(([,row])=>{attempts+=row.attempts;made+=row.made;});
+        grid.append(drawSeasonCourt(zones,mode.value));
+        colorLegend.textContent=mode.value==='volume' ? 'Más naranja = más intentos dentro de la selección. El color representa frecuencia, no efectividad.' : 'Rojo → verde = menor → mayor conversión. Compará también los intentos: pocas muestras pueden dar porcentajes extremos.';
+        const unknown=entries.filter(([id])=>!heatZones[id]);
+        if(unknown.length){const note=document.createElement('p');note.textContent='Fuera del esquema: '+unknown.map(([id,r])=>`${id}: ${r.made}/${r.attempts}`).join(' · ');grid.append(note);}
         status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.`;
         const volume=[...entries].sort((a,b)=>b[1].attempts-a[1].attempts)[0];
         const substantial=entries.filter(e=>e[1].attempts>=10).sort((a,b)=>b[1].made/b[1].attempts-a[1].made/a[1].attempts);
         analysis.textContent=attempts ? `Cálculo NextLevel: ${made}/${attempts} tiros convertidos (${(100*made/attempts).toFixed(1)}%). La mayor concentración está en ${volume[0]}: ${volume[1].attempts} intentos (${(100*volume[1].attempts/attempts).toFixed(1)}% del volumen). `+(substantial.length ? `Entre las zonas con al menos 10 intentos, ${substantial[0][0]} presenta el mayor porcentaje: ${substantial[0][1].made}/${substantial[0][1].attempts}. `:'')+'Los porcentajes describen esta muestra; no prueban calidad de tiro, dificultad o habilidad técnica. Revisar con el coach las zonas de alto volumen y menor conversión antes de definir una meta.':'Sin tiros para esta selección.';
-      };select.addEventListener('change',render);render();
+      };select.setAttribute('aria-label','Torneo del mapa');select.addEventListener('change',render);mode.addEventListener('change',render);render();
     }catch(e){status.textContent='No se pudo cargar el mapa de temporada. Reintentá más tarde.';}
+  }
+  function seasonMilestones(games){
+    const keys=['pts','reb_tot','ast','stl','blk'];
+    const numeric=v=>v!==null && v!==undefined && v!=='' && Number.isFinite(Number(v));
+    const best=key=>{const known=games.filter(g=>numeric(g[key]));if(!known.length)return null;const value=Math.max(...known.map(g=>Number(g[key])));return {value,games:known.filter(g=>Number(g[key])===value),coverage:known.length};};
+    const doubles=games.filter(g=>keys.filter(k=>numeric(g[k]) && Number(g[k])>=10).length>=2);
+    const complete=games.filter(g=>keys.every(k=>numeric(g[k]))).length;
+    return {points:best('pts'),valuation:best('val'),doubles,complete,total:games.length};
+  }
+  async function loadMilestones(){
+    const el=document.getElementById('season-milestones');if(!el)return;
+    try{
+      const {data,error}=await _supa.from('game_log').select('*').eq('player_id',PLAYER_ID).eq('source','cabb_api').gte('fecha',SEASON+'-01-01').lt('fecha',String(+SEASON+1)+'-01-01').order('fecha',{ascending:false});
+      if(error)throw error;const games=data || [],summary=seasonMilestones(games);el.replaceChildren();
+      const add=text=>{const p=document.createElement('p');p.style.cssText='font-size:.75rem;line-height:1.6';p.textContent=text;el.append(p);};
+      const match=g=>`${g.fecha} · vs ${g.rival || 'rival sin informar'} · ${g.torneo || 'torneo sin informar'} · ${g.resultado_eq || 'resultado sin informar'}`;
+      add(`Cálculo NextLevel sobre datos CABB · temporada ${SEASON} · ${games.length} partidos cargados · AFMB y Federal.`);
+      if(!games.length){add('Todavía no hay partidos oficiales disponibles para calcular hitos.');return;}
+      for(const [label,row] of [['Máximo de puntos',summary.points],['Máxima valoración CABB',summary.valuation]]){
+        add(row ? `${label}: ${row.value} · datos disponibles en ${row.coverage}/${games.length} partidos.` : `${label}: sin datos oficiales disponibles.`);
+        if(row)row.games.forEach(g=>add(match(g)));
+      }
+      add(`Dobles-dobles verificados: ${summary.doubles.length}. Al menos 10 en dos categorías: puntos, rebotes, asistencias, recuperos o tapones. Un triple-doble también cumple este hito.`);
+      summary.doubles.forEach(g=>add(`${match(g)} · `+[['pts','PTS'],['reb_tot','REB'],['ast','AST'],['stl','ROB'],['blk','TAP']].filter(([key])=>g[key]!=null && Number(g[key])>=10).map(([key,label])=>`${g[key]} ${label}`).join(' · ')));
+      if(summary.complete<games.length)add(`Cobertura completa para verificar ausencia de dobles-dobles: ${summary.complete}/${games.length} partidos. Los campos faltantes no se consideran cero.`);
+      add(summary.doubles.length ? 'Objetivo de conseguir un doble-doble: ya existe un logro verificado esta temporada. Podés registrar el objetivo como cumplido en Mi Plan.' : 'Objetivo de conseguir un doble-doble: disponible en Mi Plan para activar. Aún no hay un logro verificado en los partidos cargados.');
+    }catch(e){el.textContent='No se pudieron cargar los hitos oficiales. Reintentá más tarde.';}
   }
   function shotPosition(shot){const x=Number(shot.posicion_x),y=Number(shot.posicion_y);return {left:(x-35)/730*100,top:(y-34)/405*100};}
   async function load(){
     setupMental();
+    loadMilestones();
     try {const saved=JSON.parse(localStorage.getItem('nl_pf_mia14') || '{}');if(saved.foto_url || saved.foto)pfApplyFoto(saved.foto_url || saved.foto);if(Array.isArray(saved.mentalAreas)){_pfMentalAreas=saved.mentalAreas;renderMental(_pfMentalAreas);}}catch(e){}
     // Foto y perfil se cargan al abrir la página, sin esperar la pestaña Perfil.
     try{await pfLoadState();}catch(e){}
@@ -71,6 +141,6 @@
       document.getElementById('zone-summary').textContent='Dato CABB · 2/6 de cancha · 0/0 triples · 1/3 libres (fuera del mapa).';
     }catch(e){court.querySelectorAll('[data-official-shot]').forEach(el=>el.remove());document.getElementById('zone-summary').textContent='No se pudo cargar el mapa oficial de este partido.';}
   }
-  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones};
+  if(typeof module!=='undefined')module.exports={shotPosition,summarizeZones,seasonMilestones,heatZones,drawSeasonCourt};
   if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',load);
 })();

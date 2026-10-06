@@ -8,6 +8,24 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_season_milestones(self):
+        script = """
+const assert=require('node:assert/strict');
+const {seasonMilestones}=require('./nextlevel_profile_extras.js');
+const games=[{pts:20,val:-3,reb_tot:10,ast:0,stl:0,blk:0},
+ {pts:20,val:-1,reb_tot:null,ast:0,stl:0,blk:0},
+ {pts:0,val:null,reb_tot:10,ast:10,stl:0,blk:0},
+ {pts:null,val:null,reb_tot:null,ast:null,stl:null,blk:null}];
+const s=seasonMilestones(games);
+assert.equal(s.points.value,20);assert.equal(s.points.games.length,2);
+assert.equal(s.valuation.value,-1);assert.equal(s.valuation.coverage,2);
+assert.equal(s.doubles.length,2);assert.equal(s.complete,2);
+assert.equal(seasonMilestones([]).points,null);
+assert.equal(seasonMilestones([{pts:null,val:null}]).valuation,null);
+assert.equal(seasonMilestones([{pts:10,reb_tot:10,ast:10}]).doubles.length,1);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
     def test_missing_and_zero(self):
         s=summarize_games([{'pts':0,'reb_tot':None},{'pts':10,'reb_tot':5}])
         self.assertEqual(s['ppg'],5)
