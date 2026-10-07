@@ -67,9 +67,9 @@
       const fill=heatColor(row,mode);
       const path=append('path',{d:layout.path,fill,stroke:'#8494ac','stroke-width':.8});
       const title=document.createElementNS(ns,'title');title.textContent=row ? `${zoneName(id)}: ${row.made}/${row.attempts} · ${(pct*100).toFixed(1)}%` : `${zoneName(id)}: sin intentos registrados`;path.append(title);
-      append('text',{x:layout.x,y:layout.y-10,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':12,'font-weight':700},id==='Z1' ? 'Zona pintada' : id);
-      append('text',{x:layout.x,y:layout.y+6,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':11},row ? `${row.made}/${row.attempts}` : '—');
-      if(row)append('text',{x:layout.x,y:layout.y+21,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':10},`${(pct*100).toFixed(1)}%`);
+      append('text',{x:layout.x,y:layout.y-10,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':18,'font-weight':700},id==='Z1' ? 'Zona pintada' : id);
+      append('text',{x:layout.x,y:layout.y+6,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':18},row ? `${row.made}/${row.attempts}` : '—');
+      if(row)append('text',{x:layout.x,y:layout.y+21,fill:(mode==='conversion' && row && pct>=.25 ? '#10202b' : '#fff'),'text-anchor':'middle','font-size':16},`${(pct*100).toFixed(1)}%`);
     }
     // Líneas de cancha separadas de las divisiones estadísticas del esquema.
     append('path',{d:'M15 40 H485 V450 H15 Z M174 40 V215 H326 V40 M65 40 V112 C65 365 435 365 435 112 V40 M174 215 A76 76 0 0 0 326 215 M218 62 H282',fill:'none',stroke:'#e2e8f0','stroke-width':2,'pointer-events':'none'});

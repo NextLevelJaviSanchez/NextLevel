@@ -1,0 +1,36 @@
+/* Escala de lectura del perfil. La impresión conserva sus reglas propias. */
+@media screen {
+  :root{--muted:#94a3b8;--read-body:1rem;--read-secondary:.875rem;--read-card:1.125rem;--read-section:1.25rem}
+  body{font-size:var(--read-body);line-height:1.6}
+  .tab-pane{overflow-wrap:break-word}
+  .tab-pane [style*="font-size:0."],.tab-pane [style*="font-size:."],.tab-pane [style*="font-size: 0."]{font-size:var(--read-body)!important}
+  .hero [style*="font-size:0."],.hero [style*="font-size:."],.hero [style*="font-size: 0."]{font-size:var(--read-secondary)!important}
+  .card-ttl,.card-title{font-size:var(--read-section)!important;line-height:1.35;letter-spacing:.04em;flex-wrap:wrap}
+  .mental-tip-title,.plan-ttl,.obj-ttl,.ia-ttl,.tc-name,.tab-pane h3,.tab-pane h4{font-size:var(--read-card)!important;line-height:1.4}
+  .mental-tip-copy,.mental-tip-practice,.plan-txt,.obj-txt,.ia-txt,.drill-txt,.insight-txt,.logro-txt,.profile-quote{font-size:var(--read-body)!important;line-height:1.7}
+  .pf-chip,.plan-item,.obj-item{font-size:var(--read-body)}
+  .tab-pane label,.tab-pane legend,.tab-pane summary,.tab-pane table{font-size:var(--read-body)!important;line-height:1.6}
+  .tab-pane small,.tab-pane .pf-lbl,.sc-lbl,.kpi-lbl,.dash-kpi-lbl,.dash-kpi-sub,.hero-sub,.htag,.antro-l,.tc-cap,.tc-result-lbl,.plan-tag,.obj-badge,.ia-sub,.ia-ft{font-size:var(--read-secondary)!important;line-height:1.45;letter-spacing:.02em}
+  .tab-pane input:not([type=checkbox]):not([type=radio]),.tab-pane textarea,.tab-pane select{font-size:var(--read-body)!important;min-height:44px;max-width:100%;box-sizing:border-box}
+  .tab-pane button,.obj-btn,.pf-chip{font-size:var(--read-secondary)!important;min-height:40px;line-height:1.4;white-space:normal}
+  .tab-btn{font-size:var(--read-secondary);letter-spacing:.03em;min-height:44px}
+  .bnav-btn{font-size:.75rem;font-weight:600;color:#94a3b8;letter-spacing:-.01em;line-height:1.3}
+  .bnav-btn.on{color:var(--ac)}
+  .evol-lbl{font-size:var(--read-secondary);width:115px}
+  .evol-num{font-size:1.125rem}
+  .pf-val{font-size:var(--read-body);line-height:1.5}
+  .mental-tip-grid{gap:16px}
+  .mental-tip-card{padding:18px}
+  #season-milestones p{line-height:1.65!important}
+  #season-heat-map p{line-height:1.65!important}
+  @media(max-width:520px){
+    .card{padding:16px}
+    .card-ttl{font-size:1.125rem!important}
+    .bnav-btn{padding:9px 1px;min-width:0}
+    .hero-sub{font-size:.875rem}
+    .hero-top{gap:12px}
+    .hero-info{min-width:0}
+    .nl-logo{width:42px}
+    .profile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+}
