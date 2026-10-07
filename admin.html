@@ -226,15 +226,15 @@ select option{background:#1a2537}
       </div>
       <div class="form-row trio">
         <div class="form-group">
-          <label class="form-label">PPG</label>
+          <label class="form-label">Puntos por partido</label>
           <input type="number" id="st-ppg" placeholder="8.4" step="0.1">
         </div>
         <div class="form-group">
-          <label class="form-label">RPG</label>
+          <label class="form-label">Rebotes por partido</label>
           <input type="number" id="st-rpg" placeholder="4.2" step="0.1">
         </div>
         <div class="form-group">
-          <label class="form-label">APG</label>
+          <label class="form-label">Asistencias por partido</label>
           <input type="number" id="st-apg" placeholder="2.1" step="0.1">
         </div>
       </div>
@@ -254,7 +254,7 @@ select option{background:#1a2537}
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">SPG</label>
+          <label class="form-label">Recuperos por partido</label>
           <input type="number" id="st-spg" placeholder="1.8" step="0.1">
         </div>
         <div class="form-group">
@@ -420,12 +420,12 @@ function openPlayerDetail(playerId){
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px">
       <div style="font-size:0.7rem;font-weight:800;color:var(--ac);margin-bottom:6px">${s.tournament} ${s.season} · ${s.pj} PJ</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.68rem;color:#94a3b8">
-        ${s.ppg ? '<span><b style="color:#e2e8f0">'+s.ppg+'</b> PPG</span>' : ''}
-        ${s.rpg ? '<span><b style="color:#e2e8f0">'+s.rpg+'</b> RPG</span>' : ''}
-        ${s.apg ? '<span><b style="color:#e2e8f0">'+s.apg+'</b> APG</span>' : ''}
+        ${s.ppg ? '<span><b style="color:#e2e8f0">'+Number(s.ppg).toFixed(1)+'</b> Puntos por partido</span>' : ''}
+        ${s.rpg ? '<span><b style="color:#e2e8f0">'+Number(s.rpg).toFixed(1)+'</b> Rebotes por partido</span>' : ''}
+        ${s.apg ? '<span><b style="color:#e2e8f0">'+Number(s.apg).toFixed(1)+'</b> Asistencias por partido</span>' : ''}
         ${s.efg_pct ? '<span><b style="color:#38bdf8">'+s.efg_pct+'%</b> eFG</span>' : ''}
         ${s.ts_pct  ? '<span><b style="color:#a78bfa">'+s.ts_pct+'%</b> TS</span>' : ''}
-        ${s.val_pg  ? '<span><b style="color:#facc15">'+s.val_pg+'</b> VAL</span>' : ''}
+        ${s.val_pg  ? '<span><b style="color:#facc15">'+Number(s.val_pg).toFixed(1)+'</b> VAL</span>' : ''}
       </div>
     </div>`).join('') : '<div class="empty"><div class="empty-icon">🏀</div>Sin stats CABB cargadas</div>';
 
@@ -525,12 +525,12 @@ function renderStatsPanel(){
       </div>
       <div class="eval-mini-stats">
         <span class="ems"><span>${s.pj||0}</span> PJ</span>
-        ${s.ppg  ? `<span class="ems">PPG <span>${s.ppg}</span></span>` : ''}
-        ${s.rpg  ? `<span class="ems">RPG <span>${s.rpg}</span></span>` : ''}
-        ${s.apg  ? `<span class="ems">APG <span>${s.apg}</span></span>` : ''}
+        ${s.ppg  ? `<span class="ems">Puntos por partido <span>${Number(s.ppg).toFixed(1)}</span></span>` : ''}
+        ${s.rpg  ? `<span class="ems">Rebotes por partido <span>${Number(s.rpg).toFixed(1)}</span></span>` : ''}
+        ${s.apg  ? `<span class="ems">Asistencias por partido <span>${Number(s.apg).toFixed(1)}</span></span>` : ''}
         ${s.efg_pct ? `<span class="ems">eFG <span>${s.efg_pct}%</span></span>` : ''}
         ${s.ts_pct  ? `<span class="ems">TS <span>${s.ts_pct}%</span></span>` : ''}
-        ${s.val_pg  ? `<span class="ems">VAL <span>${s.val_pg}</span></span>` : ''}
+        ${s.val_pg  ? `<span class="ems">VAL <span>${Number(s.val_pg).toFixed(1)}</span></span>` : ''}
       </div>
     `;
     el.appendChild(div);

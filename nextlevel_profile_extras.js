@@ -91,6 +91,11 @@
       const colorLegend=document.createElement('p');colorLegend.style.fontSize='.7rem';card.append(colorLegend);
       const grid=document.createElement('div');card.append(grid);
       const analysis=document.createElement('p');analysis.style.cssText='font-size:.75rem;line-height:1.6';card.append(analysis);
+      const controls=document.createElement('div');controls.style.cssText='display:flex;flex-wrap:wrap;gap:10px;margin:12px 0';mode.style.marginLeft='0';select.style.maxWidth=mode.style.maxWidth='100%';controls.append(select,mode);
+      const help=document.createElement('details');help.style.cssText='margin-top:14px;font-size:14px;line-height:1.6';const summary=document.createElement('summary');summary.textContent='Cómo leer el mapa y sus datos';summary.style.cssText='cursor:pointer;color:#38bdf8;font-weight:700';help.append(summary,legend,colorLegend);
+      const updated=document.createElement('p');updated.style.cssText='font-size:14px;color:var(--muted)';updated.textContent=data.generated_at?'Datos actualizados: '+new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}):'Fecha de actualización sin informar';help.append(updated);
+      grid.style.cssText='width:100%;min-width:0;margin:10px 0';status.style.cssText='font-size:14px;line-height:1.5;color:var(--muted)';
+      card.replaceChildren(title,status,controls,grid,analysis,help);
       const render=()=>{
         const games=data.games.filter(g=>g.matched && (select.value==='Todos los torneos' || g.tournament===select.value));
         const zones=summarizeZones(games),entries=Object.entries(zones).sort((a,b)=>Number(a[0].slice(1))-Number(b[0].slice(1)));
@@ -100,7 +105,7 @@
         colorLegend.textContent=mode.value==='volume' ? 'Volumen: naranja intenso >50 intentos · naranja intermedio 15–50 · gris azulado 1–14 · gris oscuro sin intentos. El color representa frecuencia.' : 'Efectividad: verde >40% · amarillo 25–40% · azul <25% con intentos · gris oscuro sin intentos. Compará también el volumen: pocas muestras pueden dar porcentajes extremos.';
         const unknown=entries.filter(([id])=>!heatZones[id]);
         if(unknown.length){const note=document.createElement('p');note.textContent='Fuera del esquema: '+unknown.map(([id,r])=>`${id}: ${r.made}/${r.attempts}`).join(' · ');grid.append(note);}
-        status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.${data.generated_at ? ' Actualizado: '+new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : ''}`;
+        status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha`;
         const volume=[...entries].sort((a,b)=>b[1].attempts-a[1].attempts)[0];
         const substantial=entries.filter(e=>e[1].attempts>=10).sort((a,b)=>b[1].made/b[1].attempts-a[1].made/a[1].attempts);
         analysis.textContent=attempts ? `Cálculo NextLevel: ${made}/${attempts} tiros convertidos (${(100*made/attempts).toFixed(1)}%). La mayor concentración está en ${zoneName(volume[0])}: ${volume[1].attempts} intentos (${(100*volume[1].attempts/attempts).toFixed(1)}% del volumen). `+(substantial.length ? `Entre las zonas con al menos 10 intentos, ${zoneName(substantial[0][0])} presenta el mayor porcentaje: ${substantial[0][1].made}/${substantial[0][1].attempts}. `:'')+'Los porcentajes describen esta muestra; no prueban calidad de tiro, dificultad o habilidad técnica. Revisar con el coach las zonas de alto volumen y menor conversión antes de definir una meta.':'Sin tiros para esta selección.';
