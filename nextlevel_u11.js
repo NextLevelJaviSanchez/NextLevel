@@ -14,6 +14,11 @@ function validProfile(profile,today){
  if(profile.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.contactEmail))return false;
  return ['height','weight','wingspan','reach','shoeSize'].every(k=>profile[k]==null || profile[k]==='' || (Number.isFinite(Number(profile[k])) && Number(profile[k])>0));
 }
+function createAutosave(save,onError,delay=700){
+ let timer=null,chain=Promise.resolve();
+ const flush=()=>{clearTimeout(timer);timer=null;chain=chain.then(save).catch(onError);return chain;};
+ return {schedule(){clearTimeout(timer);timer=setTimeout(flush,delay);},flush};
+}
 async function load(){
 const $=id=>document.getElementById(id),key='nextlevel_u11_milo_v1';let state={entries:[],physical:[],profile:{},challenge:'Mirar antes de pasar'},playerId=null,linkedUserId=null,busy=false;
 try{const saved=JSON.parse(localStorage.getItem(key) || '{}');state={...state,...saved};if(!Array.isArray(state.entries))state.entries=[];if(!Array.isArray(state.physical))state.physical=[];}catch(e){}
@@ -31,13 +36,15 @@ const mentalTips={
  'Comunicarme con mis compañeros':['🤝 Nos ayudamos','Probá avisar que estás libre o alentar a un compañero. Buscá una oportunidad en cada entrenamiento.'],
  'Disfrutar y manejar los nervios':['🌱 Tomarme un momento','Si aparecen nervios, hacé una pausa y soltá el aire despacio. Podés contarle a tu familia o coach qué te ayudaría.']
 };
-const render=()=>{
-applyPhoto();document.querySelectorAll('[data-profile-field]').forEach(el=>el.value=state.profile[el.dataset.profileField] ?? '');
-document.querySelectorAll('[data-profile-choice]').forEach(el=>el.checked=(state.profile[el.dataset.profileChoice] || []).includes(el.value));
-$('mini-plan-season-goal').textContent=state.profile.seasonGoal || 'Podés elegir tu objetivo en Perfil y conversarlo con el coach.';
+const renderProfilePlan=()=>{$('mini-plan-season-goal').textContent=state.profile.seasonGoal || 'Podés elegir tu objetivo en Perfil y conversarlo con el coach.';
 $('mini-plan-areas').textContent=(state.profile.technicalAreas || []).join(' · ') || 'Podés elegir tus áreas en Perfil.';
 const tips=$('mini-plan-mental');tips.replaceChildren();for(const area of state.profile.mentalAreas || []){const tip=mentalTips[area];if(!tip)continue;const card=node('section',null,tips);card.className='tip';node('h3',tip[0],card);node('p',tip[1],card);}if(!tips.children.length)node('p','Elegí en Perfil qué querés trabajar. Acá vas a encontrar ideas para probar y revisar con tu coach.',tips);
 
+};
+const render=()=>{
+applyPhoto();document.querySelectorAll('[data-profile-field]').forEach(el=>el.value=state.profile[el.dataset.profileField] ?? '');
+document.querySelectorAll('[data-profile-choice]').forEach(el=>el.checked=(state.profile[el.dataset.profileChoice] || []).includes(el.value));
+renderProfilePlan();
 $('mini-challenge').value=state.challenge;$('challenge-preview').textContent=state.challenge;
 $('mini-enjoy').value=state.profile.enjoy || '';$('mini-learn').value=state.profile.learn || '';$('mini-position').value=state.profile.position || 'Estoy probando distintas posiciones';
 const cutoff=new Date(today+'T12:00:00Z');cutoff.setUTCDate(cutoff.getUTCDate()-6);const week=state.entries.filter(e=>e.date>=cutoff.toISOString().slice(0,10) && e.date<=today);$('week-summary').textContent=week.length ? `${week.length} experiencias registradas en los últimos siete días. Podés revisarlas con tu coach.` : 'Todavía no registraste una práctica esta semana.';
@@ -49,16 +56,24 @@ async function verifyAccount(){if(!client || !playerId)throw Error('Entrá con t
 async function persistProfile(){
  const snapshot={...state.profile,challenge:state.challenge};const serialized=JSON.stringify(snapshot);await verifyAccount();
  const {error}=await client.from('player_data').upsert({player_id:playerId,module:'mini_profile_v1',data:snapshot,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;
- if(serialized===JSON.stringify({...state.profile,challenge:state.challenge}))state.profileDirty=false;saveLocal();$('mini-profile-save-status').textContent='✅ Perfil guardado en Supabase.';
+ if(serialized===JSON.stringify({...state.profile,challenge:state.challenge})){state.profileDirty=false;$('mini-profile-save-status').textContent='✅ Guardado automáticamente en Supabase.';}else $('mini-profile-save-status').textContent='Guardando los últimos cambios…';saveLocal();
 }
-$('mini-save-profile').addEventListener('click',async()=>{
+const profileAutosave=createAutosave(async()=>{
+ if(!state.profileDirty)return;
+ if(!validProfile(state.profile,today)){$('mini-profile-save-status').textContent='Borrador guardado en este dispositivo. Revisá la fecha, el correo o las medidas para sincronizar.';return;}
+ if(!playerId){$('mini-profile-save-status').textContent='Guardado en este dispositivo · entrá con tu cuenta para sincronizar.';return;}
+ $('mini-profile-save-status').textContent='Guardando…';await persistProfile();
+},e=>{$('mini-profile-save-status').textContent='Guardado en este dispositivo · pendiente de sincronización: '+e.message;});
+function captureProfile(){
  const profile={...state.profile,enjoy:$('mini-enjoy').value.trim(),learn:$('mini-learn').value.trim(),position:$('mini-position').value};
  document.querySelectorAll('[data-profile-field]').forEach(el=>{profile[el.dataset.profileField]=el.value.trim();});
  for(const kind of ['technicalAreas','mentalAreas'])profile[kind]=[...document.querySelectorAll('[data-profile-choice="'+kind+'"]:checked')].map(el=>el.value);
- if(!validProfile(profile,today)){$('mini-profile-save-status').textContent='Revisá la fecha de nacimiento, el correo y las medidas.';return;}
- state.profileDirty=true;state.profile=profile;if(!saveLocal())return;render();$('mini-profile-save-status').textContent='Guardado en este dispositivo · pendiente de sincronización.';
- if(playerId){try{await persistProfile();}catch(e){$('mini-profile-save-status').textContent='Guardado en este dispositivo. Queda pendiente: '+e.message;}}
-});
+ state.profileDirty=true;state.profile=profile;
+ if(!saveLocal()){$('mini-profile-save-status').textContent='No se pudo guardar en este dispositivo. Conservá tus cambios antes de cerrar.';return;}
+ renderProfilePlan();$('mini-profile-save-status').textContent='Cambios guardados en este dispositivo · sincronizando…';profileAutosave.schedule();
+}
+document.querySelectorAll('#mini-perfil input:not([type="file"]),#mini-perfil textarea,#mini-perfil select').forEach(el=>el.addEventListener(el.type==='checkbox' || el.tagName==='SELECT'?'change':'input',captureProfile));
+window.addEventListener('online',()=>profileAutosave.schedule());
 $('mini-photo-button').addEventListener('click',()=>$('mini-photo-input').click());
 async function persistPhoto(){await verifyAccount();const snapshot=state.photo;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'foto_url',data:snapshot,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;if(snapshot===state.photo)state.photoDirty=false;saveLocal();$('mini-photo-status').textContent='✅ Foto guardada en Supabase. Se verá en tus otros dispositivos.';}
 $('mini-photo-input').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file)return;const btn=$('mini-photo-button');btn.disabled=true;
@@ -87,14 +102,16 @@ let rows=[];for(let from=0;;from+=500){const {data:chunk,error:readError}=await 
 const cloud=rows.filter(r=>r.module.startsWith('plan_progress_v1:') && r.data?.id && Array.isArray(r.data.areas)).map(r=>({...r.data,synced:true}));const ids=new Set(cloud.map(e=>e.id));state.entries=mergeEntries(state.entries.map(e=>ids.has(e.id)?{...e,synced:true}:e),cloud);const {data:measureRows,error:measureError}=await client.from('player_data').select('module,data').eq('player_id',playerId).like('module','mini_measures_v1:%');if(measureError)throw measureError;const measures=(measureRows || []).filter(r=>r.module.startsWith('mini_measures_v1:') && r.data?.id).map(r=>({...r.data,synced:true}));const measureIds=new Set(measures.map(e=>e.id));state.physical=mergeEntries(state.physical.map(e=>measureIds.has(e.id)?{...e,synced:true}:e),measures);saveLocal();render();renderPhysical();$('mini-sync').hidden=false;status('Cuenta de Milo vinculada. Podés sincronizar sus registros cuando quieras.');
 const {data:official,error:officialError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module','cabb_mini_official_v1').maybeSingle();if(officialError)throw officialError;if(official?.data)await renderOfficial(official.data);
 const {data:photo,error:photoError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module','foto_url').maybeSingle();if(photoError)throw photoError;if(!state.photoDirty){state.photo=photoSource(photo?.data);applyPhoto();saveLocal();}
+await NextLevelMiniPhysical.connect(client,playerId,linkedUserId);
 NextLevelCoachWorkspace.mount({host:$('mini-conversation'),client,playerId,mode:'player',playerLabel:'Jugador'});
+if(state.profileDirty)profileAutosave.schedule();else $('mini-profile-save-status').textContent='Perfil cargado desde Supabase · autoguardado activo.';
 }catch(e){playerId=null;$('mini-sync').hidden=true;status('No se pudo vincular el perfil: '+e.message);}
 }
 $('mini-connect').addEventListener('click',connectAccount);
 $('mini-sync').addEventListener('click',async()=>{if(!playerId || !client || busy)return;busy=true;$('mini-sync').disabled=true;try{const {data:auth,error:authError}=await client.auth.getUser();if(authError || !auth?.user || auth.user.id!==linkedUserId)throw Error('Volvé a comprobar la cuenta de Milo antes de sincronizar.');
 for(const entry of state.entries.filter(e=>!e.synced)){const {synced,...payload}=entry;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'plan_progress_v1:'+entry.id,data:payload,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;entry.synced=true;saveLocal();}
 for(const entry of state.physical.filter(e=>!e.synced)){const {synced,...payload}=entry;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'mini_measures_v1:'+entry.id,data:payload,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;entry.synced=true;saveLocal();}
-await persistProfile();if(state.photoDirty)await persistPhoto();status('Prácticas, preferencias y medidas guardadas en Supabase.');render();renderPhysical();}catch(e){status('Quedaron registros pendientes: '+e.message);}finally{busy=false;$('mini-sync').disabled=false;}});
+profileAutosave.schedule();await profileAutosave.flush();if(state.profileDirty)throw Error("El perfil sigue pendiente; revisá sus datos o la conexión.");if(state.photoDirty)await persistPhoto();status('Prácticas, preferencias y medidas guardadas en Supabase.');render();renderPhysical();}catch(e){status('Quedaron registros pendientes: '+e.message);}finally{busy=false;$('mini-sync').disabled=false;}});
 render();
 async function renderOfficial(source){
 try{if(!source){const response=await fetch('cabb_milo_u11_2026.json',{cache:'no-store'});if(!response.ok)throw Error();source=await response.json();}
@@ -106,15 +123,14 @@ for(const [key,label] of metrics){const card=node('section',null,$('mini-stat-su
 node('p','La valoración es el cálculo recibido de CABB con los conteos registrados en Mini; no es una evaluación completa de tus habilidades.',$('mini-stat-summary')).className='muted';
 const games=[...source.games].sort((a,b)=>a.Fecha.split('/').reverse().join('-').localeCompare(b.Fecha.split('/').reverse().join('-'))).reverse();
 for(const g of games){const home=g.NombreEquipoLocal==='QUILMES ATLETICO CLUB',rival=home?g.NombreEquipoVisitante:g.NombreEquipoLocal;const detail=node('details',null,$('mini-game-list'));node('summary',g.Fecha+' · '+rival,detail);const result=g.Resultados || {};node('p',`Resultado del equipo: ${home?result.ResultadoLocal:result.ResultadoVisitante}–${home?result.ResultadoVisitante:result.ResultadoLocal}`,detail);const row=records.find(r=>r.id===String(g.IdPartidoNotificacion));if(row){node('p',`Dato CABB: ${row.puntos ?? '—'} puntos · ${row.tiempo_jugado ?? '—'} minutos · ${row.valoracion ?? '—'} valoración`,detail);node('p',`Faltas: ${row.faltascometidas ?? '—'} cometidas · ${row.faltasrecibidas ?? '—'} recibidas`,detail);node('p',`Tiros: dobles ${row.canasta2p ?? '—'}/${row.tiro2p ?? '—'} · libres ${row.canasta1p ?? '—'}/${row.tiro1p ?? '—'}`,detail);}else node('p','Sin acta individual consultada para este partido.',detail);}
-const evolution=()=>{const key=$('mini-evolution-metric').value,chart=$('mini-evolution-chart');chart.replaceChildren();const known=records.filter(r=>r[key]!=null && Number.isFinite(Number(r[key]))),max=Math.max(1,...known.map(r=>Math.abs(Number(r[key]))));for(const r of known){const line=node('div',null,chart);line.style.cssText='display:grid;grid-template-columns:95px 1fr 50px;gap:10px;align-items:center;margin:9px 0';node('span',r.date,line);const track=node('div',null,line);track.style.cssText='height:14px;background:#173048;border-radius:6px';const bar=node('div',null,track);bar.style.cssText=`height:100%;width:${Math.abs(Number(r[key]))/max*100}%;background:${Number(r[key])<0?'#c4b5fd':'#fb923c'};border-radius:6px`;node('strong',Number(r[key]).toFixed(key==='minutos'?1:0),line);}
-$('mini-evolution-summary').replaceChildren();node('p',`${known.length} registros de ${records.length} actas consultadas. Compará los partidos con su contexto, sin tomar un número como una nota personal.`,$('mini-evolution-summary')).className='muted';if(records.length>=10){const recent=averageMini(records.slice(-5),key),previous=averageMini(records.slice(-10,-5),key);node('p',previous==null || recent==null ? 'No hay datos completos para comparar los dos bloques.' : `Cinco anteriores: ${previous.toFixed(1)} · últimos cinco: ${recent.toFixed(1)}. El cambio se conversa con el coach junto con la participación y los rivales.`,$('mini-evolution-summary'));}};$('mini-evolution-metric').addEventListener('change',evolution);evolution();
+NextLevelMiniEvolution.render(records,source.games,source);
 $('mini-coach-data').textContent=`Hay ${records.length} actas individuales para conversar: ${average('puntos')?.toFixed(1) ?? '—'} puntos y ${average('minutos')?.toFixed(1) ?? '—'} minutos por partido en esta muestra. Podemos revisar cómo participaste, en qué situaciones aparecen las faltas y qué acción te gustaría practicar. La elección del desafío se acuerda con tu coach.`;
 $('mini-data-limit').textContent='Rebotes, asistencias y recuperos no se usan para construir tu perfil porque todavía no confirmamos su cobertura de registro en Mini. La valoración se muestra como dato CABB, con esa limitación.';
 }catch(e){$('mini-source-date').textContent='No se pudieron cargar los partidos oficiales. Reintentá más tarde.';}
 }
 await renderOfficial();
-if(client){const {data}=await client.auth.getSession();if(data?.session)await connectAccount();}
+if(client){const {data}=await client.auth.getSession();if(data?.session)await connectAccount();else status('Entrá con la cuenta de Milo para sincronizar. Tus cambios locales se conservan.');}
 }
-if(typeof module!=='undefined')module.exports={playerMatches,mergeEntries,validPractice,averageMini,validProfile,photoSource};
+if(typeof module!=='undefined')module.exports={playerMatches,mergeEntries,validPractice,averageMini,validProfile,photoSource,createAutosave};
 if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',load);
 })();

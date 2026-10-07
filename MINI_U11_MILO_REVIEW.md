@@ -43,3 +43,17 @@ Físico permite medidas fechadas sin interpretar crecimiento ni aplicar estánda
 - Objetivo/áreas pasan a Mi Plan; tips mentales solo en Mi Plan. Ninguna etiqueta profesional ni interpretación del crecimiento en Mini.
 - Conexión al perfil existente automática cuando hay sesión; conserva botón para comprobar cuenta y sincronizar pendientes/foto.
 - 32 pruebas pasan; perfil completo verificado en navegador, sin errores de consola. Carga real de foto y guardado de datos personales deben verificarse cuando la familia complete los valores reales. Publicación pendiente.
+
+## Autoguardado de Perfil — 07/10/2026
+- Eliminado botón Guardar. Campos de texto/medidas guardan borrador local al escribir; selects y áreas múltiples al cambiar.
+- Sincronización con pausa de 700 ms, cola de escrituras para preservar orden y aviso de confirmación/pendiente.
+- Valores incompletos o inválidos se conservan localmente hasta corregirse; no se confirman como guardados en Supabase. Reintento al reconectar cuenta o recuperar conexión.
+- 33 pruebas pasan, incluidas escrituras concurrentes/última versión y recuperación tras error; navegador sin errores y botón ausente. No se escribieron datos personales ficticios.
+
+
+## Evolución, hitos y tests de Mía — 07/10/2026
+- Evolución SVG por partido: puntos, minutos, faltas cometidas/recibidas y valoración; selector últimos 10/toda temporada, valores visibles y detalle al tocar/foco teclado. Promedios temporada/últimos cinco/cinco anteriores con faltantes explícitos.
+- Hitos en Rendimiento: máximos puntos (15), valoración (14), minutos (20, todos los empates desplegables), faltas recibidas (9) y 23 participaciones. Dobles-dobles sin verificación por cobertura Mini.
+- Copiados del perfil de Mía HTML/CSS/instrucciones y cálculo de los cinco tests. Módulo nextlevel_mini_physical.js usa la identidad/sesión verificada de Milo y misma physical_test_results; conserva medidas con fecha existentes. Incluye validación de fecha, intentos y estado de error de guardado. No usa el UUID de Mía.
+- 35 pruebas pasan, incluyendo empates/faltantes/bloques y mock de guardado physical_test_results con identidad propia y mejor intento. Navegador: evolución/rango, tarjetas de tests e instrucciones verificados sin errores de consola. No se registraron tests físicos ficticios.
+- Pendientes publicación, foto real y primera medición/test real acompañado por coach.

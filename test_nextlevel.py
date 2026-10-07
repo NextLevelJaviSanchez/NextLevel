@@ -8,6 +8,43 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_mini_evolution_milestones_and_incomplete_blocks(self):
+        script="""
+const assert=require('node:assert/strict');const m=require('./nextlevel_mini_evolution.js');
+const r=[{id:'a',puntos:0},{id:'b',puntos:15},{id:'c',puntos:15},{id:'d',puntos:null}];
+assert.equal(m.mean(r,'puntos'),null);assert.deepEqual(m.milestone(r,'puntos').games.map(r=>r.id),['b','c']);assert.equal(m.milestone(r,'puntos').coverage,3);assert.equal(m.milestone([{valoracion:-2},{valoracion:0}],'valoracion').max,0);assert.equal(m.value({faltascometidas:-1},'faltascometidas'),null);
+const rows=Array.from({length:10},(_,i)=>({minutos:i<5?10:20}));assert.deepEqual(m.blocks(rows,'minutos'),{season:15,recent:20,previous:10});rows[9].minutos=null;assert.equal(m.blocks(rows,'minutos').recent,null);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_mini_physical_own_identity_and_best_attempt(self):
+        script="""
+const assert=require('node:assert/strict');const els=new Map(),writes=[];
+global.window={};global.alert=()=>{};
+global.document={getElementById(id){if(!els.has(id))els.set(id,{value:'',textContent:'',style:{},classList:{remove(){}}});return els.get(id);},querySelectorAll(){return [];},querySelector(){return {textContent:'',disabled:false};}};
+const m=require('./nextlevel_mini_physical.js');
+assert.deepEqual(Object.values(m.types).map(t=>t.type),['beep_test','sprint_rep_15','lane_agility','broad_jump','squat_30s']);
+const client={auth:{async getUser(){return {data:{user:{id:'own-user'}}};}},from(table){assert.equal(table,'physical_test_results');const q={select(){return q;},eq(){return q;},order(){return q;},async limit(){return {data:[]};},async insert(row){writes.push(row);return {};}};return q;}};
+(async()=>{await m.connect(client,'own-player','own-user');document.getElementById('f-lane-date').value='2026-10-07';document.getElementById('f-lane-1').value='20';document.getElementById('f-lane-2').value='18';await window.saveTest('lane');assert.equal(writes[0].player_id,'own-player');assert.equal(writes[0].value,18);assert.equal(writes[0].attempt_1,20);assert.equal(writes[0].attempt_2,18);})().catch(e=>{console.error(e);process.exitCode=1;});
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        self.assertNotIn('11111111-0000-0000-0000-000000000014',(R/'nextlevel_mini_physical.js').read_text(encoding='utf8'))
+
+    def test_mini_autosave_serializes_and_recovers(self):
+        script="""
+const assert=require('node:assert/strict');const {createAutosave}=require('./nextlevel_u11.js');
+(async()=>{
+let value='first',release,active=0,maximum=0,saved=[],errors=[];
+const saver=createAutosave(async()=>{active++;maximum=Math.max(maximum,active);const snapshot=value;if(snapshot==='first')await new Promise(r=>release=r);active--;if(snapshot==='failure')throw Error('offline');saved.push(snapshot);},e=>errors.push(e.message),10000);
+saver.schedule();saver.schedule();const first=saver.flush();await Promise.resolve();value='latest';const second=saver.flush();release();await Promise.all([first,second]);assert.deepEqual(saved,['first','latest']);assert.equal(maximum,1);
+value='failure';await saver.flush();value='recovered';await saver.flush();assert.deepEqual(errors,['offline']);assert.equal(saved.at(-1),'recovered');
+})().catch(e=>{console.error(e);process.exitCode=1;});
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        html=(R/'perfil_milo_sanchez_u11.html').read_text(encoding='utf8')
+        self.assertNotIn('id="mini-save-profile"',html)
+        self.assertIn('Autoguardado activo',html)
+
     def test_mini_complete_profile_and_photo_validation(self):
         script="""
 const assert=require('node:assert/strict');const {validProfile,photoSource}=require('./nextlevel_u11.js');
