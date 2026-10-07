@@ -82,7 +82,7 @@
     const title=document.createElement('div');title.className='card-ttl';title.textContent='🔥 Temporada 2026 — mapa de calor por zonas';card.append(title);
     const status=document.createElement('p');status.textContent='Cargando tiros oficiales de la temporada…';card.append(status);
     try{
-      const response=await fetch('cabb_season_shots_2026.json');if(!response.ok)throw Error('No disponible');const data=await response.json();
+      const response=await fetch('cabb_season_shots_2026.json',{cache:'no-store'});if(!response.ok)throw Error('No disponible');const data=await response.json();
       const select=document.createElement('select');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
       for(const value of ['Todos los torneos','AFMB','Federal CABB']){const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);}card.append(select);
       const legend=document.createElement('p');legend.style.fontSize='.7rem';legend.textContent='Media cancha esquemática: las posiciones y límites de las zonas son aproximados, no una calibración oficial CABB. Ambos lados se agrupan por código. Cada sector muestra conversiones/intentos y porcentaje; — significa sin intentos. Tiros libres fuera del mapa.';card.append(legend);
@@ -100,7 +100,7 @@
         colorLegend.textContent=mode.value==='volume' ? 'Volumen: naranja intenso >50 intentos · naranja intermedio 15–50 · gris azulado 1–14 · gris oscuro sin intentos. El color representa frecuencia.' : 'Efectividad: verde >40% · amarillo 25–40% · azul <25% con intentos · gris oscuro sin intentos. Compará también el volumen: pocas muestras pueden dar porcentajes extremos.';
         const unknown=entries.filter(([id])=>!heatZones[id]);
         if(unknown.length){const note=document.createElement('p');note.textContent='Fuera del esquema: '+unknown.map(([id,r])=>`${id}: ${r.made}/${r.attempts}`).join(' · ');grid.append(note);}
-        status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.`;
+        status.textContent=`${select.value} · ${games.length} partidos · ${attempts} tiros de cancha · cobertura reconciliada con cada boxscore.${data.generated_at ? ' Actualizado: '+new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : ''}`;
         const volume=[...entries].sort((a,b)=>b[1].attempts-a[1].attempts)[0];
         const substantial=entries.filter(e=>e[1].attempts>=10).sort((a,b)=>b[1].made/b[1].attempts-a[1].made/a[1].attempts);
         analysis.textContent=attempts ? `Cálculo NextLevel: ${made}/${attempts} tiros convertidos (${(100*made/attempts).toFixed(1)}%). La mayor concentración está en ${zoneName(volume[0])}: ${volume[1].attempts} intentos (${(100*volume[1].attempts/attempts).toFixed(1)}% del volumen). `+(substantial.length ? `Entre las zonas con al menos 10 intentos, ${zoneName(substantial[0][0])} presenta el mayor porcentaje: ${substantial[0][1].made}/${substantial[0][1].attempts}. `:'')+'Los porcentajes describen esta muestra; no prueban calidad de tiro, dificultad o habilidad técnica. Revisar con el coach las zonas de alto volumen y menor conversión antes de definir una meta.':'Sin tiros para esta selección.';
@@ -124,18 +124,18 @@
     const heading=document.createElement('div');heading.className='card-ttl';heading.textContent='🏀 TOP del equipo — promedios por partido';card.append(heading);
     const content=document.createElement('div');content.textContent='Cargando actas del plantel…';card.append(content);
     try{
-      const response=await fetch('cabb_team_2026.json');if(!response.ok)throw Error('Snapshot no disponible');const data=await response.json();
+      const response=await fetch('cabb_team_2026.json',{cache:'no-store'});if(!response.ok)throw Error('Snapshot no disponible');const data=await response.json();
       const select=document.createElement('select');select.setAttribute('aria-label','Torneo del TOP');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
       ['AFMB','Federal CABB'].forEach(v=>{const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option);});card.insertBefore(select,content);
       const render=()=>{
         content.replaceChildren();const games=data.games.filter(g=>select.value==='Todos los torneos' || g.tournament===select.value);
         const text=t=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6';p.textContent=t;content.append(p);};
         const minimum=Math.ceil(games.length*.5);
-        text(`${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. Cálculo NextLevel desde actas CABB.`);
+        text(`TOP actualizado: ${data.generated_at ? new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : 'fecha de generación no disponible'} · ${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. Cálculo NextLevel desde actas CABB.`);
         if(games.some(g=>!g.available)){text('Cobertura incompleta: ranking pendiente hasta disponer de todas las actas.');return;}
         const panels=document.createElement('div');panels.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px';content.append(panels);
         const isProfile=p=>p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')==='GERALDINE MIA SANCHEZ';
-        for(const [key,label,negative] of [['pts','Puntos',false],['reb_tot','Rebotes',false],['stl','Recuperos',false],['blk','Tapones',false],['ast','Asistencias',false],['fouls_received','Faltas recibidas',false],['to_perdidas','Pérdidas',true],['faltas','Faltas cometidas',true]]){
+        for(const [key,label,negative] of [['val','Valoración',false],['pts','Puntos',false],['reb_tot','Rebotes',false],['stl','Recuperos',false],['blk','Tapones',false],['ast','Asistencias',false],['fouls_received','Faltas recibidas',false],['to_perdidas','Pérdidas',true],['faltas','Faltas cometidas',true]]){
           const result=teamRanking(games,key),panel=document.createElement('div');panel.style.cssText='padding:12px;border-radius:10px;background:var(--card2);border:1px solid rgba(255,255,255,.08)';panels.append(panel);
           const title=document.createElement('strong');title.style.fontSize='.78rem';title.textContent=label;panel.append(title);
           const caption=document.createElement('p');caption.style.cssText='font-size:.62rem;color:var(--muted);margin:4px 0 8px';caption.textContent=negative ? 'Mayor promedio · a revisar' : 'TOP 3 · promedio por partido';panel.append(caption);

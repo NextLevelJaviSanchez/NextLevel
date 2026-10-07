@@ -1,5 +1,6 @@
 """Extrae tiros oficiales y audita cada acta; no infiere una escala global."""
 import json,time
+from datetime import datetime,timezone
 from pathlib import Path
 from cabb_app_api import CABBApiClient
 from cabb_games import discover_games,checked
@@ -34,6 +35,7 @@ def collect():
                 record['coordinate_count']=sum(s.get('posicion_x') not in (None,'') and s.get('posicion_y') not in (None,'') and (float(s['posicion_x'])!=0 or float(s['posicion_y'])!=0) for s in shots.values())
             except Exception as e:record['error']=str(e);record['matched']=False
             result['games'].append(record);print(f"{tournament} {record['id']}: {len(record['shots'])} tiros; reconciliado={record['matched']}",flush=True);time.sleep(.15)
+    result['generated_at']=datetime.now(timezone.utc).isoformat()
     Path('cabb_season_shots_2026.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
     print('AUDIT',json.dumps({'games':len(result['games']),'reconciled':sum(g['matched'] for g in result['games']),'shots':sum(len(g['shots']) for g in result['games'])}))
 if __name__=='__main__':collect()

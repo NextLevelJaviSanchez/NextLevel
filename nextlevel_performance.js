@@ -43,6 +43,16 @@
     sections.priorities.push('Objetivo propuesto: registrar intentos y conversiones en entrenamiento y acordar una meta con el coach. Comparar últimos cinco dentro del mismo torneo en Rendimiento. Proyección: no se estima rendimiento futuro desde estos promedios.');
     targets.forEach(el=>el.textContent=groups.length ? sections[el.dataset.coachAnalysis].join(' ') : 'Sin actas oficiales disponibles para el análisis. Coach: evaluación pendiente.');
   }
+  function latestUpdate(rows){
+    const dates=rows.flatMap(row=>[row.updated_at,row.synced_at]).filter(value=>value && Number.isFinite(Date.parse(value)));
+    return dates.length ? dates.reduce((a,b)=>Date.parse(a)>Date.parse(b)?a:b) : null;
+  }
+  function renderFreshness(games,seasons){
+    const value=latestUpdate([...games,...seasons]),stamp=document.getElementById('data-updated-at'),latest=document.getElementById('data-latest-match');
+    if(stamp)stamp.textContent=value ? new Date(value).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : 'Sin fecha de sincronización';
+    const date=games.map(g=>g.fecha?.slice(0,10)).filter(Boolean).sort().at(-1);
+    if(latest)latest.textContent=date ? new Date(date+'T12:00:00Z').toLocaleDateString('es-AR',{timeZone:'America/Buenos_Aires',day:'2-digit',month:'2-digit',year:'numeric'}) : 'Sin partidos cargados';
+  }
   async function readAll(table, query) {
     const result = [];
     for (let offset = 0; ; offset += 500) {
@@ -75,6 +85,7 @@
         .order('fecha',{ascending:false}).order('cabb_partido_id',{ascending:false}));
       const seasons = await readAll('stats_seasons', q => q.eq('player_id',config.playerId)
         .eq('season',config.season).order('tournament'));
+      renderFreshness(games,seasons);
       renderCoach(games, seasons);
       const totalExpected=seasons.reduce((sum,s)=>sum+Number(s.pj || 0),0);
       const coverageComplete=totalExpected>0 && games.length===totalExpected;
@@ -137,11 +148,12 @@
       select.addEventListener('change',render); render();
     } catch (error) {
       document.querySelectorAll('[data-coach-analysis]').forEach(el=>el.textContent='No se pudo cargar el análisis oficial. Reintentá más tarde.');
+      const stamp=document.getElementById('data-updated-at');if(stamp)stamp.textContent='No se pudo consultar';
       const profile=document.getElementById('coach-stat-profile');if(profile)profile.textContent='No se pudo cargar el análisis oficial. Reintentá más tarde.';
       status.textContent = 'No se pudo cargar el historial oficial. Reintentá más tarde.';
       console.warn('Rendimiento oficial:',error.message);
     }
   }
-  if (typeof module !== 'undefined') module.exports = { summarize };
+  if (typeof module !== 'undefined') module.exports = { summarize, latestUpdate };
   if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded',load);
 })();

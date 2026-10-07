@@ -1,10 +1,10 @@
 """Snapshot de actas de todo el plantel, sin limitarse a perfiles NextLevel."""
 import json,time
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime,timezone
 from cabb_app_api import CABBApiClient
 from cabb_games import discover_games,checked,number
-FIELDS={'pts':'puntos','reb_tot':'rebotes','ast':'asistencias','stl':'recuperaciones','blk':'taponescometidos','fouls_received':'faltasrecibidas','to_perdidas':'perdidas','faltas':'faltascometidas'}
+FIELDS={'val':'valoracion','pts':'puntos','reb_tot':'rebotes','ast':'asistencias','stl':'recuperaciones','blk':'taponescometidos','fouls_received':'faltasrecibidas','to_perdidas':'perdidas','faltas':'faltascometidas'}
 def collect():
     client=CABBApiClient();out={'season':'2026','source':'cabb_api','games':[]}
     for tournament,team in [('AFMB','CLUB SOCIAL Y DEPORTIVO BERAZATEGUI'),('Federal CABB','DEP. BERAZATEGUI')]:
@@ -27,5 +27,6 @@ def collect():
             except Exception as e:item['available']=False;item['error']=str(e)
             out['games'].append(item);print(tournament,item['id'],len(item['players']),flush=True);time.sleep(.15)
     if any(not g['available'] for g in out['games']):raise RuntimeError('Snapshot incompleto: no reemplaza el archivo anterior')
+    out['generated_at']=datetime.now(timezone.utc).isoformat()
     Path('cabb_team_2026.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf8')
 if __name__=='__main__':collect()

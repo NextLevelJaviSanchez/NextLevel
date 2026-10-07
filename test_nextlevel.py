@@ -8,6 +8,17 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_valuation_ranking_and_update_timestamp(self):
+        script="""
+const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');const {latestUpdate}=require('./nextlevel_performance.js');
+const r=teamRanking([{available:true,players:[{name:'A',val:-2},{name:'B',val:0},{name:'C',val:null}]},{available:true,players:[{name:'A',val:4},{name:'B',val:0},{name:'C',val:20}]}],'val');
+assert.equal(r.rows[0].name,'A');assert.equal(r.rows[0].avg,1);assert.equal(r.rows[1].avg,0);assert.equal(r.excluded,1);
+assert.equal(latestUpdate([{updated_at:'2026-10-06T20:00:00Z'},{synced_at:'2026-10-07T03:22:00Z'},{updated_at:'bad'}]),'2026-10-07T03:22:00Z');assert.equal(latestUpdate([{}]),null);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        extras=(R/'nextlevel_profile_extras.js').read_text(encoding='utf-8')
+        self.assertIn("[['val','Valoración',false],['pts','Puntos',false]",extras)
+
     def test_team_discovery_excludes_other_clubs(self):
         import sync_cabb_supabase as sync
         from unittest.mock import patch
