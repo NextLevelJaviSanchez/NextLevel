@@ -1950,12 +1950,12 @@ function buildDashboard() {
   const mainPP = s.combined.ppg != null ? s.combined.ppg : s.afmb.ppg;
   const mainPJ = s.combined.pj   != null ? s.combined.pj  : s.afmb.pj;
 
-  document.getElementById('dash-ppp').textContent     = fmt(mainPP);
+  document.getElementById('dash-ppp').textContent     = mainPP==null?'—':Number(mainPP).toFixed(1);
   document.getElementById('dash-ppp-sub').textContent = s.afmb.ppg && s.fed.ppg
-    ? `${s.afmb.ppg} AFMB · ${s.fed.ppg} Fed`
-    : s.afmb.ppg ? `${s.afmb.ppg} PPP · AFMB 🏀` : '—';
+    ? `${Number(s.afmb.ppg).toFixed(1)} AFMB · ${Number(s.fed.ppg).toFixed(1)} Fed`
+    : s.afmb.ppg ? `${Number(s.afmb.ppg).toFixed(1)} PPP · AFMB 🏀` : '—';
   document.getElementById('dash-pj').textContent      = fmt(mainPJ);
-  document.getElementById('dash-mpg').textContent     = fmt(mpg);
+  document.getElementById('dash-mpg').textContent     = mpg==null?'—':Number(mpg).toFixed(1);
 
   // Bienvenida dinámica
   const hora = new Date().getHours();
@@ -3073,5 +3073,5 @@ function fisInit() {
 <script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>
 <script src="nextlevel_readability.js?v=20261007-1"></script>
-<script src="nextlevel_profile_dorsal.js?v=20261007"></script></body>
+<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-goals1"></script></body>
 </html>
