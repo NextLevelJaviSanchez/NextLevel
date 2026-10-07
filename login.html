@@ -208,7 +208,7 @@ async function doLogin() {
 
   if (players && players.length > 0) {
     const shortId = SHORT_IDS[players[0].id];
-    window.location.href = getPlayerHome(shortId,players[0].name);
+    window.location.href = getPlayerHome(shortId,players[0].name,players[0].id);
   } else {
     window.location.href = 'admin.html';
   }
@@ -216,7 +216,8 @@ async function doLogin() {
 
 // ─── Home por jugadora ─────────────────────────────────────────────────
 // Cada jugadora entra a su hub principal al hacer login
-function getPlayerHome(shortId,playerName='') {
+function getPlayerHome(shortId,playerName='',playerId=null) {
+  if(playerId)return 'perfil.html?player='+encodeURIComponent(playerId);
   const normalized=String(playerName).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
   if(/\bMILO\b/.test(normalized) && /\bSANCHEZ\b/.test(normalized))return 'perfil_milo_sanchez_u11.html';
   const homes = {
@@ -250,7 +251,7 @@ window.addEventListener('load', async () => {
       showInfo('✅ Sesión activa — redirigiendo…');
       const { data: players } = await client.from('players').select('id,name').eq('user_id', session.user.id).limit(1);
       if (players && players.length > 0) {
-        window.location.href = getPlayerHome(SHORT_IDS[players[0].id],players[0].name);
+        window.location.href = getPlayerHome(SHORT_IDS[players[0].id],players[0].name,players[0].id);
       } else {
         window.location.href = 'admin.html';
       }

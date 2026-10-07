@@ -21,7 +21,7 @@
       host.replaceChildren();
       const controls=node('div',null,host);controls.style.cssText='display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px';
       const tournament=node('select',null,controls);tournament.setAttribute('aria-label','Torneo de evolución');
-      for(const name of ['AFMB','Federal CABB']){const o=node('option',name,tournament);o.value=name;}
+      for(const name of [...new Set(games.map(g=>g.torneo).filter(Boolean))]){const o=node('option',name,tournament);o.value=name;}
       const metric=node('select',null,controls);metric.setAttribute('aria-label','Métrica de evolución');
       Object.entries(metrics).forEach(([key,label])=>{const o=node('option',label,metric);o.value=key;});
       [tournament,metric].forEach(n=>n.style.cssText='padding:9px;background:var(--card2);color:var(--text);border-radius:8px;border:1px solid rgba(255,255,255,.15)');

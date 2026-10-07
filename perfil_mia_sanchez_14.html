@@ -1380,8 +1380,8 @@ const AREAS = [
    Consulta stats_seasons + game_log en Supabase y
    expone un objeto unificado para renderizar todos los KPIs.
    ══════════════════════════════════════════════════════════ */
-const PLAYER_ID = '11111111-0000-0000-0000-000000000014';
-const SEASON    = '2026';
+const PLAYER_ID = window.NextLevelPlayer?.playerId || '11111111-0000-0000-0000-000000000014';
+const SEASON    = window.NextLevelPlayer?.season || '2026';
 
 // Objeto centralizado — un solo lugar para todos los KPIs
 let playerStats = {
@@ -1407,11 +1407,11 @@ async function loadPlayerStats() {
 
     // Separar por torneo
     const afmbRow = seasons?.find(r =>
-      r.tournament?.toLowerCase().includes('afmb') ||
+      r.tournament===window.NextLevelPlayer?.primaryTournament || r.tournament?.toLowerCase().includes('afmb') ||
       r.tournament?.toLowerCase().includes('metropolit'));
     const fedRow  = seasons?.find(r =>
       r.tournament?.toLowerCase().includes('federal') ||
-      r.tournament?.toLowerCase().includes('fed'));
+      r.tournament==='Federal CABB');
 
     if (afmbRow) {
       playerStats.afmb = {
@@ -1440,6 +1440,12 @@ async function loadPlayerStats() {
     const mpgComplete = (!pjA || playerStats.afmb.min_pg != null) && (!pjF || playerStats.fed.min_pg != null);
     playerStats.combined.min_pg = pjTot && mpgComplete
       ? +(((playerStats.afmb.min_pg ?? 0) * pjA + (playerStats.fed.min_pg ?? 0) * pjF) / pjTot).toFixed(1) : null;
+    if(window.NextLevelPlayer){
+      const active=(seasons || []).filter(s=>Number(s.pj)>0),total=active.reduce((n,s)=>n+Number(s.pj),0);
+      const weighted=key=>total && active.every(s=>s[key]!=null)?active.reduce((n,s)=>n+Number(s[key])*Number(s.pj),0)/total:null;
+      playerStats.combined={pj:total || null,ppg:weighted('ppg'),min_pg:weighted('min_pg')};
+    }
+
 
     // 2. Intentar calcular RPG y APG desde game_log
     const { data: gl, error: eGl } = await _supa
@@ -1946,7 +1952,7 @@ function buildDashboard() {
   // Bienvenida dinámica
   const hora = new Date().getHours();
   const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
-  document.getElementById('dash-bienvenida').textContent = `${saludo}, Mía — acá está tu evolución`;
+  document.getElementById('dash-bienvenida').textContent = `${saludo}, ${window.NextLevelPlayer?.name || 'Mía'} — acá está tu evolución`;
   document.getElementById('dash-subtitulo').textContent  = `Temporada 2026 · ${mainPJ || '?'} partidos · Next Level Basketball`;
 
   // Evolución mini en Dashboard
@@ -2213,7 +2219,7 @@ function exportCV() {
 /* ══════════════════════════════════════════════════════════
    TAB PERFIL — persistencia (localStorage + Supabase Storage)
    ══════════════════════════════════════════════════════════ */
-const PF_KEY        = 'nl_pf_mia14';
+const PF_KEY        = window.NextLevelPlayer && !window.NextLevelPlayer.legacyMia ? 'nl_pf_'+PLAYER_ID : 'nl_pf_mia14';
 const PF_BUCKET     = 'player-photos';          // bucket en Supabase Storage
 const PF_PHOTO_PATH = 'mia14/profile.jpg';      // path fijo por jugadora
 
@@ -2221,6 +2227,7 @@ const PF_PHOTO_PATH = 'mia14/profile.jpg';      // path fijo por jugadora
 let _pfSaveTimer;
 let _pfSaveQueue = Promise.resolve();
 let _pfEditRevision = 0;
+let _pfSeasonGoals = {};
 function pfSave() {
   _pfEditRevision++;
   const revision = _pfEditRevision;
@@ -2239,6 +2246,9 @@ function pfSave() {
     calzado:    document.getElementById('pf-calzado')?.value || '',
     nota:       document.getElementById('pf-nota')?.value    || '',
     dream:      _pfObj || '',
+    seasonGoal: document.getElementById('pf-season-goal')?.value ?? previous.seasonGoal ?? '',
+    seasonGoalSeason:SEASON,
+    seasonGoals:{..._pfSeasonGoals,...previous.seasonGoals,[SEASON]:document.getElementById('pf-season-goal')?.value ?? previous.seasonGoal ?? ''},
     obj:        _pfObj || '', // compatibilidad con el perfil guardado anteriormente
     mentalAreas: [..._pfMentalAreas],
     areas:      [..._pfAreas],
@@ -2399,6 +2409,7 @@ function pfApplyData(d) {
   set('pf-calzado', d.calzado);
   set('pf-nota',    d.nota);
   _pfObj = d.dream ?? d.obj ?? '';
+  set('pf-dream-text',_pfObj);_pfSeasonGoals={...(d.seasonGoal?{[d.seasonGoalSeason || '2026']:d.seasonGoal}:{}),...d.seasonGoals};set('pf-season-goal',window.NextLevelProfileCodec?NextLevelProfileCodec.seasonGoal(d,SEASON):d.seasonGoal);
   document.querySelectorAll('#pf-obj-chips .pf-chip').forEach(c =>
     c.classList.toggle('active', c.dataset.val === _pfObj));
   _pfAreas = [...new Set(Array.isArray(d.areas) ? d.areas : String(d.area || '').split('|').filter(Boolean))];
@@ -2446,6 +2457,7 @@ async function pfLoadState() {
     .eq('module', 'perfil_v1')
     .maybeSingle();
 
+  if(!rows?.data && window.NextLevelPlayer && window.NextLevelProfileCodec){const {data:mini}=await _supa.from('player_data').select('data').eq('player_id',PLAYER_ID).eq('module','mini_profile_v1').maybeSingle();if(mini?.data){pfApplyData(NextLevelProfileCodec.toMature(mini.data));return;}}
   if (rows?.data) {
     // Dato en la nube — aplicar y sincronizar localStorage
     if(revisionAtLoad!==_pfEditRevision)return;
@@ -2475,7 +2487,7 @@ async function doLogout() {
 /* ══════════════════════════════════════════════════════════
    TAB FÍSICO — rediseño completo v2
    ══════════════════════════════════════════════════════════ */
-const FIS_PLAYER_ID = '11111111-0000-0000-0000-000000000014';
+const FIS_PLAYER_ID = PLAYER_ID;
 
 /* Configuración por tipo de test
    lowerIsBetter: true → menor valor = mejor (Lane Agility)
@@ -2512,7 +2524,7 @@ const _charts = {};
 /* ── ANTROPOMETRÍA — leer desde localStorage de Mi Perfil ── */
 function fisLoadAntro() {
   try {
-    const raw = localStorage.getItem('nl_pf_mia14');
+    const raw = localStorage.getItem(PF_KEY);
     const pf  = raw ? JSON.parse(raw) : {};
     const alt = parseFloat(pf.altura)  || null;
     const pes = parseFloat(pf.peso)    || null;

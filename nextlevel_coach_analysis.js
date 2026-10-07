@@ -27,10 +27,10 @@
     const host=document.getElementById('coach-stat-profile');if(!host)return;
     const node=(tag,text,parent)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;if(parent)parent.append(n);return n;};
     try{
-      if(!teamPromise)teamPromise=fetch('cabb_team_2026.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).catch(()=>null);
+      if(!teamPromise)teamPromise=(window.NextLevelSources ? NextLevelSources.read('team') : fetch('cabb_team_2026.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();})).catch(()=>null);
       const team=await teamPromise;host.replaceChildren();
       const select=node('select',null,host);select.setAttribute('aria-label','Torneo del análisis');select.style.cssText='padding:9px;background:var(--card2);color:var(--text);border-radius:8px';
-      ['AFMB','Federal CABB'].forEach(name=>{const o=node('option',name,select);o.value=name;});
+      [...new Set([...(games || []).map(g=>g.torneo),...(seasons || []).map(s=>s.tournament)].filter(Boolean))].forEach(name=>{const o=node('option',name,select);o.value=name;});
       const content=node('div',null,host);const paragraph=(parent,text)=>{const p=node('p',text,parent);p.className='mental-tip-copy';p.style.margin='8px 0';return p;};
       const draw=()=>{
         content.replaceChildren();const rows=games.filter(g=>g.torneo===select.value),season=seasons.find(s=>s.tournament===select.value),model=analyze(rows);

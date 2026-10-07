@@ -79,12 +79,12 @@
   async function loadSeasonHeat(){
     const host=document.getElementById('season-heat-map');if(!host)return;
     const card=document.createElement('div');card.className='card';host.replaceChildren(card);
-    const title=document.createElement('div');title.className='card-ttl';title.textContent='🔥 Temporada 2026 — mapa de calor por zonas';card.append(title);
+    const title=document.createElement('div');title.className='card-ttl';title.textContent='🔥 Temporada '+(typeof SEASON!=='undefined'?SEASON:'2026')+' — mapa de calor por zonas';card.append(title);
     const status=document.createElement('p');status.textContent='Cargando tiros oficiales de la temporada…';card.append(status);
     try{
-      const response=await fetch('cabb_season_shots_2026.json',{cache:'no-store'});if(!response.ok)throw Error('No disponible');const data=await response.json();
+      const data=window.NextLevelSources ? await NextLevelSources.read('shots') : await fetch('cabb_season_shots_2026.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No disponible');return r.json();});
       const select=document.createElement('select');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
-      for(const value of ['Todos los torneos','AFMB','Federal CABB']){const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);}card.append(select);
+      for(const value of ['Todos los torneos',...new Set(data.games.map(g=>g.tournament))]){const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);}card.append(select);
       const legend=document.createElement('p');legend.style.fontSize='.7rem';legend.textContent='Media cancha esquemática: las posiciones y límites de las zonas son aproximados, no una calibración oficial CABB. Ambos lados se agrupan por código. Cada sector muestra conversiones/intentos y porcentaje; — significa sin intentos. Tiros libres fuera del mapa.';card.append(legend);
       const mode=document.createElement('select');mode.style.cssText=select.style.cssText;mode.style.marginLeft='8px';mode.setAttribute('aria-label','Color del mapa');
       for(const [value,label] of [['volume','Calor: volumen de tiros'],['conversion','Calor: porcentaje convertido']]){const option=document.createElement('option');option.value=value;option.textContent=label;mode.append(option);}card.append(mode);
@@ -124,9 +124,9 @@
     const heading=document.createElement('div');heading.className='card-ttl';heading.textContent='🏀 TOP del equipo — promedios por partido';card.append(heading);
     const content=document.createElement('div');content.textContent='Cargando actas del plantel…';card.append(content);
     try{
-      const response=await fetch('cabb_team_2026.json',{cache:'no-store'});if(!response.ok)throw Error('Snapshot no disponible');const data=await response.json();
+      const data=window.NextLevelSources ? await NextLevelSources.read('team') : await fetch('cabb_team_2026.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Snapshot no disponible');return r.json();});
       const select=document.createElement('select');select.setAttribute('aria-label','Torneo del TOP');select.style.cssText='background:var(--card2);color:var(--text);padding:8px;border-radius:8px';
-      ['AFMB','Federal CABB'].forEach(v=>{const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option);});card.insertBefore(select,content);
+      [...new Set(data.games.map(g=>g.tournament))].forEach(v=>{const option=document.createElement('option');option.value=v;option.textContent=v;select.append(option);});card.insertBefore(select,content);
       const render=()=>{
         content.replaceChildren();const games=data.games.filter(g=>select.value==='Todos los torneos' || g.tournament===select.value);
         const text=t=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6';p.textContent=t;content.append(p);};
@@ -134,7 +134,7 @@
         text(`TOP actualizado: ${data.generated_at ? new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : 'fecha de generación no disponible'} · ${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. Cálculo NextLevel desde actas CABB.`);
         if(games.some(g=>!g.available)){text('Cobertura incompleta: ranking pendiente hasta disponer de todas las actas.');return;}
         const panels=document.createElement('div');panels.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px';content.append(panels);
-        const isProfile=p=>p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')==='GERALDINE MIA SANCHEZ';
+        const isProfile=p=>p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')===(window.NextLevelPlayer?.cabbName || 'SANCHEZ, MIA GERALDINE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ');
         for(const [key,label,negative] of [['val','Valoración',false],['pts','Puntos',false],['reb_tot','Rebotes',false],['stl','Recuperos',false],['blk','Tapones',false],['ast','Asistencias',false],['fouls_received','Faltas recibidas',false],['to_perdidas','Pérdidas',true],['faltas','Faltas cometidas',true]]){
           const result=teamRanking(games,key),panel=document.createElement('div');panel.style.cssText='padding:12px;border-radius:10px;background:var(--card2);border:1px solid rgba(255,255,255,.08)';panels.append(panel);
           const title=document.createElement('strong');title.style.fontSize='.78rem';title.textContent=label;panel.append(title);
@@ -204,12 +204,12 @@
     setupMental();
     loadMilestones();
     loadTeamRanking();
-    try {const saved=JSON.parse(localStorage.getItem('nl_pf_mia14') || '{}');if(saved.foto_url || saved.foto)pfApplyFoto(saved.foto_url || saved.foto);if(Array.isArray(saved.mentalAreas)){_pfMentalAreas=saved.mentalAreas;renderMental(_pfMentalAreas);}}catch(e){}
+    try {const saved=JSON.parse(localStorage.getItem(typeof PF_KEY!=='undefined'?PF_KEY:'nl_pf_mia14') || '{}');if(saved.foto_url || saved.foto)pfApplyFoto(saved.foto_url || saved.foto);if(Array.isArray(saved.mentalAreas)){_pfMentalAreas=saved.mentalAreas;renderMental(_pfMentalAreas);}}catch(e){}
     // Foto y perfil se cargan al abrir la página, sin esperar la pestaña Perfil.
     try{await pfLoadState();}catch(e){}
     try{await pfLoadFotoFromCloud();}catch(e){}
     if(!_pfMentalLoaded){
-      try{const {data,error}=await _supa.from('intake_responses').select('mental,q2').eq('player_id','11111111-0000-0000-0000-000000000014').maybeSingle();if(error)throw error;if(!_pfMentalLoaded){_pfMentalAreas=String(data?.mental || '').split('|').filter(Boolean);renderMental(_pfMentalAreas);}}catch(e){renderMental(_pfMentalAreas);}
+      try{const {data,error}=await _supa.from('intake_responses').select('mental,q2').eq('player_id',PLAYER_ID).maybeSingle();if(error)throw error;if(!_pfMentalLoaded){_pfMentalAreas=String(data?.mental || '').split('|').filter(Boolean);renderMental(_pfMentalAreas);}}catch(e){renderMental(_pfMentalAreas);}
     }
     await loadSeasonHeat();
 

@@ -8,6 +8,31 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_shared_templates_identity_category_and_preferences(self):
+        script="""
+const assert=require('node:assert/strict'),fs=require('node:fs');const c=require('./nextlevel_player_context.js'),t=require('./nextlevel_template.js'),codec=require('./nextlevel_profile_codec.js');
+assert.equal(c.templateFor('Mini U11'),'mini');assert.equal(c.templateFor('MINI MASCULINO'),'mini');for(const category of ['U13','U15','Cadetes','Mayores'])assert.equal(c.templateFor(category),'u13');assert.throws(()=>c.templateFor('Sin categoría'));
+const player={id:'00000000-0000-0000-0000-000000000123',name:'Otra persona',club:'Otro club',category:'Mini U11'};
+assert.equal(c.contextFor(player,'2026').template,'mini');const newer=c.contextFor(player,'2027',{category:'U13',tournaments:[{label:'FEBAMBA'}]});assert.equal(newer.template,'u13');assert.equal(newer.primaryTournament,'FEBAMBA');assert.equal(newer.legacyMia,false);
+assert.notEqual(c.cacheKey(player.id,'profile'),c.cacheKey('00000000-0000-0000-0000-000000000124','profile'));
+const miloContext={...newer,template:'mini',name:'Milo Sánchez',club:'Quilmes Atlético Club'};const preserved=t.compileTemplate(fs.readFileSync('perfil_milo_sanchez_u11.html','utf8'),miloContext);const dataScript=preserved.match(/window.NextLevelPlayer=([\\s\\S]*?);<\\/script>/)[1];assert.equal(JSON.parse(dataScript).name,miloContext.name);assert.equal(JSON.parse(dataScript).club,miloContext.club);
+
+const prefs={dream:'Aprender',seasonGoal:'Usar ambas manos',birthDate:'2016-06-01',dominantHand:'Izquierda',mentalAreas:['Seguir después de un error'],technicalAreas:['Pases']};const mature=codec.toMature(prefs);assert.equal(mature.fnac,prefs.birthDate);assert.equal(mature.dream,'Aprender');assert.deepEqual(mature.areas,['Pases']);assert.equal(codec.toMini(mature).dominantHand,'Izquierda');assert.equal(codec.seasonGoal(mature,'2026'),'Usar ambas manos');assert.equal(codec.seasonGoal(mature,'2027'),'');
+for(const [template,file] of [['mini','perfil_milo_sanchez_u11.html'],['u13','perfil_mia_sanchez_14.html']]){const html=t.compileTemplate(fs.readFileSync(file,'utf8'),{...newer,template,name:'</script><img src=x onerror=alert(1)>'});assert.ok(!html.includes('</script><img src=x onerror=alert(1)>'));assert.ok(html.includes('\\u003c/script>'));if(template==='u13'){assert.ok(!html.includes('11111111-0000-0000-0000-000000000014'));assert.ok(html.includes("'nl_pf_'+PLAYER_ID"));}}
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_edge_sync_contract_and_shot_reconciliation(self):
+        script=r"""
+const assert=require('node:assert/strict'),fs=require('node:fs'),{stripTypeScriptTypes}=require('node:module');
+const source=fs.readFileSync('supabase/functions/nextlevel-onboard/index.ts','utf8').replace(/^import .*;\r?\n/m,'');
+const api=new Function('Deno','createClient',stripTypeScriptTypes(source)+';return {rowsFor,extractShots,isoDate};')({env:{get(){return 'test';}},serve(){}},()=>({}));
+const data=JSON.parse(fs.readFileSync('cabb_milo_u11_2026.json','utf8')),act=data.boxscores[0],g=data.games.find(g=>String(g.IdPartidoNotificacion)===act.id),p=act.milo[0],team={club:data.club,label:'FEBAMBA Mini'};
+const row=api.rowsFor(p,g,{playerId:'own-player',template:'mini'},team,'2026-10-07T00:00:00Z');assert.equal(row.player_id,'own-player');assert.equal(row.ast,null);assert.equal(row.pts,p.puntos);assert.equal(row.cabb_partido_id,act.id);assert.throws(()=>api.rowsFor({...p,puntos:999},g,{playerId:'own',template:'mini'},team,'now'));
+const box={partido:{idlocal:1,idvisitante:2}},person={dorsal:5,tiro2p:2,tiro3p:0,canasta2p:1,canasta3p:0};const events=[{autoincremental_id:1,equipo_id:1,dorsal:5,accion_tipo:'CANASTA-2P',posicion_x:10,posicion_y:20},{autoincremental_id:2,equipo_id:1,dorsal:5,accion_tipo:'TIRO2-FALLADO'}];assert.equal(api.extractShots([...events,events[0]],box,person,true).matched,true);assert.equal(api.extractShots(events.slice(0,1),box,person,true).matched,false);assert.throws(()=>api.extractShots([...events,{...events[0],posicion_x:30}],box,person,true));
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
     def test_mini_evolution_milestones_and_incomplete_blocks(self):
         script="""
 const assert=require('node:assert/strict');const m=require('./nextlevel_mini_evolution.js');
@@ -383,7 +408,11 @@ assert.equal(seasonMilestones([{pts:10,reb_tot:10,ast:10}]).doubles.length,1);
                 if start in old and end in old:
                     self.assertEqual(old[old.index(start):old.index(end,old.index(start))],h[h.index(start):h.index(end,h.index(start))])
             if name.startswith('perfil_mia'):
-                self.assertEqual(old[old.index('const FIS_PLAYER_ID'):old.index('</script>',old.index('const FIS_PLAYER_ID'))],h[h.index('const FIS_PLAYER_ID'):h.index('</script>',h.index('const FIS_PLAYER_ID'))])
+                old_physical=old[old.index('const FIS_PLAYER_ID'):old.index('</script>',old.index('const FIS_PLAYER_ID'))]
+                new_physical=h[h.index('const FIS_PLAYER_ID'):h.index('</script>',h.index('const FIS_PLAYER_ID'))]
+                # Only the player identity and its cache are parameterized; test behavior is retained.
+                old_physical=old_physical.replace("const FIS_PLAYER_ID = '11111111-0000-0000-0000-000000000014';",'const FIS_PLAYER_ID = PLAYER_ID;').replace("localStorage.getItem('nl_pf_mia14')",'localStorage.getItem(PF_KEY)')
+                self.assertEqual(old_physical,new_physical)
             original_ids=set(re.findall(r'id="([^"]+)"',old));new_ids=set(re.findall(r'id="([^"]+)"',h))
             self.assertTrue({'tab-rend','tab-coach','tab-prog','tab-plan','tab-fis','tab-perfil'}<=new_ids)
         r=subprocess.run([NODE,'--check',str(R/'nextlevel_performance.js')],capture_output=True)

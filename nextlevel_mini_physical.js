@@ -108,9 +108,9 @@ function calcJump() {
 
 /* ── GUARDAR TEST ── */
 async function saveTest(key) {
-  if(!_supa || !FIS_PLAYER_ID){alert('Entrá con la cuenta de Milo para guardar este test.');return;}
+  if(!_supa || !FIS_PLAYER_ID){alert('Entrá con tu cuenta para guardar este test.');return;}
   const {data:auth,error:authError}=await _supa.auth.getUser();
-  if(authError || !auth?.user || auth.user.id!==linkedUserId){alert('Volvé a comprobar la cuenta de Milo antes de guardar.');return;}
+  if(authError || !auth?.user || auth.user.id!==linkedUserId){alert('Volvé a comprobar tu cuenta antes de guardar.');return;}
   const fields=[...document.querySelectorAll('#form-'+key+' input:not([type="hidden"])')];
   if(fields.some(el=>!el.checkValidity())){alert('Revisá los valores ingresados.');return;}
   const inputDate=document.getElementById('f-'+key+'-date').value;
@@ -190,7 +190,7 @@ async function saveTest(key) {
 
 /* ── CARGAR datos de un test desde Supabase ── */
 async function fisLoadTest(key) {
-  if(!_supa || !FIS_PLAYER_ID){document.getElementById('hist-'+key).textContent='Entrá con la cuenta de Milo para consultar y guardar sus registros.';return;}
+  if(!_supa || !FIS_PLAYER_ID){document.getElementById('hist-'+key).textContent='Entrá con tu cuenta para consultar y guardar tus registros.';return;}
   const { data, error } = await _supa
     .from('physical_test_results')
     .select('*')
