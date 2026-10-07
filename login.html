@@ -84,23 +84,23 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#040c1
       — Acceso rápido —
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="quick-btns">
-      <button class="qbtn" onclick="quickLogin('mia@nextlevel.com','Mia2026!')">
+      <button class="qbtn" onclick="quickLogin('mia@nextlevel.com')">
         <span class="qnum">14</span>
         <div><div class="qname">Mía Sánchez</div><div class="qsub">U13 · Escolta</div></div>
       </button>
-      <button class="qbtn" onclick="quickLogin('cat@nextlevel.com','Cat2026!')">
+      <button class="qbtn" onclick="quickLogin('cat@nextlevel.com')">
         <span class="qnum">8</span>
         <div><div class="qname">Catalina Grillo</div><div class="qsub">U13</div></div>
       </button>
-      <button class="qbtn" onclick="quickLogin('luba@nextlevel.com','Luba2026!')">
+      <button class="qbtn" onclick="quickLogin('luba@nextlevel.com')">
         <span class="qnum">6</span>
         <div><div class="qname">Luba Portinari</div><div class="qsub">U13</div></div>
       </button>
-      <button class="qbtn" onclick="quickLogin('alma@nextlevel.com','Alma2026!')">
+      <button class="qbtn" onclick="quickLogin('alma@nextlevel.com')">
         <span class="qnum">12</span>
         <div><div class="qname">Alma Smigiel</div><div class="qsub">U13</div></div>
       </button>
-      <button class="qbtn" onclick="quickLogin('martina@nextlevel.com','Martina2026!')" style="grid-column:span 2">
+      <button class="qbtn" onclick="quickLogin('martina@nextlevel.com')" style="grid-column:span 2">
         <span class="qnum">10</span>
         <div><div class="qname">Martina Bailón</div><div class="qsub">Infantiles</div></div>
       </button>
@@ -143,10 +143,11 @@ function setBusy(on) {
 document.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 
 // ─── QUICK LOGIN (botones de acceso rápido) ────────────────────────────
-function quickLogin(email, pass) {
+function quickLogin(email) {
   document.getElementById('inp-email').value = email;
-  document.getElementById('inp-pass').value  = pass;
-  doLogin();
+  document.getElementById('inp-pass').value = '';
+  hideAll();
+  document.getElementById('inp-pass').focus();
 }
 
 // ─── LOGIN ─────────────────────────────────────────────────────────────
