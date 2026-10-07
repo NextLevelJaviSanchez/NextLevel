@@ -385,7 +385,7 @@ function renderPlayers(){
     const div = document.createElement('div');
     div.className = 'player-row';
     div.innerHTML = `
-      <div class="pr-av"><span>#${p.dorsal}</span></div>
+      <div class="pr-av"><span>#${p.dorsal ?? '—'}</span></div>
       <div class="pr-info">
         <div class="pr-name">${p.name}</div>
         <div class="pr-meta">${p.category} · ${p.club} · ${p.position || '—'}</div>
@@ -414,7 +414,7 @@ function openPlayerDetail(playerId){
   const sts  = allStats.filter(s => s.player_id === playerId);
   const short = UUID_TO_SHORT[playerId] || '';
 
-  document.getElementById('modal-player-title').textContent = p.name + ' #' + p.dorsal;
+  document.getElementById('modal-player-title').textContent = p.name + (p.dorsal==null?'':' #'+p.dorsal);
 
   const statsHtml = sts.length ? sts.map(s => `
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px">
@@ -449,9 +449,9 @@ function openPlayerDetail(playerId){
 
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
       <a href="perfil.html?player=${p.id}" class="btn-sm">👤 Perfil compartido</a>
-      ${short ? `<a href="dossier_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal}_bera_u13_2026.html" class="btn-sm">📊 Dossier</a>` : ''}
+      ${short ? `<a href="dossier_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal ?? '—'}_bera_u13_2026.html" class="btn-sm">📊 Dossier</a>` : ''}
       ${short ? `<a href="evaluacion_fisica_v2.html?player=${short}" class="btn-sm">🏋️ Prep. Física</a>` : ''}
-      ${short ? `<a href="plan_mejora_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal}.html" class="btn-sm">🎯 Plan</a>` : ''}
+      ${short ? `<a href="plan_mejora_${p.name.toLowerCase().replace(/ /g,'_')}_${p.dorsal ?? '—'}.html" class="btn-sm">🎯 Plan</a>` : ''}
     </div>
 
     <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">📋 Evaluaciones físicas</div>
@@ -480,7 +480,7 @@ function renderAllEvals(){
     div.style.alignItems = 'flex-start';
     div.innerHTML = `
       <div style="display:flex;justify-content:space-between;width:100%;align-items:center;margin-bottom:6px">
-        <div style="font-size:0.78rem;font-weight:800">${p ? p.name + ' #' + p.dorsal : '?'}</div>
+        <div style="font-size:0.78rem;font-weight:800">${p ? p.name + (p.dorsal==null?'':' #'+p.dorsal) : '?'}</div>
         <div class="eval-mini-date">${fmtDate(e.date)}</div>
       </div>
       <div class="eval-mini-stats">
@@ -501,7 +501,7 @@ function renderStatsPanel(){
   // Poblar select de jugadoras
   const sel = document.getElementById('st-player');
   sel.innerHTML = allPlayers.map(p =>
-    `<option value="${p.id}">${p.name} #${p.dorsal}</option>`
+    `<option value="${p.id}">${p.name} #${p.dorsal ?? '—'}</option>`
   ).join('');
 
   // Listar stats existentes
@@ -785,7 +785,7 @@ function renderIntakes(){
     div.style.alignItems    = 'flex-start';
     div.innerHTML = `
       <div style="display:flex;justify-content:space-between;width:100%;align-items:center;margin-bottom:6px">
-        <div style="font-size:0.82rem;font-weight:800">${p.name} <span style="color:var(--muted)">#${p.dorsal}</span></div>
+        <div style="font-size:0.82rem;font-weight:800">${p.name} <span style="color:var(--muted)">#${p.dorsal ?? '—'}</span></div>
         ${intake
           ? `<span style="font-size:0.62rem;color:var(--green);font-weight:700">✅ Guardado ${fmtDateTime(intake.updated_at)}</span>`
           : `<span style="font-size:0.62rem;color:var(--muted)">Sin datos</span>`}
@@ -838,5 +838,5 @@ init();
 </script>
 <script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{if(msgCurrentPlayer)selectMsgPlayer(msgCurrentPlayer);});</script>
-<script src="nextlevel_player_sync.js?v=20261007"></script><script src="nextlevel_player_context.js"></script><script src="nextlevel_onboarding.js?v=20261007-dorsal-opcional"></script></body>
+<script src="nextlevel_player_sync.js?v=20261007-server-check"></script><script src="nextlevel_player_context.js"></script><script src="nextlevel_onboarding.js?v=20261007-dorsal-opcional"></script></body>
 </html>

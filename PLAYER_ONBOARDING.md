@@ -39,3 +39,5 @@ Al pasar de Mini a U13, se conserva UUID, foto (`foto_url`), historial de partid
 Pendientes: ejecutar/desplegar SQL/Edge Function en el proyecto real, probar alta completa con una nueva cuenta y activar workflow. No se realizó auditoría de seguridad, conforme al alcance acordado.
 
 Comprobación remota: /functions/v1/nextlevel-onboard responde 404 NOT_FOUND; la activación del servidor sigue pendiente. No hay Supabase CLI ni credenciales administrativas disponibles en este entorno.
+
+Dorsal opcional: si el esquema existente exige dorsal, ejecutar `sql_dorsal_optional.sql`. El alta admite NULL sin inventar un número; conserva todos los dorsales cargados. Si Auth se creó antes del error, repetir el alta con el mismo correo reutiliza la cuenta.

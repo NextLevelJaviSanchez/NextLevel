@@ -1,3 +1,7 @@
+-- Permitir un dorsal desconocido sin inventar un número.
+-- Conserva los dorsales existentes. Puede ejecutarse más de una vez.
+alter table public.players alter column dorsal drop not null;
+
 -- Instalar una vez en SQL Editor. RPC privada invocada por la función del servidor.
 create or replace function public.onboard_nextlevel_player(account_id uuid, display_name text, club_name text, category_name text, shirt_number integer, season_value text, configuration jsonb)
 returns uuid language plpgsql security definer set search_path=public as $$

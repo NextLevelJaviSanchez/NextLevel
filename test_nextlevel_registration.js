@@ -14,3 +14,9 @@ pj=5;assert.equal((await context.discoverFederal(client,{...config,tournaments:r
 assert.equal((await context.discoverFederal(client,{...config,template:'mini'},'2026')).length,0);
 console.log('OK: bienvenida, Federal verificado, ausencia de participación, duplicados y Mini');
 })().catch(e=>{console.error(e);process.exitCode=1;});
+
+// Updating uses the authorized server even when browser access to player_data is unavailable.
+class Element{constructor(tag){this.tag=tag;this.children=[];this.style={};this.value='';}append(e){this.children.push(e);}before(e){root=e;}setAttribute(){}replaceChildren(){this.children=[];}querySelectorAll(tag){return this.children.flatMap(c=>[...(c.tag===tag?[c]:[]),...c.querySelectorAll(tag)]);}}
+let root,requests=0;const anchor=new Element('div'),player={id:'registered',name:'Luba Portinari',category:'U13'};
+const sandbox={document:{getElementById:()=>anchor,createElement:tag=>new Element(tag)},allPlayers:[player],supa:{from:()=>{throw Error('Browser read must not be required');},functions:{invoke:async(_,args)=>{assert.equal(args.body.playerId,player.id);assert.equal(args.body.action,'sync');requests++;return {data:{games:28}};}}},doRefresh:async()=>{}};
+sandbox.window=sandbox;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('nextlevel_player_sync.js','utf8'),sandbox);sandbox.NextLevelSync.render([player]);const boxes=root.querySelectorAll('input'),check=boxes.find(e=>e.type==='checkbox');boxes.find(e=>e.type==='number').value='2026';check.checked=true;check.onchange();root.querySelectorAll('button')[0].onclick().then(()=>{assert.equal(requests,1);console.log('OK: sync independiente de lectura de configuración desde navegador');}).catch(e=>{console.error(e);process.exitCode=1;});

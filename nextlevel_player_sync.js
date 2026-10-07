@@ -10,7 +10,6 @@
  function update(){button.disabled=running || !selected.size;button.textContent='Actualizar seleccionados ('+selected.size+')';}
  async function run(){if(running || !selected.size)return;if(!/^20\d{2}$/.test(season.value)){output.textContent='Revisá la temporada.';return;}const year=season.value,ids=[...selected];running=true;update();season.disabled=true;list.querySelectorAll('input').forEach(e=>e.disabled=true);output.replaceChildren();
  let done=0;try{for(const id of ids){const player=allPlayers.find(p=>p.id===id);const row=make('p',(player?.name || 'Jugador')+': consultando CABB…',output);try{
- const registration=await supa.from('player_data').select('data').eq('player_id',id).eq('module','player_season_v1:'+year).maybeSingle();if(registration.error)throw registration.error;if(!registration.data?.data?.tournaments?.length)throw Error('Falta vincular el equipo y torneo de esta temporada desde Nuevo jugador.');
  const {data,error}=await supa.functions.invoke('nextlevel-onboard',{body:{action:'sync',playerId:id,season:year}});if(error){let message=error.message;try{const body=await error.context?.json();message=body?.error || message;}catch(_){}throw Error(message);}if(data?.error)throw Error(data.error);row.textContent=(player?.name || 'Jugador')+': '+data.games+' partidos sincronizados.';done++;
  }catch(e){row.textContent=(player?.name || 'Jugador')+': pendiente — '+e.message;}}
  if(done)await doRefresh();make('p',done+' de '+ids.length+' jugadores actualizados.',output);
