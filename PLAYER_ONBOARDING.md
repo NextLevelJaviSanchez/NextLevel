@@ -41,3 +41,5 @@ Pendientes: ejecutar/desplegar SQL/Edge Function en el proyecto real, probar alt
 Comprobación remota: /functions/v1/nextlevel-onboard responde 404 NOT_FOUND; la activación del servidor sigue pendiente. No hay Supabase CLI ni credenciales administrativas disponibles en este entorno.
 
 Dorsal opcional: si el esquema existente exige dorsal, ejecutar `sql_dorsal_optional.sql`. El alta admite NULL sin inventar un número; conserva todos los dorsales cargados. Si Auth se creó antes del error, repetir el alta con el mismo correo reutiliza la cuenta.
+
+Cambio de contraseña desde coach: Ver jugador → Acceso jugador/padre → Cambiar contraseña. La función verifica la cuenta vinculada y aplica Auth Admin updateUserById desde el servidor; no envía mails ni persiste la contraseña en player_data. Publicar admin.html y nextlevel_account_admin.js y redesplegar nextlevel-onboard para activar. Probado con mocks, sin cambiar cuentas reales.
