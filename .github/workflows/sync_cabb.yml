@@ -32,6 +32,7 @@ on:
           - only-stats
           - only-gamelog
           - dry-run
+          - mini-milo
 
 jobs:
   sync:
@@ -56,20 +57,33 @@ jobs:
         env:
           SUPA_URL: ${{ secrets.SUPA_URL }}
           SUPA_KEY: ${{ secrets.SUPA_KEY }}
+          MINI_MILO_ENABLED: ${{ vars.MINI_MILO_ENABLED }}
         run: |
           python sync_cabb_supabase.py
           python sync_cabb_supabase.py --tournament "Federal CABB"
+          if [ "$MINI_MILO_ENABLED" = "true" ]; then
+            python collect_cabb_mini.py
+            python sync_cabb_mini_supabase.py
+          fi
 
       - name: Run sync (manual)
         if: github.event_name == 'workflow_dispatch'
         env:
           SUPA_URL: ${{ secrets.SUPA_URL }}
           SUPA_KEY: ${{ secrets.SUPA_KEY }}
+          MINI_MILO_ENABLED: ${{ vars.MINI_MILO_ENABLED }}
         run: |
           MODE="${{ github.event.inputs.mode }}"
-          if [ "$MODE" = "full" ]; then
+          if [ "$MODE" = "mini-milo" ]; then
+            python collect_cabb_mini.py
+            python sync_cabb_mini_supabase.py
+          elif [ "$MODE" = "full" ]; then
             python sync_cabb_supabase.py
             python sync_cabb_supabase.py --tournament "Federal CABB"
+            if [ "$MINI_MILO_ENABLED" = "true" ]; then
+              python collect_cabb_mini.py
+              python sync_cabb_mini_supabase.py
+            fi
           else
             python sync_cabb_supabase.py --$MODE
             python sync_cabb_supabase.py --tournament "Federal CABB" --$MODE

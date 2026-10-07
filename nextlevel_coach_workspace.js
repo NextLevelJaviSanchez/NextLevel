@@ -21,8 +21,9 @@
   async function readAll(client,table,build){
     const rows=[];for(let from=0;;from+=500){const {data,error}=await build(client.from(table).select('*')).range(from,from+499);if(error)throw error;rows.push(...(data || []));if(!data || data.length<500)break;}return rows;
   }
-  async function mount({host,client,playerId,mode}){
+  async function mount({host,client,playerId,mode,playerLabel='Jugadora'}){
     if(!host)return;
+    const roleLabels={...roles,player:playerLabel};
     const token={};mounts.set(host,token);const active=()=>mounts.get(host)===token;
     host.replaceChildren();
     const node=(tag,text,parent)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;if(parent)parent.append(n);return n;};
@@ -34,7 +35,7 @@
     const field=(label,tag,parent=form)=>{const wrap=node('label',label,parent);wrap.style.cssText='display:grid;gap:6px;font-size:.72rem;color:#cbd5e1';const input=node(tag,null,wrap);input.style.cssText='padding:10px;background:#102035;color:#e2e8f0;border:1px solid #2b3d54;border-radius:8px;font:inherit';return input;};
     let role,name;
     if(mode==='player'){
-      role=field('¿Quién escribe?','select');for(const [value,label] of [['player','Jugadora'],['family','Padre / madre / representante']]){const option=node('option',label,role);option.value=value;}
+      role=field('¿Quién escribe?','select');for(const [value,label] of [['player',playerLabel],['family','Padre / madre / representante']]){const option=node('option',label,role);option.value=value;}
       name=field('Nombre (opcional)','input');name.maxLength=80;
     }
     const context=field('Sobre una práctica','select');
@@ -57,14 +58,14 @@
       if(conversation.length>50)paragraph(messages,`Se muestran los últimos 50 de ${conversation.length} mensajes.`);
       visible.forEach(m=>{
         const bubble=node('section',null,messages);bubble.style.cssText='background:'+(m.authorRole==='coach'?'#10283a':'#172238')+';padding:12px;border-radius:10px;border-left:3px solid '+(m.authorRole==='coach'?'#38bdf8':'#c4b5fd')+';margin:10px 0';
-        node('strong',roles[m.authorRole]+(m.authorName ? ' · '+m.authorName : ''),bubble).style.cssText='color:'+(m.authorRole==='coach'?'#38bdf8':'#c4b5fd')+';font-size:.74rem';
+        node('strong',roleLabels[m.authorRole]+(m.authorName ? ' · '+m.authorName : ''),bubble).style.cssText='color:'+(m.authorRole==='coach'?'#38bdf8':'#c4b5fd')+';font-size:.74rem';
         const practice=entries.find(e=>e.id===m.practiceId);
         if(m.practiceId)node('small',practice ? ' · Práctica '+practice.date+' ('+practice.areas.join(' / ')+')' : ' · Sobre una práctica registrada',bubble).style.color='#94a3b8';
         if(m.parentId){const parent=conversation.find(e=>e.id===m.parentId);if(parent)paragraph(bubble,'En respuesta a: '+parent.body.slice(0,90)).style.color='#94a3b8';}
         paragraph(bubble,m.body);node('small',dateLabel(m.createdAt)+(m.legacy ? ' · Historial anterior' : ''),bubble).style.color='#94a3b8';
       });
       if(mode!=='coach')return;
-      coachArea.replaceChildren();node('h3','🌱 Prácticas de la jugadora',coachArea).style.cssText='font-size:.9rem;color:#4ade80;margin-top:20px';
+      coachArea.replaceChildren();node('h3','🌱 Prácticas registradas',coachArea).style.cssText='font-size:.9rem;color:#4ade80;margin-top:20px';
       if(!entries.length)paragraph(coachArea,'No hay prácticas nuevas disponibles.');
       entries.slice(0,10).forEach(e=>{
         const card=node('section',null,coachArea);card.style.cssText='padding:12px;background:#142338;border-radius:10px;margin:10px 0';node('strong',e.date+' · '+e.areas.join(' / '),card).style.color='#4ade80';

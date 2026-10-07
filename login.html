@@ -202,13 +202,13 @@ async function doLogin() {
 
   const { data: players } = await client
     .from('players')
-    .select('id')
+    .select('id,name')
     .eq('user_id', data.user.id)
     .limit(1);
 
   if (players && players.length > 0) {
     const shortId = SHORT_IDS[players[0].id];
-    window.location.href = getPlayerHome(shortId);
+    window.location.href = getPlayerHome(shortId,players[0].name);
   } else {
     window.location.href = 'admin.html';
   }
@@ -216,7 +216,9 @@ async function doLogin() {
 
 // ─── Home por jugadora ─────────────────────────────────────────────────
 // Cada jugadora entra a su hub principal al hacer login
-function getPlayerHome(shortId) {
+function getPlayerHome(shortId,playerName='') {
+  const normalized=String(playerName).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+  if(/\bMILO\b/.test(normalized) && /\bSANCHEZ\b/.test(normalized))return 'perfil_milo_sanchez_u11.html';
   const homes = {
     'mia14':     'perfil_mia_sanchez_14.html',
     'cat8':      'dossier_premium_catalina_grillo_8_2026.html',
@@ -246,9 +248,9 @@ window.addEventListener('load', async () => {
     const { data: { session } } = await client.auth.getSession();
     if (session?.user) {
       showInfo('✅ Sesión activa — redirigiendo…');
-      const { data: players } = await client.from('players').select('id').eq('user_id', session.user.id).limit(1);
+      const { data: players } = await client.from('players').select('id,name').eq('user_id', session.user.id).limit(1);
       if (players && players.length > 0) {
-        window.location.href = getPlayerHome(SHORT_IDS[players[0].id]);
+        window.location.href = getPlayerHome(SHORT_IDS[players[0].id],players[0].name);
       } else {
         window.location.href = 'admin.html';
       }

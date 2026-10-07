@@ -594,12 +594,15 @@ function selectMsgPlayer(playerId){
   });
   renderMsgList();
   const workspace=document.getElementById('coach-player-workspace');
-  const useNew=playerId==='11111111-0000-0000-0000-000000000014';
+  const selected=allPlayers.find(p=>p.id===playerId);
+  const normalized=String(selected?.name || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+  const mini=/\bMILO\b/.test(normalized) && /\bSANCHEZ\b/.test(normalized);
+  const useNew=playerId==='11111111-0000-0000-0000-000000000014' || mini;
   document.getElementById('legacy-msg-compose').hidden=useNew;
   document.getElementById('legacy-message-tools').open=!useNew;
   document.getElementById('legacy-message-summary').hidden=!useNew;
   workspace.hidden=!useNew;
-  if(useNew && window.NextLevelCoachWorkspace)NextLevelCoachWorkspace.mount({host:workspace,client:supa,playerId,mode:'coach'});
+  if(useNew && window.NextLevelCoachWorkspace)NextLevelCoachWorkspace.mount({host:workspace,client:supa,playerId,mode:'coach',playerLabel:mini?'Jugador':'Jugadora'});
 }
 
 function renderMsgList(){

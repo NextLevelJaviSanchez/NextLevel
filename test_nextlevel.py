@@ -8,6 +8,50 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_mini_sync_official_and_missing_coverage(self):
+        import json
+        from sync_cabb_mini_supabase import build_rows
+        source=json.loads((R/'cabb_milo_u11_2026.json').read_text(encoding='utf8'))
+        rows=build_rows(source,'00000000-0000-0000-0000-000000000001')
+        self.assertEqual(len(rows),23)
+        self.assertEqual(len({r['cabb_partido_id'] for r in rows}),23)
+        self.assertTrue(all(r['ast'] is None and r['reb_tot'] is None for r in rows))
+        self.assertEqual(summarize_games(rows)['ppg'],5.43)
+        self.assertEqual(summarize_games(rows)['val_pg'],4.22)
+        self.assertTrue(all(r['torneo']=='FEBAMBA Mini' for r in rows))
+
+    def test_mini_has_original_tabs_and_available_stats(self):
+        h=(R/'perfil_milo_sanchez_u11.html').read_text(encoding='utf-8')
+        nav=h[h.index('<nav class="tabs"'):h.index('</nav>')]
+        self.assertEqual(re.findall(r'data-pane="([^"]+)"',nav),['dash','perfil','rend','coach','prog','plan','fis'])
+        script="""
+const assert=require('node:assert/strict');const {averageMini}=require('./nextlevel_u11.js');
+assert.equal(averageMini([{puntos:0},{puntos:10}],'puntos'),5);
+assert.equal(averageMini([{puntos:0},{puntos:null}],'puntos'),null);
+assert.equal(averageMini([{valoracion:-2},{valoracion:4}],'valoracion'),1);
+assert.equal(averageMini([{puntos:-1}],'puntos'),null);
+assert.equal(averageMini([{puntos:''}],'puntos'),null);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_mini_login_route_preserves_existing_profiles(self):
+        h=(R/'login.html').read_text(encoding='utf-8')
+        source=h[h.index('function getPlayerHome('):h.index('// ─── Carga dinámica')]
+        script=source+"\nconst assert=require('node:assert/strict');assert.equal(getPlayerHome('mia14','Mia Sanchez'),'perfil_mia_sanchez_14.html');assert.equal(getPlayerHome('martina10','Martina Bailon'),'perfil_martina_bailon_10.html');assert.equal(getPlayerHome(undefined,'SÁNCHEZ, MILO BASTIAN'),'perfil_milo_sanchez_u11.html');"
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+
+    def test_u11_identity_and_personal_progress(self):
+        script="""
+const assert=require('node:assert/strict');const {playerMatches,mergeEntries,validPractice}=require('./nextlevel_u11.js');
+assert.equal(playerMatches('SÁNCHEZ, MILO BASTIAN'),true);assert.equal(playerMatches('SANCHEZ, MIA GERALDINE'),false);
+const entries=mergeEntries([{id:'a',date:'2026-10-07',success:'local'}],[{id:'a',date:'2026-10-07',success:'cloud'},{id:'b',date:'2026-10-06'}]);assert.equal(entries.length,2);assert.equal(entries[0].success,'local');
+assert.equal(validPractice({date:'2026-10-07',success:'Probé con ambas manos',next:''},'2026-10-07'),true);assert.equal(validPractice({date:'2026-02-30',success:'bien',next:''},'2026-10-07'),false);assert.equal(validPractice({date:'2026-10-08',success:'bien',next:''},'2026-10-07'),false);
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        mini=(R/'perfil_milo_sanchez_u11.html').read_text(encoding='utf-8')
+        self.assertNotIn('11111111-0000-0000-0000-000000000014',mini)
+        self.assertNotIn('nextlevel_coach_analysis.js',mini)
+
     def test_valuation_ranking_and_update_timestamp(self):
         script="""
 const assert=require('node:assert/strict');const {teamRanking}=require('./nextlevel_profile_extras.js');const {latestUpdate}=require('./nextlevel_performance.js');
