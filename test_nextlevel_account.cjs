@@ -8,6 +8,13 @@ const db={from:table=>{assert.equal(table,'players');return {select:()=>({eq:(ke
  email='coach@example.invalid';await assert.rejects(()=>context.changePlayerPassword(db,playerId,'TestOnly2026!',email),/jugador/);assert.equal(writes.length,0);email='test-player@example.invalid';
  const result=await context.changePlayerPassword(db,playerId,'TestOnly2026!','coach@example.invalid');assert.equal(result.ok,true);assert.equal(result.verified,true);assert.equal(writes.length,1);assert.equal(writes[0].id,accountId);assert.equal(Object.keys(writes[0].attributes).join(','),'password');assert(!('password' in result));
  await assert.rejects(()=>context.changePlayerPassword(db,playerId,'TestOnly2026!','coach@example.invalid',async()=>{throw Error('Verificación de login falló');}),/Verificación de login falló/);
+ const originalUpdate=db.auth.admin.updateUserById;
+ db.auth.admin.updateUserById=async(id,attributes)=>{assert.equal(id,accountId);assert.deepEqual(Object.keys(attributes).sort(),['email','email_confirm']);assert.equal(attributes.email_confirm,true);return {data:{user:{id,email:attributes.email}}};};
+ const corrected=await context.changePlayerEmail(db,playerId,' corrected@example.invalid ','coach@example.invalid');assert.equal(corrected.email,'corrected@example.invalid');assert.equal(corrected.playerId,playerId);
+ await assert.rejects(()=>context.changePlayerEmail(db,playerId,'bad','coach@example.invalid'),/correo nuevo/);
+ await assert.rejects(()=>context.changePlayerEmail(db,playerId,'coach@example.invalid','coach@example.invalid'),/distinto/);
+ db.auth.admin.updateUserById=async()=>({error:new Error('Email ya registrado')});await assert.rejects(()=>context.changePlayerEmail(db,playerId,'corrected@example.invalid','coach@example.invalid'),/ya registrado/);
+ db.auth.admin.updateUserById=originalUpdate;
  db.auth.admin.updateUserById=async()=>({error:new Error('Auth no disponible')});await assert.rejects(()=>context.changePlayerPassword(db,playerId,'TestOnly2026!','coach@example.invalid'),/Auth no disponible/);
  new vm.Script(stripTypeScriptTypes(source).replace(/^import .*$/m,''));new vm.Script(fs.readFileSync('nextlevel_account_admin.js','utf8'));
  for(const m of fs.readFileSync('admin.html','utf8').matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi))if(!m[1].includes('src='))new vm.Script(m[2]);
