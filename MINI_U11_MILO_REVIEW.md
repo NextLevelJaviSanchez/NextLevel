@@ -34,3 +34,12 @@ Físico permite medidas fechadas sin interpretar crecimiento ni aplicar estánda
 - Lectura posterior: 23 PJ, 5.4 PPG, 18.9 MIN, 4.2 VAL.
 - Navegador: cuenta vinculada y conversación/progreso leídos desde Supabase; actor Jugador o Padre/madre habilitado. No se enviaron mensajes ni se inventaron prácticas.
 - Pendientes: publicar archivos y activar MINI_MILO_ENABLED en GitHub para sincronización programada; probar guardado de una práctica real y otro dispositivo.
+
+
+## Perfil completo adaptado a Mini — 07/10/2026
+- Misma estructura de apartados: foto en encabezado, datos de competencia, posición elegible/datos personales/contacto familiar, medidas, sueño, objetivo de temporada, selección múltiple técnica/mental, nota al coach, resumen imprimible.
+- Mantiene enjoy/learn/position y las prácticas previas. Nuevos campos se agregan a mini_profile_v1; guardado de perfil confirma Supabase y conserva pendientes ante fallas.
+- Foto comprimida máximo 640px, validación de archivo/5MB, guardada como foto_url (misma convención de Mía). No se cargó ninguna foto ficticia ni dato personal de prueba.
+- Objetivo/áreas pasan a Mi Plan; tips mentales solo en Mi Plan. Ninguna etiqueta profesional ni interpretación del crecimiento en Mini.
+- Conexión al perfil existente automática cuando hay sesión; conserva botón para comprobar cuenta y sincronizar pendientes/foto.
+- 32 pruebas pasan; perfil completo verificado en navegador, sin errores de consola. Carga real de foto y guardado de datos personales deben verificarse cuando la familia complete los valores reales. Publicación pendiente.

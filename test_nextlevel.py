@@ -8,6 +8,25 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_mini_complete_profile_and_photo_validation(self):
+        script="""
+const assert=require('node:assert/strict');const {validProfile,photoSource}=require('./nextlevel_u11.js');
+assert.equal(validProfile({birthDate:'2026-02-30'},'2026-10-07'),false);
+assert.equal(validProfile({height:-1},'2026-10-07'),false);
+assert.equal(validProfile({contactEmail:'bad'},'2026-10-07'),false);
+assert.equal(validProfile({birthDate:'2016-06-01',height:'140',contactEmail:'family@example.com'},'2026-10-07'),true);
+assert.equal(photoSource('javascript:alert(1)'),null);
+assert.equal(photoSource('data:image/jpeg;base64,YWJj'),'data:image/jpeg;base64,YWJj');
+"""
+        subprocess.run([NODE,'-e',script],cwd=R,check=True,capture_output=True)
+        html=(R/'perfil_milo_sanchez_u11.html').read_text(encoding='utf8')
+        for field in ['dream','seasonGoal','birthDate','dominantHand','height','weight','wingspan','reach','shoeSize','coachNote']:
+            self.assertIn('data-profile-field="'+field+'"',html)
+        self.assertIn('data-profile-choice="technicalAreas"',html)
+        self.assertIn('data-profile-choice="mentalAreas"',html)
+        self.assertEqual(html.count('id="mini-avatar-photo"'),1)
+        self.assertIn('id="mini-plan-mental"',html)
+
     def test_mini_sync_official_and_missing_coverage(self):
         import json
         from sync_cabb_mini_supabase import build_rows
