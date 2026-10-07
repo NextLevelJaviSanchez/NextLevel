@@ -162,15 +162,15 @@
     const best=key=>{const known=games.filter(g=>numeric(g[key]));if(!known.length)return null;const value=Math.max(...known.map(g=>Number(g[key])));return {value,games:known.filter(g=>Number(g[key])===value),coverage:known.length};};
     const doubles=games.filter(g=>keys.filter(k=>numeric(g[k]) && Number(g[k])>=10).length>=2);
     const complete=games.filter(g=>keys.every(k=>numeric(g[k]))).length;
-    return {points:best('pts'),valuation:best('val'),doubles,complete,total:games.length};
+    return {points:best('pts'),rebounds:best('reb_tot'),minutes:best('minutos'),valuation:best('val'),doubles,complete,total:games.length};
   }
   async function loadMilestones(){
     const el=document.getElementById('season-milestones');if(!el)return;
     try{
       const {data,error}=await _supa.from('game_log').select('*').eq('player_id',PLAYER_ID).eq('source','cabb_api').gte('fecha',SEASON+'-01-01').lt('fecha',String(+SEASON+1)+'-01-01').order('fecha',{ascending:false});
-      if(error)throw error;const games=data || [],summary=seasonMilestones(games);el.replaceChildren();
+      if(error)throw error;const games=data || [],summary=seasonMilestones(games);window.NextLevelSeasonMilestones=summary;if(typeof buildDashLogros==='function')buildDashLogros();el.replaceChildren();
       const paragraph=(parent,text,style='')=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6;margin:6px 0;'+style;p.textContent=text;parent.append(p);return p;};
-      paragraph(el,`Temporada ${SEASON} · ${games.length} partidos · AFMB y Federal`, 'color:var(--muted);margin:0 0 14px');
+      paragraph(el,`Temporada ${SEASON} · ${games.length} partidos · ${[...new Set(games.map(g=>g.torneo).filter(Boolean))].join(' · ')}`, 'color:var(--muted);margin:0 0 14px');
       if(!games.length){paragraph(el,'Todavía no hay partidos oficiales disponibles para calcular hitos.');return;}
       const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px';el.append(grid);
       const card=(icon,title,value,color)=>{
@@ -186,7 +186,7 @@
         paragraph(detail,`${date.length===3 ? date.reverse().join('/') : g.fecha || 'Fecha sin informar'} · ${g.torneo || 'Torneo sin informar'}`, 'color:var(--muted);font-size:.65rem');
         paragraph(detail,'Resultado del equipo: '+(g.resultado_eq || 'sin informar'),'font-size:.65rem');
       };
-      for(const [icon,label,row,color,unit] of [['🏀','Máximo de puntos',summary.points,'var(--ac)','puntos'],['⭐','Máxima valoración',summary.valuation,'#FFD740','de valoración CABB']]){
+      for(const [icon,label,row,color,unit] of [['🏀','Máximo de puntos',summary.points,'var(--ac)','puntos'],['⭐','Máxima valoración',summary.valuation,'#FFD740','de valoración CABB'],['🛡️','Máximo de rebotes',summary.rebounds,'#38bdf8','rebotes'],['⏱️','Mayor tiempo de juego',summary.minutes,'#a78bfa','minutos']]){
         const panel=card(icon,label,row ? `${row.value} ${unit}` : 'Sin datos',color);
         if(row){row.games.forEach(g=>match(panel,g));paragraph(panel,`Datos disponibles: ${row.coverage}/${games.length} partidos`, 'font-size:.62rem;color:var(--muted);margin-top:12px');}
       }

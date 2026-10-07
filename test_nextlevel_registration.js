@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),{stripTypeScriptTypes}=require('node:module');
+const {firstName}=require('./nextlevel_player_context.js');
+assert.equal(firstName('PORTINARI, LUBA JULIETA'),'Luba');assert.equal(firstName('Mía Sánchez'),'Mía');assert.equal(firstName('SANCHEZ, MILO BASTIAN'),'Milo');
+const source=fs.readFileSync('supabase/functions/nextlevel-onboard/index.ts','utf8');
+const code=source.slice(source.indexOf('const clubIdentity='),source.indexOf('async function syncPlayer('));
+const context={norm:s=>String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()};vm.createContext(context);vm.runInContext(stripTypeScriptTypes(code),context);
+const config={category:'U13',template:'u13',club:'CLUB SOCIAL Y DEPORTIVO BERAZATEGUI',cabbName:'PORTINARI, LUBA JULIETA',tournaments:[]};
+const team={Nombre:'DEP. BERAZATEGUI',Categoria:'LA LIGA FEDERAL INFANTILES FEMENINA',Temporada:'2026',Competicion:'FORMATIVAS',Delegacion:'CONFEDERACION ARGENTINA DE BASQUETBOL'};
+assert(context.federalCandidate(team,config,'2026'));for(const change of [{Nombre:'OTRO CLUB'},{Categoria:'LA LIGA FEDERAL CADETES FEMENINA'},{Temporada:'2025'}])assert(!context.federalCandidate({...team,...change},config,'2026'));
+(async()=>{let pj=5,categoryChecks=0;const client={teams:async()=>[team],roster:async()=>[{Nombre:config.cabbName,PartidosJugados:pj}],category:async()=>{categoryChecks++;}};
+let result=await context.discoverFederal(client,config,'2026');assert.equal(result.length,1);assert.equal(categoryChecks,1);assert.equal(result[0].label,'Federal CABB');
+pj=0;assert.equal((await context.discoverFederal(client,config,'2026')).length,0);assert.equal(categoryChecks,1);
+pj=5;assert.equal((await context.discoverFederal(client,{...config,tournaments:result},'2026')).length,0);
+assert.equal((await context.discoverFederal(client,{...config,template:'mini'},'2026')).length,0);
+console.log('OK: bienvenida, Federal verificado, ausencia de participación, duplicados y Mini');
+})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,8 +1,9 @@
 /* Identidad y plantilla por temporada. No contiene credenciales administrativas. */
 (function(){'use strict';
 const normalize=s=>String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+function firstName(name){const text=String(name || '').trim();const given=text.includes(',')?text.slice(text.indexOf(',')+1).trim():text;const word=given.split(/\s+/)[0] || '';return word?word.charAt(0).toLocaleUpperCase('es-AR')+word.slice(1).toLocaleLowerCase('es-AR'):'';}
 function templateFor(category){const text=normalize(category);if(/\b(U11|MINI|PREMINI|U9)\b/.test(text))return 'mini';if(/\b(U13|U15|U17|U19|U21|INFANTILES|CADETES|JUVENILES|MAYORES)\b/.test(text))return 'u13';throw Error('Elegí una categoría Mini U11 o U13 en adelante.');}
 function cacheKey(id,kind){if(!/^[0-9a-f-]{36}$/i.test(id))throw Error('Identidad inválida');return 'nl_'+kind+'_'+id;}
 function contextFor(player,season,registration={}){const category=registration.category || player.category;return {...registration,playerId:player.id,name:player.name,legacyMia:player.id==='11111111-0000-0000-0000-000000000014',dorsal:registration.dorsal ?? player.dorsal,club:registration.club || player.club,category,season:String(season),template:templateFor(category),cabbName:registration.cabbName || player.name,primaryTournament:registration.tournaments?.[0]?.label || (normalize(player.club).includes('BERAZATEGUI')?'AFMB':'Competencia'),legacy:!registration.tournaments?.length};}
-const api={normalize,templateFor,cacheKey,contextFor};if(typeof module!=='undefined')module.exports=api;if(typeof window!=='undefined')window.NextLevelPlayerContext=api;
+const api={firstName,normalize,templateFor,cacheKey,contextFor};if(typeof module!=='undefined')module.exports=api;if(typeof window!=='undefined')window.NextLevelPlayerContext=api;
 })();

@@ -328,8 +328,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 </style>
 <link rel="stylesheet" href="nextlevel_readability.css?v=20261007-2">
+<script src="nextlevel_player_context.js?v=20261007-nombre"></script>
 </head>
 <body>
+<div style="display:flex;justify-content:flex-end;padding:10px 16px"><button type="button" onclick="doLogout()" style="background:var(--card2);color:#fca5a5;border:1px solid #475569;border-radius:8px;padding:10px 16px;font-size:16px">Salir ↗</button></div>
 
 <!-- HERO -->
 <div class="hero">
@@ -1958,7 +1960,7 @@ function buildDashboard() {
   // Bienvenida dinámica
   const hora = new Date().getHours();
   const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
-  document.getElementById('dash-bienvenida').textContent = `${saludo}, ${window.NextLevelPlayer?.name || 'Mía'} — acá está tu evolución`;
+  document.getElementById('dash-bienvenida').textContent = `${saludo}, ${window.NextLevelPlayerContext?.firstName(window.NextLevelPlayer?.name || 'Mía') || 'Mía'} — acá está tu evolución`;
   document.getElementById('dash-subtitulo').textContent  = `Temporada 2026 · ${mainPJ || '?'} partidos · Next Level Basketball`;
 
   // Evolución mini en Dashboard
@@ -2049,9 +2051,12 @@ async function buildDashFisico() {
 function buildDashLogros() {
   const s = playerStats;
   const logros = [];
+  const best=window.NextLevelSeasonMilestones;
+  if(best)for(const [key,icon,label] of [['points','🏀','Más puntos'],['rebounds','🛡️','Más rebotes'],['minutes','⏱️','Más minutos']]){const row=best[key];if(row){const g=row.games[0];logros.push({icon,txt:`<strong>${label}: ${Number(row.value).toFixed(key==='minutes'?1:0)}</strong> · ${g.fecha}`});}}
+
   if (s.afmb.ppg && s.afmb.ppg >= 8)  logros.push({ icon:'🔥', txt:`<strong>Anotación AFMB</strong> — ${s.afmb.ppg} PPP en ${s.afmb.pj} partidos` });
   if (s.fed.ppg)                        logros.push({ icon:'🌐', txt:`<strong>Federal CABB</strong> — ${s.fed.ppg} PPP a nivel nacional` });
-  if (s.combined.pj && s.combined.pj >= 20) logros.push({ icon:'⏱️', txt:`<strong>${s.combined.pj} partidos</strong> — temporada completa en cancha` });
+  if (s.combined.pj && s.combined.pj >= 20) logros.push({ icon:'⏱️', txt:`<strong>${s.combined.pj} partidos</strong> — participaciones registradas` });
   OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'cumplido').forEach(o =>
     logros.push({ icon:'✅', txt:`<strong>Objetivo cumplido:</strong> ${o.ttl}` })
   );
@@ -3061,9 +3066,9 @@ function fisInit() {
 
 </script>
 <script src="nextlevel_coach_analysis.js?v=20261006-coach1"></script>
-<script src="nextlevel_performance.js?v=20261007-topval" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
-<script src="nextlevel_profile_extras.js?v=20261007-readable"></script>
-<script src="nextlevel_evolution.js"></script>
+<script src="nextlevel_performance.js?v=20261007-evolucion-mobile" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
+<script src="nextlevel_profile_extras.js?v=20261007-evolucion-mobile"></script>
+<script src="nextlevel_evolution.js?v=20261007-evolucion-mobile"></script>
 <script src="nextlevel_plan_progress.js"></script>
 <script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>

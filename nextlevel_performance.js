@@ -132,7 +132,7 @@
         }
         Object.keys(summary).forEach(k => {
           const tr=node('tr',null,body), a=base[k], b=recent[k];
-          [k,k==='AST/PER' && a!=null ? a.toFixed(2) : fmt(a),k==='AST/PER' && b!=null ? b.toFixed(2) : fmt(b),a==null||b==null?'—':((b-a)>0?'↑ ':((b-a)<0?'↓ ':'→ '))+Math.abs(b-a).toFixed(k==='AST/PER'?2:1)].forEach(t => node('td',t,tr));
+          [k,k==='AST/PER' && a!=null ? a.toFixed(2) : fmt(a),k==='AST/PER' && b!=null ? b.toFixed(2) : fmt(b),a==null||b==null?'—':((b-a)>0?'↑ ':((b-a)<0?'↓ ':'→ '))+Math.abs(b-a).toFixed(k==='AST/PER'?2:1)].forEach((t,i) => {const cell=node('td',t,tr);if(i===3 && a!=null && b!=null){const delta=Math.round((b-a)*Math.pow(10,k==='AST/PER'?2:1));cell.style.color=delta>0?'#4ade80':delta<0?'#f87171':'#FFD740';cell.style.fontWeight='800';}});
         });
         seasons.filter(s => !select.value || s.tournament === select.value).forEach(s => {
           node('p',`${s.tournament} · resumen de temporada: ${s.pj ?? 'Sin datos'} PJ · ${fmt(s.ppg)} PTS · ${fmt(s.min_pg)} MIN. Fuente: resumen sincronizado; comparar cobertura antes de equipararlo al historial.`,content);
