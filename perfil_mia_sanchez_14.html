@@ -1067,7 +1067,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="profile-grid">
       <div class="profile-field"><div class="pf-lbl">Dorsal</div><div class="pf-val">#14</div></div>
       <div class="profile-field"><div class="pf-lbl">Club</div><div class="pf-val">Dep. Berazategui</div></div>
-      <div class="profile-field"><div class="pf-lbl">Competencias 2026</div><div class="pf-val">AFMB + Federal CABB</div></div>
+      <div class="profile-field"><div class="pf-lbl">Competencias 2026</div><div class="pf-val" id="profile-competitions">Sin participación registrada</div></div>
       <div class="profile-field"><div class="pf-lbl">Partidos jugados</div><div class="pf-val"><span data-official-metric="pj">—</span> PJ totales</div></div>
     </div>
   </div>
@@ -1253,7 +1253,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
     <div class="g4" style="margin-bottom:12px">
-      <div class="stat-cell"><div class="sc-val" style="color:var(--ac)" id="cv-ppp-fed">—</div><div class="sc-lbl">PPP Fed 🏀</div></div>
+      <div class="stat-cell" data-federal-participation style="display:none"><div class="sc-val" style="color:var(--ac)" id="cv-ppp-fed">—</div><div class="sc-lbl">PPP Fed 🏀</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--green)" id="cv-ppp-afmb">—</div><div class="sc-lbl">PPP AFMB 🏀</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--purple)" id="cv-mpg">—</div><div class="sc-lbl">MPP 🏀</div></div>
       <div class="stat-cell"><div class="sc-val" style="color:var(--cyan)" id="cv-pj">—</div><div class="sc-lbl">PJ 🏀</div></div>
@@ -1288,7 +1288,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="rpt-h2">Estadísticas — Temporada 2026</div>
     <div class="rpt-grid">
       <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-ppp-afmb">—</div><div class="rpt-kpi-l">PPP AFMB</div></div>
-      <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-ppp-fed">—</div><div class="rpt-kpi-l">PPP Federal</div></div>
+      <div class="rpt-kpi" data-federal-participation style="display:none"><div class="rpt-kpi-v" id="rpt-ppp-fed">—</div><div class="rpt-kpi-l">PPP Federal</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-mpg">—</div><div class="rpt-kpi-l">Min / Partido</div></div>
       <div class="rpt-kpi"><div class="rpt-kpi-v" id="rpt-pj">—</div><div class="rpt-kpi-l">Partidos</div></div>
     </div>
@@ -1421,7 +1421,7 @@ async function loadPlayerStats() {
       };
       if (afmbRow.updated_at) playerStats.updated_at = afmbRow.updated_at;
     }
-    if (fedRow) {
+    if (fedRow && Number(fedRow.pj)>0) {
       playerStats.fed = {
         ppg: fedRow.ppg != null ? +fedRow.ppg : null,
         pj:  fedRow.pj  != null ? +fedRow.pj  : null,
@@ -1489,6 +1489,9 @@ async function loadPlayerStats() {
 /* ── Renderizar todos los KPIs desde playerStats ── */
 function renderPlayerStats() {
   const s = playerStats;
+  const hasFederal=Number(s.fed.pj)>0;
+  document.querySelectorAll('[data-federal-participation],#hero-kpi-fed,#hero-tag-fed,#st-fed-row').forEach(el=>el.style.display=hasFederal?'':'none');
+  const competitions=document.getElementById('profile-competitions');if(competitions)competitions.textContent=[Number(s.afmb.pj)>0?(window.NextLevelPlayer?.primaryTournament || 'AFMB'):null,hasFederal?'Federal CABB':null].filter(Boolean).join(' · ') || 'Sin participación registrada';
   const fmt = v => v != null ? v : '—';
 
   // ── HERO ──
@@ -1507,7 +1510,7 @@ function renderPlayerStats() {
   elSet('hero-pj',   pjTot);
 
   // HERO — KPI Federal (solo si hay datos)
-  if (s.fed.ppg != null) {
+  if (Number(s.fed.pj)>0) {
     elSet('hero-ppp-fed', fedPPG);
     const kpiFed = document.getElementById('hero-kpi-fed');
     if (kpiFed) kpiFed.style.display = '';
@@ -1524,7 +1527,7 @@ function renderPlayerStats() {
     tagTorneo.textContent = `🏀 ${s.afmb.ppg} PPP AFMB`;
     tagTorneo.style.display = '';
   }
-  if (tagFed && s.fed.ppg != null) {
+  if (tagFed && Number(s.fed.pj)>0) {
     tagFed.textContent = `🌐 ${s.fed.ppg} PPP Federal`;
     tagFed.style.display = '';
   }
@@ -1539,7 +1542,7 @@ function renderPlayerStats() {
                         s.afmb.pj ? `${s.afmb.pj} AFMB` : '—');
 
   // Fila Federal (mostrar solo si hay datos)
-  if (s.fed.ppg != null) {
+  if (Number(s.fed.pj)>0) {
     const fedRow = document.getElementById('st-fed-row');
     if (fedRow) fedRow.style.display = '';
     elSet('st-ppp-fed', fedPPG);
@@ -1935,6 +1938,9 @@ async function loadCoachEval() {
    ══════════════════════════════════════════════════════════ */
 function buildDashboard() {
   const s = playerStats;
+  const hasFederal=Number(s.fed.pj)>0;
+  document.querySelectorAll('[data-federal-participation],#hero-kpi-fed,#hero-tag-fed,#st-fed-row').forEach(el=>el.style.display=hasFederal?'':'none');
+  const competitions=document.getElementById('profile-competitions');if(competitions)competitions.textContent=[Number(s.afmb.pj)>0?(window.NextLevelPlayer?.primaryTournament || 'AFMB'):null,hasFederal?'Federal CABB':null].filter(Boolean).join(' · ') || 'Sin participación registrada';
   const fmt = v => v != null ? v : '—';
 
   // KPIs — usar AFMB como fallback cuando no hay Federal

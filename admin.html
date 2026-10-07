@@ -121,7 +121,7 @@ select option{background:#1a2537}
     <div class="topbar-sub" id="coach-email">coach@nextlevel.com</div>
   </div>
   <div style="display:flex;gap:6px;align-items:center">
-    <button class="btn-sm" id="btn-refresh" onclick="doRefresh()" title="Actualizar todos los datos">🔄 Actualizar</button>
+    <button class="btn-sm" id="btn-refresh" onclick="doRefresh()" title="Volver a leer los datos guardados">🔄 Recargar panel</button>
     <button class="btn-sm" onclick="doLogout()">🚪 Salir</button>
   </div>
 </div>
@@ -372,6 +372,7 @@ function renderSummary(){
 
 // ═══════════════ JUGADORAS ════════════════════════════════════════════
 function renderPlayers(){
+  if(window.NextLevelSync)window.NextLevelSync.render(allPlayers);
   const el = document.getElementById('players-list');
   el.innerHTML = '';
   allPlayers.forEach(p => {
@@ -748,7 +749,7 @@ async function doRefresh(){
   } catch(e) {
     toast('⚠️ Error al actualizar: ' + e.message);
   } finally {
-    btn.textContent = '🔄 Actualizar';
+    btn.textContent = '🔄 Recargar panel';
     btn.disabled = false;
   }
 }
@@ -837,5 +838,5 @@ init();
 </script>
 <script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{if(msgCurrentPlayer)selectMsgPlayer(msgCurrentPlayer);});</script>
-<script src="nextlevel_player_context.js"></script><script src="nextlevel_onboarding.js"></script></body>
+<script src="nextlevel_player_sync.js?v=20261007"></script><script src="nextlevel_player_context.js"></script><script src="nextlevel_onboarding.js?v=20261007-dorsal-opcional"></script></body>
 </html>
