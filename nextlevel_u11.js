@@ -115,6 +115,7 @@ const cloud=rows.filter(r=>r.module.startsWith('plan_progress_v1:') && r.data?.i
 const {data:official,error:officialError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module',window.NextLevelPlayer ? 'cabb_mini_official_v1:'+NextLevelPlayer.season : 'cabb_mini_official_v1').maybeSingle();if(officialError)throw officialError;if(official?.data)await renderOfficial(official.data);
 const {data:photo,error:photoError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module','foto_url').maybeSingle();if(photoError)throw photoError;if(!state.photoDirty){state.photo=photoSource(photo?.data);applyPhoto();saveLocal();}
 await NextLevelMiniPhysical.connect(client,playerId,linkedUserId);
+await NextLevelMiniGoals.connect({client,playerId,season:window.NextLevelPlayer?.season || '2026',official:official?.data,verifyAccount});
 NextLevelCoachWorkspace.mount({host:$('mini-conversation'),client,playerId,mode:'player',playerLabel:'Jugador'});
 if(state.profileDirty)profileAutosave.schedule();else $('mini-profile-save-status').textContent='Perfil cargado desde Supabase · autoguardado activo.';
 }catch(e){playerId=null;$('mini-sync').hidden=true;status('No se pudo vincular el perfil: '+e.message);}

@@ -45,19 +45,22 @@ function advance(goal,games,now){if(goal.status!=='achieved')throw Error('El pas
 const api={rules,gamesFor,measure,target,create,evaluate,advance};
 if(typeof module!=='undefined')module.exports=api;root.NextLevelGradualGoals=api;
 if(typeof document==='undefined')return;
-document.addEventListener('DOMContentLoaded',async()=>{
- const anchor=document.getElementById('obj-list');if(!anchor)return;
- const player=typeof PLAYER_ID!=='undefined'?PLAYER_ID:root.NextLevelPlayer?.playerId,season=String(typeof SEASON!=='undefined'?SEASON:root.NextLevelPlayer?.season);
- const client=typeof _supa!=='undefined'?_supa:null;if(!player || !client || !/^20\d{2}$/.test(season))return;
+async function mount(options={}){
+ const anchor=options.anchor || document.getElementById('obj-list');if(!anchor || anchor._gradualGoalsMounted)return;
+ const player=options.playerId || (typeof PLAYER_ID!=='undefined'?PLAYER_ID:root.NextLevelPlayer?.playerId),season=String(options.season || (typeof SEASON!=='undefined'?SEASON:root.NextLevelPlayer?.season));
+ const client=options.client || (typeof _supa!=='undefined'?_supa:null);if(!player || !client || !/^20\d{2}$/.test(season))return;
+ anchor._gradualGoalsMounted=true;
+ const allowed=options.metrics || Object.keys(rules);
  const node=(tag,text,parent)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;if(parent)parent.append(n);return n;};
  const host=node('section',null);anchor.before(host);host.className='card';node('h3','🎯 Mis objetivos graduales',host);
  const status=node('p','Cargando tus objetivos…',host);status.setAttribute('role','status');
  const controls=node('div',null,host),select=node('select',null,controls);select.setAttribute('aria-label','Torneo de los objetivos');select.style.cssText='padding:10px;background:var(--card2);color:var(--text);max-width:100%';
  const cards=node('div',null,host),awards=node('div',null,host);let games=[],records=new Map(),busy=false;
- const dashAnchor=document.getElementById('dash-obj-activo'),dash=dashAnchor?node('section',null):null;if(dash)dashAnchor.after(dash);
+ const dashAnchor=options.dashboard || document.getElementById('dash-obj-activo'),dash=dashAnchor?node('section',null):null;if(dash)dashAnchor.after(dash);
  const prefix='gradual_goals_v1:'+season+':',now=()=>new Date().toISOString(),key=(metric,torneo)=>prefix+encodeURIComponent(torneo)+':'+metric;
  const fmt=(v,m)=>Number(v).toFixed(1)+rules[m].unit;
  async function save(module,goal){
+  if(options.verifyAccount)await options.verifyAccount();
   const old=records.get(module),stamp=now();let query;
   if(old)query=client.from('player_data').update({data:goal,updated_at:stamp}).eq('player_id',player).eq('module',module).eq('updated_at',old.updated_at).select('module,data,updated_at');
   else query=client.from('player_data').insert({player_id:player,module,data:goal,updated_at:stamp}).select('module,data,updated_at');
@@ -67,9 +70,9 @@ document.addEventListener('DOMContentLoaded',async()=>{
  const button=(text,parent,task)=>{const b=node('button',text,parent);b.type='button';b.className='obj-btn';b.disabled=busy;b.addEventListener('click',()=>action(task));return b;};
  function render(){
   cards.replaceChildren();awards.replaceChildren();if(dash)dash.replaceChildren();const torneo=select.value;
-  node('p','Elegí hasta 2 objetivos activos. Se evalúan con partidos nuevos del mismo torneo. Los objetivos técnicos del plan se mantienen debajo.',cards);
+  node('p',options.description || 'Elegí hasta 2 objetivos activos. Se evalúan con partidos nuevos del mismo torneo. Los objetivos técnicos del plan se mantienen debajo.',cards);
   const active=[...records.values()].filter(r=>r.data.status==='active').length;
-  for(const [metric,rule] of Object.entries(rules)){
+  for(const metric of allowed){const rule=rules[metric];if(!rule)continue;
    const module=key(metric,torneo),goal=records.get(module)?.data,card=node('section',null,cards);card.className='obj-item';node('h4',rule.label,card);
    if(!goal){const base=measure(gamesFor(games,torneo).slice(-5),metric),t=base.ready?target(metric,base.value):null;
     node('p',base.ready?`Base: ${fmt(base.value,metric)} · Primer paso: ${t==null?'límite alcanzado':fmt(t,metric)}`:base.reason,card);
@@ -92,13 +95,16 @@ document.addEventListener('DOMContentLoaded',async()=>{
   if(dash){node('h4','🎯 Objetivos graduales',dash);for(const row of records.values()){const g=row.data;if(g.status==='active')node('p',`${rules[g.metric].label}: ${fmt(g.baseline.value,g.metric)} → ${fmt(g.target,g.metric)} · ${g.torneo}`,dash);}if(list.length)celebration(list[0],dash);}
  }
  try{
-  for(let from=0;;from+=1000){const {data,error}=await client.from('game_log').select('*').eq('player_id',player).eq('source','cabb_api').gte('fecha',season+'-01-01').lt('fecha',String(+season+1)+'-01-01').order('fecha').order('cabb_partido_id').range(from,from+999);if(error)throw error;games.push(...(data || []));if(!data || data.length<1000)break;}
+  if(options.loadGames)games=await options.loadGames();
+  else for(let from=0;;from+=1000){const {data,error}=await client.from('game_log').select('*').eq('player_id',player).eq('source','cabb_api').gte('fecha',season+'-01-01').lt('fecha',String(+season+1)+'-01-01').order('fecha').order('cabb_partido_id').range(from,from+999);if(error)throw error;games.push(...(data || []));if(!data || data.length<1000)break;}
   const {data,error}=await client.from('player_data').select('module,data,updated_at').eq('player_id',player).like('module',prefix+'%');if(error)throw error;
-  for(const row of data || []){if(row.module.startsWith(prefix) && row.data?.version===1 && rules[row.data.metric])records.set(row.module,row);}
+  for(const row of data || []){if(row.module.startsWith(prefix) && row.data?.version===1 && allowed.includes(row.data.metric))records.set(row.module,row);}
   const tournaments=[...new Set([...games.map(g=>g.torneo),...[...records.values()].map(r=>r.data.torneo)].filter(Boolean))];
   for(const t of tournaments)node('option',t,select).value=t;
   for(const [module,row] of [...records]){const goal=evaluate(row.data,games,now());if(JSON.stringify(goal)!==JSON.stringify(row.data))await save(module,goal);}
   status.textContent=tournaments.length?'☁️ Historial guardado. Revisá tus metas con el coach.':'Todavía no hay partidos oficiales para crear objetivos.';render();select.addEventListener('change',render);
  }catch(e){status.textContent='No se pudieron cargar o guardar los objetivos. Recargá para reintentar. '+e.message;controls.hidden=true;}
-});
+}
+api.mount=mount;
+document.addEventListener('DOMContentLoaded',()=>mount());
 })(typeof window!=='undefined'?window:globalThis);

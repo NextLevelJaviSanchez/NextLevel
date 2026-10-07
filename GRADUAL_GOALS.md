@@ -1,6 +1,8 @@
 # Objetivos graduales
 
-Integración en `perfil_mia_sanchez_14.html`, plantilla utilizada por `perfil.html` para los perfiles con estadísticas detalladas. El módulo nuevo conserva los objetivos técnicos y manuales existentes. Mini mantiene su flujo actual: sus actas no proporcionan las métricas completas requeridas por este motor.
+Integración en `perfil_mia_sanchez_14.html` y `perfil_milo_sanchez_u11.html`, las dos plantillas compartidas utilizadas por `perfil.html`. El módulo nuevo conserva los objetivos técnicos y manuales existentes.
+
+Mini usa el mismo motor y el adaptador `nextlevel_mini_goals.js`. Ofrece metas de tiros libres y dobles con los mismos pasos y muestras mínimas. Se conecta después de verificar la cuenta del jugador. Lee actas individuales de la temporada guardadas para ese perfil y `game_log` de FEBAMBA Mini, sin duplicar partidos; la nube prevalece sobre el snapshot. No usa los ceros de métricas cuya cobertura no está confirmada. Los desafíos de práctica existentes se conservan. Las felicitaciones aparecen en Inicio y Mi Plan.
 
 ## Criterios
 
@@ -26,3 +28,5 @@ Los logros guardados conservan su evidencia histórica. Una corrección posterio
 ## Validación
 
 `node test_gradual_goals.cjs`: 16 casos del motor y dos comprobaciones de interfaz con nube simulada. Cubre etapas, muestras, datos faltantes, torneos, minutos, pausas, dirección de mejora, condición de pérdidas, límites y guardado fallido. Las pruebas no escriben datos reales de jugadores.
+
+`node test_mini_goals.cjs`: nueve comprobaciones del adaptador Mini, con fechas y temporadas, identidad ambigua, partidos terminados, formatos actuales y antiguos, campos faltantes, progresión y conexión para otro jugador.
