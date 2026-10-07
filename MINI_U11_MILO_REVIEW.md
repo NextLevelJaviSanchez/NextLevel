@@ -27,3 +27,10 @@ Físico permite medidas fechadas sin interpretar crecimiento ni aplicar estánda
 - Workflow: modo manual `mini-milo`; actualización programada y full incluyen Mini al activar variable GitHub `MINI_MILO_ENABLED=true`, luego de completar el alta. Antes no rompe sync actual.
 - 31 pruebas pasan; dry-run confirma 23 actas y promedios 5.43 puntos, 18.88 minutos, 4.22 valoración.
 - No hubo escritura real ni publicación en este paso: no hay credencial administrativa disponible ni correo elegido. Pendientes alta Auth/players, ejecutar sync con acceso autorizado, comprobar login y persistencia real desde dos dispositivos, publicar archivos y activar variable programada.
+
+## Activación real confirmada — 07/10/2026
+- Perfil Milo vinculado al acceso jugador/padre.
+- Escrituras reales verificadas mediante sesión autenticada: 23 game_log, una stats_seasons FEBAMBA Mini y fuente cabb_mini_official_v1.
+- Lectura posterior: 23 PJ, 5.4 PPG, 18.9 MIN, 4.2 VAL.
+- Navegador: cuenta vinculada y conversación/progreso leídos desde Supabase; actor Jugador o Padre/madre habilitado. No se enviaron mensajes ni se inventaron prácticas.
+- Pendientes: publicar archivos y activar MINI_MILO_ENABLED en GitHub para sincronización programada; probar guardado de una práctica real y otro dispositivo.
