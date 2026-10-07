@@ -157,7 +157,9 @@ def find_equipo(client: CABBApiClient) -> Optional[str]:
     candidatos = [e for e in equipos
                   if str(e.get('Categoria', '')).upper() == CATEGORIA_HINT
                   and str(e.get('Temporada', '')) == SEASON
-                  and ('ARGENTINA DE BASQUETBOL' if TOURNAMENT == 'Federal CABB' else 'FEMENINA METROPOLITANA') in str(e.get('Delegacion', '')).upper()]
+                  and ('ARGENTINA DE BASQUETBOL' if TOURNAMENT == 'Federal CABB' else 'FEMENINA METROPOLITANA') in str(e.get('Delegacion', '')).upper()
+                  and str(e.get('Nombre', '')).strip().upper() == ('DEP. BERAZATEGUI' if TOURNAMENT == 'Federal CABB' else 'CLUB SOCIAL Y DEPORTIVO BERAZATEGUI')
+                  and str(e.get('Competicion', '')).strip().upper() == ('FORMATIVAS' if TOURNAMENT == 'Federal CABB' else 'FORMATIVAS ' + SEASON)]
     if len(candidatos) == 1:
         return candidatos[0].get('Id')
     if len(candidatos) > 1:

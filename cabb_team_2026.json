@@ -3491,6 +3491,158 @@
       "available": true
     },
     {
+      "id": "644838",
+      "tournament": "AFMB",
+      "date": "2026-10-06",
+      "players": [
+        {
+          "name": "LORENZO MONZON, ISABELLA",
+          "dorsal": "4",
+          "pts": 1.0,
+          "reb_tot": 2.0,
+          "ast": 0.0,
+          "stl": 1.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 1.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "DOMINGUEZ, BRUNELLA MARTINEZ",
+          "dorsal": "5",
+          "pts": 2.0,
+          "reb_tot": 3.0,
+          "ast": 0.0,
+          "stl": 0.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 2.0,
+          "faltas": 3.0
+        },
+        {
+          "name": "PORTINARI, LUBA JULIETA",
+          "dorsal": "6",
+          "pts": 2.0,
+          "reb_tot": 8.0,
+          "ast": 0.0,
+          "stl": 2.0,
+          "blk": 0.0,
+          "fouls_received": 1.0,
+          "to_perdidas": 1.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "GOMEZ, HELENA CRISTINA",
+          "dorsal": "7",
+          "pts": 10.0,
+          "reb_tot": 2.0,
+          "ast": 2.0,
+          "stl": 4.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 6.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "GRILLO, CATALINA",
+          "dorsal": "8",
+          "pts": 3.0,
+          "reb_tot": 12.0,
+          "ast": 0.0,
+          "stl": 1.0,
+          "blk": 0.0,
+          "fouls_received": 4.0,
+          "to_perdidas": 1.0,
+          "faltas": 1.0
+        },
+        {
+          "name": "GONZALEZ DIAZ, PAZ GUADALUPE",
+          "dorsal": "9",
+          "pts": 2.0,
+          "reb_tot": 3.0,
+          "ast": 0.0,
+          "stl": 0.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 0.0,
+          "faltas": 5.0
+        },
+        {
+          "name": "BAILON, MARTINA PILAR",
+          "dorsal": "10",
+          "pts": 9.0,
+          "reb_tot": 3.0,
+          "ast": 3.0,
+          "stl": 4.0,
+          "blk": 0.0,
+          "fouls_received": 3.0,
+          "to_perdidas": 5.0,
+          "faltas": 4.0
+        },
+        {
+          "name": "PEDERNERA, AGUSTINA MILAGROS",
+          "dorsal": "11",
+          "pts": 4.0,
+          "reb_tot": 2.0,
+          "ast": 0.0,
+          "stl": 1.0,
+          "blk": 0.0,
+          "fouls_received": 2.0,
+          "to_perdidas": 1.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "SMIGIEL, ALMA",
+          "dorsal": "12",
+          "pts": 0.0,
+          "reb_tot": 2.0,
+          "ast": 0.0,
+          "stl": 4.0,
+          "blk": 0.0,
+          "fouls_received": 1.0,
+          "to_perdidas": 1.0,
+          "faltas": 3.0
+        },
+        {
+          "name": "MORELLO, ALLEGRA",
+          "dorsal": "13",
+          "pts": 4.0,
+          "reb_tot": 2.0,
+          "ast": 0.0,
+          "stl": 0.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 1.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "SANCHEZ, MIA GERALDINE",
+          "dorsal": "14",
+          "pts": 18.0,
+          "reb_tot": 3.0,
+          "ast": 1.0,
+          "stl": 2.0,
+          "blk": 0.0,
+          "fouls_received": 8.0,
+          "to_perdidas": 2.0,
+          "faltas": 2.0
+        },
+        {
+          "name": "PAZ, VITTORIA",
+          "dorsal": "15",
+          "pts": 0.0,
+          "reb_tot": 0.0,
+          "ast": 0.0,
+          "stl": 0.0,
+          "blk": 0.0,
+          "fouls_received": 0.0,
+          "to_perdidas": 1.0,
+          "faltas": 1.0
+        }
+      ],
+      "available": true
+    },
+    {
       "id": "694869",
       "tournament": "Federal CABB",
       "date": "2026-09-15",

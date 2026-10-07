@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-07",
+  "match_id": "644838",
+  "discovery": "canonical fixture; no opponent required",
+  "game_rows": 5,
+  "total_game_rows": 135,
+  "idempotent": true,
+  "mia": {
+    "fecha": "2026-10-06",
+    "rival": "CLUB SOCIAL Y DEPORTIVO UNION FLORIDA",
+    "resultado_eq": "55-61",
+    "pts": 18,
+    "reb_tot": 3,
+    "ast": 1,
+    "stl": 2,
+    "val": 13,
+    "minutos": 19.4,
+    "tc_in": 6,
+    "tc_att": 15,
+    "tl_in": 6,
+    "tl_att": 12
+  },
+  "afmb": {
+    "pj": 22,
+    "ppg": 8.9,
+    "rpg": 4.5,
+    "apg": 0.4
+  },
+  "shots_reconciled": true,
+  "season_shots": 271
+}

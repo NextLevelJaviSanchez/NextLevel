@@ -2123,6 +2123,152 @@
       "coordinate_count": 6
     },
     {
+      "id": "644838",
+      "tournament": "AFMB",
+      "date": "06/10/2026",
+      "shots": [
+        {
+          "autoincremental_id": 639,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:02:43.7",
+          "posicion_x": "87",
+          "posicion_y": "251",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 635,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:03:01.7",
+          "posicion_x": "106",
+          "posicion_y": "235",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 581,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:05:35.1",
+          "posicion_x": "135",
+          "posicion_y": "221",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 561,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:06:39.3",
+          "posicion_x": "175",
+          "posicion_y": "256",
+          "zona": "Z3-IZ"
+        },
+        {
+          "autoincremental_id": 558,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:06:57.3",
+          "posicion_x": "80",
+          "posicion_y": "266",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 514,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 4,
+          "tiempo_partido": "00:09:14.7",
+          "posicion_x": "102",
+          "posicion_y": "268",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 290,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:00:27.2",
+          "posicion_x": "106",
+          "posicion_y": "202",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 273,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:01:55.7",
+          "posicion_x": "98",
+          "posicion_y": "221",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 248,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:04:35.1",
+          "posicion_x": "110",
+          "posicion_y": "244",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 244,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:04:41.1",
+          "posicion_x": "110",
+          "posicion_y": "237",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 221,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:06:09.3",
+          "posicion_x": "110",
+          "posicion_y": "245",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 185,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:07:54.5",
+          "posicion_x": "94",
+          "posicion_y": "207",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 176,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:08:24.6",
+          "posicion_x": "102",
+          "posicion_y": "238",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 161,
+          "accion_tipo": "CANASTA-2P",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:09:30.7",
+          "posicion_x": "86",
+          "posicion_y": "248",
+          "zona": "Z1-IZ"
+        },
+        {
+          "autoincremental_id": 159,
+          "accion_tipo": "TIRO2-FALLADO",
+          "numero_periodo": 2,
+          "tiempo_partido": "00:09:33.7",
+          "posicion_x": "109",
+          "posicion_y": "237",
+          "zona": "Z1-IZ"
+        }
+      ],
+      "expected_attempts": 15,
+      "expected_made": 6,
+      "matched": true,
+      "coordinate_count": 15
+    },
+    {
       "id": "694869",
       "tournament": "Federal CABB",
       "date": "15/09/2026",

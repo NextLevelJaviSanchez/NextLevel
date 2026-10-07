@@ -8,6 +8,15 @@ import os
 NODE=os.environ.get('NEXTLEVEL_NODE','node')
 
 class Regression(unittest.TestCase):
+    def test_team_discovery_excludes_other_clubs(self):
+        import sync_cabb_supabase as sync
+        from unittest.mock import patch
+        class Client:
+            def buscar_equipos(self,text,skip):
+                return [dict(Id='correct',Nombre='CLUB SOCIAL Y DEPORTIVO BERAZATEGUI',Categoria='INFANTILES FEMENINO',Temporada='2026',Delegacion='FEMENINA METROPOLITANA',Competicion='FORMATIVAS 2026'),dict(Id='wrong',Nombre='CLUB VECINAL LA UNION',Categoria='INFANTILES FEMENINO',Temporada='2026',Delegacion='FEMENINA METROPOLITANA',Competicion='FORMATIVAS 2026')]
+        with patch.object(sync,'TOURNAMENT','AFMB'):
+            self.assertEqual(sync.find_equipo(Client()),'correct')
+
     def test_coach_workspace_saves_and_retains_failed_draft(self):
         script=r"""
 const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
