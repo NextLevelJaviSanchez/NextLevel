@@ -1,9 +1,16 @@
-/* Navegación móvil contenida: botones legibles sin ampliar el ancho de la página. */
+/* Una fila deslizable contenida en el ancho del celular. */
 @media screen and (max-width:640px){
- .tab-bar,.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;max-width:100%;min-width:0;box-sizing:border-box;gap:0;padding:0;overflow:visible;}
- .tab-bar .tab-btn,.tabs button{width:100%;min-width:0;max-width:100%;white-space:normal;overflow-wrap:break-word;padding:9px 4px;font-size:14px;line-height:1.3;letter-spacing:0;min-height:48px;box-sizing:border-box;}
- .bnav,.bottom-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;max-width:100%;min-width:0;box-sizing:border-box;gap:0;padding:4px 4px calc(4px + env(safe-area-inset-bottom));overflow:visible;}
- .bnav .bnav-btn,.bottom-tabs button{min-width:0;width:100%;max-width:100%;white-space:normal;overflow-wrap:break-word;box-sizing:border-box;font-size:14px;line-height:1.25;letter-spacing:0;padding:6px 3px;min-height:48px;}
- body{padding-bottom:calc(116px + env(safe-area-inset-bottom));}
- main{padding-bottom:24px;min-width:0;max-width:100%;box-sizing:border-box;}
+ .nextlevel-nav-wrap{position:sticky;top:0;z-index:200;max-width:100%;min-width:0;background:var(--bg2,#091424)}
+ .nextlevel-nav-wrap::after{content:'›';position:absolute;right:0;top:0;height:48px;width:22px;display:grid;place-items:center;background:var(--bg2,#091424);color:var(--ac,#fb923c);font:700 24px system-ui;pointer-events:none}
+ .nextlevel-nav-wrap.at-end::after{display:none}
+ .tab-bar,.tabs{display:flex;flex-wrap:nowrap;width:100%;max-width:100%;min-width:0;box-sizing:border-box;gap:0;padding:0 22px 0 0;overflow-x:auto;overflow-y:hidden;position:static;scrollbar-width:thin;overscroll-behavior-x:contain;scroll-padding-inline:12px 26px}
+ .tab-bar .tab-btn,.tabs button{flex:0 0 auto;width:auto;min-width:0;max-width:none;white-space:nowrap;padding:12px 13px;font-size:14px;line-height:1.3;letter-spacing:0;min-height:48px;box-sizing:border-box}
+ .bnav,.bottom-tabs{display:none!important}
+ body{padding-bottom:env(safe-area-inset-bottom)}
+ main{padding-bottom:24px;min-width:0;max-width:100%;box-sizing:border-box}
+ .nextlevel-brand-actions{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:4px;flex-basis:124px;width:124px}
+ .nextlevel-brand-actions :is(.nl-logo,.mini-brand){width:100px!important;flex:0 0 100%;margin-bottom:3px}
+ .nextlevel-brand-actions .nextlevel-profile-logout{width:52px!important;flex:0 0 52px}
+ .nextlevel-brand-actions .nextlevel-theme-bar{width:68px;flex:0 0 68px}
+ .nextlevel-brand-actions .nextlevel-theme-toggle{width:68px!important;padding:5px 2px!important;font-size:12px!important;min-height:32px!important;white-space:nowrap!important}
 }
