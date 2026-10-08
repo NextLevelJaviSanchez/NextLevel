@@ -8,13 +8,13 @@ try{
  const {data:players,error:playerError}=await query;if(playerError)throw playerError;if(players?.length!==1)throw Error('No se encontró un único perfil accesible.');
  const p=players[0];if(p.user_id!==auth.user.id && auth.user.email!=='coach@nextlevel.com')throw Error('Esta cuenta no corresponde al jugador.');
  const {data:row,error:registrationError}=await client.from('player_data').select('data').eq('player_id',p.id).eq('module','player_season_v1:'+season).maybeSingle();if(registrationError)throw registrationError;
- const context=NextLevelPlayerContext.contextFor(p,season,row?.data || {});
+ const context=NextLevelPlayerContext.contextFor(p,season,row?.data || {});context.isDemo=row?.data?.isDemo===true;
  const {data:dorsalPreference,error:dorsalError}=await client.from('player_data').select('data').eq('player_id',p.id).eq('module','profile_dorsal_v1').maybeSingle();if(dorsalError)throw dorsalError;if(dorsalPreference?.data?.dorsal!=null)context.dorsal=dorsalPreference.data.dorsal;
  // Preserve known identities and verified snapshot files for legacy profiles only.
  if(context.legacy){context.cabbName=p.id==='11111111-0000-0000-0000-000000000014'?'SANCHEZ, MIA GERALDINE':p.id==='e814cad8-7be8-45dd-8fdd-2d5dcc32bc96'?'SANCHEZ, MILO BASTIAN':p.name;context.legacySnapshots=p.id==='11111111-0000-0000-0000-000000000014' || p.id==='e814cad8-7be8-45dd-8fdd-2d5dcc32bc96';}
  context.legacyTeam=context.legacy && season==='2026' && context.template==='u13' && /BERAZATEGUI/i.test(context.club) && /U13|INFANTILES/i.test(context.category);
  const path=context.template==='mini'?'perfil_milo_sanchez_u11.html':'perfil_mia_sanchez_14.html';const response=await fetch(path,{cache:'no-store'});if(!response.ok)throw Error('No se pudo cargar la plantilla.');
- const html=NextLevelTemplate.compileTemplate(await response.text(),context);
+ let html=NextLevelTemplate.compileTemplate(await response.text(),context);if(context.isDemo)html=html.replace('<body>','<body><div style="padding:8px;text-align:center;background:#c2410c;color:white;font:600 14px system-ui">DEMO · Perfil ficticio · Datos copiados para demostración</div>');
  document.open();document.write(html);document.close();
 }catch(e){document.getElementById('profile-loader-status').textContent=e.message;}
 })();
