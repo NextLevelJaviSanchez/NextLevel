@@ -14,3 +14,15 @@
  .nextlevel-brand-actions .nextlevel-theme-bar{width:68px;flex:0 0 68px}
  .nextlevel-brand-actions .nextlevel-theme-toggle{width:68px!important;padding:5px 2px!important;font-size:12px!important;min-height:32px!important;white-space:nowrap!important}
 }
+
+/* Etiquetas del encabezado en filas completas, fuera de la columna del nombre. */
+@media screen and (max-width:640px){
+ .hero-top{display:grid;grid-template-columns:68px minmax(0,1fr) 124px;gap:8px 10px;align-items:start}
+ .hero-top>.hero-num{grid-column:1;grid-row:1 / span 2}
+ .hero-top>.hero-info{display:contents}
+ .hero-top .hero-name{grid-column:2;grid-row:1;min-width:0;overflow-wrap:break-word}
+ .hero-top .hero-sub{grid-column:2;grid-row:2;min-width:0;overflow-wrap:break-word;margin-top:0}
+ .hero-top>.nextlevel-brand-actions{grid-column:3;grid-row:1 / span 2}
+ .hero-top .hero-tags{grid-column:1 / -1;grid-row:3;display:flex;flex-direction:column;gap:8px;width:100%;min-width:0;margin-top:6px}
+ .hero-top .hero-tags .htag{display:block;width:100%;box-sizing:border-box;padding:10px 14px;border-radius:12px;white-space:normal;line-height:1.4}
+}

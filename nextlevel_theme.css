@@ -73,3 +73,9 @@ html[data-theme="light"] [style*="color:#22c55e"],html[data-theme="light"] [styl
 html[data-theme="light"] [style*="color:#86efac"],html[data-theme="light"] [style*="color: #86efac"],html[data-theme="light"] [style*="color: rgb(134, 239, 172)"]{color:#15803d!important}
 html[data-theme="light"] [style*="color:#4ade80"],html[data-theme="light"] [style*="color: #4ade80"],html[data-theme="light"] [style*="color: rgb(74, 222, 128)"]{color:#15803d!important}
 }
+
+/* Textos explicativos del coach y de los tips: contraste sobre tarjetas claras. */
+@media screen{
+ html[data-theme="light"] :is(.mental-tip-copy,.mental-tip-practice,.mental-tip-followup){color:#334155!important}
+ html[data-theme="light"] #coach-stat-profile p{color:#334155!important}
+}

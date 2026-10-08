@@ -1,16 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 195" width="560" height="195">
-  <!-- NEXT LEVEL — texto BLANCO bold italic (versión dark/sobre fondo oscuro) -->
+  <!-- NEXT LEVEL — texto claro bold italic -->
   <text x="16" y="118"
         font-family="'Arial Black','Franklin Gothic Heavy','Impact',sans-serif"
         font-size="90" font-weight="900" font-style="italic"
-        fill="#ffffff" letter-spacing="-3">NEXT LEVEL</text>
+        fill="#f1f5f9" letter-spacing="-3" textLength="510" lengthAdjust="spacingAndGlyphs">NEXT LEVEL</text>
   <!-- BASKETBALL — naranja, espaciado amplio -->
   <text x="88" y="162"
         font-family="'Arial','Helvetica',sans-serif"
         font-size="32" font-weight="800"
         fill="#f97316" letter-spacing="9">BASKETBALL</text>
   <!-- Flecha naranja sobre la X (diagonal ascendente) -->
+  <!-- Línea del cuerpo -->
   <line x1="172" y1="108" x2="232" y2="22"
         stroke="#f97316" stroke-width="20" stroke-linecap="round"/>
+  <!-- Punta de flecha (triángulo relleno) -->
   <polygon points="236,4 258,44 210,38" fill="#f97316"/>
 </svg>
