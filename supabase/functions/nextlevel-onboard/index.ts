@@ -1,3 +1,4 @@
+function officialCategory(name:any){const value=String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();if(/\bU[ -]?9\b|PRE[ -]?MINI/.test(value))return 'Mini U11';if(/\bU[ -]?11\b|\bMINI\b/.test(value))return 'Mini U11';if(/\bU[ -]?13\b|INFANTIL/.test(value))return 'U13';if(/\bU[ -]?15\b|CADET/.test(value))return 'U15';if(/\bU[ -]?17\b|JUVENIL/.test(value))return 'U17';if(/\bU[ -]?19\b/.test(value))return 'U19';if(/\bU[ -]?21\b/.test(value))return 'U21';if(/MAYORES|PRIMERA|SUPERIOR/.test(value))return 'Mayores';return null;}
 // Coach onboarding and official synchronization. Service credentials remain server-side.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 const url=Deno.env.get('SUPABASE_URL')!,serviceKey=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -79,7 +80,7 @@ Deno.serve(async req=>{
  if(body.action==='teams'){const teams=await c.teams(needed(body.query));return answer({teams:teams.filter(t=>String(t.Temporada)===body.season).map(t=>({club:t.Nombre,categoryName:t.Categoria,competition:t.Competicion,federation:t.Delegacion,season:String(t.Temporada)}))});}
  if(body.action==='roster'){const players=await c.roster(body.team);return answer({players:players.map((p:any)=>({name:p.Nombre,pj:p.PartidosJugados,dorsal:p.Dorsal ?? null}))});}
  if(body.action!=='create')throw Error('Acción desconocida');
- const {team}=body,season=String(team.season),displayName=needed(body.name),cabbName=needed(body.cabbName),category=needed(body.category),email=needed(body.email).toLowerCase();if(!/^20\d{2}$/.test(season) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Temporada o correo inválido');
+ const {team}=body,season=String(team.season),displayName=needed(body.name),cabbName=needed(body.cabbName),category=officialCategory(team.categoryName) || needed(body.category),email=needed(body.email).toLowerCase();if(!/^20\d{2}$/.test(season) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Temporada o correo inválido');
  const template=category==='Mini U11'?'mini':['U13','U15','U17','U19','U21','Mayores'].includes(category)?'u13':null;if(!template)throw Error('Categoría no admitida');if((template==='mini')!==/\b(PREMINI|MINI)\b/.test(norm(team.categoryName)))throw Error('La plantilla seleccionada no corresponde a la categoría CABB');
  const roster=await c.roster(team);if(roster.filter((p:any)=>samePlayerName(p.Nombre,cabbName)).length!==1)throw Error('Elegí un único jugador del plantel CABB');await c.category(team);
  let account:any=null;for(let page=1;page<=100;page++){const {data,error}=await db.auth.admin.listUsers({page,perPage:100});if(error)throw error;account=data.users.find(u=>u.email?.toLowerCase()===email);if(account || data.users.length<100)break;}

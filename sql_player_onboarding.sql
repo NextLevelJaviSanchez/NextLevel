@@ -16,6 +16,7 @@ begin
  if duplicates>1 then raise exception 'La cuenta tiene varios jugadores: revisar antes de continuar'; end if;
  if duplicates=1 and not exists(select 1 from players where id=result_id and name=display_name) then raise exception 'La cuenta ya corresponde a otro jugador'; end if;
  if duplicates=0 then result_id:=gen_random_uuid();insert into players(id,name,club,category,dorsal,user_id) values(result_id,display_name,club_name,category_name,shirt_number,account_id); end if;
+ update players set category=category_name where id=result_id;
  insert into player_data(player_id,module,data,updated_at) values(result_id,'player_season_v1:'||season_value,configuration,now()) on conflict(player_id,module) do update set data=excluded.data,updated_at=excluded.updated_at;
  return result_id;
 end $$;
