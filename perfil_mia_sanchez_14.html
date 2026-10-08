@@ -1227,6 +1227,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="pf-chip" onclick="pfSelectArea(this,'Manejo pelota')" data-val="Manejo pelota">🔄 Manejo pelota</div>
         <div class="pf-chip" onclick="pfSelectArea(this,'Mental')" data-val="Mental">🧠 Mental</div>
         <div class="pf-chip" onclick="pfSelectArea(this,'Tiro libre')" data-val="Tiro libre">🎯 Tiro libre</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Pases')" data-val="Pases">Pases</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Rebotes')" data-val="Rebotes">Rebotes</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Usar ambas manos')" data-val="Usar ambas manos">Usar ambas manos</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Lanzamientos cerca del aro')" data-val="Lanzamientos cerca del aro">Lanzamientos cerca del aro</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Moverme sin pelota')" data-val="Moverme sin pelota">Moverme sin pelota</div>
+<div class="pf-chip" onclick="pfSelectArea(this,'Coordinación')" data-val="Coordinación">Coordinación</div>
       </div>
     </div>
     <div>
@@ -1820,11 +1826,11 @@ const OBJETIVOS_BASE = [
     txt:'Objetivo de temporada: alcanzar al menos 10 en dos categorías entre puntos, rebotes, asistencias, recuperos y tapones en un mismo partido oficial. Los hitos muestran los resultados verificados.',
     origen:'Objetivo · Temporada 2026', color:'#facc15',
     drill:'Acordá con el coach acciones de juego que contribuyan al equipo. El logro se verifica desde las estadísticas oficiales; no garantiza un resultado.' },
-  { id:'tl70',   ttl:'Tiro libre — objetivo elegido: 70%',            estado:'activo',
-    txt:'Practicá una rutina sencilla de tiro libre y registrá convertidos e intentados. Revisá con el coach si el 70% sigue siendo una meta adecuada para vos.',
+  { id:'tl70',   ttl:'Tiro libre — propuesta para conversar',            estado:'pendiente',
+    txt:'Practicá una rutina sencilla de tiro libre y registrá convertidos e intentados. Elegí una meta gradual basada en tus estadísticas y conversala con tu coach.',
     origen:'Objetivo propuesto · por acordar con el coach', color:'#ef4444',
     drill:'Elegí con tu coach una secuencia cómoda antes de tirar. Las repeticiones se adaptan al entrenamiento.' },
-  { id:'pullup', ttl:'Tiro después del drible',    estado:'activo',
+  { id:'pullup', ttl:'Tiro después del drible',    estado:'pendiente',
     txt:'Practicá cómo detenerte con equilibrio antes de tirar, en situaciones que el coach elija para vos.',
     origen:'Objetivo propuesto · práctica de tiro', color:'#f97316',
     drill:'Probá primero sin oposición. Tu coach decide cuándo sumar dificultad y cuántas repeticiones hacer.' },
@@ -1999,8 +2005,9 @@ function buildDashboard() {
 
 function buildDashObjActivo(container) {
   const activos = OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'activo');
+  if (!activos.length && window.NextLevelGradualGoals?.activeCount > 0) { container.replaceChildren(); return; }
   if (!activos.length) {
-    container.innerHTML = `<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin objetivos activos — activá uno desde el Plan.</div>`;
+    container.innerHTML = `<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin objetivos activos elegidos. En Mi Plan podés revisar las metas sugeridas por tus estadísticas.</div>`;
     return;
   }
   container.innerHTML = activos.map(obj => `
@@ -2276,6 +2283,7 @@ function pfSave() {
   const valid=[...document.querySelectorAll('#tab-perfil input')].every(input=>input.type==='file' || input.checkValidity());
   if(!valid){clearTimeout(_pfSaveTimer);show('Revisá los campos ingresados');return;}
   try { localStorage.setItem(PF_KEY, JSON.stringify({...previous,...data})); } catch(e) {show('No se pudo guardar en este dispositivo');}
+  document.dispatchEvent(new CustomEvent('nextlevel-profile-preferences',{detail:data}));
   show('Guardado local · sincronizando…');
   clearTimeout(_pfSaveTimer);
   _pfSaveTimer=setTimeout(()=>{
@@ -2431,6 +2439,7 @@ function pfApplyData(d) {
     c.classList.toggle('active', _pfAreas.includes(c.dataset.val)));
   if(Array.isArray(d.mentalAreas)){_pfMentalAreas=[...new Set(d.mentalAreas)];_pfMentalLoaded=true;}
   if(typeof window.renderProfileMental==='function')window.renderProfileMental(_pfMentalAreas);
+  document.dispatchEvent(new CustomEvent('nextlevel-profile-preferences',{detail:{areas:[..._pfAreas],mentalAreas:[..._pfMentalAreas]}}));
   const fechaEl = document.getElementById('pf-antro-fecha');
   if (fechaEl && d.antroFecha) fechaEl.textContent = d.antroFecha;
   pfCalcAntro();
@@ -3072,9 +3081,9 @@ function fisInit() {
 <script src="nextlevel_performance.js?v=20261007-evolucion-mobile" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
 <script src="nextlevel_profile_extras.js?v=20261007-court-first"></script>
 <script src="nextlevel_evolution.js?v=20261007-evolucion-mobile"></script>
-<script src="nextlevel_plan_progress.js"></script>
-<script src="nextlevel_coach_workspace.js?v=20261006-1"></script>
+<script src="nextlevel_goal_catalog.js?v=20261007-category1"></script><script src="nextlevel_plan_progress.js?v=20261007-personal1"></script>
+<script src="nextlevel_coach_workspace.js?v=20261007-category1"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>
 <script src="nextlevel_readability.js?v=20261007-1"></script>
-<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-goals2"></script></body>
+<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-category1"></script></body>
 </html>

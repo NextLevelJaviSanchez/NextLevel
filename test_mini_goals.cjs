@@ -19,6 +19,6 @@ test('Datos faltantes no felicitan',()=>{const rows=normalize({...sample,boxscor
  let options,reads=0;global.document={getElementById:id=>({id})};global.NextLevelGradualGoals={mount:async o=>{options=o;return o.loadGames();}};
  const client={from(){const q={};for(const m of ['select','eq','gte','lt','order','range'])q[m]=()=>q;q.then=(resolve,reject)=>{reads++;return Promise.resolve({data:[{...normalize(sample,'2026')[0],tl_in:8}],error:null}).then(resolve,reject);};return q;}};
  const verify=()=>{};const rows=await connect({client,playerId:'mini-other-player',season:'2026',official:sample,verifyAccount:verify});
- assert.equal(options.playerId,'mini-other-player');assert.deepEqual(options.metrics,['tl','t2']);assert.equal(options.verifyAccount,verify);assert.equal(options.anchor.id,'mini-gradual-goals');assert.equal(options.dashboard.id,'mini-goals-dashboard');assert.equal(rows.length,10);assert.equal(rows[0].tl_in,8);assert.equal(reads,1);
+ assert.equal(options.playerId,'mini-other-player');assert.deepEqual(options.metrics.slice(0,3),['tl','t2','minutes']);assert.ok(!options.metrics.includes('stl'));assert.equal(options.verifyAccount,verify);assert.equal(options.anchor.id,'mini-gradual-goals');assert.equal(options.dashboard.id,'mini-goals-dashboard');assert.equal(rows.length,10);assert.equal(rows[0].tl_in,8);assert.equal(reads,1);
  console.log('OK Plantilla para cualquier jugador Mini, cuenta verificada, sin duplicar snapshot y nube');console.log(`${count+1} comprobaciones Mini pasaron.`);
 })().catch(e=>{console.error(e);process.exitCode=1;});

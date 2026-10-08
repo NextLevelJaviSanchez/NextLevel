@@ -29,6 +29,9 @@
     const date=field('📅 Fecha de la práctica','date');date.value=today;date.max=today;date.required=true;
     const group=node('fieldset',null,form);group.style.cssText='border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:12px;font-size:.72rem';node('legend','✅ ¿Qué practiqué?',group).style.marginBottom='8px';
     const checks=['Tiro','Manejo','Defensa','Rebote','Pases','Trabajo mental'].map(name=>{const label=node('label',null,group);const check=node('input',null,label);check.type='checkbox';check.value=name;label.append(document.createTextNode(' '+name));return check;});
+    const addPersonalAreas=profile=>{for(const name of window.NextLevelGoalCatalog?.practiceAreas(profile) || []){if(checks.some(c=>c.value===name))continue;const label=node('label',null,group),check=node('input',null,label);check.type='checkbox';check.value=name;label.append(document.createTextNode(' '+name));checks.push(check);}};
+    addPersonalAreas({areas:typeof _pfAreas!=='undefined'?_pfAreas:[],mentalAreas:typeof _pfMentalAreas!=='undefined'?_pfMentalAreas:[]});
+    document.addEventListener('nextlevel-profile-preferences',event=>addPersonalAreas(event.detail || {}));
     const shooting=node('details',null,form);node('summary','🏀 Anotar tiros de entrenamiento (opcional)',shooting).style.cssText='cursor:pointer;font-size:.75rem;color:var(--ac)';
     const selectWrap=node('label','Tipo de tiro ',shooting);const type=node('select',null,selectWrap);type.setAttribute('aria-label','Tipo de tiro de entrenamiento');for(const name of ['Libres','Dobles','Triples']){const option=node('option',name,type);option.value=name;}
     const shotField=label=>{const wrap=node('label',label,shooting);wrap.style.cssText='display:block;margin-top:8px;font-size:.72rem';const input=node('input',null,wrap);input.type='number';input.min=0;input.max=1000;input.step=1;input.style.cssText='margin-left:8px;width:90px;background:var(--card2);color:var(--text);padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:6px';return input;};
@@ -56,7 +59,7 @@
     const sync=async()=>{
       if(busy)return;busy=true;saveButton.disabled=true;retry.disabled=true;
       try{
-        for(const id of [...pending]){const entry=entries.find(e=>e.id===id);if(!entry)continue;const {error}=await _supa.from('player_data').upsert({player_id:PLAYER_ID,module:prefix+id,data:entry,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;pending.delete(id);persist();}
+        for(const id of [...pending]){const entry=entries.find(e=>e.id===id);if(!entry)continue;const {error}=await _supa.from('player_data').upsert({player_id:PLAYER_ID,module:prefix+id,data:entry,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;pending.delete(id);persist();document.dispatchEvent(new CustomEvent('nextlevel-practice-saved',{detail:entry}));}
         status.textContent='✅ Tus prácticas están guardadas en Supabase.';
       }catch(e){status.textContent='⏳ Hay prácticas pendientes. Si la copia local está disponible, se conservan en este dispositivo; reintentá cuando haya conexión.';}
       finally{busy=false;saveButton.disabled=false;retry.disabled=false;render();}

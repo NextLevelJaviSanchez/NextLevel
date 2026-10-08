@@ -32,19 +32,22 @@ class Element{
  replaceChildren(){this.children=[];}setAttribute(){}addEventListener(name,fn){this.listeners[name]=fn;}
  allText(){return [this.textContent,...this.children.map(n=>n.allText())].join(' ');}
 }
-async function uiTest(fail){
+async function uiTest(fail,practice=false){
  const anchor=new Element('div'),dash=new Element('div');let load,updates=0;
  const document={createElement:tag=>new Element(tag),getElementById:key=>key==='obj-list'?anchor:key==='dash-obj-activo'?dash:null,addEventListener:(name,fn)=>{load=fn;}};
- const old={module:'gradual_goals_v1:2026:AFMB:tl',data:goal,updated_at:now};
+ const catalog=require('./nextlevel_goal_catalog.js'),baseTime=Date.now()-6*86400000;
+ const uiGoal=practice?api.create('practice_defense','AFMB',[],new Date(baseTime).toISOString()):goal;
+ const extras=practice?[{module:'perfil_v1',data:{areas:['Defensa']}},...[1,2,3].map(n=>{const timestamp=new Date(baseTime+n*86400000).toISOString();return {module:'plan_progress_v1:'+n,data:{id:String(n),source:'player_training',date:timestamp.slice(0,10),createdAt:timestamp,areas:['Defensa']}};})]:[];
+ const old={module:'gradual_goals_v1:2026:AFMB:'+uiGoal.metric,data:uiGoal,updated_at:now};
  const client={from(table){let write=false,payload;
   const query={};for(const method of ['select','eq','like','gte','lt','order','range'])query[method]=()=>query;
   query.update=value=>{write=true;payload=value;return query;};
   query.insert=value=>{write=true;payload=value;return query;};
-  query.then=(resolve,reject)=>Promise.resolve(write?(updates++,fail?{data:null,error:Error('offline')}:{data:[{module:old.module,...payload}]}):{data:table==='game_log'?[...base,...rows(6,5,7)]:[old],error:null}).then(resolve,reject);return query;
+  query.then=(resolve,reject)=>Promise.resolve(write?(updates++,fail?{data:null,error:Error('offline')}:{data:[{module:old.module,...payload}]}):{data:table==='game_log'?[...base,...rows(6,5,7)]:[old,...extras],error:null}).then(resolve,reject);return query;
  }};
- vm.runInNewContext(fs.readFileSync(require.resolve('./nextlevel_gradual_goals.js'),'utf8'),{document,PLAYER_ID:'test-player',SEASON:'2026',_supa:client,window:{},console});
+ vm.runInNewContext(fs.readFileSync(require.resolve('./nextlevel_gradual_goals.js'),'utf8'),{document,PLAYER_ID:'test-player',SEASON:'2026',_supa:client,window:practice?{NextLevelGoalCatalog:catalog}:{},console});
  await load();assert.equal(updates,1);
  if(fail){assert.match(anchor.beforeNode.allText(),/No se pudieron/);assert.doesNotMatch(anchor.beforeNode.allText(),/¡Objetivo cumplido!/);}
- else{assert.match(anchor.beforeNode.allText(),/¡Objetivo cumplido!/);assert.match(anchor.beforeNode.allText(),/Activar próximo paso/);assert.match(dash.afterNode.allText(),/¡Objetivo cumplido!/);}
+ else{assert.match(anchor.beforeNode.allText(),/¡Objetivo cumplido!/);assert.match(anchor.beforeNode.allText(),/Activar próximo paso/);assert.match(dash.afterNode.allText(),/¡Objetivo cumplido!/);if(practice){assert.match(dash.afterNode.allText(),/3 días de práctica/);assert.doesNotMatch(anchor.beforeNode.allText(),/Tiros libres/);}}
 }
-(async()=>{await uiTest(false);console.log('OK Tarjeta en Plan e Inicio, guardada antes de mostrarse');await uiTest(true);console.log('OK Error de guardado no anuncia un logro confirmado');})().catch(error=>{console.error(error);process.exitCode=1;});
+(async()=>{await uiTest(false);console.log('OK Tarjeta en Plan e Inicio, guardada antes de mostrarse');await uiTest(true);console.log('OK Error de guardado no anuncia un logro confirmado');await uiTest(false,true);console.log('OK Área elegida Defensa, felicitación por práctica en Inicio y sin tiros libres comunes');})().catch(error=>{console.error(error);process.exitCode=1;});

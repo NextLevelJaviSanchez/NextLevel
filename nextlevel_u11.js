@@ -37,6 +37,8 @@ const mentalTips={
  'Disfrutar y manejar los nervios':['🌱 Tomarme un momento','Si aparecen nervios, hacé una pausa y soltá el aire despacio. Podés contarle a tu familia o coach qué te ayudaría.']
 };
 const renderProfilePlan=()=>{$('mini-plan-season-goal').textContent=state.profile.seasonGoal || 'Podés elegir tu objetivo en Perfil y conversarlo con el coach.';
+document.dispatchEvent(new CustomEvent('nextlevel-profile-preferences',{detail:state.profile}));
+for(const area of window.NextLevelGoalCatalog?.practiceAreas(state.profile) || []){if([...$('mini-challenge').options].some(o=>o.value===area))continue;const option=node('option',area,$('mini-challenge'));option.value=area;}
 $('mini-plan-areas').textContent=(state.profile.technicalAreas || []).join(' · ') || 'Podés elegir tus áreas en Perfil.';
 const tips=$('mini-plan-mental');tips.replaceChildren();for(const area of state.profile.mentalAreas || []){const tip=mentalTips[area];if(!tip)continue;const card=node('section',null,tips);card.className='tip';node('h3',tip[0],card);node('p',tip[1],card);}if(!tips.children.length)node('p','Elegí en Perfil qué querés trabajar. Acá vas a encontrar ideas para probar y revisar con tu coach.',tips);
 
@@ -115,14 +117,14 @@ const cloud=rows.filter(r=>r.module.startsWith('plan_progress_v1:') && r.data?.i
 const {data:official,error:officialError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module',window.NextLevelPlayer ? 'cabb_mini_official_v1:'+NextLevelPlayer.season : 'cabb_mini_official_v1').maybeSingle();if(officialError)throw officialError;if(official?.data)await renderOfficial(official.data);
 const {data:photo,error:photoError}=await client.from('player_data').select('data').eq('player_id',playerId).eq('module','foto_url').maybeSingle();if(photoError)throw photoError;if(!state.photoDirty){state.photo=photoSource(photo?.data);applyPhoto();saveLocal();}
 await NextLevelMiniPhysical.connect(client,playerId,linkedUserId);
-await NextLevelMiniGoals.connect({client,playerId,season:window.NextLevelPlayer?.season || '2026',official:official?.data,verifyAccount});
+await NextLevelMiniGoals.connect({client,playerId,season:window.NextLevelPlayer?.season || '2026',official:official?.data,verifyAccount,getProfile:()=>state.profile});
 NextLevelCoachWorkspace.mount({host:$('mini-conversation'),client,playerId,mode:'player',playerLabel:'Jugador'});
 if(state.profileDirty)profileAutosave.schedule();else $('mini-profile-save-status').textContent='Perfil cargado desde Supabase · autoguardado activo.';
 }catch(e){playerId=null;$('mini-sync').hidden=true;status('No se pudo vincular el perfil: '+e.message);}
 }
 $('mini-connect').addEventListener('click',connectAccount);
 $('mini-sync').addEventListener('click',async()=>{if(!playerId || !client || busy)return;busy=true;$('mini-sync').disabled=true;try{const {data:auth,error:authError}=await client.auth.getUser();if(authError || !auth?.user || auth.user.id!==linkedUserId)throw Error('Volvé a comprobar la cuenta de Milo antes de sincronizar.');
-for(const entry of state.entries.filter(e=>!e.synced)){const {synced,...payload}=entry;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'plan_progress_v1:'+entry.id,data:payload,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;entry.synced=true;saveLocal();}
+for(const entry of state.entries.filter(e=>!e.synced)){const {synced,...payload}=entry;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'plan_progress_v1:'+entry.id,data:payload,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;entry.synced=true;saveLocal();document.dispatchEvent(new CustomEvent('nextlevel-practice-saved',{detail:payload}));}
 for(const entry of state.physical.filter(e=>!e.synced)){const {synced,...payload}=entry;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'mini_measures_v1:'+entry.id,data:payload,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;entry.synced=true;saveLocal();}
 profileAutosave.schedule();await profileAutosave.flush();if(state.profileDirty)throw Error("El perfil sigue pendiente; revisá sus datos o la conexión.");if(state.photoDirty)await persistPhoto();status('Prácticas, preferencias y medidas guardadas en Supabase.');render();renderPhysical();}catch(e){status('Quedaron registros pendientes: '+e.message);}finally{busy=false;$('mini-sync').disabled=false;}});
 render();

@@ -2,12 +2,23 @@
 
 Integración en `perfil_mia_sanchez_14.html` y `perfil_milo_sanchez_u11.html`, las dos plantillas compartidas utilizadas por `perfil.html`. El módulo nuevo conserva los objetivos técnicos y manuales existentes.
 
-Mini usa el mismo motor y el adaptador `nextlevel_mini_goals.js`. Ofrece metas de tiros libres y dobles con los mismos pasos y muestras mínimas. Se conecta después de verificar la cuenta del jugador. Lee actas individuales de la temporada guardadas para ese perfil y `game_log` de FEBAMBA Mini, sin duplicar partidos; la nube prevalece sobre el snapshot. No usa los ceros de métricas cuya cobertura no está confirmada. Los desafíos de práctica existentes se conservan. Las felicitaciones aparecen en Inicio y Mi Plan.
+Mini usa el mismo motor y el adaptador `nextlevel_mini_goals.js`. Ofrece metas de tiros libres y dobles cuando se eligen esas áreas, participación por debajo de 20 minutos y práctica según preferencias. Se conecta después de verificar la cuenta del jugador. Lee actas individuales de la temporada guardadas para ese perfil y `game_log` de FEBAMBA Mini, sin duplicar partidos; la nube prevalece sobre el snapshot. No usa los ceros de métricas cuya cobertura no está confirmada. Los desafíos de práctica existentes se conservan. Las felicitaciones aparecen en Inicio y Mi Plan.
+
+## Catálogo por preferencias
+
+`nextlevel_goal_catalog.js` relaciona las selecciones de Perfil con objetivos. Defensa propone práctica y recuperos donde hay cobertura. Manejo propone práctica y pérdidas; pases, práctica/asistencias/pérdidas; rebotes, práctica y rebotes; tiro libre, práctica y efectividad; cerca del aro, práctica y dobles; tiro exterior, práctica y triples según rol. Ambas manos, movimiento sin pelota, coordinación, físico y cada área mental tienen una consigna de práctica propia. Sin preferencias no se muestran metas comunes de tiro. Las metas activadas previamente se conservan aunque cambie la selección.
+
+Las prácticas avanzan en bloques de 3, 4 y 5 días distintos, contando únicamente registros de `player_training` guardados en la nube, posteriores a la activación, con el área correspondiente y fechas válidas. Cada etapa requiere días nuevos. La felicitación reconoce constancia registrada por el jugador; no certifica dominio técnico ni una evaluación del coach. Las observaciones defensivas estructuradas del esquema propuesto todavía requieren desarrollo.
+
+El perfil comunica cambios al motor y al formulario de prácticas. Guardar una práctica dispara una evaluación y la felicitación en Inicio después del guardado del logro. Los registros aún pendientes de sincronización no generan logros confirmados.
 
 ## Criterios
 
 - Activación voluntaria de hasta dos objetivos estadísticos activos, contando todos los torneos de la temporada cargada.
 - Base: cinco partidos recientes del mismo torneo y temporada, fuente `cabb_api`, sin duplicados ni registros de no participación explícita. No se infiere una ausencia desde estadísticas de cero puntos.
+- Participación: U11 y U13 usan referencia de 20 minutos. U15 y categorías superiores no tienen techo automático de 20: el coach define `participationReferenceMinutes` en su evaluación, según categoría y rol. Bajo 5 minutos, +1; entre 5 y menos de 15, +2; desde 15, +1 hasta la referencia aplicable. Evaluación con cinco partidos nuevos. La categoría desconocida no recibe una referencia automática.
+- La meta guarda su categoría y referencia. Las metas antiguas sin ese contexto en categorías superiores quedan pausadas para revisión; el coach puede reformularlas después de acordar la referencia. Los logros se conservan. Las tasas por 20 minutos siguen siendo una unidad de comparación y no un límite de participación.
+- Recuperos: +10% de tasa por 20 minutos, mínimo incremento de 0,1; requiere cinco partidos y 50 minutos acumulados. No se propone en Mini sin cobertura.
 - Libres: mínimo 20 intentos, paso de 3 puntos porcentuales. Dobles: 30 intentos, paso de 2 puntos. Triples: 25 intentos, paso de 2 puntos. Límite 100%.
 - Rebotes y asistencias: mejora del 5%, mínimo 0,1 por 20 minutos. Pérdidas: reducción del 5%, mínimo 0,1 por 20 minutos; límite cero.
 - Asistencias también exige que la tasa de pérdidas no supere la base.

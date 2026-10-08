@@ -15,10 +15,10 @@ function normalize(source,season){
  }
  return [...new Map(rows.map(r=>[r.cabb_partido_id,r])).values()];
 }
-async function connect({client,playerId,season,official,verifyAccount}){
+async function connect({client,playerId,season,official,verifyAccount,getProfile}){
  if(!root.NextLevelGradualGoals?.mount)return;
- return root.NextLevelGradualGoals.mount({client,playerId,season,verifyAccount,
-  anchor:document.getElementById('mini-gradual-goals'),dashboard:document.getElementById('mini-goals-dashboard'),metrics:['tl','t2'],
+ return root.NextLevelGradualGoals.mount({client,playerId,season,verifyAccount,getProfile,mini:true,
+  anchor:document.getElementById('mini-gradual-goals'),dashboard:document.getElementById('mini-goals-dashboard'),metrics:['tl','t2','minutes',...Object.keys(root.NextLevelGoalCatalog?.rules || {})],
   description:'Un pasito a la vez: elegí con tu coach hasta 2 metas de tiro. Necesitamos 5 partidos e intentos suficientes para empezar. Tus experiencias de práctica siguen en este plan.',
   loadGames:async()=>{
    const rows=normalize(official,season);
