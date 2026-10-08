@@ -326,11 +326,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .mental-tip-practice strong{color:var(--tip-color,#38bdf8)}
 .mental-tip-practice p{margin:5px 0 0;color:#cbd5e1}
 
+
+html.nl-capture,html.nl-capture *{scrollbar-width:none!important}html.nl-capture::-webkit-scrollbar,html.nl-capture *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 </style>
 <link rel="stylesheet" href="nextlevel_readability.css?v=20261007-2">
 <script src="nextlevel_player_context.js?v=20261008-demo-identity"></script>
 
-<link rel="stylesheet" href="nextlevel_theme.css?v=20261008-coach-contrast"><script src="nextlevel_theme.js?v=20261008-logo"></script><script src="nextlevel_mobile_navigation.js?v=20261008-row"></script><link rel="stylesheet" href="nextlevel_mobile_navigation.css?v=20261008-wide-tags"><script src="nextlevel_photo_crop.js?v=20261008"></script></head>
+<link rel="stylesheet" href="nextlevel_theme.css?v=20261008-coach-contrast"><script src="nextlevel_theme.js?v=20261008-logo"></script><script src="nextlevel_mobile_navigation.js?v=20261008-row"></script><link rel="stylesheet" href="nextlevel_mobile_navigation.css?v=20261008-wide-tags"><script src="nextlevel_photo_crop.js?v=20261008"></script><script>if(new URLSearchParams(location.search).get("capture")==="1")document.documentElement.classList.add("nl-capture");</script></head>
 <body>
 <button id="profile-top-logout" type="button" onclick="doLogout()" aria-label="Cerrar sesión">Salir ↗</button>
 
@@ -3077,3 +3079,5 @@ function fisInit() {
 <script src="nextlevel_readability.js?v=20261007-1"></script>
 <script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-block2"></script><script src="nextlevel_coach_personalization.js?v=20261007-assists"></script><script src="nextlevel_coach_analysis.js?v=20261007-block2"></script></body>
 </html>
+
+

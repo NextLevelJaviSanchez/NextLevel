@@ -54,7 +54,7 @@ section{padding:72px 20px;max-width:900px;margin:0 auto}
 .problem-questions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}
 @media(max-width:500px){.problem-questions{grid-template-columns:1fr}}
 .pq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;font-size:0.85rem;font-weight:700;color:#94a3b8;display:flex;align-items:center;gap:10px}
-.pq-icon{width:32px;height:32px;border-radius:50%;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:var(--or);display:flex;align-items:center;justify-content:center;flex-shrink:0}.pq-icon svg{width:18px;height:18px;display:block}
+.pq-item::before{content:'?';width:28px;height:28px;border-radius:50%;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:#f97316;font-size:0.85rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .problem-answer{background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(168,85,247,0.04));border:1px solid rgba(249,115,22,0.15);border-radius:12px;padding:18px 22px;font-size:0.9rem;font-weight:700;color:#fb923c;text-align:center;margin-top:8px}
 
 /* ── CÓMO FUNCIONA ── */
@@ -252,12 +252,6 @@ section[id]{scroll-margin-top:80px}
 .demo-shot span{display:block;margin-top:12px;color:var(--or);font-weight:700}
 @media(max-width:560px){.demo-grid{grid-template-columns:1fr}.demo-shot img{aspect-ratio:7/9}.demo-shot a{max-height:430px}}
 .demo-shot-wide{grid-column:1/-1}.demo-shot-wide a{max-height:none}
-/* Capturas del perfil con login en formato celular */
-.demo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-.demo-shot a{display:flex;justify-content:center;max-height:none;padding:12px;background:#03080f}
-.demo-shot img{width:100%;max-width:260px;height:auto;aspect-ratio:390/844;object-fit:contain;object-position:center}
-@media(max-width:760px){.demo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.demo-grid{grid-template-columns:1fr}.demo-shot img{aspect-ratio:390/844}.demo-shot a{max-height:none}}
 </style>
 </head>
 <body>
@@ -316,10 +310,10 @@ section[id]{scroll-margin-top:80px}
   <p class="sec-sub">Podés entrenar todos los días. Pero si no sabés qué necesitás mejorar, es difícil saber dónde poner el foco.</p>
 
   <div class="problem-questions">
-    <div class="pq-item"><span class="pq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 16v-5m5 5V4m5 12V8"/></svg></span>¿Cómo estoy jugando?</div>
-    <div class="pq-item"><span class="pq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg></span>¿Cuáles son mis fortalezas?</div>
-    <div class="pq-item"><span class="pq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg></span>¿Qué necesito mejorar?</div>
-    <div class="pq-item"><span class="pq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6 4 3 6-8M15 6h5v5"/></svg></span>¿Estoy progresando?</div>
+    <div class="pq-item">¿Cómo estoy jugando?</div>
+    <div class="pq-item">¿Cuáles son mis fortalezas?</div>
+    <div class="pq-item">¿Qué necesito mejorar?</div>
+    <div class="pq-item">¿Estoy progresando?</div>
   </div>
 
   <div class="problem-answer">
@@ -395,7 +389,7 @@ section[id]{scroll-margin-top:80px}
     </div>
     <div class="app-card" style="--ac:#22c55e">
       <div class="app-icon">📈</div>
-      <div class="app-title">Mis últimos partidos y evolución</div>
+      <div class="app-title">Mi Últimos partidos y evolución</div>
       <div class="app-desc">Seguí tus avances partido a partido, reconocé las etapas cumplidas y conservá tus logros. Cada meta explica desde dónde empezaste y con qué datos se evaluó.</div>
     </div>
     <div class="app-card" style="--ac:#06b6d4">
@@ -420,13 +414,15 @@ section[id]{scroll-margin-top:80px}
 <section id="demo">
   <div class="sec-eyebrow">Así se ve Next Level Player</div>
   <h2 class="sec-title">Conocé el recorrido de Sofía.</h2>
-  <p class="sec-sub">Explorá el perfil de Sofía Pérez, del Club Horizonte, desde el celular. Estas capturas muestran la versión de la demo con acceso de usuario: rendimiento, prácticas, prioridades y comparación con el equipo.</p>
-  <div class="demo-grid"><figure class="demo-shot"><a href="demo-capturas/sofia-perfil-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir perfil personal de Sofía Pérez en celular"><img src="demo-capturas/sofia-perfil-clean.jpg" alt="Perfil DEMO de Sofía Pérez con su foto personal, club, categoría y resumen de temporada en celular" loading="lazy" width="390" height="844"></a><figcaption><strong>Tu perfil, tu identidad</strong>Tu foto, club, categoría y datos de temporada, en un perfil propio.<span>Abrir captura completa ↗</span></figcaption></figure><figure class="demo-shot"><a href="demo-capturas/sofia-inicio-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir Tu punto de partida de Sofía en celular"><img src="demo-capturas/sofia-inicio-clean.jpg" alt="Tu punto de partida: captura en celular del perfil DEMO de Sofía Pérez con login" loading="lazy" width="390" height="844"></a><figcaption><strong>Tu punto de partida</strong>Tu resumen de temporada, participación y señales de evolución.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-rendimiento-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir Tu juego, en detalle de Sofía en celular"><img src="demo-capturas/sofia-rendimiento-clean.jpg" alt="Tu juego, en detalle: captura en celular del perfil DEMO de Sofía Pérez con login" loading="lazy" width="390" height="844"></a><figcaption><strong>Tu juego, en detalle</strong>Compará los últimos cinco partidos con tu temporada y seguí tus métricas.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-plan-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir Tu trabajo diario de Sofía en celular"><img src="demo-capturas/sofia-plan-clean.jpg" alt="Tu trabajo diario: captura en celular del perfil DEMO de Sofía Pérez con login" loading="lazy" width="390" height="844"></a><figcaption><strong>Tu trabajo diario</strong>Registrá tus prácticas, tus aciertos y lo que querés probar la próxima vez.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-mejoras-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir En qué podés mejorar de Sofía en celular"><img src="demo-capturas/sofia-mejoras-clean.jpg" alt="En qué podés mejorar: captura en celular del perfil DEMO de Sofía Pérez con login" loading="lazy" width="390" height="844"></a><figcaption><strong>En qué podés mejorar</strong>Tus prioridades según las áreas elegidas y tu producción actual.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-top-clean.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir Compará cómo venís en tu equipo de Sofía en celular"><img src="demo-capturas/sofia-top-clean.jpg" alt="Compará cómo venís en tu equipo: captura en celular del perfil DEMO de Sofía Pérez con login" loading="lazy" width="390" height="844"></a><figcaption><strong>Compará cómo venís en tu equipo</strong>Consultá tu posición en el TOP del equipo, con promedios y partidos de referencia.<span>Abrir captura completa ↗</span></figcaption></figure></div>
-<p class="disclaimer"><strong>DEMO · Perfil ficticio · Datos de ejemplo.</strong> Sofía Pérez y el Club Horizonte son identidades ficticias. Las capturas del perfil con login usan datos copiados para demostración; el TOP usa un equipo ficticio y valores de ejemplo. Las capturas ilustran la experiencia y no constituyen un testimonio ni una promesa de resultados. Las funciones y los datos disponibles varían según categoría, competencia y modalidad.</p>
+  <p class="sec-sub">Explorá estas capturas de la demo de Sofía Pérez, del Club Horizonte. Desde el resumen de temporada hasta sus prácticas, todo su recorrido está en un solo lugar.</p>
+  <div class="demo-grid">
+    <figure class="demo-shot"><a href="demo-capturas/sofia-inicio.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu punto de partida de Sofía Pérez"><img src="demo-capturas/sofia-inicio.jpg" alt="Captura de Tu punto de partida del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="1380"></a><figcaption><strong>Tu punto de partida</strong>Resumen de temporada, evolución de partidos y un próximo paso para trabajar.<span>Abrir captura completa ↗</span></figcaption></figure>
+<figure class="demo-shot"><a href="demo-capturas/sofia-rendimiento.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu juego, en detalle de Sofía Pérez"><img src="demo-capturas/sofia-rendimiento.jpg" alt="Captura de Tu juego, en detalle del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="2002"></a><figcaption><strong>Tu juego, en detalle</strong>Estadísticas, hitos y últimos partidos con rival, resultado y aporte individual.<span>Abrir captura completa ↗</span></figcaption></figure>
+<figure class="demo-shot"><a href="demo-capturas/sofia-plan.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu trabajo diario de Sofía Pérez"><img src="demo-capturas/sofia-plan.jpg" alt="Captura de Tu trabajo diario del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="1182"></a><figcaption><strong>Tu trabajo diario</strong>Prácticas para registrar y tips para acompañar la concentración y la confianza.<span>Abrir captura completa ↗</span></figcaption></figure>
+<figure class="demo-shot"><a href="demo-capturas/sofia-mejoras-actual.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir aspectos a mejorar de Sofía Pérez"><img src="demo-capturas/sofia-mejoras-actual.jpg" alt="Análisis actualizado de Sofía Pérez: producción y prioridades según las áreas elegidas" loading="lazy" width="860" height="625" style="aspect-ratio:860/625;object-fit:contain"></a><figcaption><strong>En qué podés mejorar</strong>Tu base actual, las áreas que elegiste y las prioridades para conversar con el coach.<span>Abrir captura completa ↗</span></figcaption></figure>
+<figure class="demo-shot demo-shot-wide"><a href="demo-capturas/sofia-top.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir TOP del equipo de Sofía Pérez"><img src="demo-capturas/sofia-top.jpg" alt="TOP del equipo demo: Sofía destacada en puntos, rebotes y valoración; equipo ficticio y datos de ejemplo" loading="lazy" width="860" height="549" style="aspect-ratio:860/549;object-fit:contain"></a><figcaption><strong>Compará cómo venís en tu equipo</strong>Ubicá tu aporte en puntos, rebotes y valoración, con promedios y cantidad de partidos. La comparación ayuda a conversar sobre tu juego.<span>Abrir captura completa ↗</span></figcaption></figure>
+  </div>
+  <p class="disclaimer"><strong>DEMO · Perfil ficticio · Datos de ejemplo.</strong> Sofía Pérez y el Club Horizonte son identidades ficticias. Las capturas del perfil con login usan datos copiados para demostración; el TOP usa un equipo ficticio y valores de ejemplo. Las capturas ilustran la experiencia y no constituyen un testimonio ni una promesa de resultados. Las funciones y los datos disponibles varían según categoría, competencia y modalidad.</p>
 </section>
 
 <!-- ══ OBJETIVOS INDIVIDUALES ══ -->
@@ -488,7 +484,7 @@ section[id]{scroll-margin-top:80px}
   <div class="sec-eyebrow">A tu ritmo</div>
   <h2 class="sec-title">Continuá cuando quieras.</h2>
   <p class="sec-sub">Renová PLAYER por USD 10 o PLAYER + COACHING por USD 20, por otros 30 días. Coordinamos la renovación por WhatsApp y te enviamos el link de pago. No hay débito automático.</p>
-  <div class="problem-answer">Con la compra inicial conservás tu perfil y tu estado de progreso: estadísticas históricas, análisis, objetivos y plan. Si no renovás, solo se pausa la incorporación de nuevas estadísticas de competencia. Podés seguir registrando tus entrenamientos y evaluaciones físicas, medir el avance de tu plan y reactivar las actualizaciones cuando quieras.</div>
+  <div class="problem-answer">Si no renovás, las actualizaciones se pausan. Conservás el acceso a tu perfil, estadísticas históricas, análisis, objetivos y plan existente. Podés reactivar el seguimiento más adelante.</div>
   <div class="hero-btns" style="margin-top:24px"><a class="btn-secondary" target="_blank" rel="noopener noreferrer" href="https://wa.me/541158394755?text=Hola%20Javi%2C%20quiero%20renovar%20mi%20Next%20Level%20Player%20por%20otros%2030%20d%C3%ADas.">Renovar por WhatsApp →</a></div>
 </section>
 <!-- ══ ESTADO FÍSICO ══ -->
@@ -651,7 +647,7 @@ section[id]{scroll-margin-top:80px}
         <span>¿Qué pasa después de los primeros 30 días?</span>
         <span class="faq-q-icon">+</span>
       </div>
-      <div class="faq-a">Podés renovar por otros 30 días: PLAYER cuesta USD 10 y PLAYER + COACHING, USD 20. Lo coordinamos por WhatsApp con un link de pago. Si no renovás, conservás tu perfil y estado de progreso. Se pausa la incorporación de nuevas estadísticas de competencia, pero podés seguir registrando entrenamientos y evaluaciones físicas y medir tu plan. El acompañamiento personal del coach corresponde al período activo de PLAYER + COACHING. No hay cobro automático ni permanencia.</div>
+      <div class="faq-a">Podés renovar por otros 30 días: PLAYER cuesta USD 10 y PLAYER + COACHING, USD 20. Lo coordinamos por WhatsApp con un link de pago. Si no renovás, mantenés tu información existente y se pausan las actualizaciones y el seguimiento del coach. No hay cobro automático ni permanencia.</div>
     </div>
 
     <div class="faq-item">
@@ -667,7 +663,7 @@ section[id]{scroll-margin-top:80px}
         <span>¿Puedo seguir viendo mi información si no continúo?</span>
         <span class="faq-q-icon">+</span>
       </div>
-      <div class="faq-a">Sí. La compra inicial conserva tu perfil, estado de progreso e información histórica. Sin renovar podés seguir registrando y midiendo tu plan de entrenamiento y físico; solo se pausa la incorporación de nuevas estadísticas de competencia. Podés reactivarlas más adelante.</div>
+      <div class="faq-a">Tu perfil e información se mantienen disponibles. Lo que deja de actualizarse son los nuevos datos de competencia si no renovás el período de actualizaciones.</div>
     </div>
 
   </div>
@@ -915,10 +911,6 @@ document.addEventListener('keydown', function(e){if(e.key === 'Escape') closeMod
 </script>
 </body>
 </html>
-
-
-
-
 
 
 
