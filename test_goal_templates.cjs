@@ -4,8 +4,8 @@ for(const [category,template] of [['U11','mini'],['U13 Femenino','u13'],['U15','
  const playerId='99999999-0000-0000-0000-000000000001',context={playerId,season:'2026',category,template,name:'Jugador de prueba'};
  const source=fs.readFileSync(path.join(appRoot,template==='mini'?'perfil_milo_sanchez_u11.html':'perfil_mia_sanchez_14.html'),'utf8'),html=compileTemplate(source,context);
  assert.ok(html.includes('"category":"'+category+'"'));
- for(const asset of ['nextlevel_goal_catalog','nextlevel_gradual_goals','nextlevel_coach_workspace'])assert.equal((html.match(new RegExp('src="'+asset+'\\.js','g')) || []).length,1);
- assert.ok(html.includes('nextlevel_goal_catalog.js?v=20261007-goals-final'));
+ for(const asset of ['nextlevel_goal_catalog','nextlevel_gradual_goals','nextlevel_coach_workspace','nextlevel_coach_analysis','nextlevel_coach_personalization'])assert.equal((html.match(new RegExp('src="'+asset+'\\.js','g')) || []).length,1);
+ assert.ok(html.includes('nextlevel_goal_catalog.js?v=20261007-block2'));
  assert.ok(html.indexOf('src="nextlevel_goal_catalog.js')<html.indexOf('src="nextlevel_gradual_goals.js'));
  if(template==='mini'){assert.equal((html.match(/id="mini-gradual-goals"/g) || []).length,1);assert.equal((html.match(/id="mini-goals-dashboard"/g) || []).length,1);assert.ok(html.includes('data-profile-choice="technicalAreas"'));}
  else{assert.ok(html.includes('nextlevel-profile-preferences'));assert.ok(html.includes('data-val="Pases"'));assert.ok(html.includes('data-val="Rebotes"'));}

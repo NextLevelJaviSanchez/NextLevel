@@ -328,7 +328,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 </style>
 <link rel="stylesheet" href="nextlevel_readability.css?v=20261007-2">
-<script src="nextlevel_player_context.js?v=20261007-nombre"></script>
+<script src="nextlevel_player_context.js?v=20261007-rotation-all"></script>
+<link rel="stylesheet" href="nextlevel_mobile_navigation.css?v=20261007">
 </head>
 <body>
 <div style="display:flex;justify-content:flex-end;padding:10px 16px"><button type="button" onclick="doLogout()" style="background:var(--card2);color:#fca5a5;border:1px solid #475569;border-radius:8px;padding:10px 16px;font-size:16px">Salir ↗</button></div>
@@ -713,7 +714,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
     <div id="obj-list"></div>
     <div style="margin-top:10px;font-size:0.62rem;color:var(--muted);line-height:1.5;background:rgba(249,115,22,0.03);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:8px 11px">
-      💡 Las metas graduales se comprueban con partidos nuevos o prácticas guardadas. Al cumplirlas, verás una felicitación en Inicio. Las propuestas técnicas anteriores pueden seguirse manualmente con tu coach.
+      💡 Cada meta estadística muestra su base y un total para los próximos 2 partidos. Las metas de práctica se comprueban con días registrados. Al cumplirlas, verás una felicitación en Inicio. Las propuestas técnicas anteriores pueden seguirse manualmente con tu coach.
     </div>
   </div>
 
@@ -1975,12 +1976,16 @@ function buildDashboard() {
   const mini = document.getElementById('dash-evol-mini');
   if (mini) {
     if (window._evolResults && window._evolResults.length) {
-      const mej = window._evolResults.filter(r => r.trend === 'up').map(r => r.lbl).join(', ');
-      const cai = window._evolResults.filter(r => r.trend === 'down').map(r => r.lbl).join(', ');
+      const minuteResult=window._evolResults.find(r=>r.key==='minutos');
+      const rotation=window.NextLevelPlayerContext?.minuteRotation(minuteResult?.vRec ?? mpg,window.NextLevelPlayer?.category || 'U13',window.NextLevelPlayer?.maxAllowedMinutes);
+      const mej = window._evolResults.filter(r => r.trend === 'up' && !(rotation && r.key==='minutos')).map(r => r.lbl).join(', ');
+      const cai = window._evolResults.filter(r => r.trend === 'down' && !(rotation && r.key==='minutos')).map(r => r.lbl).join(', ');
+
       let txt = '';
       if (mej) txt += `📈 <span style="color:#22c55e;font-weight:700">${mej}</span> mejorando`;
       if (mej && cai) txt += ' · ';
       if (cai) txt += `⚠️ <span style="color:#ef4444;font-weight:700">${cai}</span> a trabajar`;
+      if(rotation){if(txt)txt+=' · ';txt+=rotation.low?`⏱️ <span style="color:#facc15;font-weight:700">Minutos a trabajar con el coach</span> (${rotation.average.toFixed(1)} min; referencia: ${rotation.threshold} min o menos)`:`⏱️ <span style="color:#4ade80;font-weight:700">Minutos dentro de la rotación esperada</span> (${rotation.average.toFixed(1)} min)`;}
       if (!txt) txt = '→ Rendimiento estable en los últimos partidos';
       mini.innerHTML = txt;
     } else {
@@ -2100,7 +2105,7 @@ function generarReport() {
   const evolEl = document.getElementById('rpt-evol');
   if (window._evolResults && window._evolResults.length) {
     const mej = window._evolResults.filter(r => r.trend === 'up').map(r => `${r.lbl} (${r.vRec})`).join(', ');
-    const cai = window._evolResults.filter(r => r.trend === 'down').map(r => `${r.lbl} (${r.vRec})`).join(', ');
+    const cai = window._evolResults.filter(r => r.trend === 'down' && (r.key!=='minutos' || window.NextLevelPlayerContext?.minuteRotation(r.vRec,window.NextLevelPlayer?.category || 'U13',window.NextLevelPlayer?.maxAllowedMinutes)?.low)).map(r => `${r.lbl} (${r.vRec})`).join(', ');
     evolEl.textContent = `Últimos 5 partidos vs. anteriores: ${mej ? 'Mejora en ' + mej + '. ' : ''}${cai ? 'Bajó en ' + cai + '.' : mej ? '' : 'Rendimiento estable.'}`;
   } else {
     evolEl.textContent = 'Sin suficientes partidos para calcular evolución por bloques.';
@@ -3077,13 +3082,13 @@ function fisInit() {
 }
 
 </script>
-<script src="nextlevel_coach_analysis.js?v=20261006-coach1"></script>
+
 <script src="nextlevel_performance.js?v=20261007-evolucion-mobile" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
-<script src="nextlevel_profile_extras.js?v=20261007-court-first"></script>
+<script src="nextlevel_profile_extras.js?v=20261007-compact-hitos"></script>
 <script src="nextlevel_evolution.js?v=20261007-evolucion-mobile"></script>
-<script src="nextlevel_goal_catalog.js?v=20261007-goals-final"></script><script src="nextlevel_plan_progress.js?v=20261007-goals-final"></script>
-<script src="nextlevel_coach_workspace.js?v=20261007-goals-final"></script>
+<script src="nextlevel_goal_catalog.js?v=20261007-block2"></script><script src="nextlevel_plan_progress.js?v=20261007-block2"></script>
+<script src="nextlevel_coach_workspace.js?v=20261007-block2"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>
 <script src="nextlevel_readability.js?v=20261007-1"></script>
-<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-goals-final"></script></body>
+<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-block2"></script><script src="nextlevel_coach_personalization.js?v=20261007-block2"></script><script src="nextlevel_coach_analysis.js?v=20261007-block2"></script></body>
 </html>

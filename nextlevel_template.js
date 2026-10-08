@@ -14,7 +14,7 @@ function compileTemplate(html,context){
  }
  html=html.replace('</body>','<script src="nextlevel_profile_identity.js"><\/script></body>');
  html=html.replace('<head>','<head><script>window.NextLevelPlayer='+encoded+';<\/script><script src="nextlevel_profile_codec.js"><\/script><script src="nextlevel_sources.js"><\/script>');
- html=html.replace(/(src="(?:nextlevel_goal_catalog|nextlevel_gradual_goals|nextlevel_mini_goals|nextlevel_plan_progress|nextlevel_u11|nextlevel_coach_workspace)\.js)(?:\?[^\"]*)?"/g,'$1?v=20261007-goals-final"');
+ html=html.replace(/(src="(?:nextlevel_goal_catalog|nextlevel_gradual_goals|nextlevel_mini_goals|nextlevel_plan_progress|nextlevel_u11|nextlevel_coach_workspace|nextlevel_coach_analysis|nextlevel_coach_personalization)\.js)(?:\?[^\"]*)?"/g,'$1?v=20261007-block2"');
  return html;
 }
 const api={compileTemplate};if(typeof module!=='undefined')module.exports=api;if(typeof window!=='undefined')window.NextLevelTemplate=api;

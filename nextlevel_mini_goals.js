@@ -1,6 +1,8 @@
 /* Adaptador Mini: sólo tiros registrados; nunca inferir rebotes o asistencias. */
 (function(root){
 'use strict';
+const gameCache=new Map();
+const getGames=(playerId,season)=>gameCache.get(playerId+':'+season) || [];
 function normalize(source,season){
  if(!source || String(source.season)!==String(season))return [];
  const fixture=new Map((source.games || []).map(g=>[String(g.IdPartidoNotificacion),g])),rows=[];
@@ -11,7 +13,7 @@ function normalize(source,season){
   const parts=String(g.Fecha).split('/');if(parts.length!==3)continue;
   const date=parts.reverse().join('-');if(!/^\d{4}-\d{2}-\d{2}$/.test(date) || !date.startsWith(String(season)+'-') || !Number.isFinite(Date.parse(date+'T12:00:00Z')) || new Date(date+'T12:00:00Z').toISOString().slice(0,10)!==date)continue;
   const p=players[0],minutes=p.milisegundos_jugados==null?null:Number(p.milisegundos_jugados)/60000;
-  rows.push({cabb_partido_id:String(act.id),fecha:date,torneo:source.tournament || 'FEBAMBA Mini',source:'cabb_api',minutos:minutes,tl_in:p.canasta1p,tl_att:p.tiro1p,t2_in:p.canasta2p,t2_att:p.tiro2p});
+  rows.push({cabb_partido_id:String(act.id),fecha:date,torneo:source.tournament || 'FEBAMBA Mini',source:'cabb_api',pts:p.puntos,minutos:minutes,tl_in:p.canasta1p,tl_att:p.tiro1p,t2_in:p.canasta2p,t2_att:p.tiro2p});
  }
  return [...new Map(rows.map(r=>[r.cabb_partido_id,r])).values()];
 }
@@ -24,9 +26,9 @@ async function connect({client,playerId,season,official,verifyAccount,getProfile
    const rows=normalize(official,season);
    for(let from=0;;from+=1000){const {data,error}=await client.from('game_log').select('*').eq('player_id',playerId).eq('source','cabb_api').eq('torneo','FEBAMBA Mini').gte('fecha',season+'-01-01').lt('fecha',String(+season+1)+'-01-01').order('fecha').order('cabb_partido_id').range(from,from+999);if(error)throw error;rows.push(...(data || []));if(!data || data.length<1000)break;}
    // Las actas de la nube prevalecen sobre el snapshot, sin duplicar partidos.
-   return [...new Map(rows.map(r=>[String(r.cabb_partido_id),r])).values()];
+   const merged=[...new Map(rows.map(r=>[String(r.cabb_partido_id),r])).values()];gameCache.set(playerId+':'+season,merged);return merged;
   }
  });
 }
-const api={normalize,connect};if(typeof module!=='undefined')module.exports=api;root.NextLevelMiniGoals=api;
+const api={normalize,connect,getGames};if(typeof module!=='undefined')module.exports=api;root.NextLevelMiniGoals=api;
 })(typeof window!=='undefined'?window:globalThis);

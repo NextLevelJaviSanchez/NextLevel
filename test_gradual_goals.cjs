@@ -36,7 +36,7 @@ async function uiTest(fail,practice=false){
  const anchor=new Element('div'),dash=new Element('div');let load,updates=0;
  const document={createElement:tag=>new Element(tag),getElementById:key=>key==='obj-list'?anchor:key==='dash-obj-activo'?dash:null,addEventListener:(name,fn)=>{load=fn;}};
  const catalog=require('./nextlevel_goal_catalog.js'),baseTime=Date.now()-6*86400000;
- const uiGoal=practice?api.create('practice_defense','AFMB',[],new Date(baseTime).toISOString()):goal;
+ const uiGoal=practice?api.create('practice_defense','AFMB',[],new Date(baseTime).toISOString()):api.create('tl','AFMB',base,'2026-09-05T12:00:00Z',{goalMode:'game_block_v2'});
  const extras=practice?[{module:'perfil_v1',data:{areas:['Defensa']}},...[1,2,3].map(n=>{const timestamp=new Date(baseTime+n*86400000).toISOString();return {module:'plan_progress_v1:'+n,data:{id:String(n),source:'player_training',date:timestamp.slice(0,10),createdAt:timestamp,areas:['Defensa']}};})]:[];
  const old={module:'gradual_goals_v1:2026:AFMB:'+uiGoal.metric,data:uiGoal,updated_at:now};
  const client={from(table){let write=false,payload;

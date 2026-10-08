@@ -193,7 +193,7 @@
       };
       for(const [icon,label,row,color,unit] of [['🏀','Máximo de puntos',summary.points,'var(--ac)','puntos'],['⭐','Máxima valoración',summary.valuation,'#FFD740','de valoración CABB'],['🛡️','Máximo de rebotes',summary.rebounds,'#38bdf8','rebotes'],['⏱️','Mayor tiempo de juego',summary.minutes,'#a78bfa','minutos']]){
         const panel=card(icon,label,row ? `${row.value} ${unit}` : 'Sin datos',color);
-        if(row){row.games.forEach(g=>match(panel,g));paragraph(panel,`Datos disponibles: ${row.coverage}/${games.length} partidos`, 'font-size:.62rem;color:var(--muted);margin-top:12px');}
+        if(row){if(row.games.length>1)paragraph(panel,`${row.games.length} partidos con esta marca`,'color:var(--muted)');row.games.slice(0,2).forEach(g=>match(panel,g));if(row.games.length>2){const more=document.createElement('details');more.style.cssText='margin-top:12px;font-size:14px';const label=document.createElement('summary');label.textContent=`Ver los ${row.games.length-2} partidos restantes`;label.style.cssText='cursor:pointer;color:#38bdf8';more.append(label);row.games.slice(2).forEach(g=>match(more,g));panel.append(more);}paragraph(panel,`Datos disponibles: ${row.coverage}/${games.length} partidos`, 'font-size:.62rem;color:var(--muted);margin-top:12px');}
       }
       const doubles=card('✌️','Dobles-dobles',`${summary.doubles.length} ${summary.doubles.length===1 ? 'logro' : 'logros'}`,'var(--green)');
       summary.doubles.forEach(g=>{match(doubles,g);paragraph(doubles,[['pts','PTS'],['reb_tot','REB'],['ast','AST'],['stl','ROB'],['blk','TAP']].filter(([key])=>g[key]!=null && Number(g[key])>=10).map(([key,label])=>`${g[key]} ${label}`).join(' · '),'font-weight:800;color:var(--green)');});
