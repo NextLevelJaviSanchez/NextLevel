@@ -708,12 +708,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- OBJETIVOS DE DESARROLLO — con estados -->
   <div class="card">
     <div class="card-ttl" style="justify-content:space-between">
-      🎯 Mis Objetivos de Desarrollo
+      🎯 Mis objetivos y prácticas
       <span style="font-size:0.52rem;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">Estado guardado en la nube</span>
     </div>
     <div id="obj-list"></div>
     <div style="margin-top:10px;font-size:0.62rem;color:var(--muted);line-height:1.5;background:rgba(249,115,22,0.03);border:1px solid rgba(249,115,22,0.1);border-radius:8px;padding:8px 11px">
-      💡 Marcá un objetivo como <strong style="color:#fb923c">Activo</strong> para que aparezca en tu Dashboard. Cuando lo lograste, marcalo como <strong style="color:#4ade80">Cumplido</strong> y se sumará a tus logros.
+      💡 Las metas graduales se comprueban con partidos nuevos o prácticas guardadas. Al cumplirlas, verás una felicitación en Inicio. Las propuestas técnicas anteriores pueden seguirse manualmente con tu coach.
     </div>
   </div>
 
@@ -2007,7 +2007,7 @@ function buildDashObjActivo(container) {
   const activos = OBJETIVOS_BASE.filter(o => (_objEstados[o.id] || o.estado) === 'activo');
   if (!activos.length && window.NextLevelGradualGoals?.activeCount > 0) { container.replaceChildren(); return; }
   if (!activos.length) {
-    container.innerHTML = `<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin objetivos activos elegidos. En Mi Plan podés revisar las metas sugeridas por tus estadísticas.</div>`;
+    container.innerHTML = `<div style="font-size:0.72rem;color:var(--muted);text-align:center;padding:10px 0">Sin objetivos activos elegidos. En Mi Plan podés revisar las metas sugeridas por tus áreas elegidas y estadísticas.</div>`;
     return;
   }
   container.innerHTML = activos.map(obj => `
@@ -3081,9 +3081,9 @@ function fisInit() {
 <script src="nextlevel_performance.js?v=20261007-evolucion-mobile" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
 <script src="nextlevel_profile_extras.js?v=20261007-court-first"></script>
 <script src="nextlevel_evolution.js?v=20261007-evolucion-mobile"></script>
-<script src="nextlevel_goal_catalog.js?v=20261007-category1"></script><script src="nextlevel_plan_progress.js?v=20261007-personal1"></script>
-<script src="nextlevel_coach_workspace.js?v=20261007-category1"></script>
+<script src="nextlevel_goal_catalog.js?v=20261007-goals-final"></script><script src="nextlevel_plan_progress.js?v=20261007-goals-final"></script>
+<script src="nextlevel_coach_workspace.js?v=20261007-goals-final"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>{NextLevelCoachWorkspace.mount({host:document.getElementById('player-coach-workspace'),client:_supa,playerId:PLAYER_ID,mode:'player'});});</script>
 <script src="nextlevel_readability.js?v=20261007-1"></script>
-<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-category1"></script></body>
+<script src="nextlevel_profile_dorsal.js?v=20261007"></script><script src="nextlevel_gradual_goals.js?v=20261007-goals-final"></script></body>
 </html>
