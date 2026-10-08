@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const catalog=require('./nextlevel_goal_catalog.js');
+const model=require('./nextlevel_coach_personalization.js');
+const {missions}=require('./nextlevel_mini_adventures.js');
+const rows=Array.from({length:5},(_,i)=>({cabb_partido_id:String(i),fecha:'2026-09-0'+(i+1),torneo:'Mini',source:'cabb_api',minutos:8,pts:2,tl_in:1,tl_att:2,t2_in:1,t2_att:3}));
+const preferences={technicalAreas:['Tiro libre']};
+assert.deepEqual(catalog.recommendations(preferences,{mini:true,minutes:8,category:'U11'}),['practice_free','tl']);
+const result=model.analyze(rows,{mini:true,category:'U11',profile:preferences});
+assert.ok(!result.proposals.some(p=>p.metric==='minutes'));
+assert.equal(result.priorities[0].metric,'practice_free');
+assert.match(result.participation,/no califican/);
+assert.equal(new Set(missions.map(m=>m.id)).size,5);
+assert.ok(missions.every(m=>catalog.entries.some(e=>e.tags.includes(m.area))));
+console.log('OK Mini: práctica primero, sin metas de minutos, cinco aventuras vinculadas a áreas reales.');

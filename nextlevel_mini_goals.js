@@ -20,8 +20,8 @@ function normalize(source,season){
 async function connect({client,playerId,season,official,verifyAccount,getProfile}){
  if(!root.NextLevelGradualGoals?.mount)return;
  return root.NextLevelGradualGoals.mount({client,playerId,season,verifyAccount,getProfile,mini:true,
-  anchor:document.getElementById('mini-gradual-goals'),dashboard:document.getElementById('mini-goals-dashboard'),metrics:['tl','t2','minutes',...Object.keys(root.NextLevelGoalCatalog?.rules || {})],
-  description:'Un pasito a la vez: elegí con tu coach hasta 2 metas de tiro. Necesitamos 5 partidos e intentos suficientes para empezar. Tus experiencias de práctica siguen en este plan.',
+  anchor:document.getElementById('mini-gradual-goals'),dashboard:document.getElementById('mini-goals-dashboard'),metrics:['tl','t2',...Object.keys(root.NextLevelGoalCatalog?.rules || {})],
+  description:'Un pasito a la vez: elegí con tu coach hasta 2 metas de práctica. Los objetivos de tiro son opcionales y requieren 5 partidos e intentos suficientes. Lo principal es probar, aprender y conversar.',
   loadGames:async()=>{
    const rows=normalize(official,season);
    for(let from=0;;from+=1000){const {data,error}=await client.from('game_log').select('*').eq('player_id',playerId).eq('source','cabb_api').eq('torneo','FEBAMBA Mini').gte('fecha',season+'-01-01').lt('fecha',String(+season+1)+'-01-01').order('fecha').order('cabb_partido_id').range(from,from+999);if(error)throw error;rows.push(...(data || []));if(!data || data.length<1000)break;}
