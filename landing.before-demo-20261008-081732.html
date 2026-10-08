@@ -241,16 +241,6 @@ section[id]{scroll-margin-top:80px}
 .hero-pill{color:#94a3b8}
 .app-title{font-size:.9rem}.app-desc{font-size:.8rem}
 @media(max-width:560px){.app-grid{grid-template-columns:1fr}.coach-card{padding:22px}.story-card{padding:20px}}
-
-.demo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.demo-shot{margin:0;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;min-width:0}
-.demo-shot a{display:block;background:#03080f;overflow:hidden}
-.demo-shot img{display:block;width:100%;height:auto;aspect-ratio:7/12;object-fit:cover;object-position:top;transition:transform .2s}
-.demo-shot a:hover img{transform:scale(1.02)}
-.demo-shot figcaption{padding:18px;font-size:.8rem;color:#94a3b8;line-height:1.6}
-.demo-shot strong{display:block;color:#e2e8f0;font-size:1rem;margin-bottom:6px}
-.demo-shot span{display:block;margin-top:12px;color:var(--or);font-weight:700}
-@media(max-width:560px){.demo-grid{grid-template-columns:1fr}.demo-shot img{aspect-ratio:7/9}.demo-shot a{max-height:430px}}
 </style>
 </head>
 <body>
@@ -290,7 +280,7 @@ section[id]{scroll-margin-top:80px}
 
     <div class="hero-btns">
       <a href="#registro" class="btn-primary" onclick="openModal()">🚀 Quiero mi Next Level Player</a>
-      <a href="#demo" class="btn-secondary">Ver la app por dentro</a>
+      <a href="#producto" class="btn-secondary">Ver qué incluye</a>
     </div>
 
     <div class="hero-pills">
@@ -407,19 +397,6 @@ section[id]{scroll-margin-top:80px}
       <div class="app-desc">Tu categoría, preferencias y áreas a mejorar orientan tu recorrido. Personalizá tu foto y encontrá tu historial, objetivos y desarrollo en un solo lugar.</div>
     </div>
   </div>
-</section>
-
-
-<section id="demo">
-  <div class="sec-eyebrow">Así se ve Next Level Player</div>
-  <h2 class="sec-title">Conocé el recorrido de Sofía.</h2>
-  <p class="sec-sub">Explorá estas capturas de la demo de Sofía Pérez, del Club Horizonte. Desde el resumen de temporada hasta sus prácticas, todo su recorrido está en un solo lugar.</p>
-  <div class="demo-grid">
-    <figure class="demo-shot"><a href="demo-capturas/sofia-inicio.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu punto de partida de Sofía Pérez"><img src="demo-capturas/sofia-inicio.jpg" alt="Captura de Tu punto de partida del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="1380"></a><figcaption><strong>Tu punto de partida</strong>Resumen de temporada, evolución de partidos y un próximo paso para trabajar.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-rendimiento.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu juego, en detalle de Sofía Pérez"><img src="demo-capturas/sofia-rendimiento.jpg" alt="Captura de Tu juego, en detalle del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="2002"></a><figcaption><strong>Tu juego, en detalle</strong>Estadísticas, hitos y últimos partidos con rival, resultado y aporte individual.<span>Abrir captura completa ↗</span></figcaption></figure>
-<figure class="demo-shot"><a href="demo-capturas/sofia-plan.jpg" target="_blank" rel="noopener noreferrer" aria-label="Abrir captura de Tu trabajo diario de Sofía Pérez"><img src="demo-capturas/sofia-plan.jpg" alt="Captura de Tu trabajo diario del perfil DEMO de Sofía Pérez, Club Horizonte; datos ficticios" loading="lazy" width="698" height="1182"></a><figcaption><strong>Tu trabajo diario</strong>Prácticas para registrar y tips para acompañar la concentración y la confianza.<span>Abrir captura completa ↗</span></figcaption></figure>
-  </div>
-  <p class="disclaimer"><strong>DEMO · Perfil ficticio · Datos de ejemplo.</strong> Sofía Pérez, el club y las estadísticas son ficticios. Las capturas ilustran la experiencia y no constituyen un testimonio ni una promesa de resultados. Las funciones y los datos disponibles varían según categoría, competencia y modalidad.</p>
 </section>
 
 <!-- ══ OBJETIVOS INDIVIDUALES ══ -->
@@ -699,7 +676,6 @@ section[id]{scroll-margin-top:80px}
   <div class="footer-links">
     <a href="login.html">Acceso jugadores</a>
     <a href="#precios">Planes</a>
-    <a href="#demo">Capturas de la demo</a>
     <a href="#faq">FAQ</a>
     <a href="https://wa.me/541158394755" target="_blank">WhatsApp</a>
     <a href="#terminos">Términos y Condiciones</a>
@@ -908,7 +884,6 @@ document.addEventListener('keydown', function(e){if(e.key === 'Escape') closeMod
 </script>
 </body>
 </html>
-
 
 
 

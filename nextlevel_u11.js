@@ -78,8 +78,9 @@ document.querySelectorAll('#mini-perfil input:not([type="file"]),#mini-perfil te
 window.addEventListener('online',()=>profileAutosave.schedule());
 $('mini-photo-button').addEventListener('click',()=>$('mini-photo-input').click());
 async function persistPhoto(){await verifyAccount();const snapshot=state.photo;const {error}=await client.from('player_data').upsert({player_id:playerId,module:'foto_url',data:snapshot,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});if(error)throw error;if(snapshot===state.photo)state.photoDirty=false;saveLocal();$('mini-photo-status').textContent='✅ Foto guardada en Supabase. Se verá en tus otros dispositivos.';}
-$('mini-photo-input').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file)return;const btn=$('mini-photo-button');btn.disabled=true;
+$('mini-photo-input').addEventListener('change',async event=>{let file=event.target.files?.[0];if(!file)return;const btn=$('mini-photo-button');btn.disabled=true;
  try{if(!file.type.startsWith('image/') || file.size>5*1024*1024)throw Error('Elegí una imagen de hasta 5 MB.');
+ file=await NextLevelPhotoCrop.edit(file);if(!file)return;
  const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('No se pudo leer la imagen.'));reader.readAsDataURL(file);});
  const img=await new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(Error('No se pudo abrir la imagen.'));image.src=data;});
  const canvas=document.createElement('canvas'),scale=Math.min(1,640/Math.max(img.width,img.height));canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const src=canvas.toDataURL('image/jpeg',.82);if(src.length>750000)throw Error('Elegí una imagen más pequeña.');

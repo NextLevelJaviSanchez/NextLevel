@@ -330,7 +330,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <link rel="stylesheet" href="nextlevel_readability.css?v=20261007-2">
 <script src="nextlevel_player_context.js?v=20261007-rotation-all"></script>
 
-<link rel="stylesheet" href="nextlevel_theme.css?v=20261008-coach-contrast"><script src="nextlevel_theme.js?v=20261008-logo"></script><script src="nextlevel_mobile_navigation.js?v=20261008-row"></script><link rel="stylesheet" href="nextlevel_mobile_navigation.css?v=20261008-wide-tags"></head>
+<link rel="stylesheet" href="nextlevel_theme.css?v=20261008-coach-contrast"><script src="nextlevel_theme.js?v=20261008-logo"></script><script src="nextlevel_mobile_navigation.js?v=20261008-row"></script><link rel="stylesheet" href="nextlevel_mobile_navigation.css?v=20261008-wide-tags"><script src="nextlevel_photo_crop.js?v=20261008"></script></head>
 <body>
 <button id="profile-top-logout" type="button" onclick="doLogout()" aria-label="Cerrar sesión">Salir ↗</button>
 
@@ -2305,24 +2305,9 @@ function pfSave() {
 /* ── FOTO — sube a Supabase Storage, disponible en cualquier dispositivo ── */
 let _pfFotoB64 = ''; // cache local solo para mostrar antes de subir
 
-function pfLoadFoto(input) {
-  const file = input.files?.[0];
-  if (!file) return;
-  if(!file.type.startsWith('image/')){alert('Elegí un archivo de imagen.');return;}
-  if (file.size > 5 * 1024 * 1024) {
-    alert('La imagen es demasiado grande. Usá una foto de hasta 5 MB.');
-    input.value = '';
-    return;
-  }
-  // Mostrar preview inmediata
-  const reader = new FileReader();
-  reader.onload = e => {
-    _pfFotoB64 = e.target.result;
-    pfApplyFoto(_pfFotoB64);
-  };
-  reader.readAsDataURL(file);
-  // Subir a Supabase Storage en paralelo
-  pfUploadFoto(file);
+async function pfLoadFoto(input) {
+ const file=input.files?.[0];if(!file)return;
+ try{const cropped=await NextLevelPhotoCrop.edit(file);if(!cropped)return;await pfUploadFoto(cropped);}catch(e){alert(e.message || 'No se pudo ajustar la foto.');}finally{input.value='';}
 }
 
 async function pfUploadFoto(file) {
@@ -3084,7 +3069,7 @@ function fisInit() {
 </script>
 
 <script src="nextlevel_performance.js?v=20261007-evolucion-mobile" data-player-id="11111111-0000-0000-0000-000000000014" data-season="2026"></script>
-<script src="nextlevel_profile_extras.js?v=20261007-compact-hitos"></script>
+<script src="nextlevel_profile_extras.js?v=20261008-demo-top"></script>
 <script src="nextlevel_evolution.js?v=20261007-evolucion-mobile"></script>
 <script src="nextlevel_goal_catalog.js?v=20261007-block2"></script><script src="nextlevel_plan_progress.js?v=20261007-block2"></script>
 <script src="nextlevel_coach_workspace.js?v=20261007-block2"></script>

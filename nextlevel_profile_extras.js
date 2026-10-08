@@ -136,7 +136,7 @@
         content.replaceChildren();const games=data.games.filter(g=>select.value==='Todos los torneos' || g.tournament===select.value);
         const text=t=>{const p=document.createElement('p');p.style.cssText='font-size:.72rem;line-height:1.6';p.textContent=t;content.append(p);};
         const minimum=Math.ceil(games.length*.5);
-        text(`TOP actualizado: ${data.generated_at ? new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : 'fecha de generación no disponible'} · ${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. Cálculo NextLevel desde actas CABB.`);
+        text(`TOP actualizado: ${data.generated_at ? new Date(data.generated_at).toLocaleString('es-AR',{timeZone:'America/Buenos_Aires',hourCycle:'h23'}) : 'fecha de generación no disponible'} · ${data.season} · ${games.length} partidos del equipo · mínimo ${minimum} PJ (50%) · promedios por partido jugado. ${data.isDemo ? "DEMO · Equipo ficticio y valores de ejemplo." : "Cálculo NextLevel desde actas CABB."}`);
         if(games.some(g=>!g.available)){text('Cobertura incompleta: ranking pendiente hasta disponer de todas las actas.');return;}
         const panels=document.createElement('div');panels.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px';content.append(panels);
         const isProfile=p=>p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')===(window.NextLevelPlayer?.cabbName || 'SANCHEZ, MIA GERALDINE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ');
