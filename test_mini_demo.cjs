@@ -1,0 +1,27 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),crypto=require('node:crypto');
+const storage=new Map(),window={},localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,String(v)),removeItem:k=>storage.delete(k)};
+const context={window,localStorage,crypto,document:{addEventListener(){}},location:{reload(){}},console};
+vm.createContext(context);
+for(const name of ['mini_demo_data.js','nextlevel_mini_demo.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+name,'utf8'),context);
+const data=window.NextLevelMiniDemoData,client=window.NextLevelMiniDemo.client;
+assert.equal(window.NextLevelPlayer.name,'Tomás Pérez');
+assert.equal(data.club,'Club Horizonte · DEMO');
+assert.ok(data.boxscores.length>=5);
+assert.doesNotMatch(JSON.stringify(data),/SANCHEZ|MILO|QUILMES|foto_url|contactEmail|whatsapp/i);
+const seed=JSON.parse([...storage.values()][0]);assert.ok(seed.entries.length===2);assert.equal(seed.profile.position,'Quiero probar de todo');
+const html=fs.readFileSync(__dirname+'/perfil_demo_mini.html','utf8'),script=fs.readFileSync(__dirname+'/nextlevel_u11_demo.js','utf8');
+assert.doesNotMatch(html,/nextlevel_app_config|supabase-js|nextlevel_profile_dorsal|nextlevel_sources|cabb_milo|Milo|Quilmes/i);
+assert.doesNotMatch(script,/supabase|createClient|client\.from|fetch\(/i);
+assert.ok(html.includes('mini-adventure-options'));assert.ok(script.includes('recordPractice(entry)'));
+(async()=>{
+let result=await client.from('player_data').select('*').eq('player_id',window.NextLevelPlayer.playerId);assert.equal(result.data.length,2);
+const row={player_id:window.NextLevelPlayer.playerId,module:'gradual_goals_v1:2026:test',data:{status:'active'},updated_at:'one'};
+result=await client.from('player_data').insert(row).select();assert.equal(result.data.length,1);
+result=await client.from('player_data').update({updated_at:'two'}).eq('module',row.module).eq('updated_at','one').select();assert.equal(result.data.length,1);
+result=await client.from('player_data').update({updated_at:'three'}).eq('module',row.module).eq('updated_at','one').select();assert.equal(result.data.length,0);
+window.NextLevelMiniDemo.recordPractice({id:'experience-test',areas:['Usar ambas manos'],success:'Probé',date:'2026-10-08'});
+result=await client.from('player_data').select().like('module','plan_progress_v1:%');assert.equal(result.data.length,3);
+vm.runInContext(fs.readFileSync(__dirname+'/nextlevel_mini_demo.js','utf8'),context);
+result=await window.NextLevelMiniDemo.client.from('player_data').select().eq('module',row.module);assert.equal(result.data[0].updated_at,'two');
+console.log('OK Demo: identidad ficticia, datos anonimizados, 23 actas, aventuras, guardado local, recarga y actualización concurrente.');
+})().catch(e=>{console.error(e);process.exitCode=1;});
