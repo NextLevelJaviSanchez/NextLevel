@@ -1,0 +1,39 @@
+name: Publicar contención de privacidad
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar solo la página pública de mantenimiento
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          source = Path('privacy-maintenance/index.html')
+          if not source.is_file():
+              raise RuntimeError('Falta la página revisada: no publicar el repositorio completo')
+          output = Path('privacy-pages-artifact')
+          output.mkdir()
+          shutil.copyfile(source, output / 'index.html')
+          shutil.copyfile(source, output / '404.html')
+          (output / '.nojekyll').write_text('')
+          if {p.name for p in output.iterdir()} != {'index.html', '404.html', '.nojekyll'}:
+              raise RuntimeError('El paquete contiene archivos no autorizados')
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: privacy-pages-artifact
+      - uses: actions/deploy-pages@v4
+        id: deployment
