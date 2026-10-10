@@ -1,0 +1,12 @@
+begin;
+create or replace function nextlevel_private.can_read_player_photo(object_name text) returns boolean language sql stable security definer set search_path='' as $$ select nextlevel_private.owns_photo(object_name) or (nextlevel_private.is_admin_coach() and exists(select 1 from public.players p where split_part(object_name,'/',1)=p.id::text or (split_part(object_name,'/',1)='mia14' and p.id='11111111-0000-0000-0000-000000000014'::uuid))); $$;
+revoke all on function nextlevel_private.can_read_player_photo(text) from public,anon;
+grant execute on function nextlevel_private.can_read_player_photo(text) to authenticated;
+alter policy nl_photos_boundary on storage.objects using(bucket_id<>'player-photos' or nextlevel_private.can_read_player_photo(name)) with check(bucket_id<>'player-photos' or nextlevel_private.owns_photo(name));
+drop policy if exists nl_admin_coach_photo_read on storage.objects;
+create policy nl_admin_coach_photo_read on storage.objects for select to authenticated using(bucket_id='player-photos' and nextlevel_private.is_admin_coach() and nextlevel_private.can_read_player_photo(name));
+drop policy if exists nl_photos_owner_update_boundary on storage.objects;
+create policy nl_photos_owner_update_boundary on storage.objects as restrictive for update to anon,authenticated using(bucket_id<>'player-photos' or nextlevel_private.owns_photo(name)) with check(bucket_id<>'player-photos' or nextlevel_private.owns_photo(name));
+drop policy if exists nl_photos_owner_delete_boundary on storage.objects;
+create policy nl_photos_owner_delete_boundary on storage.objects as restrictive for delete to anon,authenticated using(bucket_id<>'player-photos' or nextlevel_private.owns_photo(name));
+commit;
