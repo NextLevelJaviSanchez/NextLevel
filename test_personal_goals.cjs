@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict'),catalog=require('./nextlevel_goal_catalog.js'),engine=require('./nextlevel_gradual_goals.js');
 assert.deepEqual(catalog.recommendations({areas:['Defensa']}),['stl','practice_defense']);
-assert.deepEqual(catalog.recommendations({technicalAreas:['Defensa']},{mini:true,category:'U11',minutes:8}),['minutes','practice_defense']);
+assert.deepEqual(catalog.recommendations({technicalAreas:['Defensa']},{mini:true,category:'U11',minutes:8}),['practice_defense']);
+assert.ok(!catalog.recommendations({technicalAreas:['Defensa']},{mini:true,category:'U11',minutes:8}).includes('minutes'));
 assert.deepEqual(catalog.recommendations({areas:['Tiro libre']}),['tl','practice_free']);
 assert.ok(!catalog.recommendations({areas:['Defensa']}).includes('tl'));
 assert.ok(catalog.recommendations({areas:['Mental'],mentalAreas:['Seguir después de un error']}).includes('practice_reset'));

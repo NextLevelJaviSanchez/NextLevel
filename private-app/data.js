@@ -18,8 +18,9 @@
   return all;
  }
  async function saveModule(client,guard,playerId,module,data){
-  if(!['perfil_v1','mini_profile_v1','foto_url'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module))throw Error('Guardado no autorizado.');
+  if(!['perfil_v1','mini_profile_v1','foto_url'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module)&&!/^gradual_goals_v1:\d{4}:[^:]{1,300}:[a-z0-9_]{1,50}$/.test(module))throw Error('Guardado no autorizado.');
   await guard.verify();const {error}=await client.from('player_data').upsert({player_id:playerId,module,data,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});guard.assert();if(error)throw error;
  }
- const api={ownPlayer,rows,saveModule,readTables};if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
+ async function saveEvaluation(client,guard,playerId,entry){await guard.verify();if(entry.player_id!==playerId)throw Error('Evaluación no autorizada.');const {error}=await client.from('evaluations').insert(entry);guard.assert();if(error)throw error;}
+ const api={ownPlayer,rows,saveModule,saveEvaluation,readTables};if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
 })(typeof window==='undefined'?{}:window);
