@@ -37,6 +37,9 @@ jobs:
           node test_personal_goals.cjs
           node test_game_block_goals.cjs
           node test_gradual_goals.cjs
+          node scripts/test_final_backend.cjs
+          node scripts/test_final_account.cjs
+          python scripts/test_sync_privacy.py --source sync_registered_players.py
       - name: Comprobar las fuentes y crear el paquete permitido
         env:
           MODE: ${{ inputs.mode }}

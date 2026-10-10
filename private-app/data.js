@@ -19,7 +19,7 @@
   return all;
  }
  async function saveModule(client,guard,playerId,module,data){
-  if(!['perfil_v1','mini_profile_v1','foto_url'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module)&&!/^mini_measures_v1:[0-9a-f-]{36}$/.test(module)&&!/^gradual_goals_v1:\d{4}:[^:]{1,300}:[a-z0-9_]{1,50}$/.test(module))throw Error('Guardado no autorizado.');
+  if(!['perfil_v1','mini_profile_v1','foto_url','profile_dorsal_v1','obj_estados_v1'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module)&&!/^mini_measures_v1:[0-9a-f-]{36}$/.test(module)&&!/^gradual_goals_v1:\d{4}:[^:]{1,300}:[a-z0-9_]{1,50}$/.test(module))throw Error('Guardado no autorizado.');
   await guard.verify();const {error}=await client.from('player_data').upsert({player_id:playerId,module,data,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});guard.assert();if(error)throw error;
  }
  async function saveEvaluation(client,guard,playerId,entry){await guard.verify();if(entry.player_id!==playerId)throw Error('Evaluación no autorizada.');const {error}=await client.from('evaluations').insert(entry);guard.assert();if(error)throw error;}
@@ -34,6 +34,12 @@
 
  async function removeReply(client,guard,playerId,messageId,replyId){if(!/^[0-9a-f-]{36}$/i.test(replyId))throw Error('La respuesta no es válida.');if(await accessRole(client,guard)!=='player')throw Error('Solo la cuenta del jugador puede borrar sus respuestas.');await legacyParent(client,guard,playerId,messageId);const {error}=await client.from('message_replies').delete().eq('player_id',playerId).eq('message_id',messageId).eq('id',replyId);guard.assert();if(error)throw error;}
  async function saveSelfTest(client,guard,playerId,value){await guard.verify();if(await accessRole(client,guard)!=='player'||value.player_id!==playerId||value.source!=='self')throw Error('La prueba debe corresponder a tu propia cuenta.');const {error}=await client.from('physical_test_results').insert(value);guard.assert();if(error)throw error;}
- const api={ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,readTables};
+
+ async function selfTestParent(client,guard,playerId,id){if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))throw Error('La prueba no es válida.');if(await accessRole(client,guard)!=='player')throw Error('Solo podés modificar tus registros propios.');const {data,error}=await client.from('physical_test_results').select('id,test_type').eq('player_id',playerId).eq('id',id).eq('source','self').limit(1);guard.assert();if(error)throw error;if(data?.length!==1)throw Error('Este registro propio no está disponible.');return data[0];}
+ async function updateSelfTest(client,guard,playerId,value){if(value.player_id!==playerId||value.source!=='self')throw Error('Prueba no autorizada.');const old=await selfTestParent(client,guard,playerId,value.id);if(old.test_type!==value.test_type)throw Error('Conservá el tipo de la prueba al editar.');const {data,error}=await client.from('physical_test_results').update(value).eq('player_id',playerId).eq('id',value.id).eq('source','self').select('id');guard.assert();if(error)throw error;if(data?.length!==1)throw Error('No se confirmó la edición; recargá antes de continuar.');}
+ async function removeSelfTest(client,guard,playerId,id){await selfTestParent(client,guard,playerId,id);const {data,error}=await client.from('physical_test_results').delete().eq('player_id',playerId).eq('id',id).eq('source','self').select('id');guard.assert();if(error)throw error;if(data?.length!==1)throw Error('No se confirmó el borrado; recargá antes de continuar.');}
+
+ async function saveIntake(client,guard,playerId,value){if(value.player_id!==playerId)throw Error('Las respuestas deben corresponder a tu perfil.');if(await accessRole(client,guard)!=='player')throw Error('La evaluación personal se completa desde la cuenta del jugador.');await ownPlayer(client,guard,playerId);const {error}=await client.from('intake_responses').upsert(value,{onConflict:'player_id'});guard.assert();if(error)throw error;}
+ const api={ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,updateSelfTest,removeSelfTest,saveIntake,readTables};
 if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
 })(typeof window==='undefined'?{}:window);

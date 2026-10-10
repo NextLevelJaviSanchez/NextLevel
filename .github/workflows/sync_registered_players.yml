@@ -1,10 +1,52 @@
-name: Sincronización de jugadores pausada
+name: Sincronización privada de jugadores
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Revisar configuración o actualizar actas privadas
+        type: choice
+        default: review
+        options:
+          - review
+          - execute
+      season:
+        description: Temporada
+        default: '2026'
+        required: true
 permissions:
   contents: read
+concurrency:
+  group: nextlevel-private-sync
+  cancel-in-progress: false
 jobs:
-  privacy-hold:
+  sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - run: echo 'Sincronización pausada durante la revisión de privacidad. Los datos de Supabase se conservan.'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Comprobar destino, permisos y privacidad de la importación
+        env:
+          SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
+        run: |
+          python scripts/test_sync_privacy.py --source sync_registered_players.py
+          python - <<'PY'
+          import os,json,base64
+          key=os.environ.get('SUPA_SERVICE_ROLE_KEY','')
+          try:
+              payload=json.loads(base64.urlsafe_b64decode(key.split('.')[1]+'==='))
+          except Exception:
+              raise SystemExit('Configurar una credencial service_role válida para la sincronización.')
+          if payload.get('role')!='service_role' or payload.get('ref')!='yjcxwfkedxzkcspddghz':
+              raise SystemExit('La credencial guardada no autoriza la sincronización de este proyecto.')
+          print('Credencial del servidor y proyecto verificados. No se muestra su contenido.')
+          PY
+      - name: Revisar o importar solamente en Supabase
+        env:
+          SUPA_URL: https://yjcxwfkedxzkcspddghz.supabase.co
+          SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
+          SYNC_SEASON: ${{ inputs.season }}
+          SYNC_EXECUTE: ${{ inputs.mode == 'execute' && '1' || '0' }}
+        run: python sync_registered_players.py
