@@ -1,12 +1,20 @@
 {
-  "source_commit": "68527c0fd47156287d652500617c32b6930002f9",
-  "source_sha256": "f12fa14993083046c30b0f9fbec374cf02778efa516dcf408894a8a84d4eb006",
+  "source_commit": "969db1dff8512d883652ff49a917c1b1e49a903e",
+  "source_sha256": "a56f0b8bf76a4dd30f6b2b3a163b861081628b79ff0843250ccfa1b6c838834b",
   "account_a_login": true,
   "account_b_login": true,
   "foreign_profile_denied": true,
+  "reverse_foreign_profile_denied": true,
   "logout_back_denied": true,
   "cloud_save_reload": true,
   "photo_private": true,
   "anonymous_denied": true,
-  "reverse_foreign_profile_denied": true
+  "notes": [
+    "Usuario ingresó con Mía y Alma en la revisión publicada; ambos perfiles propios cargaron.",
+    "Ambas sesiones rechazaron el perfil contrario sin datos privados.",
+    "Guardado de campos existentes y comparación después de recargar aprobados para ambas cuentas; no se guardaron valores personales en archivos.",
+    "Mía muestra foto privada inline; Alma no tiene foto guardada. Tras salir el elemento foto no conserva src.",
+    "Con Alma, salir y volver atrás exige ingreso; con Mía volver a abrir su enlace exige ingreso.",
+    "12 tablas rechazaron al público con 401; administración anónima rechazada con 403."
+  ]
 }
