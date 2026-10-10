@@ -1,17 +1,17 @@
 (function(root){
  'use strict';
  const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
- const legacy=/^(?:nl_(?:pf_|plan_progress_|coach_draft_|obj_|fis_|intake_|ef_photos_)|nextlevel_u11_|nextlevel_private_v1:|plan_mia|mia_plan|lara_plan|.*_berazategui_plan_v1$|intake_|fotos_)/;
+ const legacy=/^(?:nl_|nextlevel_u11_|nextlevel_private_v1:|plan_mia|mia_plan|lara_plan|.*_berazategui_plan_v1$|intake_|fotos_)/;
  function legacyKeys(storage){const keys=[];for(let i=0;i<storage.length;i++){const k=storage.key(i);if(k&&legacy.test(k))keys.push(k);}return keys;}
  function eraseLegacy(storage){legacyKeys(storage).forEach(k=>storage.removeItem(k));}
  async function guard(client,surface,onEnd){
   const initial=await client.auth.getUser();
-  if(initial.error||!UUID.test(initial.data?.user?.id||''))throw Error('Iniciá sesión para abrir tu perfil.');
+  if(initial.error||!UUID.test(initial.data?.user?.id||''))throw Error('IniciÃ¡ sesiÃ³n para abrir tu perfil.');
   const id=initial.data.user.id;let active=true;
   const hide=()=>{surface.document.documentElement.classList.add('locked');};
   const end=()=>{if(!active)return;active=false;hide();onEnd();surface.location.replace('login.html');};
-  const assert=()=>{if(!active)throw Error('La sesión terminó.');};
-  const verify=async()=>{assert();try{const result=await client.auth.getUser();if(result.error||result.data?.user?.id!==id){end();throw Error('Volvé a iniciar sesión.');}assert();return id;}catch(e){end();throw e;}};
+  const assert=()=>{if(!active)throw Error('La sesiÃ³n terminÃ³.');};
+  const verify=async()=>{assert();try{const result=await client.auth.getUser();if(result.error||result.data?.user?.id!==id){end();throw Error('VolvÃ© a iniciar sesiÃ³n.');}assert();return id;}catch(e){end();throw e;}};
   const {data:listener}=client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(session?.user&&session.user.id!==id))end();});
   let checking=false;
   const restore=async()=>{if(!active||checking)return;checking=true;hide();try{await verify();surface.document.documentElement.classList.remove('locked');}catch(_){end();}finally{checking=false;}};
