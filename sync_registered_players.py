@@ -9,9 +9,9 @@ def run():
  season=os.environ.get('SYNC_SEASON') or str(datetime.datetime.now(datetime.timezone.utc).year)
  records=[]
  for offset in range(0,100000,500):
-  path='/rest/v1/player_data?select=player_id,module&module=eq.player_season_v1:'+season+'&order=player_id&limit=500&offset='+str(offset)
+  path='/rest/v1/player_data?select=player_id,module,is_demo:data-%3E%3EisDemo&module=eq.player_season_v1:'+season+'&order=player_id&limit=500&offset='+str(offset)
   with urllib.request.urlopen(urllib.request.Request(url+path,headers=headers)) as response:page=json.load(response)
-  records.extend(page)
+  records.extend(row for row in page if str(row.get('is_demo','')).lower()!='true')
   if len(page)<500:break
  else:raise SystemExit('Demasiados registros: dividir la sincronización antes de continuar.')
  if os.environ.get('SYNC_EXECUTE')!='1':
