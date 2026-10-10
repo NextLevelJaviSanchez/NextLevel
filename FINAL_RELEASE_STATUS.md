@@ -13,4 +13,7 @@ Fuente de la aplicación: a56f0b8bf76a4dd30f6b2b3a163b861081628b79ff0843250ccfa1
 La interfaz recupera los recorridos principales originales. No se afirma igualdad de cada píxel ni recuperación de datos locales no sincronizados que fueron borrados con autorización. El historial del repositorio continúa público por decisión del usuario; no se purgó ni se privatizó.
 
 
-Publicación principal completada: ejecución 38095237131, commit 707ba3830287dda6f3d2a67b4ab72e5c8f810beb. Verificación real de 64 rutas aprobada y auditoría anónima posterior aprobada. La presentación final cambia únicamente el aviso de revisión por Acceso privado; no modifica las seis fuentes de la aplicación verificadas.
+Publicación principal completada: ejecución 38095389518, commit cae632c43ae79b82d481e9a8745c0f4076c348cd. Verificación real de 64 rutas aprobada y auditoría anónima posterior aprobada. La presentación final cambia únicamente el aviso de revisión por Acceso privado; no modifica las seis fuentes de la aplicación verificadas.
+
+
+La base de futuras revisiones se fija en ese commit publicado. Se construyó una revisión de prueba y se comprobó que conserva byte a byte los archivos de la versión principal.
