@@ -39,6 +39,7 @@ jobs:
           node test_gradual_goals.cjs
           node scripts/test_final_backend.cjs
           node scripts/test_final_account.cjs
+          node scripts/test_service_credential.cjs
           python scripts/test_sync_privacy.py --source sync_registered_players.py
       - name: Comprobar las fuentes y crear el paquete permitido
         env:

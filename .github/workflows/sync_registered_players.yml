@@ -1,5 +1,7 @@
 name: Sincronización privada de jugadores
 on:
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -53,5 +55,5 @@ jobs:
           SUPA_URL: https://yjcxwfkedxzkcspddghz.supabase.co
           SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
           SYNC_SEASON: ${{ inputs.season }}
-          SYNC_EXECUTE: ${{ inputs.mode == 'execute' && '1' || '0' }}
+          SYNC_EXECUTE: ${{ (github.event_name == 'schedule' || inputs.mode == 'execute') && '1' || '0' }}
         run: NODE_PATH="$RUNNER_TEMP/nextlevel-sync/node_modules" node sync_registered_players.cjs

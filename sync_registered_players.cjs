@@ -26,7 +26,7 @@ async function run(){
  new Function('createClient','Deno','module',compiled)(createClient,{env:{get:name=>env[name]},serve:()=>{}},moduleObject);
  const errors={};let completed=0;
  for(const row of records){
-  try{await moduleObject.exports.syncPlayer(row.player_id,season);completed++;}
+  try{await moduleObject.exports.syncPlayer(row.player_id,season);completed++;console.log('Progreso de importación:',completed,'/',records.length);}
   catch(error){let category='import_failure';const message=String(error?.message||'');for(const [prefix,label] of [['CABB','official_source'],['Cobertura incompleta','coverage'],['Equipo/categoría','team_identity'],['Categoría canónica','category_identity'],['Boxscore no corresponde','fixture_mismatch'],['Jugador ausente','roster_identity'],['Sin partidos','no_games']])if(message.startsWith(prefix)){category=label;break;}errors[category]=(errors[category]||0)+1;}
  }
  console.log('Perfiles oficiales actualizados:',completed);
