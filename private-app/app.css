@@ -5,3 +5,9 @@
 .table-scroll{overflow-x:auto}#goal-cards button{margin:6px}#goal-cards article{background:#0c1422;padding:18px;border-radius:12px;margin:12px 0}form details{margin:16px 0}
 
 .choices{display:flex;flex-wrap:wrap;gap:8px 20px}.choices label{display:flex;align-items:center;gap:8px}.choices input{width:20px;height:20px;margin:0}fieldset{border:1px solid var(--line);border-radius:12px;margin:18px 0}legend{color:var(--accent)}
+
+.photo-crop{width:min(400px,calc(100vw - 24px));padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text)}.photo-crop canvas{width:100%;aspect-ratio:1;touch-action:none;cursor:grab;border-radius:12px}.photo-crop button{margin:6px}.photo-crop::backdrop{background:#000b}
+
+.print-report{display:none}@media print{body{background:white;color:black}header,footer,main>p,main>section,#coach-directory,#private> :not(.print-report){display:none!important}#private>.print-report{display:block!important}#private[hidden]>.print-report,.locked #private>.print-report{display:none!important}#private,.print-report{background:white;color:black}.print-report p,.print-report dt,.print-report caption{color:#333}.print-report img{max-width:110px}.print-report article{break-inside:avoid}.print-report svg{background:#eee}.print-report th,.print-report td{color:black}.print-report table{font-size:12px}}
+
+.season-court{display:block;width:100%;max-width:620px;margin:auto}#official-extras{overflow-x:auto}
