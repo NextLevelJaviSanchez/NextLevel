@@ -1,0 +1,41 @@
+name: Revisar acceso privado
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Etapa de publicación
+        type: choice
+        default: preview
+        options:
+          - preview
+          - maintenance
+          - live
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar las fuentes y crear el paquete permitido
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          node --check private-app/app.js
+          node --check private-app/data.js
+          node --check private-app/security.js
+          python scripts/build_private_pages.py --mode "$MODE"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: privacy-pages-artifact
+      - uses: actions/deploy-pages@v4
+        id: deployment
