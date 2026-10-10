@@ -1,0 +1,12 @@
+{
+  "source_commit": "68527c0fd47156287d652500617c32b6930002f9",
+  "source_sha256": "f12fa14993083046c30b0f9fbec374cf02778efa516dcf408894a8a84d4eb006",
+  "account_a_login": true,
+  "account_b_login": true,
+  "foreign_profile_denied": true,
+  "logout_back_denied": true,
+  "cloud_save_reload": true,
+  "photo_private": true,
+  "anonymous_denied": true,
+  "reverse_foreign_profile_denied": true
+}
