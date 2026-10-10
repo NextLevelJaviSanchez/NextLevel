@@ -27,6 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar el importador del servidor
+        run: npm install --prefix "$RUNNER_TEMP/nextlevel-sync" --no-package-lock --ignore-scripts @supabase/supabase-js@2.49.1
       - name: Comprobar destino, permisos y privacidad de la importación
         env:
           SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
@@ -49,4 +54,4 @@ jobs:
           SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
           SYNC_SEASON: ${{ inputs.season }}
           SYNC_EXECUTE: ${{ inputs.mode == 'execute' && '1' || '0' }}
-        run: python sync_registered_players.py
+        run: NODE_PATH="$RUNNER_TEMP/nextlevel-sync/node_modules" node sync_registered_players.cjs
