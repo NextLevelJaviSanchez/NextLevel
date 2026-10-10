@@ -142,3 +142,22 @@ html[data-theme="light"] [style*="color:#4ade80"],html[data-theme="light"] [styl
 }
 
 html[data-theme="light"]{--line:#cbd5e1;--accent:#c2410c}html[data-theme="light"] .tab-btn[aria-pressed=true],html[data-theme="light"] .bnav-btn[aria-pressed=true]{color:#c2410c!important}html[data-theme="light"] .home-tip,html[data-theme="light"] .metric,html[data-theme="light"] #mini-adventures article{background:#edf2f7!important;color:#182638}html[data-theme="light"] .evolution-chart{background:#edf2f7}html[data-theme="light"] .hero-name{color:#182638}html[data-theme="light"] .home-tip p{color:#526176}#nextlevel-theme-toggle{font-size:13px;padding:8px 10px;background:var(--card2);color:var(--text);border:1px solid var(--line)}
+
+/* Original profile, statistics and plan cards. */
+.stat-cell{background:var(--card2);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.04)}
+.sc-val{font-size:1.3rem;font-weight:900;line-height:1}
+.sc-lbl{font-size:0.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.sc-sub{font-size:0.6rem;margin-top:3px;font-weight:600}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-field{background:var(--card2);border-radius:10px;padding:11px 13px;border:1px solid rgba(255,255,255,0.04)}
+.pf-lbl{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.pf-val{font-size:0.8rem;font-weight:700;color:var(--text)}
+.mental-tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px}
+.mental-tip-card{background:var(--card2);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--tip-color,#38bdf8);border-radius:12px;padding:15px;min-width:0}
+.mental-tip-title{display:flex;align-items:center;gap:8px;color:var(--tip-color,#38bdf8);font-size:.84rem;line-height:1.4;margin:0 0 10px}
+.mental-tip-title span{font-size:1.3rem}
+.mental-tip-copy{font-size:.74rem;color:#cbd5e1;line-height:1.7;margin:0}
+.mental-tip-practice{margin-top:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,.035);font-size:.7rem;line-height:1.6}
+.mental-tip-practice strong{color:var(--tip-color,#38bdf8)}
+.mental-tip-practice p{margin:5px 0 0;color:#cbd5e1}
+.original-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.panel{background:transparent;border:0;padding:0}.panel>h2{padding:16px 4px 0}.card-ttl{font-size:18px!important;line-height:1.4;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;margin:0 0 16px}.card-ttl::after{content:'';flex:1;height:1px;background:rgba(249,115,22,.15)}.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.profile-field{background:var(--card2);padding:12px;border-radius:10px}.pf-lbl{font-size:13px;color:var(--muted)}.pf-val{font-size:16px;font-weight:700}.choices{gap:8px}.choices label{padding:10px 12px;border:1px solid var(--line);background:var(--card2);border-radius:10px;min-height:44px;margin:4px 0}.choices label:has(input:checked){border-color:var(--ac);background:rgba(249,115,22,.1)}.mental-tip-title{font-size:18px}.mental-tip-copy{font-size:16px;color:var(--muted)}.stat-cell .sc-val{font-size:28px;color:var(--ac2)}.stat-cell .sc-lbl{font-size:14px;color:var(--muted)}.stat-cell .sc-sub{font-size:12px;color:var(--muted)}#stats-summary .stats-grid{margin:14px 0}#season-milestones{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}#season-milestones>h3,#season-milestones>p,#season-milestones>h4{grid-column:1/-1}#season-milestones>article{background:var(--card2);border-radius:12px;padding:16px;border:1px solid var(--line)}.mini-mode .panel{background:transparent;border:0;padding:0}.mini-mode .original-card{border-radius:14px;padding:20px}html[data-theme=light] .original-card,html[data-theme=light] .profile-field,html[data-theme=light] .choices label,html[data-theme=light] #season-milestones article{background:var(--card);color:var(--text)}@media(max-width:500px){.original-card,.mini-mode .original-card{padding:16px}.profile-grid{grid-template-columns:1fr}.choices label{width:100%}}
