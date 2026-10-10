@@ -1,11 +1,11 @@
-# Acceso del entrenador pendiente de habilitación
+# Administrador y coach
 
-El acceso del entrenador y el panel administrativo permanecen pausados. La aplicación publicada exige una cuenta vinculada al jugador y permite consultar únicamente ese perfil. No hay excepciones basadas en correo ni contraseñas compartidas entre participantes.
+El propietario autorizó su cuenta verificada como administrador y coach de todos los jugadores. El permiso está vinculado al UUID de Supabase en un registro privado con RLS y sin acceso directo desde los clientes. No depende del correo ni de user_metadata. No se guardan contraseñas o claves privilegiadas en la aplicación.
 
-## Modelo propuesto
+La versión ampliada en /revision/ reconoce el rol mediante una función protegida y muestra el selector de jugadores. Puede consultar cualquier perfil, editar sus datos personales y registrar evaluaciones/devoluciones. Los jugadores mantienen el acceso solo a su propio perfil. Las estadísticas oficiales y los vínculos con cuentas continúan protegidos contra escrituras del navegador.
 
-Cada entrenador debe utilizar su propia cuenta. El propietario del perfil debe autorizar a ese entrenador para ese jugador, con permisos explícitos y revocables. La lista de perfiles compartidos debe salir de la base de datos, con reglas aplicadas también a consultas directas. Un vínculo no debe abrir el resto del plantel ni los contactos privados por defecto.
+Los mensajes privados de jugador y coach registran el autor desde la identidad autenticada y las reglas rechazan autores ajenos o un jugador que declare ser coach. No hay borradores personales persistidos ni envío de notificaciones externas. Las devoluciones generales conservan los campos originales y el historial de mensajes conserva sus filas.
 
-Las devoluciones deben registrar el autor desde la sesión verificada, conservar fecha e historial y separar práctica declarada por el jugador de evaluación del entrenador. Las estadísticas oficiales continúan siendo escritas solo por el servidor.
+El permiso puede desactivarse desde el registro privado por administración del servidor. Cada consulta/escritura vuelve a verificarlo; la interfaz del coach comprueba el rol al volver a la página y periódicamente, y se limpia si cambia. No se crean excepciones de acceso para otros correos. Los archivos de Storage continúan bajo su política anterior; las fotos de perfil que maneja esta versión se leen desde los datos privados del jugador.
 
-Antes de habilitar acceso se necesita definir qué cuentas reciben permiso sobre qué jugadores y probar aceptar/revocar un vínculo. No se han creado permisos ni invitaciones durante la recuperación. La consulta del historial de mensajes ya guardados está disponible para el propietario.
+Validación: 79 comprobaciones de interfaz, 22 de roles en PostgreSQL local y pruebas en la base real de acceso total del coach, aislamiento del jugador, autoría, protección de estadísticas/vínculos, rechazo anónimo y revocación. Las escrituras de prueba fueron revertidas. La raíz conserva la versión básica; /revision/ contiene el acceso ampliado. La sincronización y el alta/cambio de credenciales desde la aplicación siguen pausados.
