@@ -1,5 +1,5 @@
 """Actualiza registros player_season_v1 sin agregar nombres al código."""
-import json,os,urllib.request,urllib.parse,datetime
+import json,os,urllib.request,urllib.parse,urllib.error,datetime
 
 def run():
  url=os.environ.get('SUPA_URL','https://yjcxwfkedxzkcspddghz.supabase.co');key=os.environ.get('SUPA_SERVICE_ROLE_KEY')
@@ -17,15 +17,26 @@ def run():
  if os.environ.get('SYNC_EXECUTE')!='1':
   print('Revisión sin escrituras. Perfiles registrados:',len(records))
   return
- failures=0
+ failures=0; diagnostics={}
  for row in records:
   try:
    request=urllib.request.Request(url+'/functions/v1/nextlevel-onboard',data=json.dumps({'action':'sync','playerId':row['player_id'],'season':season}).encode(),headers=headers)
    with urllib.request.urlopen(request,timeout=180) as response:result=json.load(response)
    if result.get('error'):raise RuntimeError(result['error'])
    pass  # No publicar identificadores ni resultados individuales.
+  except urllib.error.HTTPError as error:
+   failures+=1
+   label='http_'+str(error.code)
+   if error.code==400:
+    try:
+     message=str(json.load(error).get('error',''))
+     for prefix,category in [('Este perfil no tiene equipo','configuration'),('CABB','official_source'),('Equipo/categoría','team_identity'),('Categoría canónica','category_identity'),('Cobertura incompleta','coverage'),('Boxscore no corresponde','fixture_mismatch'),('Jugador ausente','roster_identity'),('Sin partidos','no_games')]:
+      if message.startswith(prefix):label=category;break
+    except Exception:pass
+   diagnostics[label]=diagnostics.get(label,0)+1
   except Exception as error:
    failures+=1  # El resumen no incluye datos de jugadores ni cuerpos de error.
+ if diagnostics:print('Diagnóstico agregado:',json.dumps(diagnostics,sort_keys=True))
  if failures:raise SystemExit(f'{failures} perfiles requieren revisar la importación.')
  print('Perfiles actualizados:',len(records))
 if __name__=='__main__':run()
