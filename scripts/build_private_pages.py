@@ -37,6 +37,10 @@ if args.mode!='maintenance':
  base.mkdir(exist_ok=True)
  for name in files:shutil.copyfile(source/name,base/name)
  for alias in ['login.html','perfil.html']:shutil.copyfile(source/'index.html',base/alias)
+ if args.mode=='live':
+  for html in ['index.html','login.html','perfil.html']:
+   page=base/html
+   page.write_text(page.read_text(encoding='utf-8').replace('Versión en revisión · Acceso con tu cuenta','Acceso privado · Tu cuenta'),encoding='utf-8')
  prefix='revision/' if args.mode=='preview' else ''
  expected.update(prefix+n for n in files+['login.html','perfil.html'])
 actual={p.relative_to(args.output).as_posix() for p in args.output.rglob('*') if p.is_file()}
