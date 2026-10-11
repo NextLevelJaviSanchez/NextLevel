@@ -1,0 +1,12 @@
+const fs=require('node:fs'),{stripTypeScriptTypes}=require('node:module'),assert=require('node:assert/strict');
+const source=fs.readFileSync(__dirname+'/../supabase/functions/nextlevel-onboard/index.ts','utf8').replace('import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";','');const m={exports:{}};
+new Function('createClient','Deno','module',stripTypeScriptTypes(source)+'\nmodule.exports={unavailableOfficialAct,assertBoxscoreFixture};')(()=>({}),{env:{get:()=>''},serve:()=>{}},m);
+const missing={resultado:'correcto',error:'sin datos',partido:{estado_partido:'',local:'',visitante:''},estadisticas:{estadisticasequipolocal:[],estadisticasequipovisitante:[]}};
+assert.equal(m.exports.unavailableOfficialAct(missing),true);
+for(const altered of [{...missing,resultado:'error'},{...missing,error:'timeout'},{...missing,partido:{...missing.partido,local:'TEAM A'}},{...missing,partido:{...missing.partido,estado_partido:'EN_JUEGO'}},{...missing,estadisticas:{...missing.estadisticas,estadisticasequipolocal:[{puntos:0}]}},{...missing,estadisticas:{estadisticasequipolocal:[]}}])assert.equal(!!m.exports.unavailableOfficialAct(altered),false);
+const g={NombreEquipoLocal:'TEAM A',NombreEquipoVisitante:'TEAM B',IdPartidoNotificacion:'123',Fecha:'01/01/2026'};
+assert.throws(()=>m.exports.assertBoxscoreFixture({partido:{estado_partido:'FINALIZADO',local:'OTHER',visitante:'TEAM B'}},g));
+assert.doesNotThrow(()=>m.exports.assertBoxscoreFixture({partido:{estado_partido:'FINALIZADO',local:'TEAM A',visitante:'TEAM B'}},g));
+assert(source.includes('expected!==rows.length'));
+assert(source.indexOf('for(const write of writes)')>source.indexOf('expected!==rows.length'));
+console.log('Unavailable-act handling, wrong-team rejection and strict coverage guards passed.');

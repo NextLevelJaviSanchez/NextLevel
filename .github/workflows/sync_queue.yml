@@ -23,4 +23,6 @@ jobs:
         env:
           SUPA_URL: https://yjcxwfkedxzkcspddghz.supabase.co
           SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
-        run: NODE_PATH="$RUNNER_TEMP/nextlevel-sync/node_modules" node sync_queue_worker.cjs
+        run: |
+          node scripts/test_official_act.cjs
+          NODE_PATH="$RUNNER_TEMP/nextlevel-sync/node_modules" node sync_queue_worker.cjs
