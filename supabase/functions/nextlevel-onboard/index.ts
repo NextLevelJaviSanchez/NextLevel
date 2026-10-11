@@ -7,6 +7,7 @@ const answer=(data:unknown,status=200)=>new Response(JSON.stringify(data),{statu
 const COACH_ID='275323dc-c40c-4e3d-b6db-00147bf30b4d';
 const COACH_ACTIONS=new Set(['capabilities','teams','roster','create','player-account','set-player-email','set-player-password','sync']);
 async function authorizeCoach(database:any,token:string){if(!token)return false;const {data,error}=await database.auth.getUser(token);if(error||data?.user?.id!==COACH_ID)return false;const scoped=createClient(url,Deno.env.get('SUPABASE_ANON_KEY')!,{global:{headers:{Authorization:'Bearer '+token}},auth:{persistSession:false,autoRefreshToken:false}});const {data:role,error:roleError}=await scoped.rpc('nextlevel_access_role');return !roleError&&role==='admin_coach';}
+async function authorizeService(token:string){if(token===serviceKey)return true;try{const part=token.split('.')[1];const claims=JSON.parse(atob(part.replace(/-/g,'+').replace(/_/g,'/')));if(claims.role!=='service_role'||claims.ref!=='yjcxwfkedxzkcspddghz')return false;const scoped=createClient(url,Deno.env.get('SUPABASE_ANON_KEY')!,{global:{headers:{Authorization:'Bearer '+token}},auth:{persistSession:false,autoRefreshToken:false}});const {error}=await scoped.from('players').select('id').limit(1);return !error;}catch(_){return false;}}
 const norm=(s:unknown)=>String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim().replace(/\s+/g,' ');
 
 function canonicalCategory(name:unknown){
@@ -82,7 +83,7 @@ async function changePlayerEmail(database:any,playerId:string,emailValue:unknown
 Deno.serve(async req=>{
  if(req.headers.get('Origin')&&req.headers.get('Origin')!=='https://nextleveljavisanchez.github.io')return answer({error:'Origen no autorizado.'},403);if(req.method==='OPTIONS')return new Response('ok',{headers:cors});if(req.method!=='POST')return answer({error:'Usá una solicitud POST.'},405);
  try{
- const token=req.headers.get('Authorization')?.replace(/^Bearer /,'') || '';const service=token===serviceKey;
+ const token=req.headers.get('Authorization')?.replace(/^Bearer /,'') || '';const service=await authorizeService(token);
  if(!service&&!await authorizeCoach(db,token))return answer({error:'Esta operación requiere tu cuenta de administrador y coach.'},403);
  const body=await req.json();if(!COACH_ACTIONS.has(body.action))return answer({error:'Acción no disponible.'},400);if(service&&body.action!=='sync')return answer({error:'La credencial del servidor solo permite sincronizar.'},403);
  if(body.action==='capabilities')return answer({accounts:true,sync:true,coachId:COACH_ID});

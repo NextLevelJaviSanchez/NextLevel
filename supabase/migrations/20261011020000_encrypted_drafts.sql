@@ -1,4 +1,4 @@
--- Prepared restoration migration: private, account-bound recovery of pending edits.
+-- Migration for private, account-bound recovery of pending edits.
 begin;
 create table if not exists nextlevel_private.draft_keys(
  account_id uuid not null references auth.users(id),player_id uuid not null references public.players(id),

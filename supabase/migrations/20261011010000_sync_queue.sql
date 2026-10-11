@@ -1,4 +1,4 @@
--- Prepared restoration migration. Not executed in the production project.
+-- Migration for the private coach synchronization queue.
 begin;
 create table if not exists public.nextlevel_sync_jobs (
  id uuid primary key default gen_random_uuid(),

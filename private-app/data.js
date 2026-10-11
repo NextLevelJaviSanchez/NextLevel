@@ -56,7 +56,14 @@
   }
   throw Error('Otro cambio llegó mientras guardabas. El pendiente se conserva para reintentar.');
  }
- const api={patchProfile,ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,updateSelfTest,removeSelfTest,saveIntake,readTables};
+ async function requestSync(client,guard,playerIds,season){
+  if(!Array.isArray(playerIds)||!playerIds.length||playerIds.length>100||playerIds.some(id=>!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))||!/^20\d{2}$/.test(String(season)))throw Error('Selección o temporada inválida.');
+  await guard.verify();if(await accessRole(client,guard)!=='admin_coach')throw Error('Usá tu cuenta de coach.');
+  const ids=[...new Set(playerIds)],{data,error}=await client.rpc('nextlevel_request_sync',{player_ids:ids,season_value:String(season)});guard.assert();
+  if(error||!Array.isArray(data)||data.length!==ids.length||data.some(job=>!ids.includes(job.player_id)||job.season!==String(season)||!['queued','running'].includes(job.status)))throw Error('No se pudo confirmar la solicitud. Consultá los resultados privados antes de repetirla.');
+  return data;
+ }
+ const api={requestSync,patchProfile,ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,updateSelfTest,removeSelfTest,saveIntake,readTables};
 if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
 })(typeof window==='undefined'?{}:window);
 
