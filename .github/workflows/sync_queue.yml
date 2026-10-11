@@ -1,0 +1,26 @@
+name: Actualizaciones solicitadas por el coach
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nextlevel-private-sync
+  cancel-in-progress: false
+jobs:
+  requested-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar importador privado
+        run: npm install --prefix "$RUNNER_TEMP/nextlevel-sync" --no-package-lock --ignore-scripts @supabase/supabase-js@2.49.1
+      - name: Procesar solicitudes privadas
+        env:
+          SUPA_URL: https://yjcxwfkedxzkcspddghz.supabase.co
+          SUPA_SERVICE_ROLE_KEY: ${{ secrets.SUPA_KEY }}
+        run: NODE_PATH="$RUNNER_TEMP/nextlevel-sync/node_modules" node sync_queue_worker.cjs

@@ -40,6 +40,46 @@
  async function removeSelfTest(client,guard,playerId,id){await selfTestParent(client,guard,playerId,id);const {data,error}=await client.from('physical_test_results').delete().eq('player_id',playerId).eq('id',id).eq('source','self').select('id');guard.assert();if(error)throw error;if(data?.length!==1)throw Error('No se confirmó el borrado; recargá antes de continuar.');}
 
  async function saveIntake(client,guard,playerId,value){if(value.player_id!==playerId)throw Error('Las respuestas deben corresponder a tu perfil.');if(await accessRole(client,guard)!=='player')throw Error('La evaluación personal se completa desde la cuenta del jugador.');await ownPlayer(client,guard,playerId);const {error}=await client.from('intake_responses').upsert(value,{onConflict:'player_id'});guard.assert();if(error)throw error;}
- const api={ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,updateSelfTest,removeSelfTest,saveIntake,readTables};
+ async function patchProfile(client,guard,playerId,module,patch){
+  if(!['perfil_v1','mini_profile_v1'].includes(module)||!guard||!patch||typeof patch!=='object'||Array.isArray(patch))throw Error('Guardado de perfil no autorizado.');
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(playerId))throw Error('El perfil no es válido.');
+  const role=await accessRole(client,guard);await ownPlayer(client,guard,playerId,role==='admin_coach');guard.assert();
+  for(let attempt=0;attempt<3;attempt++){
+   await guard.verify();const {data:rows,error:readError}=await client.from('player_data').select('data,updated_at').eq('player_id',playerId).eq('module',module).limit(1);guard.assert();if(readError)throw readError;
+   const old=rows?.[0];if(old?.data!=null&&(typeof old.data!=='object'||Array.isArray(old.data)))throw Error('El perfil guardado necesita revisión; no se reemplazó.');
+   const value={...(old?.data||{}),...patch};if(patch.seasonGoals)value.seasonGoals={...(old?.data?.seasonGoals||{}),...patch.seasonGoals};
+   const previousStamp=Date.parse(old?.updated_at)||0;
+   const entry={player_id:playerId,module,data:value,updated_at:new Date(Math.max(Date.now(),previousStamp+1)).toISOString()};let result;
+   if(old){let query=client.from('player_data').update({data:value,updated_at:entry.updated_at}).eq('player_id',playerId).eq('module',module);query=old.updated_at==null?query.is('updated_at',null):query.eq('updated_at',old.updated_at);result=await query.select('data,updated_at');}
+   else result=await client.from('player_data').insert(entry).select('data,updated_at');
+   guard.assert();if(result.error){if(result.error.code==='23505')continue;throw result.error;}if(result.data?.length===1)return result.data[0].data;
+  }
+  throw Error('Otro cambio llegó mientras guardabas. El pendiente se conserva para reintentar.');
+ }
+ const api={patchProfile,ownPlayer,rows,saveModule,saveEvaluation,accessRole,players,saveCoachModule,sendConversation,replyLegacy,reaction,removeReply,saveSelfTest,updateSelfTest,removeSelfTest,saveIntake,readTables};
 if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
 })(typeof window==='undefined'?{}:window);
+
+(function(root){
+ 'use strict';
+ const prefix='nextlevel_encrypted_draft_v1:';
+ const base64=bytes=>{let text='';for(const value of bytes)text+=String.fromCharCode(value);return root.btoa(text);};
+ const bytes=text=>Uint8Array.from(root.atob(text),char=>char.charCodeAt(0));
+ async function open(client,guard,playerId,{crypto=root.crypto,storage=root.localStorage}={}){
+  if(!root.NextLevelSecurity.UUID.test(playerId))throw Error('Perfil inválido para recuperar pendientes.');
+  await guard.verify();const candidate=base64(crypto.getRandomValues(new Uint8Array(32)));
+  const result=await client.rpc('nextlevel_draft_key',{profile_id:playerId,candidate_key:candidate});guard.assert();
+  if(result.error||typeof result.data!=='string'||bytes(result.data).length!==32)throw Error('Respaldo cifrado todavía no disponible.');
+  const key=await crypto.subtle.importKey('raw',bytes(result.data),'AES-GCM',false,['encrypt','decrypt']);guard.assert();
+  const scope=guard.id+':'+playerId;let active=true;const pending=new Map();
+  const assert=()=>{guard.assert();if(!active)throw Error('El respaldo de esta sesión está cerrado.');};
+  const valid=name=>/^(perfil_v1|mini_profile_v1):20\d{2}$/.test(name)||name==='foto_url';
+  const id=name=>{if(!valid(name))throw Error('Pendiente no admitido.');return prefix+scope+':'+name;};
+  const aad=name=>new TextEncoder().encode(scope+':'+name);
+  async function put(name,value){assert();const recordId=id(name),iv=crypto.getRandomValues(new Uint8Array(12)),text=JSON.stringify({savedAt:new Date().toISOString(),value});if(text.length>1200000)throw Error('Pendiente demasiado grande.');const previous=pending.get(name);const operation=(async()=>{if(previous)await previous.catch(()=>{});assert();const encrypted=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(name)},key,new TextEncoder().encode(text));assert();storage.setItem(recordId,JSON.stringify({v:1,iv:base64(iv),ciphertext:base64(new Uint8Array(encrypted))}));})();pending.set(name,operation);try{await operation;}finally{if(pending.get(name)===operation)pending.delete(name);}}
+  async function read(name){assert();const recordId=id(name);await pending.get(name);assert();const raw=storage.getItem(recordId);if(!raw)return null;const record=JSON.parse(raw);if(record.v!==1||typeof record.ciphertext!=='string'||record.ciphertext.length>1700000||typeof record.iv!=='string')throw Error('El pendiente cifrado no tiene un formato válido.');const clear=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(record.iv),additionalData:aad(name)},key,bytes(record.ciphertext));assert();const value=JSON.parse(new TextDecoder().decode(clear));return value;}
+  async function remove(name){assert();await pending.get(name);assert();storage.removeItem(id(name));}
+  return {put,read,remove,close(){active=false;}};
+ }
+ root.NextLevelDraftCache={open};
+})(typeof window==='undefined'?globalThis:window);

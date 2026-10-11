@@ -1,0 +1,6 @@
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),assert=require('node:assert/strict');
+const source=fs.readFileSync(path.join(__dirname,'test_private_app.cjs'),'utf8').split('(async()=>{')[0];const context={require,__dirname,console,setTimeout,clearTimeout,Buffer,TextEncoder,TextDecoder};vm.createContext(context);vm.runInContext(source+'\nthis.fixture=fixture;',context);
+(async()=>{const f=await context.fixture(),guard={id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',verify:async()=>{},assert(){}};
+ await Promise.all([f.w.NextLevelData.patchProfile(f.client,guard,'11111111-1111-4111-8111-111111111111','perfil_v1',{dream:'Sueño concurrente'}),f.w.NextLevelData.patchProfile(f.client,guard,'11111111-1111-4111-8111-111111111111','perfil_v1',{nota:'Nota concurrente'})]);
+ const rows=await f.client.from('player_data').select('*').eq('player_id','11111111-1111-4111-8111-111111111111').eq('module','perfil_v1');assert.equal(rows.data[0].data.dream,'Sueño concurrente');assert.equal(rows.data[0].data.nota,'Nota concurrente');assert.equal(rows.data[0].data.untouched,'Conservar');assert.equal(rows.data[0].data.seasonGoals[2025],'Antes');f.dom.window.close();console.log('Ediciones simultáneas: reintento por conflicto y conservación de campos y años aprobados.');
+})().catch(error=>{console.error(error);process.exit(1);});
