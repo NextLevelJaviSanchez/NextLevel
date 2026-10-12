@@ -1,6 +1,6 @@
 {
-  "source_commit": "a696cce8ad6314543a96aaefe69905ba406ca136",
-  "source_sha256": "dc1489df3d2879f55f111ae84f606ec322c65356ccee7d08eb53cea14e09dc11",
+  "source_commit": "26b9d0ab4f0755efbae8760b9920b9d4af5a1156",
+  "source_sha256": "20c892c2255d03ac5aa91da96994d6fd499c80d05a559ba967b7d399cceeec36",
   "account_a_login": true,
   "account_b_login": true,
   "foreign_profile_denied": true,
@@ -10,11 +10,13 @@
   "photo_private": true,
   "anonymous_denied": true,
   "notes": [
-    "Both human logins confirmed for this reviewed source.",
-    "Both accounts saved a temporary change, reloaded it, restored the original value and reloaded again.",
-    "Both accounts were denied the other profile; logout and browser back required login.",
-    "Existing private photo loaded for account A. New photo selection/crop/save/reload is not manually tested and does not block release.",
+    "Both human-authenticated accounts loaded their own profiles in this reviewed source.",
+    "Both saved and reloaded a temporary edit, restored the original value and reloaded again.",
+    "Both foreign profile accesses were denied; logout and browser back required login.",
+    "Existing private photos loaded for both accounts.",
     "Twelve tables denied anonymous requests with 401; anonymous administration returned 403.",
-    "No profile values, photos, credentials or user names are included."
+    "Partial coverage display and import tests passed; missing official acts never become zero-valued games.",
+    "The worker permits partial imports only when the exact warning-capable interface is published.",
+    "No private values, names, photos or credentials are included."
   ]
 }
