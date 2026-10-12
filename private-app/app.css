@@ -261,3 +261,10 @@ html[data-theme=light] .chart-label{fill:#42546b}html[data-theme=light] .chart-v
 [hidden]{display:none!important}
 
 body.profile-open:not(.mini-mode) .hero-num{height:68px}#profile-competition{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-field{min-width:0;overflow-wrap:anywhere}
+
+/* Read-only profile measurements and individual physical-test editor. */
+.antro-strip{display:flex;gap:10px;flex-wrap:wrap}.antro-pill{flex:1;min-width:90px;padding:14px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card2);display:flex;flex-direction:column;align-items:center;gap:8px}.antro-v{font-size:23px;color:var(--ac2)}.antro-l{font-size:14px;color:var(--muted)}.antro-src-badge{color:#7dd3fc}.tc-detail>#self-test-entry{margin:14px;padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--card2)}.tc-detail>#self-test-entry>summary{display:none}.tc-detail>#self-test-entry label{display:block}.tc-detail>#self-test-entry textarea{max-width:100%}
+
+html[data-theme=light] .antro-src-badge{color:#075985}
+
+#self-test-history .test-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}

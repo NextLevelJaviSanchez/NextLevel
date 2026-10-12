@@ -34,6 +34,7 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/nextlevel-tests" --no-package-lock --ignore-scripts jsdom@30.1.2 @electric-sql/pglite@0.5.8
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_private_app.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_restoration.cjs
+          NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_physical_restore.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_concurrent_profile.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_encrypted_drafts.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_sync_queue.cjs
@@ -53,7 +54,7 @@ jobs:
           node --check private-app/data.js
           node --check private-app/security.js
           if [ "$MODE" = "review" ]; then
-            git fetch --depth=1 origin 44aa1a6e7a947fee017dd78e0e23eada707a1f9b
+            git fetch --depth=1 origin e2b05075be0bf5b5abe688e15f8be2f3e14e2c19
             python scripts/build_feature_review.py
           else
             python scripts/build_private_pages.py --mode "$MODE"
