@@ -1,0 +1,17 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),{stripTypeScriptTypes}=require('node:module');
+const file=__dirname+'/../supabase/functions/nextlevel-onboard/index.ts';
+const source=fs.readFileSync(file,'utf8').replace('import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";','');
+const m={exports:{}},writes=[];let previous=null,missing=true,wrong=false;
+const config={template:'u13',category:'U13',club:'TEAM A',cabbName:'PLAYER, TEST',tournaments:[{club:'TEAM A',label:'LEAGUE'}]};
+const db={from(table){return {select(){const q={eq(){return q},async maybeSingle(){return {data:table==='stats_seasons'?(previous===null?null:{pj:previous}):{data:config},error:null}}};return q},async upsert(data){writes.push({table,data});return {error:null}}}}};
+new Function('createClient','Deno','module',stripTypeScriptTypes(source)+'\nmodule.exports={Cabb,syncPlayer,officialCoverage};')(()=>db,{env:{get:()=>''},serve:()=>{}},m);
+const {Cabb,officialCoverage}=m.exports;
+for(const args of [[0,1,1],[27,29,1],[29,28,1],[27,null,1],[1,1.5,1]])assert.throws(()=>officialCoverage(...args));
+assert.deepEqual(officialCoverage(27,28,1),{status:'partial',available:27,expected:28,missing:1});assert.equal(officialCoverage(28,28,0).status,'complete');
+Cabb.prototype.init=async()=>{};Cabb.prototype.teams=async()=>[];Cabb.prototype.roster=async()=>[{Nombre:'PLAYER, TEST',PartidosJugados:2}];
+Cabb.prototype.games=async()=>[1,2].map(id=>({IdPartido:id,IdPartidoNotificacion:String(id),Fecha:'0'+id+'/01/2026',NombreEquipoLocal:'TEAM A',NombreEquipoVisitante:'TEAM B',Resultados:{ResultadoLocal:'40',ResultadoVisitante:'30'}}));
+Cabb.prototype.post=async function(path,args){if(path.includes('partido.ashx'))throw Error('no PBP');if(args.id_partido===2&&missing)return {resultado:'correcto',error:'sin datos',partido:{estado_partido:'',local:'',visitante:''},estadisticas:{estadisticasequipolocal:[],estadisticasequipovisitante:[]}};return {resultado:'correcto',partido:{estado_partido:'FINALIZADO',local:wrong?'OTHER':'TEAM A',visitante:'TEAM B'},estadisticas:{estadisticasequipolocal:[{nombre:'PLAYER, TEST',puntos:10,milisegundos_jugados:600000,rebotes:2,asistencias:1}],estadisticasequipovisitante:[]}}};
+(async()=>{const partial=await m.exports.syncPlayer('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','2026');assert.equal(partial.coverage,'partial');let summary=writes.find(w=>w.table==='stats_seasons').data;assert.equal(summary.pj,1);assert.equal(summary.ppg,10);assert.equal(writes.find(w=>w.data.module==='official_coverage_v1:2026').data.data.tournaments[0].expected,2);
+writes.length=0;previous=2;await assert.rejects(()=>m.exports.syncPlayer('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','2026'),/se conserva/);assert.equal(writes.length,0);
+previous=null;wrong=true;await assert.rejects(()=>m.exports.syncPlayer('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','2026'),/Boxscore/);assert.equal(writes.length,0);
+wrong=false;missing=false;const full=await m.exports.syncPlayer('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','2026');assert.equal(full.coverage,'complete');assert.equal(writes.find(w=>w.data.module==='official_coverage_v1:2026').data.data.status,'complete');console.log('Partial import, no fabricated zeros, prior summary preservation, identity rejection and complete recovery passed.');})().catch(e=>{console.error(e);process.exitCode=1});

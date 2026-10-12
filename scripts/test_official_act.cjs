@@ -7,6 +7,6 @@ for(const altered of [{...missing,resultado:'error'},{...missing,error:'timeout'
 const g={NombreEquipoLocal:'TEAM A',NombreEquipoVisitante:'TEAM B',IdPartidoNotificacion:'123',Fecha:'01/01/2026'};
 assert.throws(()=>m.exports.assertBoxscoreFixture({partido:{estado_partido:'FINALIZADO',local:'OTHER',visitante:'TEAM B'}},g));
 assert.doesNotThrow(()=>m.exports.assertBoxscoreFixture({partido:{estado_partido:'FINALIZADO',local:'TEAM A',visitante:'TEAM B'}},g));
-assert(source.includes('expected!==rows.length'));
-assert(source.indexOf('for(const write of writes)')>source.indexOf('expected!==rows.length'));
+assert(source.includes('const covered=officialCoverage(rows.length,expected,unavailableActs)'));
+assert(source.indexOf('for(const write of writes)')>source.indexOf('const covered=officialCoverage('));
 console.log('Unavailable-act handling, wrong-team rejection and strict coverage guards passed.');
