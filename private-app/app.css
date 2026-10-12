@@ -268,3 +268,5 @@ body.profile-open:not(.mini-mode) .hero-num{height:68px}#profile-competition{gri
 html[data-theme=light] .antro-src-badge{color:#075985}
 
 #self-test-history .test-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}
+
+.practice-history-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}.practice-history-card h4{margin:0 0 8px}.mental-tip-practice{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
