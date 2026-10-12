@@ -23,7 +23,10 @@ async function run(){
  const importLine='import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";';if(!source.includes(importLine))throw Error('Revisar versión del importador.');source=source.replace(importLine,'');
  const moduleObject={exports:{}},env={SUPABASE_URL:url,SUPABASE_SERVICE_ROLE_KEY:key};
  new Function('createClient','Deno','module',stripTypeScriptTypes(source)+'\nmodule.exports={syncPlayer};')(createClient,{env:{get:name=>env[name]},serve:()=>{}},moduleObject);
- await processQueue(db,moduleObject.exports.syncPlayer);
+ // Partial data is allowed only after the exact warning-capable UI is live.
+ const expected=fs.readFileSync(path.join(__dirname,'private-app/app.js'),'utf8').replace(/\r\n/g,'\n');
+ let allowPartial=false;try{const response=await fetch('https://nextleveljavisanchez.github.io/NextLevel/app.js?coverage='+Date.now(),{signal:AbortSignal.timeout(15000),headers:{'Cache-Control':'no-cache'}});allowPartial=response.ok&&(await response.text()).replace(/\r\n/g,'\n')===expected;}catch(_){}
+ await processQueue(db,(playerId,season)=>moduleObject.exports.syncPlayer(playerId,season,{allowPartial}));
 }
 if(require.main===module)run().catch(()=>{console.error('No se completó la cola; revisar el estado privado en la aplicación.');process.exitCode=1;});
 module.exports={processQueue,errorCategory};
