@@ -1,10 +1,10 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 let setup=fs.readFileSync(__dirname+'/test_private_app.cjs','utf8').split('(async()=>{')[0];
 setup=setup.replace("dream:'Sueño A',obj:'Antiguo'","dream:'Sueño A',mentalAreas:['Los errores me bajan','Nervios en momentos clave','Pienso demasiado antes de tirar','<img src=x onerror=alert(1)>'],technicalAreas:['Rebotes'],obj:'Antiguo'");
-setup=setup.replace('const adminCalls=[];',"dataset.player_data.push({player_id:pa,module:'plan_mejora',data:{hist:{tl:[{fecha:'2025-01-01',inn:3,att:5}]}}}); const adminCalls=[];");
+setup=setup.replace('const adminCalls=[];',"dataset.player_data.push({player_id:pa,module:'gradual_goals_v1:2026:AFMB:reb',data:{version:1,metric:'reb',mode:'game_block_v2',status:'active',target:9,stage:1,torneo:'AFMB',baseline:{ready:true,value:4,unit:' por partido',games:5}}});dataset.player_data.push({player_id:pa,module:'plan_mejora',data:{hist:{tl:[{fecha:'2025-01-01',inn:3,att:5}]}}}); const adminCalls=[];");
 const ctx={require,__dirname,console,setTimeout,clearTimeout,Buffer,TextEncoder,TextDecoder};vm.createContext(ctx);vm.runInContext(setup+'\nthis.fixture=fixture;',ctx);
 (async()=>{const f=await ctx.fixture(),d=f.w.document;
-assert.match(d.getElementById('progress').textContent,/Un ciclo de dos semanas/);
+assert.match(d.getElementById('progress').textContent,/Un ciclo de dos semanas/);assert.match(d.getElementById('goal-cards').textContent,/Sumar al menos 9 rebotes en total entre los próximos 2 partidos/);assert.doesNotMatch(d.getElementById('goal-cards').textContent,/por 20 min/);
 assert.match(d.getElementById('plan-mental-content').textContent,/Un error, una nueva oportunidad/);
 assert.match(d.getElementById('plan-mental-content').textContent,/Decidir con confianza/);
 assert.match(d.getElementById('plan-mental-content').textContent,/Para probar/);
