@@ -36,6 +36,7 @@ jobs:
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_restoration.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_physical_restore.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_plan_restore.cjs
+          NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_profile_home_restore.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_concurrent_profile.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_encrypted_drafts.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_sync_queue.cjs
@@ -55,7 +56,7 @@ jobs:
           node --check private-app/data.js
           node --check private-app/security.js
           if [ "$MODE" = "review" ]; then
-            git fetch --depth=1 origin 0e61c785cf2bee0f5ec24d5930744ccfa80b7c3e
+            git fetch --depth=1 origin 31b0e046adb925ede70227f110af97c4e3ffe069
             python scripts/build_feature_review.py
           else
             python scripts/build_private_pages.py --mode "$MODE"
