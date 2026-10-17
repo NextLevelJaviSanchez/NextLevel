@@ -61,6 +61,9 @@ jobs:
           else
             python scripts/build_private_pages.py --mode "$MODE"
           fi
+      - name: Añadir landing y capturas públicas revisadas
+        if: inputs.mode != 'maintenance'
+        run: python scripts/add_public_landing.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
