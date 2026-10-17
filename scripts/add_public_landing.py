@@ -8,7 +8,7 @@ parser.add_argument('--output', type=Path, default=Path('privacy-pages-artifact'
 args = parser.parse_args()
 root = args.source.resolve()
 out = args.output.resolve()
-shots = [f'demo-capturas/{name}-20261016.jpg' for name in [
+shots = [f'demo-capturas/{name}-20261017.jpg' for name in [
     'sofia-perfil', 'sofia-inicio', 'sofia-rendimiento', 'sofia-plan',
     'sofia-mejoras', 'sofia-top', 'tomas-perfil', 'tomas-aventuras',
     'tomas-plan', 'tomas-evolucion']]
