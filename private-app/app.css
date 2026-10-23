@@ -270,3 +270,7 @@ html[data-theme=light] .antro-src-badge{color:#075985}
 #self-test-history .test-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color .15s}
 
 .practice-history-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}.practice-history-card h4{margin:0 0 8px}.mental-tip-practice{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+
+
+/* Level Points por partido Mini. */
+.mini-level-points{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:14px}.mini-lp-total{font-size:1.6rem;font-weight:700}.mini-lp-question{margin:16px 0;padding:12px 0;border:0;border-top:1px solid var(--line);min-width:0}.mini-lp-question label{display:block}.mini-lp-question input[type=range]{display:block;width:100%;min-height:44px;accent-color:var(--accent)}.mini-lp-question small,.mini-lp-question output{display:block;margin:7px 0}.mini-lp-question button{min-height:44px;margin:4px 6px 4px 0}.mini-lp-question button[aria-pressed=true]{outline:2px solid var(--accent)}.mini-level-points>fieldset{border:0;padding:0;min-width:0}.mini-level-points ul{padding-left:20px}.mini-level-points li{margin:6px 0}

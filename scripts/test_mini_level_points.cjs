@@ -1,0 +1,31 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const source=fs.readFileSync(path.join(__dirname,'test_private_app.cjs'),'utf8').split('(async()=>{')[0];
+const tests=String.raw`
+(async()=>{
+ const assert=require('node:assert/strict');let n=0;
+ let f=await fixture({identity:b,requested:pb,miniOfficial:true});
+ const engine=f.w.NextLevelMiniPoints;
+ const game={source:'cabb_api',minutos:8,pts:6,tl_in:1,tl_att:3,fouls_received:2};
+ const complete={participation:5,try:'yes',help:'yes',retry:'yes'};
+ assert.equal(engine.calculate(game,complete).total,30);n++;
+ assert.equal(engine.calculate({...game,pts:0,tl_in:0,tl_att:0,fouls_received:0},complete).total,21);n++;
+ assert.equal(engine.calculate({...game,minutos:0},complete).total,null);n++;
+ assert.equal(engine.calculate({...game,minutos:null},complete).total,null);n++;
+ assert.equal(engine.calculate({...game,tl_att:null},complete).partial,true);n++;
+ assert.equal(engine.calculate(game,{...complete,enjoyment:1,team:1}).total,30);n++;
+ assert.equal(engine.calculate(game,{...complete,participation:1}).total,26);n++;
+ const host=f.w.document.querySelector('.mini-level-points');assert(host);n++;
+ assert(!host.textContent.includes('¿Jugaste'));n++;
+ assert.equal(host.querySelector('output').textContent,'Sin responder');n++;
+ const range=host.querySelector('input[type=range]');range.value=4;range.dispatchEvent(new f.w.Event('input'));
+ const save=[...host.querySelectorAll('button')].find(b=>b.textContent==='Guardar mi experiencia');save.click();await f.settle();
+ const writes=f.saved.filter(s=>s.module?.startsWith('mini_level_points_v1:'));assert.equal(writes.length,1);assert.equal(writes[0].player_id,pb);assert.equal(writes[0].data.participation,4);assert.equal(writes[0].data.total,undefined);n++;
+ range.value=2;range.dispatchEvent(new f.w.Event('input'));save.click();await f.settle();
+ const last=f.saved.at(-1);assert.equal(last.module,writes[0].module);assert.equal(last.data.participation,2);n++;
+ assert.equal(f.w.localStorage.length,0);assert.equal(f.w.sessionStorage.length,0);n++;
+ f.logout();assert.equal(f.w.document.querySelectorAll('.mini-level-points').length,0);n++;f.dom.window.close();
+ f=await fixture({official:true});assert.equal(f.w.document.querySelectorAll('.mini-level-points').length,0);n++;f.dom.window.close();
+ f=await fixture({identity:a,requested:pb,miniOfficial:true,coach:true});assert(f.w.document.querySelector('.mini-level-points>fieldset').disabled);n++;f.dom.window.close();
+ console.log('PASS Mini Level Points:',n,'checks; scoring, source participation, U13 isolation, owner save, logout, coach read-only');
+})().catch(e=>{console.error(e);process.exitCode=1;});`;
+vm.runInThisContext('(function(require,__dirname){'+source+tests+'})',{filename:__filename})(require,__dirname);

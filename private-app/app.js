@@ -1,3 +1,20 @@
+/* Level Points Mini: la experiencia se conserva separada del acta CAB. */
+(function(root){
+ 'use strict';
+ const value=x=>x!==null&&x!==undefined&&x!==''&&Number.isFinite(Number(x))&&Number(x)>=0?Number(x):null;
+ const integer=x=>{const n=value(x);return n!==null&&Number.isInteger(n)?n:null;};
+ function calculate(game,answers={}){
+  const pts=integer(game.pts),made=integer(game.tl_in),attempts=integer(game.tl_att),fouls=integer(game.fouls_received),minutes=value(game.minutos);
+  const confirmed=game.source==='cabb_api'&&minutes!==null&&minutes>0;
+  const participation=Number.isInteger(answers.participation)&&answers.participation>=1&&answers.participation<=5?answers.participation:null;
+  const lines=[['Jugué · confirmado por CAB',confirmed?10:null],['Mi participación',participation]];
+  for(const [key,label] of [['try','Me animé a probar algo'],['help','Ayudé o alenté'],['retry','Volví a intentar']])lines.push([label,answers[key]==='yes'?2:answers[key]==='no'?0:null]);
+  lines.push(['Puntos de cancha',pts!==null&&made!==null&&pts>=made?pts-made:null],['Libres convertidos',made],['Libres fallados · +0,5',made!==null&&attempts!==null&&attempts>=made?(attempts-made)*.5:null],['Faltas recibidas',fouls]);
+  return {confirmed,lines,total:confirmed?lines.reduce((s,[,v])=>s+(v??0),0):null,partial:lines.some(([,v])=>v===null)};
+ }
+ const api={calculate};root.NextLevelMiniPoints=api;
+})(typeof window!=='undefined'?window:globalThis);
+
 /* Catálogo por preferencias. La práctica registrada no certifica dominio técnico. */
 (function(root){
 'use strict';
@@ -296,7 +313,33 @@ const api={analyze,total,avg};if(typeof module!=='undefined')module.exports=api;
  for(const [title,text,practice] of tips){const card=node('section',null,host);card.className='mental-tip-card';node('h4',title,card).className='mental-tip-title';node('p',text,card).className='mental-tip-copy';const task=node('div',null,card);task.className='mental-tip-practice';node('strong','✨ Para probar',task);node('p',practice||'Elegí con tu coach una acción sencilla y contá cómo te fue.',task);}
  renderPracticeAreas();
  }
- function renderMatchHistory(){const host=$('games');host.replaceChildren();node('h3','Historial de partidos · '+viewedSeason(),host);const rows=gameRows.slice().sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));if(!rows.length)node('p','Todavía no hay partidos guardados para esta temporada.',host);for(const game of rows){const card=node('article',null,host);card.className='match-card';node('h4',[game.fecha,game.rival||'Rival no informado'].filter(Boolean).join(' · '),card);node('p',(game.torneo||'Torneo no informado')+' · Resultado: '+(game.resultado_eq??'Sin informar'),card);const summary=node('div',null,card);summary.className='match-summary';for(const [key,label] of (isMini()?[['pts','Puntos'],['minutos','Minutos'],['val','Valoración']]:[['pts','Puntos'],['reb_tot','Rebotes'],['ast','Asistencias'],['minutos','Minutos'],['val','Valoración']])){node('span',label+': '+(numeric(game[key])===null?'Sin datos':game[key]),summary);}const detail=node('details',null,card);node('summary','Ver detalle del partido',detail);showValue(detail,game);node('small',game.source==='cabb_api'?'Fuente: acta CABB':'Origen: '+(game.source||'historial anterior'),card);}}
+   function renderMiniPoints(card,game){
+   if(!/\b(U9|U11)\b/i.test(player.category||'')||game.source!=='cabb_api')return;
+   const id=String(game.cabb_partido_id||game.id||'');if(!/^[a-zA-Z0-9_-]{1,80}$/.test(id))return;
+   const key='mini_level_points_v1:'+viewedSeason()+':'+id;
+   const stored=modules.get(key);let answers={...(stored&&typeof stored==='object'&&!Array.isArray(stored)?stored:{})};
+   const guard=session,playerId=player.id,host=node('section',null,card);host.className='mini-level-points';
+   node('h3','🌟 Level Points',host);node('p','Jugar, participar y animarte suma.',host);
+   const score=node('p',null,host);score.className='mini-lp-total';score.setAttribute('aria-live','polite');
+   const note=node('p',null,host),detail=node('details',null,host);node('summary','Ver todo lo que suma',detail);const list=node('ul',null,detail);
+   node('small','Fuente: acta CAB. Los libres convertidos se cuentan una sola vez. Nada resta; no hay ranking.',detail);
+   const controls=node('fieldset',null,host);node('legend','Así viví este partido',controls);
+   const indicators=[],actions=[];
+   const format=n=>new Intl.NumberFormat('es-AR',{maximumFractionDigits:1}).format(n);
+   for(const [field,label,left,right] of [['participation','¿Cuánto sentís que participaste?','Muy poquito','Muchísimo'],['enjoyment','¿Cuánto disfrutaste jugar?','Nada','Muchísimo'],['team','¿Te sentiste acompañado?','Poco','Mucho']]){
+    const row=node('div',null,controls);row.className='mini-lp-question';const labelEl=node('label',label,row),input=node('input',null,labelEl);input.type='range';input.min='1';input.max='5';input.step='1';input.value=Number.isInteger(answers[field])?answers[field]:3;
+    const output=node('output',null,row);node('small','1 · '+left+' — 5 · '+right,row);const skip=node('button','Prefiero no responder',row);skip.type='button';
+    node('small',field==='participation'?'Tu percepción suma de +1 a +5; no son los minutos del acta.':'No cambia tus puntos. Podés responder con sinceridad.',row);
+    const choose=()=>{guard.assert();answers[field]=Number(input.value);update();};input.addEventListener('input',choose);input.addEventListener('pointerup',choose);input.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')choose();});skip.addEventListener('click',()=>{guard.assert();answers[field]='skip';update();});indicators.push({field,input,output,skip});
+   }
+   for(const [field,label] of [['try','Me animé a probar algo'],['help','Ayudé o alenté a un compañero'],['retry','Volví a intentar cuando algo costó']]){const row=node('fieldset',null,controls);row.className='mini-lp-question';node('legend',label,row);for(const [value,text] of [['yes','Sí · +2'],['no','No esta vez'],['skip','Paso']]){const button=node('button',text,row);button.type='button';button.addEventListener('click',()=>{guard.assert();answers[field]=value;update();});actions.push({field,value,button});}}
+   const save=node('button','Guardar mi experiencia',controls);save.type='button';const feedback=node('p',null,host);feedback.setAttribute('role','status');
+   save.addEventListener('click',()=>execute(save,async()=>{guard.assert();if(session!==guard||player?.id!==playerId)throw Error('Volvé a abrir tu perfil.');const payload={version:1};for(const k of ['participation','enjoyment','team','try','help','retry'])if(answers[k]!==undefined)payload[k]=answers[k];await NextLevelData.saveModule(client,guard,playerId,key,payload);guard.assert();if(session!==guard||player?.id!==playerId)return;modules.set(key,payload);feedback.textContent='Experiencia guardada. Editar este partido recalcula sus puntos, sin duplicarlos.';}));
+   function update(){const result=NextLevelMiniPoints.calculate(game,answers);score.textContent=result.total===null?'Pendiente de datos CAB':format(result.total)+' Level Points';note.textContent=!result.confirmed?'El acta todavía no permite confirmar la participación. Cero puntos no significa que no jugaste.':result.partial?'Puntaje parcial · faltan respuestas o datos del acta.':'Jugar, participar y animarte suma. Podés conversar este partido con tu coach.';controls.disabled=!result.confirmed||accessRole==='admin_coach';list.replaceChildren();for(const [label,v] of result.lines)node('li',label+': '+(v===null?'Pendiente':'+'+format(v)),list);for(const {field,input,output,skip} of indicators){const v=answers[field],text=Number.isInteger(v)?v+' de 5':v==='skip'?'Prefiero no responder':'Sin responder';output.textContent=text;input.setAttribute('aria-valuetext',text);skip.setAttribute('aria-pressed',String(v==='skip'));}for(const {field,value,button} of actions)button.setAttribute('aria-pressed',String(answers[field]===value));feedback.textContent=accessRole==='admin_coach'?'Respuestas del jugador · solo el jugador puede completar su experiencia.':'Podés responder con ayuda de tu familia. Las respuestas son opcionales.';}
+   update();
+  }
+
+function renderMatchHistory(){const host=$('games');host.replaceChildren();node('h3','Historial de partidos · '+viewedSeason(),host);const rows=gameRows.slice().sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));if(!rows.length)node('p','Todavía no hay partidos guardados para esta temporada.',host);for(const game of rows){const card=node('article',null,host);card.className='match-card';node('h4',[game.fecha,game.rival||'Rival no informado'].filter(Boolean).join(' · '),card);node('p',(game.torneo||'Torneo no informado')+' · Resultado: '+(game.resultado_eq??'Sin informar'),card);const summary=node('div',null,card);summary.className='match-summary';for(const [key,label] of (isMini()?[['pts','Puntos'],['minutos','Minutos'],['val','Valoración']]:[['pts','Puntos'],['reb_tot','Rebotes'],['ast','Asistencias'],['minutos','Minutos'],['val','Valoración']])){node('span',label+': '+(numeric(game[key])===null?'Sin datos':game[key]),summary);}const detail=node('details',null,card);node('summary','Ver detalle del partido',detail);showValue(detail,game);node('small',game.source==='cabb_api'?'Fuente: acta CABB':'Origen: '+(game.source||'historial anterior'),card);renderMiniPoints(card,game);}}
 
  function renderMiniChallenge(){let summary=$('plan-season-summary');if(!summary){summary=node('section',null,$('progress'));summary.id='plan-season-summary';summary.className='original-card';}summary.replaceChildren();summary.hidden=!isMini();const tips=$('plan-mental-card'),practice=$('practice-form').closest('section');if(isMini()){$('progress').prepend(summary);summary.after(tips);tips.after($('mini-challenge-card'));node('h3','🎯 Mi objetivo y mis áreas',summary).className='card-ttl';const year=viewedSeason();node('p',profile.seasonGoals?.[year]||((profile.seasonGoalSeason||'2026')===year?profile.seasonGoal:'')||'Elegí tu objetivo de temporada en Perfil y conversalo con el coach.',summary);node('p',Array.isArray(profile.technicalAreas)&&profile.technicalAreas.length?'Áreas que quiero trabajar: '+profile.technicalAreas.join(' · '):'Podés elegir tus áreas en Perfil.',summary);}else $('progress').prepend(practice);const select=$('mini-challenge-select');select.replaceChildren();$('mini-challenge-card').hidden=!isMini();if(!isMini())return;const options=['Mirar antes de pasar','Usar ambas manos','Volver a defender','Animarme a participar','Comunicarme con mis compañeros'];for(const value of [...(profile.technicalAreas||[]),...(profile.mentalAreas||[]),profile.challenge].filter(v=>typeof v==='string'&&v.trim()))if(!options.includes(value))options.push(value);for(const value of options)node('option',value,select).value=value;select.value=profile.challenge||options[0];}
  $('mini-challenge-form').addEventListener('submit',event=>{event.preventDefault();execute(event.submitter,async()=>{session.assert();if(!isMini())throw Error('Este desafío corresponde a Mini.');const challenge=$('mini-challenge-select').value;if(!challenge||challenge.length>300)throw Error('Elegí una acción para practicar.');const next=await NextLevelData.patchProfile(client,session,player.id,moduleName,{challenge});profile=next;modules.set(moduleName,next);$('practice-area').value=challenge;renderHome();status('Desafío guardado en tu cuenta.');});});
@@ -597,3 +640,4 @@ if(isMini())node('p','Los números acompañan el aprendizaje, no definen tu valo
  $('clear-legacy').addEventListener('click',()=>{NextLevelSecurity.eraseLegacy(localStorage);NextLevelSecurity.eraseLegacy(sessionStorage);$('legacy').hidden=true;start();});
  try{if(NextLevelSecurity.legacyKeys(localStorage).length||NextLevelSecurity.legacyKeys(sessionStorage).length){$('legacy').hidden=false;status('Hay copias de la versión anterior que requieren tu decisión.');}else await start();}catch(e){status('El navegador no permite comprobar el almacenamiento. Usá una ventana nueva para continuar.');}
 })();
+

@@ -19,7 +19,7 @@
   return all;
  }
  async function saveModule(client,guard,playerId,module,data){
-  if(!['perfil_v1','mini_profile_v1','foto_url','profile_dorsal_v1','obj_estados_v1'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module)&&!/^mini_measures_v1:[0-9a-f-]{36}$/.test(module)&&!/^gradual_goals_v1:\d{4}:[^:]{1,300}:[a-z0-9_]{1,50}$/.test(module))throw Error('Guardado no autorizado.');
+  if(!/^mini_level_points_v1:20[0-9]{2}:[a-zA-Z0-9_-]{1,80}$/.test(module)&&!['perfil_v1','mini_profile_v1','foto_url','profile_dorsal_v1','obj_estados_v1'].includes(module)&&!/^plan_progress_v1:[0-9a-f-]{36}$/.test(module)&&!/^mini_measures_v1:[0-9a-f-]{36}$/.test(module)&&!/^gradual_goals_v1:\d{4}:[^:]{1,300}:[a-z0-9_]{1,50}$/.test(module))throw Error('Guardado no autorizado.');
   await guard.verify();const {error}=await client.from('player_data').upsert({player_id:playerId,module,data,updated_at:new Date().toISOString()},{onConflict:'player_id,module'});guard.assert();if(error)throw error;
  }
  async function saveEvaluation(client,guard,playerId,entry){await guard.verify();if(entry.player_id!==playerId)throw Error('Evaluación no autorizada.');const {error}=await client.from('evaluations').insert(entry);guard.assert();if(error)throw error;}
@@ -90,3 +90,4 @@ if(typeof module!=='undefined')module.exports=api;else root.NextLevelData=api;
  }
  root.NextLevelDraftCache={open};
 })(typeof window==='undefined'?globalThis:window);
+
