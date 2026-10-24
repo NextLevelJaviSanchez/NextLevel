@@ -35,6 +35,7 @@ jobs:
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_private_app.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_top_ai.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_mini_level_points.cjs
+          NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_mini_performance.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_mini_level_points_rls.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_competition_labels.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_restoration.cjs
@@ -61,7 +62,7 @@ jobs:
           node --check private-app/data.js
           node --check private-app/security.js
           if [ "$MODE" = "review" ]; then
-            git fetch --depth=1 origin 87180f5ea9e6589fb52e825cfdf5416f71da6bcf
+            git fetch --depth=1 origin 8c76f07c44cc2c301ba7ec3accea23ebe7966c96
             python scripts/build_feature_review.py
           else
             python scripts/build_private_pages.py --mode "$MODE"

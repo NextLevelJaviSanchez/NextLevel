@@ -1,0 +1,15 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),prefix=fs.readFileSync(path.join(__dirname,'test_private_app.cjs'),'utf8').split('(async()=>{')[0];
+const make=vm.runInThisContext('(function(require,__dirname){'+prefix+';return fixture;})')(require,__dirname);
+(async()=>{
+ const f=await make({identity:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',requested:'22222222-2222-4222-8222-222222222222',miniOfficial:true}),w=f.w,doc=w.document;
+ const engine=w.NextLevelMiniPoints,g={source:'cabb_api',minutos:8,pts:6,tl_in:1,tl_att:3,fouls_received:2,val:7},a={participation:5,try:'yes',help:'yes',retry:'yes'};
+ assert.equal(engine.calculate(g,a).total,37);assert.equal(engine.calculate({...g,val:-9},a).total,30);assert.equal(engine.calculate({...g,val:0},a).total,30);assert.equal(engine.calculate({...g,val:null},a).partial,true);
+ const visible=[...doc.querySelector('#stats').children].filter(e=>!e.hidden&&e.classList.contains('original-card'));
+ assert.equal(visible.length,3);assert(visible[0].contains(doc.getElementById('stats-summary')));assert(visible[1].contains(doc.getElementById('season-milestones')));assert(visible[2].contains(doc.getElementById('games')));assert.match(visible[2].textContent,/Mis Partidos/);
+ assert(doc.querySelector('.mini-points-season'));assert(doc.querySelector('.mini-points-milestone'));assert.equal(doc.querySelector('.mini-lp-editor').open,false);assert.match(doc.querySelector('.mini-match-pending').textContent,/Faltan 6/);assert.match(doc.querySelector('.mini-match-total').textContent,/19,5/);assert.match(doc.querySelector('.mini-points-season').textContent,/19,5/);
+ const host=doc.querySelector('.mini-level-points'),slider=host.querySelector('input');slider.value=4;slider.dispatchEvent(new w.Event('input'));assert.match(doc.querySelector('.mini-match-total').textContent,/vista previa sin guardar/);assert.match(doc.querySelector('.mini-points-season').textContent,/19,5/);
+ [...host.querySelectorAll('button')].find(b=>b.textContent==='Guardar mi experiencia').click();await f.settle();assert.match(doc.querySelector('.mini-match-total').textContent,/23,5/);assert.doesNotMatch(doc.querySelector('.mini-match-total').textContent,/sin guardar/);assert.match(doc.querySelector('.mini-points-season').textContent,/23,5/);assert.match(doc.querySelector('.mini-points-milestone').textContent,/23,5/);assert.match(doc.querySelector('.mini-match-pending').textContent,/Faltan 5/);assert.match(host.textContent,/Experiencia guardada/);
+ const saved=f.saved.at(-1);assert.equal(saved.data.total,undefined);assert.equal(saved.data.val,undefined);assert.equal(saved.data.participation,4);f.logout();assert.equal(doc.querySelector('.mini-points-season'),null);f.dom.window.close();
+ console.log('PASS: positive CAB valuation only, three Mini sections, closed per-match editors, missing responses, unsaved previews, saved totals and milestones, no duplicated stored statistics.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

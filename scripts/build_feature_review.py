@@ -1,6 +1,6 @@
 from pathlib import Path
 import tempfile, subprocess, shutil, json, argparse
-BASE='87180f5ea9e6589fb52e825cfdf5416f71da6bcf'
+BASE='8c76f07c44cc2c301ba7ec3accea23ebe7966c96'
 parser=argparse.ArgumentParser();parser.add_argument('--repository',default='.');args=parser.parse_args()
 root=Path.cwd()
 output=root/'privacy-pages-artifact'
