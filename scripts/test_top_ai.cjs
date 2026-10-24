@@ -8,9 +8,11 @@ const fixtureDir=__dirname;
 let prefix=fs.readFileSync(path.join(fixtureDir,'test_private_app.cjs'),'utf8').split('(async()=>{')[0];
 const customRequire=name=>name==='node:fs'?new Proxy(fs,{get(t,k){return k==='readFileSync'?(file,...args)=>String(file).endsWith(path.join('private-app','app.js'))?app:fs.readFileSync(file,...args):t[k];}}):require(name);
 prefix=prefix.replace('select(){return q;}',"select(){return q;},async maybeSingle(){return await new Promise(resolve=>q.then(result=>resolve({...result,data:result.data?.[0]||null})));}");
+prefix=prefix.replace(' if(messages)',` if(snapshots){const team=dataset.player_data.find(r=>r.module.startsWith('cabb_team_v1:'));team.data.games=Array.from({length:15},(_,i)=>({available:true,tournament:'A',players:[{name:'Otro Uno',pts:10},{name:'Otro Dos',pts:8},...(i<6?[{name:'Dueño Perfil',pts:30}]:[])]}));dataset.player_data.push({player_id:pa,module:'player_season_v1:'+new Date().getFullYear(),data:{cabbName:'Dueño Perfil'}});} if(messages)`);
 const make=vm.runInThisContext('(function(require,__dirname){'+prefix+';return fixture;})')(customRequire,fixtureDir);
 (async()=>{
- console.log('Inicio de pruebas de interfaz');let f=await make({coach:true,official:true});let w=f.w;
+ let f=await make({snapshots:true});let w=f.w;const extras=w.document.querySelector('#official-extras');assert.match(extras.textContent,/Tu registro: 6 PJ · 30.0/);assert.match(extras.textContent,/Todavía no alcanzás los 8 partidos/);const points=[...extras.querySelectorAll('h4')].find(h=>h.textContent==='Puntos').nextElementSibling;assert.match(points.textContent,/Tu registroDueño Perfil630.0/);assert.equal(points.querySelector('tbody tr').textContent,'1Otro Uno1510.0');f.dom.window.close();
+ f=await make({coach:true,official:true});w=f.w;
  const updateButton=()=>[...w.document.querySelectorAll('#coach-ai-tools button')].find(b=>b.textContent==='Actualizar visión coach IA');
  assert.ok(w.document.getElementById('coach-ai-tools'));assert.equal(updateButton().disabled,true);
  const select=w.document.querySelector('[aria-label="Plan del acompañamiento"]');select.value='PLAYER';select.dispatchEvent(new w.Event('change'));updateButton().click();
