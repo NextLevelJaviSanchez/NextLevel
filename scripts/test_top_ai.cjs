@@ -1,0 +1,23 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),app=fs.readFileSync(path.join(root,'private-app/app.js'),'utf8');
+const ctx={};vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf('  function teamRanking('),app.indexOf('  function seasonMilestones('))+';this.rank=teamRanking;',ctx);
+const games=Array.from({length:15},(_,i)=>({available:true,players:[{name:'Otro Uno',pts:10},{name:'Otro Dos',pts:8},...(i<6?[{name:'Dueño Perfil',pts:30}]:[])]}));
+let result=ctx.rank(games,'pts',8);assert.equal(result.rows.length,2);assert.equal(result.rows[0].name,'Otro Uno');assert.equal(result.rows[0].rank,1);assert.equal(result.allPlayers.find(p=>p.name==='Dueño Perfil').avg,30);assert.equal(result.allPlayers.find(p=>p.name==='Dueño Perfil').rank,null);
+games[0].players.find(p=>p.name==='Dueño Perfil').pts=null;result=ctx.rank(games,'pts',8);assert.equal(result.allPlayers.find(p=>p.name==='Dueño Perfil').avg,null);
+const fixtureDir=__dirname;
+let prefix=fs.readFileSync(path.join(fixtureDir,'test_private_app.cjs'),'utf8').split('(async()=>{')[0];
+const customRequire=name=>name==='node:fs'?new Proxy(fs,{get(t,k){return k==='readFileSync'?(file,...args)=>String(file).endsWith(path.join('private-app','app.js'))?app:fs.readFileSync(file,...args):t[k];}}):require(name);
+prefix=prefix.replace('select(){return q;}',"select(){return q;},async maybeSingle(){return await new Promise(resolve=>q.then(result=>resolve({...result,data:result.data?.[0]||null})));}");
+const make=vm.runInThisContext('(function(require,__dirname){'+prefix+';return fixture;})')(customRequire,fixtureDir);
+(async()=>{
+ console.log('Inicio de pruebas de interfaz');let f=await make({coach:true,official:true});let w=f.w;
+ const updateButton=()=>[...w.document.querySelectorAll('#coach-ai-tools button')].find(b=>b.textContent==='Actualizar visión coach IA');
+ assert.ok(w.document.getElementById('coach-ai-tools'));assert.equal(updateButton().disabled,true);
+ const select=w.document.querySelector('[aria-label="Plan del acompañamiento"]');select.value='PLAYER';select.dispatchEvent(new w.Event('change'));updateButton().click();
+ const form=w.document.querySelector('#coach-ai-tools form');assert.equal(form.hidden,false);[...form.querySelectorAll('textarea')].forEach((x,i)=>x.value='Borrador IA '+i+' <img src=x>');form.querySelector('input[type=checkbox]').checked=true;
+ const before=f.saved.length;form.requestSubmit();await f.settle();assert.equal(f.saved.length,before+1);const saved=f.saved.at(-1);assert.equal(saved.module,'coach_eval_v1');assert.equal(saved.data.body,'<img src=x onerror=alert(1)>');assert.equal(saved.data.aiReview.source,'ai_session_manual');assert.equal(saved.data.servicePlan,'PLAYER');assert.ok(Date.parse(saved.data.aiReview.updatedAt));assert.equal(w.document.querySelector('.coach-ai-review img'),null);assert.match(w.document.querySelector('.coach-ai-review').textContent,/Borrador IA/);assert.match(w.document.getElementById('coach-ai-tools').textContent,/Última actualización/);
+ f.logout();assert.equal(w.document.getElementById('coach-ai-tools'),null);assert.equal(w.document.querySelector('.coach-ai-review'),null);f.dom.window.close();
+ f=await make({coach:true,failWrites:true});w=f.w;const sel=w.document.querySelector('[aria-label="Plan del acompañamiento"]');sel.value='PLAYER';sel.dispatchEvent(new w.Event('change'));updateButton().click();const failed=w.document.querySelector('#coach-ai-tools form');failed.querySelectorAll('textarea').forEach(x=>x.value='Prueba IA');failed.querySelector('input').checked=true;failed.requestSubmit();await f.settle();assert.equal(w.document.querySelector('.coach-ai-review'),null);assert.match(w.document.getElementById('status').textContent,/Sin conexión/);f.dom.window.close();
+ f=await make();assert.equal(f.w.document.getElementById('coach-ai-tools'),null);f.dom.window.close();
+ console.log('PASS: excepción sin alterar ranking, datos ausentes, carga IA solo coach, conservación de notas, fecha confirmada, fallo sin falso guardado, escape de HTML y limpieza de sesión.');
+})().catch(e=>{console.error(e);process.exitCode=1;});
