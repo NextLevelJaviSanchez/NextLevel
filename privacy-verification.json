@@ -1,1 +1,11 @@
-{"source_commit":"acd1de9617c10aab8e76708d0f12e07dbe93e09a","source_sha256":"6a99779db57a05c49658cbb4923130c5376f8209019c063e100e9a1a9421464a","account_a_login":true,"account_b_login":true,"foreign_profile_denied":true,"logout_back_denied":true,"cloud_save_reload":true,"photo_private":true,"anonymous_denied":true}
+{
+  "source_commit": "3f3c7a067f482ff9cbc59a32428aa3795f31dd87",
+  "source_sha256": "54ac053c532584dc4b318429e591043eb15e599f394e9b0220ddc69019d04a83",
+  "account_a_login": true,
+  "account_b_login": true,
+  "foreign_profile_denied": true,
+  "logout_back_denied": true,
+  "cloud_save_reload": true,
+  "photo_private": true,
+  "anonymous_denied": true
+}
