@@ -62,7 +62,7 @@ jobs:
           node --check private-app/data.js
           node --check private-app/security.js
           if [ "$MODE" = "review" ]; then
-            git fetch --depth=1 origin 8c76f07c44cc2c301ba7ec3accea23ebe7966c96
+            git fetch --depth=1 origin 07bec0df9cdfe9c8118eabf42190da8bc8ebbb88
             python scripts/build_feature_review.py
           else
             python scripts/build_private_pages.py --mode "$MODE"
