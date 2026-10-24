@@ -35,6 +35,7 @@ jobs:
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_private_app.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_mini_level_points.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_mini_level_points_rls.cjs
+          NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_competition_labels.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_restoration.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_physical_restore.cjs
           NODE_PATH="$RUNNER_TEMP/nextlevel-tests/node_modules" node scripts/test_plan_restore.cjs
