@@ -56,6 +56,7 @@ jobs:
         env:
           MODE: ${{ inputs.mode }}
         run: |
+          python scripts/test_asset_versions.py
           node --check private-app/app.js
           node --check private-app/data.js
           node --check private-app/security.js
