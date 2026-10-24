@@ -341,6 +341,7 @@ const api={analyze,total,avg};if(typeof module!=='undefined')module.exports=api;
   if(score)score.textContent=state.total===null?'Level Points pendientes de CAB':miniPointsFormat(state.total)+' Level Points'+(state.partial?' · parcial':'')+(preview?' · vista previa sin guardar':'');
   if(notice)notice.textContent=state.pending?'Faltan '+state.pending+' respuestas opcionales. Desplegá Level Points para completar o elegir «Paso».':'Experiencia completada · podés revisar tus respuestas.';
   const summary=card.querySelector('.mini-lp-editor>summary');if(summary)summary.textContent=state.pending?'🌟 Level Points · Completar mi experiencia':'🌟 Level Points · Ver mi experiencia';
+  const banner=$('games').querySelector('.mini-matches-state');if(banner){const missing=gameRows.filter(g=>g.source==='cabb_api'&&miniPointState(g).pending>0).length;banner.textContent=missing?missing+' partidos con experiencias opcionales pendientes. Abrí Level Points en cada tarjeta para completarlas.':'Tus experiencias guardadas están al día.';}
  }
  function miniPointsMilestones(host){
   if(!isMini())return;const rows=officialGames().filter(g=>g.source==='cabb_api').map(game=>({game,state:miniPointState(game)})),known=rows.filter(r=>r.state.total!==null);
