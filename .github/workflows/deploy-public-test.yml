@@ -1,0 +1,68 @@
+name: Publicar test Next Level sin reabrir perfiles
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deploy-public-test.yml'
+      - 'test_suma_o_resta.html'
+      - 'test_suma_o_resta_imprimible.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar únicamente mantenimiento y test público
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          import re
+
+          output = Path('privacy-pages-artifact')
+          output.mkdir()
+          maintenance = Path('privacy-maintenance/index.html')
+          if not maintenance.is_file() or maintenance.is_symlink():
+              raise RuntimeError('La página de mantenimiento revisada es obligatoria')
+
+          shutil.copyfile(maintenance, output / 'index.html')
+          shutil.copyfile(maintenance, output / '404.html')
+          (output / '.nojekyll').write_text('')
+
+          tests = ('test_suma_o_resta.html', 'test_suma_o_resta_imprimible.html')
+          forbidden = re.compile(
+              r'(?i)(?:fetch\s*\(|XMLHttpRequest|supabase|service_role|'
+              r'<\s*(?:iframe|object|embed)\b|<script[^>]*\bsrc\s*=|'
+              r'(?:href|src)\s*=\s*["\x27]https?://)'
+          )
+          for name in tests:
+              source = Path(name)
+              if not source.is_file() or source.is_symlink():
+                  raise RuntimeError('Falta el test revisado: ' + name)
+              html = source.read_text(encoding='utf-8')
+              if forbidden.search(html):
+                  raise RuntimeError('El test contiene un recurso o acceso no autorizado: ' + name)
+              shutil.copyfile(source, output / name)
+
+          actual = {p.name for p in output.iterdir() if p.is_file()}
+          expected = {'index.html', '404.html', '.nojekyll', *tests}
+          if actual != expected:
+              raise RuntimeError('El paquete contiene archivos no autorizados')
+          print('Publicados exclusivamente: ' + ', '.join(sorted(actual)))
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: privacy-pages-artifact
+      - uses: actions/deploy-pages@v4
+        id: deployment
