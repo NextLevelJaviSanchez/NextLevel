@@ -60,6 +60,8 @@ jobs:
           if actual != expected:
               raise RuntimeError('El paquete contiene archivos no autorizados')
           print('Publicados exclusivamente: ' + ', '.join(sorted(actual)))
+      - name: Añadir únicamente la landing pública revisada de Next Level Player
+        run: python scripts/add_public_landing.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
